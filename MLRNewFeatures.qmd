@@ -1,0 +1,73 @@
+---
+format: live-html
+engine: knitr
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+# Expanding data by adding predictor variables
+
+## Session overview
+
+- Revisit the assumptions that underlie multiple linear regression and how they extend the simple linear case.
+- Motivate the need for multiple predictors with short stories from real-world analyses (e.g., predicting house prices or patient outcomes).
+- Highlight how model selection, diagnostics, and interpretation change as models become more complex.
+- Encourage learners to connect ideas across chapters by comparing model summaries, visual diagnostics, and inferential statements.
+
+### Potential exercises
+
+- Ask learners to brainstorm scenarios where a single predictor is insufficient and list potential additional variables.
+- Provide a model summary output and have learners identify which regression assumptions they would check first.
+
+## Quantitative predictors
+
+### Key topics to emphasise
+
+- Clarify the meaning of partial regression coefficients as “holding other variables constant.”
+- Discuss the role of centred and standardised predictors for interpretability and numerical stability.
+- Use added-variable plots or component-plus-residual plots to visualise the unique contribution of each predictor.
+
+### Potential examples
+
+- Fit a model predicting fuel efficiency (e.g., `mtcars` data) from engine size, weight, and horsepower to show competing effects.
+- Contrast models with raw vs. centred predictors to illustrate interpretational differences.
+
+### Potential exercises
+
+- Provide learners with a dataset (such as `mtcars`) and have them interpret the coefficient of weight before and after centring.
+- Ask learners to build a scatterplot matrix to hypothesise relationships among continuous predictors before modelling.
+
+### Multi-collinearity
+
+#### Key topics to emphasise
+
+- Define variance inflation factors (VIFs) and tolerance as diagnostic tools.
+- Explain why multicollinearity inflates standard errors and complicates inference.
+- Highlight remedial strategies: collecting more data, combining variables, or using regularisation methods.
+
+#### Potential examples
+
+- Demonstrate high correlation between horsepower and displacement in the `mtcars` dataset and show the impact on coefficient estimates.
+- Compare model outputs before and after removing a redundant predictor.
+
+#### Potential exercises
+
+- Provide correlation matrices and ask learners to flag problematic pairs of predictors.
+- Have learners compute VIFs for a fitted model and interpret which predictors require attention.
+
+## Qualitative predictors
+
+### Key topics to emphasise
+
+- Review dummy (indicator) coding and how the choice of reference category affects interpretation.
+- Explain how to include categorical predictors with more than two levels using treatment or sum coding.
+- Introduce the concept of adjusted means when controlling for other predictors.
+
+### Potential examples
+
+- Model exam scores using study hours (continuous) and teaching method (categorical) to illustrate contrasts.
+- Show how to interpret coefficients when switching the reference category.
+
+### Potential exercises
+
+- Ask learners to encode a three-level categorical variable manually and verify with software output.
+- Provide regression results and have learners translate coefficients into comparisons between categories.
