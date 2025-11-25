@@ -1,0 +1,44 @@
+---
+format: live-html
+engine: knitr
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+# Building models by constructing terms
+
+## Polynomials
+
+### Key topics to emphasise
+
+- Emphasise that polynomial terms model smooth curvature and require careful interpretation at different predictor levels.
+- Demonstrate how polynomial degree affects model flexibility and risk of overfitting.
+- Include a note on the bias–variance trade-off to frame how adding higher-degree terms can reduce bias but increase variance.
+- Encourage plotting predicted values to visualise curvature.
+
+### Potential examples
+
+- Use a dataset with age vs. lung capacity to illustrate diminishing returns via quadratic terms.
+- Contrast polynomial regression with piecewise linear fits to show alternative approaches.
+
+### Potential exercises
+
+- Ask learners to fit linear, quadratic, and cubic models and compare adjusted $R^2$ values.
+- Provide predicted curves and have learners match them to the appropriate polynomial degree.
+
+## Interactions
+
+### Key topics to emphasise
+
+- Interpret interaction coefficients as changes in slopes across levels of another predictor.
+- Highlight the necessity of plotting interactions (e.g., interaction plots, marginal effects).
+- Discuss the difference between interactions involving continuous vs. categorical variables.
+- Note that interactions need not be simple products; they can combine predictors through indicator-triggered slopes, smooth-varying functions, or other structured contrasts.
+
+### Potential examples
+
+- Fit a model predicting salary from years of experience, gender, and their interaction to discuss equity analyses.
+- Show how to compute and interpret simple slopes at specific predictor values.
+
+### Potential exercises
+
+- Have learners calculate predicted outcomes at combinations of predictor values to interpret interaction effects.
+- Ask learners to describe how an interaction would appear in a contour or surface plot.

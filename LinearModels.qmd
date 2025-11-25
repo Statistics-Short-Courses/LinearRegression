@@ -41,7 +41,7 @@ library(ggplot2)
 set_theme(theme_bw())
 ```
 
-# An introduction to linear statistical models {#sec-chap1}
+# Linear statistical models {#sec-chap1}
 
 ## Statistical models {#sec-independence}
 
