@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Regression case study – Introduction to Linear Regression in R</title>
+<title>6&nbsp; Building models by constructing terms – Introduction to Linear Regression in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,6 +72,35 @@ ul.task-list li input[type="checkbox"] {
 <script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/style.css">
@@ -86,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./RegressionCaseStudy.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">MultipleRegression.html</a></li><li class="breadcrumb-item"><a href="./MLRDerivedFeatures.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -169,7 +198,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./MLRDerivedFeatures.html" class="sidebar-item-text sidebar-link">
+  <a href="./MLRDerivedFeatures.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></span></a>
   </div>
 </li>
@@ -183,7 +212,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./RegressionCaseStudy.html" class="sidebar-item-text sidebar-link active">
+  <a href="./RegressionCaseStudy.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></span></a>
   </div>
 </li>
@@ -204,9 +233,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">MultipleRegression.html</a></li><li class="breadcrumb-item"><a href="./MLRDerivedFeatures.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></h1>
 </div>
 
 
@@ -223,6 +252,56 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="polynomials" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="polynomials"><span class="header-section-number">6.1</span> Polynomials</h2>
+<section id="key-topics-to-emphasise" class="level3">
+<h3 class="anchored" data-anchor-id="key-topics-to-emphasise">Key topics to emphasise</h3>
+<ul>
+<li>Emphasise that polynomial terms model smooth curvature and require careful interpretation at different predictor levels.</li>
+<li>Demonstrate how polynomial degree affects model flexibility and risk of overfitting.</li>
+<li>Include a note on the bias–variance trade-off to frame how adding higher-degree terms can reduce bias but increase variance.</li>
+<li>Encourage plotting predicted values to visualise curvature.</li>
+</ul>
+</section>
+<section id="potential-examples" class="level3">
+<h3 class="anchored" data-anchor-id="potential-examples">Potential examples</h3>
+<ul>
+<li>Use a dataset with age vs.&nbsp;lung capacity to illustrate diminishing returns via quadratic terms.</li>
+<li>Contrast polynomial regression with piecewise linear fits to show alternative approaches.</li>
+</ul>
+</section>
+<section id="potential-exercises" class="level3">
+<h3 class="anchored" data-anchor-id="potential-exercises">Potential exercises</h3>
+<ul>
+<li>Ask learners to fit linear, quadratic, and cubic models and compare adjusted <span class="math inline">\(R^2\)</span> values.</li>
+<li>Provide predicted curves and have learners match them to the appropriate polynomial degree.</li>
+</ul>
+</section>
+</section>
+<section id="interactions" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="interactions"><span class="header-section-number">6.2</span> Interactions</h2>
+<section id="key-topics-to-emphasise-1" class="level3">
+<h3 class="anchored" data-anchor-id="key-topics-to-emphasise-1">Key topics to emphasise</h3>
+<ul>
+<li>Interpret interaction coefficients as changes in slopes across levels of another predictor.</li>
+<li>Highlight the necessity of plotting interactions (e.g., interaction plots, marginal effects).</li>
+<li>Discuss the difference between interactions involving continuous vs.&nbsp;categorical variables.</li>
+<li>Note that interactions need not be simple products; they can combine predictors through indicator-triggered slopes, smooth-varying functions, or other structured contrasts.</li>
+</ul>
+</section>
+<section id="potential-examples-1" class="level3">
+<h3 class="anchored" data-anchor-id="potential-examples-1">Potential examples</h3>
+<ul>
+<li>Fit a model predicting salary from years of experience, gender, and their interaction to discuss equity analyses.</li>
+<li>Show how to compute and interpret simple slopes at specific predictor values.</li>
+</ul>
+</section>
+<section id="potential-exercises-1" class="level3">
+<h3 class="anchored" data-anchor-id="potential-exercises-1">Potential exercises</h3>
+<ul>
+<li>Have learners calculate predicted outcomes at combinations of predictor values to interpret interaction effects.</li>
+<li>Ask learners to describe how an interaction would appear in a contour or surface plot.</li>
+</ul>
 
 
 <script type="ojs-module-contents">
@@ -239,6 +318,8 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script>

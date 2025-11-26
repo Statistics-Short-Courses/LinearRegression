@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Regression case study – Introduction to Linear Regression in R</title>
+<title>5&nbsp; Expanding data by adding predictor variables – Introduction to Linear Regression in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -86,7 +86,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./RegressionCaseStudy.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">MultipleRegression.html</a></li><li class="breadcrumb-item"><a href="./MLRNewFeatures.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -163,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./MLRNewFeatures.html" class="sidebar-item-text sidebar-link">
+  <a href="./MLRNewFeatures.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></span></a>
   </div>
 </li>
@@ -183,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./RegressionCaseStudy.html" class="sidebar-item-text sidebar-link active">
+  <a href="./RegressionCaseStudy.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></span></a>
   </div>
 </li>
@@ -204,9 +204,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">MultipleRegression.html</a></li><li class="breadcrumb-item"><a href="./MLRNewFeatures.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></h1>
 </div>
 
 
@@ -223,6 +223,95 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="session-overview" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="session-overview"><span class="header-section-number">5.1</span> Session overview</h2>
+<ul>
+<li>Revisit the assumptions that underlie multiple linear regression and how they extend the simple linear case.</li>
+<li>Motivate the need for multiple predictors with short stories from real-world analyses (e.g., predicting house prices or patient outcomes).</li>
+<li>Highlight how model selection, diagnostics, and interpretation change as models become more complex.</li>
+<li>Encourage learners to connect ideas across chapters by comparing model summaries, visual diagnostics, and inferential statements.</li>
+</ul>
+<section id="potential-exercises" class="level3">
+<h3 class="anchored" data-anchor-id="potential-exercises">Potential exercises</h3>
+<ul>
+<li>Ask learners to brainstorm scenarios where a single predictor is insufficient and list potential additional variables.</li>
+<li>Provide a model summary output and have learners identify which regression assumptions they would check first.</li>
+</ul>
+</section>
+</section>
+<section id="quantitative-predictors" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="quantitative-predictors"><span class="header-section-number">5.2</span> Quantitative predictors</h2>
+<section id="key-topics-to-emphasise" class="level3">
+<h3 class="anchored" data-anchor-id="key-topics-to-emphasise">Key topics to emphasise</h3>
+<ul>
+<li>Clarify the meaning of partial regression coefficients as “holding other variables constant.”</li>
+<li>Discuss the role of centred and standardised predictors for interpretability and numerical stability.</li>
+<li>Use added-variable plots or component-plus-residual plots to visualise the unique contribution of each predictor.</li>
+</ul>
+</section>
+<section id="potential-examples" class="level3">
+<h3 class="anchored" data-anchor-id="potential-examples">Potential examples</h3>
+<ul>
+<li>Fit a model predicting fuel efficiency (e.g., <code>mtcars</code> data) from engine size, weight, and horsepower to show competing effects.</li>
+<li>Contrast models with raw vs.&nbsp;centred predictors to illustrate interpretational differences.</li>
+</ul>
+</section>
+<section id="potential-exercises-1" class="level3">
+<h3 class="anchored" data-anchor-id="potential-exercises-1">Potential exercises</h3>
+<ul>
+<li>Provide learners with a dataset (such as <code>mtcars</code>) and have them interpret the coefficient of weight before and after centring.</li>
+<li>Ask learners to build a scatterplot matrix to hypothesise relationships among continuous predictors before modelling.</li>
+</ul>
+</section>
+<section id="multi-collinearity" class="level3">
+<h3 class="anchored" data-anchor-id="multi-collinearity">Multi-collinearity</h3>
+<section id="key-topics-to-emphasise-1" class="level4">
+<h4 class="anchored" data-anchor-id="key-topics-to-emphasise-1">Key topics to emphasise</h4>
+<ul>
+<li>Define variance inflation factors (VIFs) and tolerance as diagnostic tools.</li>
+<li>Explain why multicollinearity inflates standard errors and complicates inference.</li>
+<li>Highlight remedial strategies: collecting more data, combining variables, or using regularisation methods.</li>
+</ul>
+</section>
+<section id="potential-examples-1" class="level4">
+<h4 class="anchored" data-anchor-id="potential-examples-1">Potential examples</h4>
+<ul>
+<li>Demonstrate high correlation between horsepower and displacement in the <code>mtcars</code> dataset and show the impact on coefficient estimates.</li>
+<li>Compare model outputs before and after removing a redundant predictor.</li>
+</ul>
+</section>
+<section id="potential-exercises-2" class="level4">
+<h4 class="anchored" data-anchor-id="potential-exercises-2">Potential exercises</h4>
+<ul>
+<li>Provide correlation matrices and ask learners to flag problematic pairs of predictors.</li>
+<li>Have learners compute VIFs for a fitted model and interpret which predictors require attention.</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="qualitative-predictors" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="qualitative-predictors"><span class="header-section-number">5.3</span> Qualitative predictors</h2>
+<section id="key-topics-to-emphasise-2" class="level3">
+<h3 class="anchored" data-anchor-id="key-topics-to-emphasise-2">Key topics to emphasise</h3>
+<ul>
+<li>Review dummy (indicator) coding and how the choice of reference category affects interpretation.</li>
+<li>Explain how to include categorical predictors with more than two levels using treatment or sum coding.</li>
+<li>Introduce the concept of adjusted means when controlling for other predictors.</li>
+</ul>
+</section>
+<section id="potential-examples-2" class="level3">
+<h3 class="anchored" data-anchor-id="potential-examples-2">Potential examples</h3>
+<ul>
+<li>Model exam scores using study hours (continuous) and teaching method (categorical) to illustrate contrasts.</li>
+<li>Show how to interpret coefficients when switching the reference category.</li>
+</ul>
+</section>
+<section id="potential-exercises-3" class="level3">
+<h3 class="anchored" data-anchor-id="potential-exercises-3">Potential exercises</h3>
+<ul>
+<li>Ask learners to encode a three-level categorical variable manually and verify with software output.</li>
+<li>Provide regression results and have learners translate coefficients into comparisons between categories.</li>
+</ul>
 
 
 <script type="ojs-module-contents">
@@ -239,6 +328,8 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script>

@@ -1,0 +1,122 @@
+---
+format: 
+  live-html:
+    toc: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Technical-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: true
+webr:
+  render-df: gt-interactive
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+```{webr}
+#| include: false
+library(tidyverse)
+set_theme(theme_bw())
+```
+
+
+# Inference about population parameters
+
+
+-   **Connection to simulation:** We have been given data sampled from a linear modelâ€”consider whether the parameter estimates obtained so far represent the underlying model well.
+-   **Repeat sampling experiment:** Since we can simulate data, take another sample from the same model to explore variability in the estimates.
+-   **Comparison visuals:** Overlay lines from multiple samples to build intuition for the sampling distribution of $\hat\beta$.
+-   **Key takeaway:** Even with the same generating process, estimates vary; inference quantifies this uncertainty.
+
+- since we have the opportunity, lets take another sample from the same model:
+
+```{webr}
+n <- 20
+x <- rnorm(n,0,4)
+error <-  rnorm(n,0, 2)
+y <- 0.5 * x - 3 + error
+linearData_new <- data.frame(x,y)
+```
+
+And fit a linear regression via least squares
+```{webr}
+lm_2 <- lm(y~x,linearData_new)
+lm
+```
+lets compare out two datasets (remember, these come from the same underlying linear model with $\beta_0=-3$ and $\beta_1=0.5$ and their lines of best fit:
+```{webr}
+ggplot()+
+  geom_point(data=linearData, aes())
+```
+- Repeating this process produces the sampling distribution of our parameters.
+
+- in the real world we wont have the luxury of generating new samples by running R commands, so we have to make do with the data we have. Thankfully, if our assumptions of the underlying model are true then we can expect the same process of convergence to a stable sampling distribution to hold true and our parameter estimates for beta to have a t-distribution.
+
+### Inference about $\beta$
+
+-   **Objective:** Derive sampling distributions for $\hat{\beta}_0$ and $\hat{\beta}_1$ under the model assumptions.
+-   **Key results:** Emphasise unbiasedness, variance formulas, and the joint normality of the estimators.
+-   **Confidence intervals:** Outline the structure $\hat{\beta} \pm t_{n-2,\alpha/2} \cdot \operatorname{SE}(\hat{\beta})$.
+-   **Hypothesis tests:** Summarise how to test linear contrasts of the coefficients using t-statistics.
+
+### Inference about $\sigma$
+
+-   **Distributional result:** With the assumptions above, the scaled residual sum of squares follows a $\chi^2_{n-2}$ distribution.
+-   **Confidence interval:** Show how this leads to bounds for $\sigma$ using chi-squared quantiles.
+-   **Hypothesis test:** Note the form of tests comparing error variance claims.
+-   **Software link:** Point to the `sigma` output and degrees of freedom in R for practical calculation.
+### Inference about $\beta_1$
+
+-   **Hypothesis:** To assess association, test $H_0: \beta_1 = 0$ versus an appropriate alternative.
+-   **Test statistic:** Introduce the t-statistic $t = \frac{\hat \beta_1 - 0}{\operatorname{SE}(\hat \beta_1)}$ and its $t_{n-2}$ reference distribution.
+-   **Software output:** Interpret R's t-statistic, p-value, and confidence interval for $\beta_1$.
+-   **Practical interpretation:** Translate statistical significance into statements about direction and strength of association.
+
+## Interpreting \`summary()\` output
+
+-   **Purpose:** `summary()` wraps the model fit, assumptions, and inference into a single report.
+-   **Coefficients table:** Highlight estimates, standard errors, t-values, and p-values for $\beta_0$ and $\beta_1$.
+-   **Residual standard error:** Connect this to $\hat \sigma$ and the degrees of freedom shown in the output.
+-   **Model fit metrics:** Explain multiple $R^2$ and adjusted $R^2$ as measures of explained variation.
+-   **Overall test:** Describe how the F-statistic in simple regression aligns with the $\beta_1$ t-test.
+-   **Workflow tip:** Encourage students to read the table line by line, linking each quantity back to the modelling steps above.
+
+Interpreting each component in context helps translate the statistical output into practical insight about the data.
+
+## Using the model for prediction
+
+-   **Prerequisite:** Only use the model for prediction after diagnostics suggest the assumptions hold.
+-   **Point prediction:** Use `predict()` to obtain fitted values for new $x$.
+-   **Interval estimates:** Emphasise the difference between confidence intervals for the mean response and prediction intervals for individual outcomes.
+-   **Communicating uncertainty:** Always report the uncertainty associated with predictions.
+-   **Scope of application:** Warn about extrapolating beyond the observed range of $x$ and discuss potential pitfalls.
+
+test. 
+
+
+## possible exercises
+- calculate residuals manually from beta coefficients 

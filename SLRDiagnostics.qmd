@@ -1,0 +1,258 @@
+---
+format: 
+  live-html:
+    toc: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Technical-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: true
+webr:
+  render-df: gt-interactive
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+```{r}
+#| include: false
+library(tidyverse)
+theme_set(theme_bw())
+```
+
+# Fit diagnostics and assumption checks 
+In @sec-chap1, we introduced the simple linear model by making assumptions about how our outcome variable, $Y$, could be expressed in terms of a predictor variable, $X$, and a random error term, $\varepsilon$:
+
+::: Assumption
+## The simple linear model
+$$
+Y_i = \beta_0+\beta_1X+\varepsilon_i, \quad{\varepsilon_i \sim N(0,\sigma^2)}.
+$$
+:::
+
+In particular, we assumed
+
+- A *linear* relationship between the expected value of our outcome and the predictor, $E[Y]=\beta_0+\beta_1 \cdot X$. 
+- Independent and identically distributed random error term, in particular
+
+When these conditions break, estimation and prediction can become unreliable. The slides also note that linear models are often reasonably robust, but if a pattern is obvious you should consider fixes such as transforming the response or predictors, using weighted regression for unequal variances, or moving to a different error distribution (e.g., a GLM) when normality or mean-variance relationships are severe.
+
+
+## Linearity 
+In @sec-Linearity we made a key assumption about the functional form of our model - that the expected value of the outcome, $E[Y]$ was a linear function of the parameters $\beta$ and the predictor $X$:
+$$
+E[Y]= \beta_0 + \beta_1 X
+$$
+-   **Diagnostics** Plot residuals versus each predictor and versus fitted values; an even horizontal band indicates the linear form is adequate.
+-   **Warning signs:** Curved patterns or systematic structure in these plots suggest the linear form is inadequate (a straight-line fit through a curved trend leaves a lack-of-fit pattern).
+-   **Possible remedies:** Add polynomial terms (as in the cholesterol-by-fat quadratic example on slide 8-13), transform variables, or add missing predictors to capture the curvature.
+
+### Independence of error terms
+- In @sec-chap1, we layed out the assumptions we made as we constructed a simple linear model. The first and most foundational assumption we made was that our outcome $Y$ only depended on the predictor $X$ and the random error term. In particular, this implies that the random variables $/varepsilon_i$ - the errors- are independent.
+- lets look at an example of how this might arise:
+
+::: Example
+Researchers are interested in the relationship between IQ measurement and alcohol consumption. To this end they design a study wherein they visit a nearby pub over several days and measure individual's IQ and the amount of alcohol they've consumed. 
+
+```{r}
+#| include: false
+n_part <- 5
+n_obs <- 10
+mu_00 <- 100
+mu_01 <- 5 #between-person effect
+mu_10 <- -2 #withinperson effect
+
+nonindependence_df <- tibble(
+  participant = c("Anne", "John", "Laura", "Mary", "Steve"),
+  intake_mean = seq(from = 1, to = 10, by = 2),
+  u0 = rnorm(n_part, 0, 2)
+) |>
+  mutate(
+    IQ_baseline = mu_00 + mu_01 * intake_mean + u0,
+    β_within = mu_10
+  )|>
+  mutate(obs = list(1:n_obs)) |>
+  unnest(obs) |>
+  mutate(
+    intake = intake_mean + rnorm(n_obs, 0, 2), 
+    dev_intake = intake - intake_mean,
+    IQ = IQ_baseline + β_within * dev_intake + rnorm(n(), 0, 3)
+  )
+```
+Here is a plot of the data they collected:
+
+::: {.panel-tabset}
+## Plot
+```{r}
+#| echo: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake) +
+  geom_point()
+```
+## Code
+
+```{r}
+#| eval: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake) +
+  geom_point()
+```
+:::
+Fitting a simple linear model of IQ~Alcohol intake, would suggest that higher alcohol intake is associated with higher IQ scores. indeed, we can visualise a simple linear fit with the `geom_smooth(method="lm")` function
+
+::: {.panel-tabset}
+## Plot
+```{r}
+#| echo: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake) +
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE)
+```
+## Code
+
+```{r}
+#| eval: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake) +
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE)
+```
+:::
+which shows this positive trend. In some sense this is what the data shows, however it is not the whole story. Consider the following plot, with each observation coloured by participant:
+
+::: {.panel-tabset}
+## Plot
+```{r}
+#| echo: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake, colour = participant) +
+  geom_point()
+```
+## Code
+
+```{r}
+#| eval: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake, colour = participant) +
+  geom_point()
+```
+:::
+
+We can see that multiple observations (points) originate from the same participant - and therefore are likely to associated with one another. Moreover, if we focus on linear trends within each individual, our model(s) tell a different story:
+
+::: {.panel-tabset}
+## Plot
+```{r}
+#| echo: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake, colour = participant) +
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE)
+```
+## Code
+
+```{r}
+#| eval: false
+nonindependence_df |>
+  ggplot() +
+  aes(x = IQ, y = intake, colour = participant) +
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE)
+```
+:::
+:::
+
+### Constant Variance
+-   **What it means:** Also called homoscedasticity, the variability of residuals should stay roughly constant across fitted values.
+-   **Diagnostics (slide 8-17):** Residual-versus-fitted plots should show an even vertical spread without a trend in spread.
+-   **Warning signs:** Funnel or fan shapes (narrow for small $\hat y$ but wide for large $\hat y$) reveal heteroscedasticity.
+-   **Possible remedies:** Transform the response (power transforms shown on slides 8-26 to 8-33), use weighted least squares, or model the variance explicitly if certain groups have larger spread.
+
+
+::: Example
+**Constant variance**
+
+When variability grows with the fitted value, the residuals form a funnel shape. In this simulated data the spread of the errors increases with the predictor, so the residual-versus-fitted plot fans out instead of forming an even band.
+
+```{webr}
+set.seed(2024)
+hetero_example <- tibble(
+  x = seq(0, 10, length.out = 80),
+  y = 2 + 0.5 * x + rnorm(80, 0, 0.4 + 0.25 * x)
+)
+
+hetero_model <- lm(y ~ x, data = hetero_example)
+hetero_diag <- hetero_example |>
+  mutate(
+    fitted = fitted(hetero_model),
+    residuals = resid(hetero_model)
+  )
+
+ggplot(hetero_diag, aes(fitted, residuals)) +
+  geom_hline(yintercept = 0, colour = "grey70") +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, colour = "#542788") +
+  labs(x = "Fitted value", y = "Residual")
+```
+:::
+
+
+### Normality of error
+-   **What it means:** Least squares inference (confidence intervals, hypothesis tests) assumes residuals are approximately normal.
+-   **Diagnostics (slides 8-19 to 8-20):** Use a normal Q-Q plot to compare residual quantiles with the theoretical normal line; formal tests like `shapiro.test()` exist but have low power in larger samples.
+-   **Warning signs:** Systematic bends, S-shapes, or heavy tail departures from the diagonal indicate skewness or heavy tails.
+-   **Possible remedies:** Transform the response, refit with robust methods, or move to a different error distribution if normality is clearly untenable.
+
+
+::: Example
+**Normality**
+
+Heavy-tailed errors lead to extreme residuals that stray from the reference line on a Q-Q plot. The simulated model below uses Student-$t$ noise with only two degrees of freedom, producing thicker tails than the normal distribution.
+
+```{webr}
+set.seed(2024)
+heavy_tail_example <- tibble(
+  hours = runif(100, 0, 8),
+  satisfaction = 4 + 0.8 * hours + rt(100, df = 2)
+)
+
+heavy_tail_model <- lm(satisfaction ~ hours, data = heavy_tail_example)
+heavy_tail_resid <- tibble(residuals = resid(heavy_tail_model))
+
+ggplot(heavy_tail_resid, aes(sample = residuals)) +
+  stat_qq() +
+  stat_qq_line(colour = "#1b9e77") +
+  labs(x = "Theoretical quantiles", y = "Sample quantiles")
+```
+:::
