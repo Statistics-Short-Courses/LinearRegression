@@ -40,14 +40,38 @@ webr:
 ```{r}
 #| include: false
 library(tidyverse)
-set_theme(theme_bw())
+theme_set(theme_bw())
 ```
 
 # Fit diagnostics and assumption checks 
+In @sec-chap1, we introduced the simple linear model by making assumptions about how our outcome variable, $Y$, could be expressed in terms of a predictor variable, $X$, and a random error term, $\varepsilon$:
 
-### Independence of observations
-- In @sec-chap1, we layed out the assumptions we made as we constructed a simple linear model. The first and most foundational assumption we made was that our outcome $Y$ only depended on the predictor $X$ (along with random error). This means that no other variables in our dataset influence $Y$, even through an influence on $X$. Since we are dealing with the simple case of one predictor variable $X$, it may seem that this assumtpion is garaunteed. However, a more subtle dependence may still be present: there may be some relationship between the observations themselves $X_i {{\perp \!\!\! \perp} X_j$ meaning that our observation $Y_i$ is depends on more than just $X_i$. 
+::: Assumption
+## The simple linear model
+$$
+Y_i = \beta_0+\beta_1X+\varepsilon_i, \quad{\varepsilon_i \sim N(0,\sigma^2)}.
+$$
+:::
 
+In particular, we assumed
+
+- A *linear* relationship between the expected value of our outcome and the predictor, $E[Y]=\beta_0+\beta_1 \cdot X$. 
+- Independent and identically distributed random error term, in particular
+
+When these conditions break, estimation and prediction can become unreliable. The slides also note that linear models are often reasonably robust, but if a pattern is obvious you should consider fixes such as transforming the response or predictors, using weighted regression for unequal variances, or moving to a different error distribution (e.g., a GLM) when normality or mean-variance relationships are severe.
+
+
+## Linearity 
+In @sec-Linearity we made a key assumption about the functional form of our model - that the expected value of the outcome, $E[Y]$ was a linear function of the parameters $\beta$ and the predictor $X$:
+$$
+E[Y]= \beta_0 + \beta_1 X
+$$
+-   **Diagnostics** Plot residuals versus each predictor and versus fitted values; an even horizontal band indicates the linear form is adequate.
+-   **Warning signs:** Curved patterns or systematic structure in these plots suggest the linear form is inadequate (a straight-line fit through a curved trend leaves a lack-of-fit pattern).
+-   **Possible remedies:** Add polynomial terms (as in the cholesterol-by-fat quadratic example on slide 8-13), transform variables, or add missing predictors to capture the curvature.
+
+### Independence of error terms
+- In @sec-chap1, we layed out the assumptions we made as we constructed a simple linear model. The first and most foundational assumption we made was that our outcome $Y$ only depended on the predictor $X$ and the random error term. In particular, this implies that the random variables $/varepsilon_i$ - the errors- are independent.
 - lets look at an example of how this might arise:
 
 ::: Example
@@ -169,50 +193,12 @@ nonindependence_df |>
 :::
 :::
 
-### Linearity 
--  in @assumption-linearity
--   **What it means:** The expected response should change linearly with the predictor.
--   **Diagnostics:** Scatterplots of $(x_i, y_i)$ and residual-versus-fitted plots are useful checks.
--   **Warning signs:** Curved patterns or systematic structure in these plots suggest the linear form is inadequate.
--   **Possible remedies:** Try transforming variables, adding polynomial terms, or introducing additional predictors.
-
 ### Constant Variance
 -   **What it means:** Also called homoscedasticity, the variability of residuals should stay roughly constant across fitted values.
--   **Diagnostics:** Residual-versus-fitted plots should show an even vertical spread.
+-   **Diagnostics (slide 8-17):** Residual-versus-fitted plots should show an even vertical spread without a trend in spread.
 -   **Warning signs:** Funnel or fan shapes (narrow for small $\hat y$ but wide for large $\hat y$) reveal heteroscedasticity.
--   **Possible remedies:** Transform the response, use weighted least squares, or model the variance explicitly.
+-   **Possible remedies:** Transform the response (power transforms shown on slides 8-26 to 8-33), use weighted least squares, or model the variance explicitly if certain groups have larger spread.
 
-### Normality of error
--   **What it means:** Least squares inference (confidence intervals, hypothesis tests) assumes residuals are approximately normal.
--   **Diagnostics:** Use a normal Q-Q plot to compare residual quantiles with the theoretical normal line.
--   **Warning signs:** Systematic bends or heavy tail departures from the diagonal indicate skewness or heavy tails.
--   **Possible remedies:** Transform the response, refit with robust methods, or collect more data to stabilise the distribution.
-
-### Examples of assumption violations
--   **Simulated example:** In this case the assumptions holdâ€”as expected because the data were sampled from an actual linear model.
--   **Real-world contrasts:** Add case studies where independence fails (e.g., repeated measures), the relationship is curved, the variance changes, or the residuals are non-normal.
--   **Teaching tip:** For each violation, include visuals showing the problematic residual pattern and a suggested fix.
-
-::: Example
-**Linearity**
-
-If the true relationship between the predictor and response is curved, the fitted straight line misses systematic structure. Here a quadratic mean trend leaves a clear arc in the scatterplot and in the dashed least-squares fit.
-
-```{webr}
-set.seed(2024)
-nonlinear_example <- tibble(
-  dosage = seq(0, 10, length.out = 60),
-  response = 5 + 1.4 * dosage - 0.18 * dosage^2 + rnorm(60, 0, 1.2)
-)
-
-ggplot(nonlinear_example, aes(dosage, response)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE, colour = "#d73027", linetype = "dashed") +
-  geom_smooth(method = "loess", se = FALSE, colour = "#4575b4") +
-  labs(x = "Dosage (mg)", y = "Response score") +
-  theme(legend.position = "none")
-```
-:::
 
 ::: Example
 **Constant variance**
@@ -240,6 +226,14 @@ ggplot(hetero_diag, aes(fitted, residuals)) +
   labs(x = "Fitted value", y = "Residual")
 ```
 :::
+
+
+### Normality of error
+-   **What it means:** Least squares inference (confidence intervals, hypothesis tests) assumes residuals are approximately normal.
+-   **Diagnostics (slides 8-19 to 8-20):** Use a normal Q-Q plot to compare residual quantiles with the theoretical normal line; formal tests like `shapiro.test()` exist but have low power in larger samples.
+-   **Warning signs:** Systematic bends, S-shapes, or heavy tail departures from the diagonal indicate skewness or heavy tails.
+-   **Possible remedies:** Transform the response, refit with robust methods, or move to a different error distribution if normality is clearly untenable.
+
 
 ::: Example
 **Normality**

@@ -40,13 +40,13 @@ webr:
 ```{webr}
 #| include: false
 library(tidyverse)
-set_theme(theme_bw())
+theme_set(theme_bw())
 ```
 
 ```{r}
 #| include: false
 library(tidyverse)
-set_theme(theme_bw())
+theme_set(theme_bw())
 ```
 
 ```{r}
@@ -60,7 +60,7 @@ y <- 0.5 * x - 3 + rnorm(n,0, 2)
 linearData <- data.frame(x,y)
 ojs_define(linearData)
 ```
-# Fitting models to data {.unnumbered}
+# Linear regression: fitting models to data
 in the previous section, you were given a linear model - we knew the values of $\beta_0$, $\beta_1$ and even $\sigma$. However, in most contexts we don't know the true relationship between $X$ and $Y$ in advance. Instead, we are given *data* and try to *infer* the values of $\beta$ and $\sigma$ by analysing the data.
 
 Indeed, at the end of the last session we generated data from a linear model. In preparation for this chapter, we've generated data from a similar such linear model. Here it is:

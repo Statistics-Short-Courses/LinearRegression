@@ -32,15 +32,19 @@ custom-numbered-blocks:
       boxstyle: foldbox.simple
       collapse: true
 ---
+
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
 ```{r}
-#| include: false
 library(ggplot2)
-set_theme(theme_bw())
+theme_set(theme_bw())
 ```
 
+```{webr}
+library(ggplot2)
+theme_set(theme_bw())
+```
 # Linear statistical models {#sec-chap1}
 
 ## Statistical models {#sec-independence}
@@ -74,7 +78,7 @@ $Y$ depends only on a deterministic function of $X$ and a random noise component
 
 -  [ ] Continue
 
-## Linear prediction
+## Linear prediction {#sec-Linearity}
 
 -   We now choose $f(X)$ to be a *linear function*:
 
@@ -495,7 +499,6 @@ viewof offset_z = Inputs.range([-5, 5], {step: 0.1, value: 0, label: "Centre off
 centre = mu_salary + offset_z * sigma_salary
 a = centre - k * sigma_salary
 b = centre + k * sigma_salary
-
 
 // --- Numerical helpers ---
 erf = x => {
