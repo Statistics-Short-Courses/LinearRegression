@@ -1,0 +1,14 @@
+## Andy's notes
+- Too much maths at the start "thown in quickly" introduced terms (function) (betas)
+    - Glossary could be very helpful here (e.g. introduce in intro recommed, keeping open)
+    -excersse 1.2 on using parameter variables needs clarification (e.g. specify that we ant to use the defined variables rather than the raw values)
+    -perhaps reassure that its ok to not completely understand the conceptual stuff at first, and were going to work through an example that should be straightforward. 
+    - R outputting vector for input vector was slightly confusing.
+-example salary should have different E[Y]'s e.g. use 5 years
+
+Example 2:
+- commas in numbers vs separating parameters in normal dist( e.g. N(70,000,4,000^2)) confusing. 
+- Squaring of SD term unclear (probability background) - MAke a glossary term for sd(sigma symbol) which reminds of it's relation to variance. 
+
+-Normal prob calculator (reference to 'k' confusing) - remove?
+
