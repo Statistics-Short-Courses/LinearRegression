@@ -12,3 +12,6 @@ Example 2:
 
 -Normal prob calculator (reference to 'k' confusing) - remove?
 
+- update residual symbols to e (from r)
+
+- finish RSE section
