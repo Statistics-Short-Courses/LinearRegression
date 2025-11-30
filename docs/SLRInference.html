@@ -28008,6 +28008,14 @@ initializeRuntime();
 
 </script>
 <style>
+.Technical-point {
+--color1: #FFF9C4;
+--color2: #FFEB3B;
+}
+.Exercise {
+--color1: #C8E6C9;
+--color2: #4CAF50;
+}
 .Example {
 --color1: #BBDEFB;
 --color2: #2196F3;
@@ -28015,14 +28023,6 @@ initializeRuntime();
 .Assumption {
 --color1: #FFCDD2;
 --color2: #F44336;
-}
-.Exercise {
---color1: #C8E6C9;
---color2: #4CAF50;
-}
-.Technical-point {
---color1: #FFF9C4;
---color2: #FFEB3B;
 }
 </style>
 
@@ -28347,7 +28347,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 <ul>
 <li><p><strong>Connection to simulation:</strong> We have been given data sampled from a linear modelâ€”consider whether the parameter estimates obtained so far represent the underlying model well.</p></li>
 <li><p><strong>Repeat sampling experiment:</strong> Since we can simulate data, take another sample from the same model to explore variability in the estimates.</p></li>
-<li><p><strong>Comparison visuals:</strong> Overlay lines from multiple samples to build intuition for the sampling distribution of <span class="math inline">\(\hat\beta\)</span>.</p></li>
+<li><p><strong>Comparison visuals:</strong> Overlay lines from multiple samples to build intuition for the sampling distribution of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p></li>
 <li><p><strong>Key takeaway:</strong> Even with the same generating process, estimates vary; inference quantifies this uncertainty.</p></li>
 <li><p>since we have the opportunity, lets take another sample from the same model:</p></li>
 </ul>
@@ -28372,7 +28372,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibG1fMiA8LSBsbSh5fngsbGlu
 </script>
 </div>
 </div>
-<p>lets compare out two datasets (remember, these come from the same underlying linear model with <span class="math inline">\(\beta_0=-3\)</span> and <span class="math inline">\(\beta_1=0.5\)</span> and their lines of best fit:</p>
+<p>lets compare out two datasets (remember, these come from the same underlying linear model with <span class="math inline">\(\alpha=-3\)</span> and <span class="math inline">\(\beta=0.5\)</span> and their lines of best fit:</p>
 <div class="cell">
 <div>
 <div id="webr-5" class="exercise-cell">
@@ -28385,14 +28385,14 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZ2dwbG90KCkrXG4gIGdlb21f
 </div>
 <ul>
 <li><p>Repeating this process produces the sampling distribution of our parameters.</p></li>
-<li><p>in the real world we wont have the luxury of generating new samples by running R commands, so we have to make do with the data we have. Thankfully, if our assumptions of the underlying model are true then we can expect the same process of convergence to a stable sampling distribution to hold true and our parameter estimates for beta to have a t-distribution.</p></li>
+<li><p>in the real world we wont have the luxury of generating new samples by running R commands, so we have to make do with the data we have. Thankfully, if our assumptions of the underlying model are true then we can expect the same process of convergence to a stable sampling distribution to hold true and our parameter estimates for <span class="math inline">\(b\)</span> to have a t-distribution.</p></li>
 </ul>
 <section id="inference-about-beta" class="level3">
 <h3 class="anchored" data-anchor-id="inference-about-beta">Inference about <span class="math inline">\(\beta\)</span></h3>
 <ul>
-<li><strong>Objective:</strong> Derive sampling distributions for <span class="math inline">\(\hat{\beta}_0\)</span> and <span class="math inline">\(\hat{\beta}_1\)</span> under the model assumptions.</li>
+<li><strong>Objective:</strong> Derive sampling distributions for <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> under the model assumptions.</li>
 <li><strong>Key results:</strong> Emphasise unbiasedness, variance formulas, and the joint normality of the estimators.</li>
-<li><strong>Confidence intervals:</strong> Outline the structure <span class="math inline">\(\hat{\beta} \pm t_{n-2,\alpha/2} \cdot \operatorname{SE}(\hat{\beta})\)</span>.</li>
+<li><strong>Confidence intervals:</strong> Outline the structure <span class="math inline">\(a \pm t_{n-2,\alpha/2} \cdot \operatorname{SE}(a)\)</span> (and similarly for <span class="math inline">\(b\)</span>).</li>
 <li><strong>Hypothesis tests:</strong> Summarise how to test linear contrasts of the coefficients using t-statistics.</li>
 </ul>
 </section>
@@ -28402,10 +28402,10 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZ2dwbG90KCkrXG4gIGdlb21f
 <li><p><strong>Distributional result:</strong> With the assumptions above, the scaled residual sum of squares follows a <span class="math inline">\(\chi^2_{n-2}\)</span> distribution.</p></li>
 <li><p><strong>Confidence interval:</strong> Show how this leads to bounds for <span class="math inline">\(\sigma\)</span> using chi-squared quantiles.</p></li>
 <li><p><strong>Hypothesis test:</strong> Note the form of tests comparing error variance claims.</p></li>
-<li><p><strong>Software link:</strong> Point to the <code>sigma</code> output and degrees of freedom in R for practical calculation. ### Inference about <span class="math inline">\(\beta_1\)</span></p></li>
-<li><p><strong>Hypothesis:</strong> To assess association, test <span class="math inline">\(H_0: \beta_1 = 0\)</span> versus an appropriate alternative.</p></li>
-<li><p><strong>Test statistic:</strong> Introduce the t-statistic <span class="math inline">\(t = \frac{\hat \beta_1 - 0}{\operatorname{SE}(\hat \beta_1)}\)</span> and its <span class="math inline">\(t_{n-2}\)</span> reference distribution.</p></li>
-<li><p><strong>Software output:</strong> Interpret R’s t-statistic, p-value, and confidence interval for <span class="math inline">\(\beta_1\)</span>.</p></li>
+<li><p><strong>Software link:</strong> Point to the <code>sigma</code> output and degrees of freedom in R for practical calculation. ### Inference about <span class="math inline">\(\beta\)</span></p></li>
+<li><p><strong>Hypothesis:</strong> To assess association, test <span class="math inline">\(H_0: \beta = 0\)</span> versus an appropriate alternative.</p></li>
+<li><p><strong>Test statistic:</strong> Introduce the t-statistic <span class="math inline">\(t = \frac{b - 0}{\operatorname{SE}(b)}\)</span> and its <span class="math inline">\(t_{n-2}\)</span> reference distribution.</p></li>
+<li><p><strong>Software output:</strong> Interpret R’s t-statistic, p-value, and confidence interval for <span class="math inline">\(\beta\)</span>.</p></li>
 <li><p><strong>Practical interpretation:</strong> Translate statistical significance into statements about direction and strength of association.</p></li>
 </ul>
 </section>
@@ -28413,10 +28413,10 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZ2dwbG90KCkrXG4gIGdlb21f
 <h2 data-number="4.1" class="anchored" data-anchor-id="interpreting-summary-output"><span class="header-section-number">4.1</span> Interpreting `summary()` output</h2>
 <ul>
 <li><strong>Purpose:</strong> <code>summary()</code> wraps the model fit, assumptions, and inference into a single report.</li>
-<li><strong>Coefficients table:</strong> Highlight estimates, standard errors, t-values, and p-values for <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</li>
+<li><strong>Coefficients table:</strong> Highlight estimates, standard errors, t-values, and p-values for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>.</li>
 <li><strong>Residual standard error:</strong> Connect this to <span class="math inline">\(\hat \sigma\)</span> and the degrees of freedom shown in the output.</li>
 <li><strong>Model fit metrics:</strong> Explain multiple <span class="math inline">\(R^2\)</span> and adjusted <span class="math inline">\(R^2\)</span> as measures of explained variation.</li>
-<li><strong>Overall test:</strong> Describe how the F-statistic in simple regression aligns with the <span class="math inline">\(\beta_1\)</span> t-test.</li>
+<li><strong>Overall test:</strong> Describe how the F-statistic in simple regression aligns with the <span class="math inline">\(\beta\)</span> t-test.</li>
 <li><strong>Workflow tip:</strong> Encourage students to read the table line by line, linking each quantity back to the modelling steps above.</li>
 </ul>
 <p>Interpreting each component in context helps translate the statistical output into practical insight about the data.</p>

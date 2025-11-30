@@ -1,0 +1,51 @@
+RANK	NAME	AGE	COMPANY	TITLE
+1	Indra Nooyi	52	PepsiCo	CEO/Chairman
+2	Irene Rosenfeld	55	Kraft Foods	CEO/Chairman
+3	Pat Woertz	55	Archer Daniels Midland	CEO/Chairman
+4	Anne Mulcahy	55	Xerox	CEO/Chairman
+5	Angela Braley	47	Wellpoint	CEO/President
+6	Andrea Jung	50	Avon Products	CEO/Chairman
+7	Susan Arnold	54	Procter & Gamble	President
+8	Oprah Winfrey	54	Harpo	Chairman
+9	Brenda Barnes	54	Sara Lee	CEO/Chairman
+10	Ursula Burns	50	Xerox	President
+11	Ann Livermore	50	Hewlett-Packard	EVP
+12	Ann Sweeney	50	Walt Disney	President
+13	Susan Desmond-Hellmann	51	Genentech	President
+14	Ginni Rometty	51	IBM	SVP
+15	Ellen Kullman	52	DuPont	President
+16	Safra Catz	46	Oracle	President
+17	Heidi Miller	55	J.P. Morgan Chase	CEO
+18	Judy McGrath	56	Viacom	CEO/Chairman
+19	Carol Meyrowitz	54	TJX	CEO/President
+20	Ann Moore	58	Time Inc.	CEO/Chairman
+21	Christna Gold	61	Western Union	CEO/President
+22	Amy Brinkley	52	Bank of America	Executive
+23	Susan Ivey	49	Reynolds American	CEO/President
+24	Colleen Goggins	54	Johnson & Johnson	Chairman
+25	Susan Chambers	51	Wal-Mart	EVP
+26	Charlene Begley	41	General Electric	CEO/President
+27	Barbara Desoer	55	Bank of America	President
+28	Abigail Johnson	46	Fidelity	President
+29	Pamela Nicholson	48	Enterprise	COO/President
+30	Liz Smith	45	Avon Products	President
+31	Joanne Maguire	54	Lockheed Martin	EVP
+32	Carrie Cox	51	Schering-Plough	EVP/President
+33	Cece Sutton	28	Wachovia	EVP
+34	Cheryl Sandberg	39	Facebook	COO
+35	Meredith Whitney	38	Oppenheimer & Co.	Director
+36	Jan Fields	53	McDonalds	EVP/COO
+37	Melanie Healey	47	Procter & Gamble	President
+38	Lisa Weber	45	MetLife	President
+39	Susan Decker	45	Yahoo	President
+40	Claire Babrowski	51	Toys "R" Us	EVP/COO
+41	Kathleen Murphy	45	US Wealth Management	CEO
+42	Deirdre Connelly	48	Eli Lilly	President
+43	Nancy Peretsman	54	Allen & Co.	Director
+44	Sherilyn McCoy	49	Johnson & Johnson	Chairman
+45	Gail Boudreaux	48	United Health Group	EVP
+46	Lorrie Norrington	48	eBay	CEO
+47	Terri Dial	58	Citigroup	CEO
+48	Lynn Elsenhans	52	Sunoco	CEO/President
+49	Cathie Black	64	Hearst Magazines	President
+50	Marissa Mayer	33	Google	VP

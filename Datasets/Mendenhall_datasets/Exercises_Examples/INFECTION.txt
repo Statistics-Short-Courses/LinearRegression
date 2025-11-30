@@ -1,0 +1,25 @@
+INFECTION	RATE	EST
+Polio	0	300.0
+Diphtheria	1	1000.0
+Trachoma	2	691.0
+Rabbit Fever	2	200.0
+Cholera	3	17.5
+Leprosy	5	0.8
+Tetanus	9	1000.0
+Hemorrhagic Fever	10	150.0
+Trichinosis	22	326.5
+Undulant Fever	23	146.5
+Well's Disease	39	370.0
+Gas Gangrene	98	400.0
+Parrot Fever	119	225.0
+Typhoid	152	200.0
+Q Fever	179	200.0
+Malaria	936	400.0
+Syphilis	1514	1500.0
+Dysentery	1627	1000.0
+Gonorrhea	2926	6000.0
+Meningitis	4019	5000.0
+Tuberculosis	12619	1500.0
+Hepatitis	14889	10000.0
+Gastroenteritis	203864	37000.0
+Botulism	15	37500.0

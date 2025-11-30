@@ -49,7 +49,7 @@ set_theme(theme_bw())
 
 -   **Connection to simulation:** We have been given data sampled from a linear modelâ€”consider whether the parameter estimates obtained so far represent the underlying model well.
 -   **Repeat sampling experiment:** Since we can simulate data, take another sample from the same model to explore variability in the estimates.
--   **Comparison visuals:** Overlay lines from multiple samples to build intuition for the sampling distribution of $\hat\beta$.
+-   **Comparison visuals:** Overlay lines from multiple samples to build intuition for the sampling distribution of $a$ and $b$.
 -   **Key takeaway:** Even with the same generating process, estimates vary; inference quantifies this uncertainty.
 
 - since we have the opportunity, lets take another sample from the same model:
@@ -67,20 +67,20 @@ And fit a linear regression via least squares
 lm_2 <- lm(y~x,linearData_new)
 lm
 ```
-lets compare out two datasets (remember, these come from the same underlying linear model with $\beta_0=-3$ and $\beta_1=0.5$ and their lines of best fit:
+lets compare out two datasets (remember, these come from the same underlying linear model with $\alpha=-3$ and $\beta=0.5$ and their lines of best fit:
 ```{webr}
 ggplot()+
   geom_point(data=linearData, aes())
 ```
 - Repeating this process produces the sampling distribution of our parameters.
 
-- in the real world we wont have the luxury of generating new samples by running R commands, so we have to make do with the data we have. Thankfully, if our assumptions of the underlying model are true then we can expect the same process of convergence to a stable sampling distribution to hold true and our parameter estimates for beta to have a t-distribution.
+- in the real world we wont have the luxury of generating new samples by running R commands, so we have to make do with the data we have. Thankfully, if our assumptions of the underlying model are true then we can expect the same process of convergence to a stable sampling distribution to hold true and our parameter estimates for $b$ to have a t-distribution.
 
 ### Inference about $\beta$
 
--   **Objective:** Derive sampling distributions for $\hat{\beta}_0$ and $\hat{\beta}_1$ under the model assumptions.
+-   **Objective:** Derive sampling distributions for $a$ and $b$ under the model assumptions.
 -   **Key results:** Emphasise unbiasedness, variance formulas, and the joint normality of the estimators.
--   **Confidence intervals:** Outline the structure $\hat{\beta} \pm t_{n-2,\alpha/2} \cdot \operatorname{SE}(\hat{\beta})$.
+-   **Confidence intervals:** Outline the structure $a \pm t_{n-2,\alpha/2} \cdot \operatorname{SE}(a)$ (and similarly for $b$).
 -   **Hypothesis tests:** Summarise how to test linear contrasts of the coefficients using t-statistics.
 
 ### Inference about $\sigma$
@@ -89,20 +89,20 @@ ggplot()+
 -   **Confidence interval:** Show how this leads to bounds for $\sigma$ using chi-squared quantiles.
 -   **Hypothesis test:** Note the form of tests comparing error variance claims.
 -   **Software link:** Point to the `sigma` output and degrees of freedom in R for practical calculation.
-### Inference about $\beta_1$
+### Inference about $\beta$
 
--   **Hypothesis:** To assess association, test $H_0: \beta_1 = 0$ versus an appropriate alternative.
--   **Test statistic:** Introduce the t-statistic $t = \frac{\hat \beta_1 - 0}{\operatorname{SE}(\hat \beta_1)}$ and its $t_{n-2}$ reference distribution.
--   **Software output:** Interpret R's t-statistic, p-value, and confidence interval for $\beta_1$.
+-   **Hypothesis:** To assess association, test $H_0: \beta = 0$ versus an appropriate alternative.
+-   **Test statistic:** Introduce the t-statistic $t = \frac{b - 0}{\operatorname{SE}(b)}$ and its $t_{n-2}$ reference distribution.
+-   **Software output:** Interpret R's t-statistic, p-value, and confidence interval for $\beta$.
 -   **Practical interpretation:** Translate statistical significance into statements about direction and strength of association.
 
 ## Interpreting \`summary()\` output
 
 -   **Purpose:** `summary()` wraps the model fit, assumptions, and inference into a single report.
--   **Coefficients table:** Highlight estimates, standard errors, t-values, and p-values for $\beta_0$ and $\beta_1$.
+-   **Coefficients table:** Highlight estimates, standard errors, t-values, and p-values for $\alpha$ and $\beta$.
 -   **Residual standard error:** Connect this to $\hat \sigma$ and the degrees of freedom shown in the output.
 -   **Model fit metrics:** Explain multiple $R^2$ and adjusted $R^2$ as measures of explained variation.
--   **Overall test:** Describe how the F-statistic in simple regression aligns with the $\beta_1$ t-test.
+-   **Overall test:** Describe how the F-statistic in simple regression aligns with the $\beta$ t-test.
 -   **Workflow tip:** Encourage students to read the table line by line, linking each quantity back to the modelling steps above.
 
 Interpreting each component in context helps translate the statistical output into practical insight about the data.
