@@ -13,6 +13,7 @@ book:
     - SLRFitting.qmd
     - SLRDiagnostics.qmd
     - SLRInference.qmd
+    - SLRCase.qmd
   - part: MultipleRegression.qmd
     chapters:
       - MLRNewFeatures.qmd
