@@ -9,7 +9,7 @@ book:
   - index.qmd
   - part: SimpleLinearRegression.qmd
     chapters:
-    - LinearModels.qmd
+    - SLModels.qmd
     - SLRFitting.qmd
     - SLRDiagnostics.qmd
     - SLRInference.qmd

@@ -45,39 +45,91 @@ set_theme(theme_bw())
 
 # Inference about population parameters
 
-So far, we have been given sample of data that we assumed came from a linear model, and attemped to *estimate* that model based on the data. However, since we only have a *sample* (and not an not the entire *population*), there is \*uncertainty\* in our estimates. How confident are we that our estimates, $a$, $b$ are good representations of the 'true' population parameters $\alpha$, $\beta$? Assessing this uncertainty is the subject of *statistical inference,* and will us to draw conclusions about the usefulness of our model and the reliability of the predictions it makes[^1].
+So far, we have been given sample of data that we assumed came from a linear model, and attemped to *estimate* that model based on the data. However, since we only have a *sample* (and not an not the entire *population*), there is *uncertainty* in our estimates. How confident are we that our estimates, $a$, $b$ are good representations of the 'true' population parameters $\alpha$, $\beta$? Assessing this uncertainty is the subject of *statistical inference,* and will us to draw conclusions about the usefulness of our model and the reliability of the predictions it makes[^1].
 
 [^1]: For a more general introduction to statistical inference, you may refer to the 'Inferential Statistics with R' short course. If any of the assumed content here (e.g. Normal distribution, t-tests) feels unfamiliar, please revise that course before continuing.
 
-We have been given data sampled from a linear model consider whether the parameter estimates obtained so far represent the underlying model well. - **Repeat sampling experiment:** Since we can simulate data, take another sample from the same model to explore variability in the estimates. - **Comparison visuals:** Overlay lines from multiple samples to build intuition for the sampling distribution of $a$ and $b$. - **Key takeaway:** Even with the same generating process, estimates vary; inference quantifies this uncertainty.
+## Inference about the slope
 
-since we have the opportunity, lets take another sample from the same model:
+In @sec-dataGeneration we generated data from a linear model
+$$
+y = \alpha + \beta x + \varepsilon,\qquad \varepsilon \sim \mathsf{Normal}(0, \sigma^2),
+$$
+with $\alpha = -3$, $\beta = 0.5$, $\sigma = 2$, and we plan to collect $n = 20$ observations. The following code defines those "true" values and a helper that can simulate a new sample whenever we need it.
 
 ```{r}
+set.seed(2024)
+alpha <- -3
+beta <- 0.5
+sigma <- 2
 n <- 20
-x <- rnorm(n,0,4)
-error <-  rnorm(n,0, 2)
-y <- 0.5 * x - 3 + error
-linearData_new <- data.frame(x,y)
+
+simulate_sample <- function() {
+  tibble(
+    x = rnorm(n, mean = 0, sd = 4),
+    y = alpha + beta * x + rnorm(n, mean = 0, sd = sigma)
+  )
+}
 ```
 
-And fit a linear regression via least squares
+With a single sample we obtain one set of parameter estimates. The plot below compares the fitted line from that sample to the (unknown) population line.
 
 ```{r}
-lm_2 <- lm(y~x,linearData_new)
-lm
+sample_1 <- simulate_sample()
+fit_1 <- lm(y ~ x, data = sample_1)
+
+sample_1 %>% 
+  ggplot(aes(x, y)) +
+  geom_point() +
+  geom_abline(intercept = coef(fit_1)[1], slope = coef(fit_1)[2], colour = "#1b9e77", linewidth = 1) +
+  geom_abline(intercept = alpha, slope = beta, colour = "#d95f02", linetype = "dashed") +
+  labs(
+    title = "Sample 1: fitted line vs. population line",
+    x = "x",
+    y = "y"
+  )
 ```
 
-lets compare out two datasets (remember, these come from the same underlying linear model with $\alpha=-3$ and $\beta=0.5$ and their lines of best fit:
+Generating a *second* sample from exactly the same population already gives a noticeably different least squares line. Tabulating the estimates keeps us focused on how $a$ and $b$ change from sample to sample.
 
 ```{r}
-ggplot()+
-  geom_point(data=linearData, aes())
+sample_2 <- simulate_sample()
+fit_2 <- lm(y ~ x, data = sample_2)
+
+bind_rows(
+  tibble(sample = "Sample 1", intercept = coef(fit_1)[1], slope = coef(fit_1)[2]),
+  tibble(sample = "Sample 2", intercept = coef(fit_2)[1], slope = coef(fit_2)[2])
+)
+```
+
+If we continue drawing samples we eventually build the *sampling distribution* of our estimators. Running the experiment 50 times produces the following empirical distribution for the slope $b$.
+
+```{r}
+set.seed(512)
+n_sims <- 50
+sampling_results <- map_dfr(
+  1:n_sims,
+  function(sim_id) {
+    fit <- lm(y ~ x, data = simulate_sample())
+    tibble(sim = sim_id, intercept = coef(fit)[1], slope = coef(fit)[2])
+  }
+)
+
+sampling_results %>% 
+  ggplot(aes(x = slope)) +
+  geom_histogram(binwidth = 0.05, fill = "#377eb8", colour = "white") +
+  geom_vline(xintercept = beta, linetype = "dashed", colour = "#d95f02") +
+  labs(
+    title = "Slope estimates from 50 simulated datasets",
+    subtitle = "Dashed line marks the true population slope (β = 0.5)",
+    x = "Estimated slope (b)",
+    y = "Count"
+  )
 ```
 
 -   Repeating this process produces the sampling distribution of our parameters.
 
--   in the real world we wont have the luxury of generating new samples by running R commands, so we have to make do with the data we have. Thankfully, if our assumptions of the underlying model are true then we can expect the same process of convergence to a stable sampling distribution to hold true and our parameter estimates for $b$ to have a t-distribution.
+-   In the real world we will not have the luxury of generating new samples by running R commands, so we have to make do with the data we have. Thankfully, if our assumptions of the underlying model are true then we can expect the same process of convergence to a stable sampling distribution to hold true and our parameter estimates for $b$ to follow a t-distribution.
 
 ### Inference about $\beta$
 
