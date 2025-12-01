@@ -2,6 +2,8 @@
 format: 
   live-html:
     toc: true
+resources:
+  - Data
 
 execute:
   echo: true
@@ -34,13 +36,26 @@ custom-numbered-blocks:
       collapse: true
 webr:
   render-df: gt-interactive
+  packages: 
+    - dplyr
+    - readr
+    - ggplot2
+  cell-options:
+    echo: true
+    warning: false
+    message: false
 ---
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
+
 ```{r}
 #| include: false
 library(tidyverse)
+```
+
+```{webr}
+#| include: false
 theme_set(theme_bw())
 ```
 
@@ -59,15 +74,25 @@ When performing simple linear regression, the assumption we make is that our dat
 In particular, we assume
 
 - A *linear* relationship between the expected value of our outcome and the predictor, $E[Y]=\alpha+\beta \cdot X$. 
-- Independent and identically distributed random error terms that
+- *Independent* and identically distributed random error terms that
   - Have a mean $\mu=0$, and a constant variance $Var(\varepsilon)=\sigma^2$
   - Follow a normal distribution: $N(0,\sigma^2)$
 
 If any of these conditions does not hold, the simple linear model may not be an appropriate model for our data and we may need to re-evaluate our modelling choices. We can use our fitted model -in particular, it's residuals- to 'check' the appropriateness of the simple linear model for our data.
 
 -  [ ] Continue
+
 ## Using residuals to diagnose fit and checks
+While we might be able to assess our model fit base just on a scatter plot of $X$ vs $Y$ and the overlayed linear fit (as we have been doing so far), we can use the residuals we have calculated to great effect for diagnosing how and where our model does not fit the data. Remember that a residual $e_i = Y_i - \hat{Y}_i$ is literally the difference between our model (predictions) and the actual value of our outcome variable, so by looking at residuals we get a  much clearer picture of where our fit might be failing. 
+
 ### Using `plot(lm)` for residual plots
+
+Because residual plots are so useful for checking linear models, the default behaviour for base R's `plot()` function when given an `lm` object is to output a selection of 'residual plots' for diagnosing model fit. 
+
+```{webr}
+plot
+```
+
 
 ## Linearity 
 In @sec-Linearity we made a key assumption about the functional form of our model - that the expected value of the outcome, $E[Y]$, was a linear function of the parameters $\alpha$ and $\beta$ and the predictor $X$:
@@ -88,20 +113,22 @@ If we see a trend that does not follow a straight line, we may suspect a linear 
 #### Non-linearity in cholesterol vs fat intake
 The `Olympic.txt` dataset reports cholesterol levels (milgrams per liter) and fat intake (milligrams) of 20 olympic athletes:
 
-```{r}
-library(readr)
-olympic <- read_table("Datasets/Mendenhall_datasets/Exercises_Examples/OLYMPIC.txt")[1,2]
+```{webr}
+#| edit: false
+olympic <- read_table("Data/OLYMPIC.txt")[1:2]
 ```
 
 :::: {.panel-tabset}
 ##### Data
-```{r}
+```{webr}
+#| edit: false
 olympic
 ```
 
 ##### Scatter plot
 
 ```{webr}
+#| edit: false
 ggplot(olympic)+
   aes(FAT, CHOLESTEROL)+
   geom_point()
@@ -109,15 +136,16 @@ ggplot(olympic)+
 ::::
 
 Fitting a simple linear regression to this curved data leaves the obvious non-linear trend remaining in the residuals:
-
-:::: {.panel-tabset}
-
 ```{webr}
+#| edit: false
 olympic_lm <- lm(CHOLESTEROL~FAT, data=olympic)
 ```
+
+:::: {.panel-tabset}
 ##### linear fit
 
 ```{webr}
+#| edit: false
 ggplot(olympic)+
   aes(x=FAT, y=CHOLESTEROL)+
   geom_point()+
@@ -126,6 +154,7 @@ ggplot(olympic)+
 ##### residuals
 
 ```{webr}
+#| edit: false
 ggplot(olympic_lm)+
   aes(x=.fitted, y=.resid)+
   geom_point()

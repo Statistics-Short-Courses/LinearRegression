@@ -60,7 +60,7 @@ y <- 0.5 * x - 3 + rnorm(n,0, 2)
 linearData <- data.frame(x,y)
 ojs_define(linearData)
 ```
-# Linear regression: fitting models to data {#sec-LinearFit}
+# Fitting models to data {#sec-LinearFit}
 in the previous section, you were given a linear model - we knew the values of $\alpha$, $\beta$ and even $\sigma$. However, in most contexts we don't know the true relationship between $X$ and $Y$ in advance. Instead, we are given *data* and try to *infer* the values of $\alpha$, $\beta$, and $\sigma$ by analysing the data.
 
 Indeed, at the end of the last session we generated data from a linear model. In preparation for this chapter, we've generated data from a similar such linear model. Here it is:

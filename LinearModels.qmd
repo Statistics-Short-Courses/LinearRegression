@@ -37,11 +37,13 @@ custom-numbered-blocks:
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
 ```{r}
+#| include: false
 library(ggplot2)
 theme_set(theme_bw())
 ```
 
 ```{webr}
+#| include: false
 library(ggplot2)
 theme_set(theme_bw())
 ```
@@ -49,9 +51,9 @@ theme_set(theme_bw())
 
 ## Statistical models {#sec-independence}
 
--   A primary goal of statistical modelling is to characterise the relationship between variables, for now lets call these variables $X$ and $Y$.
+-   A primary goal of statistical modelling is to characterise the relationship between *variables*. We can genericaly refer to these variables $X$ and $Y$, but their specific meaning will depend on your reserch question.  
 
--   In this context, we designate one variable, $Y$ as the *outcome* or *dependent variable*, and attempt to construct a *model* describing how it depends on the other variable(s), $X$, which we call *predictors* or *independent variables*.
+-   In the regression context, we designate one variable, $Y$ as the *outcome* or *dependent variable*, and attempt to construct a *model* describing how it depends on the other variable(s), $X$, which we call *predictors* or *independent variables*.
 
 -   We can express the idea that $Y$ depends on $X$ mathematically as
 $$
@@ -99,13 +101,11 @@ $$ {#eq-deterministic-linear-model}
 //| echo: false
 viewof b1 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β)"})
 viewof b0 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
-tex.block`E[Y] = ${b0} + ${b1}X`
 ```
 
 ```{ojs}
 //| panel: fill
 //| echo: false
-//| fig-cap: "Plot of the linear function E[Y] = α + βX"
 xRange = [-10,10]
 lineData = xRange.map(x => ({x, y: (b1 * x) + b0}))
 Plot.plot({
@@ -114,11 +114,12 @@ Plot.plot({
   marks: [
     Plot.line(lineData, { x: "x", y: "y" })]
 })
+tex.block`E[Y] = ${b0} + ${b1}X`
 ```
 
--   Here, $\alpha$ represents the expected value of $Y$ ($E[Y]$) when $X=0$, and $\beta$ represents the change in $E[Y]$ for a one-unit increase in $X$.
+-   Here, $\alpha$ represents the expected value of $Y$ ($E[Y]$) when $X=0$ - termed the *intercept* -, and $\beta$ represents the change in $E[Y]$ for a one-unit increase in $X$ - the *slope*. We aslo call $beta$ the *coefficient* of the predictor variable $X$.
 
-::: Assumption {#assumption-linearity}
+::: Assumption
 Y and X have a linear relationship
 :::
 
@@ -210,7 +211,7 @@ gradethis::grade_this_code()
 
 #### Linear prediction
 
-Great, so our linear predictor of the expected salary looks something like: 
+Great, so our linear predictor of the expected salary at company 2 looks something like: 
 $$
 E[Y]= \$70,000 + \$3,000\cdot X
 $$

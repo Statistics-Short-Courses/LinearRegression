@@ -28012,13 +28012,13 @@ initializeRuntime();
 --color1: #FFF9C4;
 --color2: #FFEB3B;
 }
-.Exercise {
---color1: #C8E6C9;
---color2: #4CAF50;
-}
 .Example {
 --color1: #BBDEFB;
 --color2: #2196F3;
+}
+.Exercise {
+--color1: #C8E6C9;
+--color2: #4CAF50;
 }
 .Assumption {
 --color1: #FFCDD2;
@@ -28187,7 +28187,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./SimpleLinearRegression.html">SimpleLinearRegression.html</a></li><li class="breadcrumb-item"><a href="./SLRInference.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./SimpleLinearRegression.html">Simple linear regression</a></li><li class="breadcrumb-item"><a href="./SLRInference.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -28221,7 +28221,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./SimpleLinearRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SimpleLinearRegression.html</span></a>
+ <span class="menu-text">Simple linear regression</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -28236,7 +28236,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./SLRFitting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear regression: fitting models to data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fitting models to data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -28251,12 +28251,18 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./SLRCase.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Case Study: Naplan Reading scores</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./MultipleRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">MultipleRegression.html</span></a>
+ <span class="menu-text">Multiple Linear Regression</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -28265,19 +28271,19 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./MLRNewFeatures.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./MLRDerivedFeatures.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./VariableScreening.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Screening</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Variable Screening</span></span></a>
   </div>
 </li>
       </ul>
@@ -28285,13 +28291,13 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./RegressionCaseStudy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression case study</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./glossary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
   </div>
 </li>
     </ul>
@@ -28305,7 +28311,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./SimpleLinearRegression.html">SimpleLinearRegression.html</a></li><li class="breadcrumb-item"><a href="./SLRInference.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./SimpleLinearRegression.html">Simple linear regression</a></li><li class="breadcrumb-item"><a href="./SLRInference.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></h1>
 </div>
