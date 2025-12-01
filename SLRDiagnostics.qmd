@@ -87,12 +87,9 @@ While we might be able to assess our model fit base just on a scatter plot of $X
 
 ### Using `plot(lm)` for residual plots
 
-Because residual plots are so useful for checking linear models, the default behaviour for base R's `plot()` function when given an `lm` object is to output a selection of 'residual plots' for diagnosing model fit. 
+Because residual plots are so useful for checking linear models, the default behaviour for base R's `plot()` function when given an `lm` object is to output a selection of 'residual plots' for diagnosing model fit. We will use each of these plots in turn for asessing our model fit and checking that our model assumptions hold. 
 
-```{webr}
-plot
-```
-
+-  [ ] Continue
 
 ## Linearity 
 In @sec-Linearity we made a key assumption about the functional form of our model - that the expected value of the outcome, $E[Y]$, was a linear function of the parameters $\alpha$ and $\beta$ and the predictor $X$:
@@ -105,9 +102,8 @@ $$
 :::
 
 In other words, we expect the scatter plot of $X$ vs $Y$ to follow a straight line like we have saw in @sec-sec-LinearFit. 
-
 ### Diagnostics
-If we see a trend that does not follow a straight line, we may suspect a linear model for these two variables is not appropriate. Lets look at an example:
+Because our linear fit can only account for straight-line relationships, any non-linearity  in the relationship will still be 'left-over' in the model residuals. We can look for such non linearity in the 'residuals vs fitted' plot:
 
 ::: Example
 #### Non-linearity in cholesterol vs fat intake
@@ -142,7 +138,7 @@ olympic_lm <- lm(CHOLESTEROL~FAT, data=olympic)
 ```
 
 :::: {.panel-tabset}
-##### linear fit
+##### Linear fit
 
 ```{webr}
 #| edit: false
@@ -151,29 +147,24 @@ ggplot(olympic)+
   geom_point()+
   geom_abline(aes(intercept= coef(olympic_lm)[[1]], slope=coef(olympic_lm)[[2]]))
 ```
-##### residuals
+##### Residuals vs fitted
 
 ```{webr}
 #| edit: false
-ggplot(olympic_lm)+
-  aes(x=.fitted, y=.resid)+
-  geom_point()
+plot(olympic_lm, which=1)
+```
+
+##### Residuals vs FAT
+
+```{webr}
+#| edit: false
+plot(olympic_lm$residuals~olympic$FAT)
+abline(h=0, col="darkblue")
 ```
 ::::
 :::
 
-### Diagnostics
-Plot residuals versus each predictor and versus fitted values; an even horizontal band indicates the linear form is adequate.
-
-### Warning signs
-Curved patterns or systematic structure in these plots suggest the linear form is inadequate (a straight-line fit through a curved trend leaves a lack-of-fit pattern).
-
-### Possible remedies
-Add polynomial terms, transform variables, or add missing predictors to capture the curvature.
-
 ## Independence of error terms
-- In @sec-chap1, we laid out the assumptions we made as we constructed a simple linear model. The first and most foundational assumption we made was that our outcome $Y$ only depended on the predictor $X$ and the random error term. In particular, this implies that the random variables $\varepsilon_i$ (the errors) are independent.
-- Let's look at an example of how this might arise:
 
 ::: Example
 Researchers are interested in the relationship between IQ measurement and alcohol consumption. To this end they design a study wherein they visit a nearby pub over several days and measure individuals' IQ and the amount of alcohol they've consumed. 
@@ -298,14 +289,14 @@ nonindependence_df |>
 ### What it means
 Also called homoscedasticity, the variability of residuals should stay roughly constant across fitted values.
 
-### Diagnostics (slide 8-17)
-Residual-versus-fitted plots should show an even vertical spread without a trend in spread.
+### Diagnostics
+Residual-versus-fitted plots should show an even vertical spread without a trend in spread. We can also look at the 
 
 ### Warning signs
 Funnel or fan shapes (narrow for small $\hat y$ but wide for large $\hat y$) reveal heteroscedasticity.
 
 ### Possible remedies
-Transform the response (power transforms shown on slides 8-26 to 8-33), use weighted least squares, or model the variance explicitly if certain groups have larger spread.
+Transform the response, use weighted least squares, or model the variance explicitly if certain groups have larger spread.
 
 
 ::: Example
@@ -313,7 +304,7 @@ Transform the response (power transforms shown on slides 8-26 to 8-33), use weig
 
 When variability grows with the fitted value, the residuals form a funnel shape. In this simulated data the spread of the errors increases with the predictor, so the residual-versus-fitted plot fans out instead of forming an even band.
 
-```{webr}
+```{r}
 set.seed(2024)
 hetero_example <- tibble(
   x = seq(0, 10, length.out = 80),
