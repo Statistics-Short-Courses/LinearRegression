@@ -409,12 +409,14 @@ grade_this_code()
 
 ### Residual Standard Error
 
+
 Dividing the residual sum of squares by $n-2$ (one degree of freedom lost per fitted coefficient) gives the mean squared error, and taking the square root yields the residual standard deviation (aka. the {{< glossary Residual-Standard-Error >}})
 $$
-\hat \sigma = \sqrt{\frac{1}{n-2}\sum_{i=1}^{n} e_i^2}.
+s^2 = \frac{1}{n-2}\sum_{i=1}^{n} e_i^2= \frac{SSE}{n-2}, \quad s=\sqrt{s^2}.
 $$
 Interpreting $\hat \sigma$ is often easier on the original $y$ scale: a typical observation falls about $\hat \sigma$ units away from the fitted line.
 
+$s^2$ and $s$ are our estimators for $\sigma^2$ and $\sigma$, respectively. 
 ::: Exercise
 #### Calculate the Residual Standard Error
 using your `e` object defined in the previous exercise, calculate the residual standard error of the least squares model (hint - there are 20 observations in the linearData dataset)
