@@ -9,3 +9,23 @@ execute:
   message: false
 ---
 # Multiple Linear Regression
+
+In most practical applications it is rare that a simple linear regression is sufficient to answer all our  questions adequately. Often our dataset will have more than one predictor variable that we can use to more accurately model the response variable.
+
+Therefore, if you have encountered a regression analysis before, it was likely a multiple linear regression. Multiple linear regression allows for more complex models than simple linear regression, but extends simple linear regression in a way such that what we have learned so far is applicable without much qualification.
+
+In short, where in simple linear regression we had a single predictor, $X$, multiple linear regression allows for multiple predictors, and we label them $X_1$ to $X_i$[^1].
+
+$$
+y=\alpha + \beta_1X_1+\beta_2X_2+ \cdots +\beta_iX_i+ \varepsilon
+$$
+where 
+- $Y$ is the dependent variable
+- $E(y) = \alpha + \beta_1 X_1 + \beta_2X_2+ \cdots +\beta_iX_i$ is the deterministic portion of the model,
+- $\varepsilon \sim N(0,\sigma^2)$
+
+
+The most straightforward case for a multiple regression is when we have additional predictors in our data set that may be relevant to our research question, or for the modelling of Y using our other predictors more generally. 
+
+
+[^1]: You might encounter notation such as $Y=\beta X$ to represent multiple regression. Note that in this case, the X here is really a matrix with columns corresponding to X_1 - X_i

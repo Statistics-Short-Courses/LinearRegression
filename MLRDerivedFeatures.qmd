@@ -21,7 +21,7 @@ engine: knitr
 
 ### Potential exercises
 
-- Ask learners to fit linear, quadratic, and cubic models and compare adjusted $R^2$ values.
+- fit linear, quadratic, and cubic models and compare adjusted $R^2$ values.
 - Provide predicted curves and have learners match them to the appropriate polynomial degree.
 
 ## Interactions
@@ -40,5 +40,5 @@ engine: knitr
 
 ### Potential exercises
 
-- Have learners calculate predicted outcomes at combinations of predictor values to interpret interaction effects.
-- Ask learners to describe how an interaction would appear in a contour or surface plot.
+- calculate predicted outcomes at combinations of predictor values to interpret interaction effects.
+- choose between plots of an how an interaction would appear.

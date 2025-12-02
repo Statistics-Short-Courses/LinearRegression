@@ -1,30 +1,83 @@
 ---
-format: live-html
+format: 
+  live-html:
+    toc: true
+
 engine: knitr
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
+embed-resources: true
 ---
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-# Expanding data by adding predictor variables
+# Adding new variables
 
-## Session overview
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
 
-- Revisit the assumptions that underlie multiple linear regression and how they extend the simple linear case.
-- Motivate the need for multiple predictors with short stories from real-world analyses (e.g., predicting house prices or patient outcomes).
-- Highlight how model selection, diagnostics, and interpretation change as models become more complex.
-- Encourage learners to connect ideas across chapters by comparing model summaries, visual diagnostics, and inferential statements.
+library(plotly)
+library(dplyr)
 
-### Potential exercises
+# Example data (replace with your own)
+set.seed(1)
+n  <- 50
+dat <- data.frame(
+  x1 = runif(n, 0, 10),
+  x2 = runif(n, 0, 10)
+)
+dat$y <- 3 + 2*dat$x1 - 1.5*dat$x2 + rnorm(n, 0, 3)
 
-- Ask learners to brainstorm scenarios where a single predictor is insufficient and list potential additional variables.
-- Provide a model summary output and have learners identify which regression assumptions they would check first.
+# Fit least squares plane
+fit <- lm(y ~ x1 + x2, data = dat)
 
+# Create grid for the plane
+x1_seq <- seq(min(dat$x1), max(dat$x1), length.out = 30)
+x2_seq <- seq(min(dat$x2), max(dat$x2), length.out = 30)
+grid   <- expand.grid(x1 = x1_seq, x2 = x2_seq)
+grid$yhat <- predict(fit, newdata = grid)
+
+z_mat <- matrix(grid$yhat, nrow = length(x1_seq), ncol = length(x2_seq))
+
+# Plotly 3D scatter + plane
+fig <- plot_ly() |>
+  add_markers(
+    data = dat,
+    x = ~x1, y = ~x2, z = ~y,
+    type = "scatter3d",
+    mode = "markers",
+    name = "Data"
+  ) |>
+  add_surface(
+    x = x1_seq,
+    y = x2_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "x1"),
+      yaxis = list(title = "x2"),
+      zaxis = list(title = "y")
+    )
+  )
+
+fig
+```
 ## Quantitative predictors
 
 ### Key topics to emphasise
 
 - Clarify the meaning of partial regression coefficients as “holding other variables constant.”
 - Discuss the role of centred and standardised predictors for interpretability and numerical stability.
-- Use added-variable plots or component-plus-residual plots to visualise the unique contribution of each predictor.
+
 
 ### Potential examples
 
@@ -33,8 +86,8 @@ engine: knitr
 
 ### Potential exercises
 
-- Provide learners with a dataset (such as `mtcars`) and have them interpret the coefficient of weight before and after centring.
-- Ask learners to build a scatterplot matrix to hypothesise relationships among continuous predictors before modelling.
+- interpret the coefficient of weight before and after centring.
+- build a scatterplot matrix to hypothesise relationships among continuous predictors before modelling.
 
 ### Multi-collinearity
 
@@ -69,5 +122,5 @@ engine: knitr
 
 ### Potential exercises
 
-- Ask learners to encode a three-level categorical variable manually and verify with software output.
+- encode a three-level categorical variable manually and verify with software output.
 - Provide regression results and have learners translate coefficients into comparisons between categories.

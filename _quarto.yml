@@ -19,7 +19,6 @@ book:
       - MLRNewFeatures.qmd
       - MLRDerivedFeatures.qmd
       - VariableScreening.qmd
-  - RegressionCaseStudy.qmd
   - glossary.qmd
   page-navigation: false
 format:

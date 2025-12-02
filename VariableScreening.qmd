@@ -5,3 +5,10 @@ engine: knitr
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
 # Variable Screening
+
+## Chapter 6 outline (slides + Mendenhall & Sincich, 2012)
+- Parsimony in statistical modelling and model fitting; SLR vs MLR contrasts and common issues (multicollinearity, unexpected signs, non-significant terms).
+- Information criteria and selection mechanics: Akaike’s Information Criterion, stepwise regression workflow (forward/backward/combined) with sequential steps.
+- Worked illustrations: exploratory plots and pairs plots, pig carcass measurements, concrete strength, and other example regressions with coefficient estimates and confidence intervals.
+- Selection cautions and diagnostics: variance inflation factors, checking signs/magnitude, and notes on extrapolation.
+- Textbook structure (Chapter 6, Variable Screening Methods): 6.1 Why use a variable screening method?; 6.2 Stepwise regression; 6.3 All-possible-regressions selection procedure; 6.4 Caveats and appropriate use.

@@ -36,13 +36,16 @@ custom-numbered-blocks:
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
-# Case Study: Naplan Reading scores
+# Case Study: NAPLAN Reading scores
 
-The “naplan_reading.csv" contains NAPLAN reading achievement data for 3,000 Australian students across Years 3, 5, 7, and 9, drawn from 60 schools. The primary outcome variable is NAPLAN reading scores, which range from approximately 100-600 for Year 3 studentsup to 400-900 for Year 9 students, reflecting the developmental progression in reading achievement.
+The “naplan_reading.csv" contains NAPLAN reading achievement data for 3,000 Australian students across Years 3, 5, 7, and 9, drawn from 60 schools. The primary outcome variable is NAPLAN reading scores, which range from approximately 100-600 for Year 3 students up to 400-900 for Year 9 students, reflecting the developmental progression in reading achievement.
 
 Key predictor variables include time spent reading at home in a week (in minutes), parents' highest education level (Year 10 or below, Year 12, Certicate/Diploma, Bachelor degree, or Postgraduate), school type (Government, Catholic, or Independent), student gender, socioeconomic status index, student birth month and number of siblings.
 
-We will investigate therelationship between socioeconomic status index (SES) and NAPLAN reading scores. In the regression context, we will aim to predict naplan reading score )(the outcome variable) by SES (the predictor variable).
+## Defining the research question
+
+In this section, we will investigate the relationship between socioeconomic status index (SES) and NAPLAN reading scores. In the regression context, we will aim to predict naplan reading score (the outcome variable) by SES (the predictor variable).
+
 To this end we will popose a simple linear model:
 
 $$
@@ -51,25 +54,32 @@ $$
 
 and aim to estimate the parameters of this model using the `naplan_reading.csv` dataset.
 
+## Importing data
+
 First, lets import the dataset
 ```{r}
 library(readr)
 naplan <- read_csv("Data/naplan_reading.csv")
 ```
+
+## Exploratory plot
 and look at a scatter plot of the variables we are interested in 
 
 ```{r}
+library(ggplot2)
 ggplot(naplan)+
-    aes(x=ses_index, y=naplan_reading_score, colour = grade)+
+    aes(x=ses_index, y=naplan_reading_score)+
     geom_point()
 ```
+
+## Fitting the least-squares model
 We can find the least squares estimates for $\alpha$ and $\beta$ using the `lm()` function:
 
 ```{r}
 reading_SES_mod <- lm(naplan_reading_score~ses_index, data=naplan)
 reading_SES_mod
 ```
-We can see that our estimate for the intercept suggests that the expected naplan reading score for a student with an SES index of zero is $a=574.04$, and that for a 1-point increase in SES index, naplan reading score is estimated to increase by 21.77 points. 
+We can see that our estimate for the intercept suggests that the expected naplan reading score for a student with an SES index of zero is $a=574.04$, and that for a 1-point increase in SES index, naplan reading score is estimated to increase by $b=21.77$ points. 
 We can visualise the fit:
 ```{r}
 ggplot(naplan)+
