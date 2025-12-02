@@ -8,3 +8,4 @@ execute:
   warning: false
   message: false
 ---
+# Simple linear regression

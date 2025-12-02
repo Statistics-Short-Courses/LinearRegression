@@ -5,4 +5,6 @@
 
 /.quarto/
 
+.Datasets
+
 **/*.quarto_ipynb

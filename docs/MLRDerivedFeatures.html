@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Building models by constructing terms – Introduction to Linear Regression in R</title>
+<title>7&nbsp; Building models by constructing terms – Introduction to Linear Regression in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,7 +115,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">MultipleRegression.html</a></li><li class="breadcrumb-item"><a href="./MLRDerivedFeatures.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">Multiple Linear Regression</a></li><li class="breadcrumb-item"><a href="./MLRDerivedFeatures.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -149,7 +149,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./SimpleLinearRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SimpleLinearRegression.html</span></a>
+ <span class="menu-text">Simple linear regression</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -164,7 +164,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./SLRFitting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear regression: fitting models to data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fitting models to data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -179,12 +179,18 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./SLRCase.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Case Study: Naplan Reading scores</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./MultipleRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">MultipleRegression.html</span></a>
+ <span class="menu-text">Multiple Linear Regression</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -193,19 +199,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./MLRNewFeatures.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./MLRDerivedFeatures.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./VariableScreening.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Screening</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Variable Screening</span></span></a>
   </div>
 </li>
       </ul>
@@ -213,13 +219,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./RegressionCaseStudy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression case study</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression case study</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./glossary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
   </div>
 </li>
     </ul>
@@ -233,9 +239,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">MultipleRegression.html</a></li><li class="breadcrumb-item"><a href="./MLRDerivedFeatures.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./MultipleRegression.html">Multiple Linear Regression</a></li><li class="breadcrumb-item"><a href="./MLRDerivedFeatures.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></h1>
 </div>
 
 
@@ -252,8 +258,8 @@ window.Quarto = {
 </header>
 
 
-<section id="polynomials" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="polynomials"><span class="header-section-number">6.1</span> Polynomials</h2>
+<section id="polynomials" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="polynomials"><span class="header-section-number">7.1</span> Polynomials</h2>
 <section id="key-topics-to-emphasise" class="level3">
 <h3 class="anchored" data-anchor-id="key-topics-to-emphasise">Key topics to emphasise</h3>
 <ul>
@@ -278,8 +284,8 @@ window.Quarto = {
 </ul>
 </section>
 </section>
-<section id="interactions" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="interactions"><span class="header-section-number">6.2</span> Interactions</h2>
+<section id="interactions" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="interactions"><span class="header-section-number">7.2</span> Interactions</h2>
 <section id="key-topics-to-emphasise-1" class="level3">
 <h3 class="anchored" data-anchor-id="key-topics-to-emphasise-1">Key topics to emphasise</h3>
 <ul>

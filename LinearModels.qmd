@@ -37,11 +37,13 @@ custom-numbered-blocks:
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
 ```{r}
+#| include: false
 library(ggplot2)
 theme_set(theme_bw())
 ```
 
 ```{webr}
+#| include: false
 library(ggplot2)
 theme_set(theme_bw())
 ```
@@ -49,9 +51,9 @@ theme_set(theme_bw())
 
 ## Statistical models {#sec-independence}
 
--   A primary goal of statistical modelling is to characterise the relationship between variables, for now lets call these variables $X$ and $Y$.
+-   A primary goal of statistical modelling is to characterise the relationship between *variables*. We can genericaly refer to these variables $X$ and $Y$, but their specific meaning will depend on your reserch question.  
 
--   In this context, we designate one variable, $Y$ as the *outcome* or *dependent variable*, and attempt to construct a *model* describing how it depends on the other variable(s), $X$, which we call *predictors* or *independent variables*.
+-   In the regression context, we designate one variable, $Y$ as the *outcome* or *dependent variable*, and attempt to construct a *model* describing how it depends on the other variable(s), $X$, which we call *predictors* or *independent variables*.
 
 -   We can express the idea that $Y$ depends on $X$ mathematically as
 $$
@@ -83,29 +85,27 @@ $Y$ depends only on a deterministic function of $X$ and a random noise component
 -   We now choose $f(X)$ to be a *linear function*:
 
 $$
-f(X)= \beta_0 + \beta_1\cdot X
+f(X)= \alpha + \beta\cdot X
 $$
 
 -   Putting aside the random error term for the moment, we can think of the *expected value* of $Y$, denoted $E[Y]$, as being given by this linear relationship:
 
 $$
-E[Y]= \beta_0 + \beta_1\cdot X
+E[Y]= \alpha + \beta\cdot X
 $$ {#eq-deterministic-linear-model}
 
--   In other words, we are representing the expected value of $Y$ as a *straight line* with y-intercept $\beta_0$ and slope $\beta_1$:
+-   In other words, we are representing the expected value of $Y$ as a *straight line* with y-intercept $\alpha$ and slope $\beta$:
 
 ```{ojs}
 //| panel: sidebar
 //| echo: false
-viewof b1 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β₁)"})
-viewof b0 = Inputs.range([-10, 10], {step: 1, label: "Intercept (β₀)"})
-tex.block`E[Y] = ${b1}X + ${b0}`
+viewof b1 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β)"})
+viewof b0 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
 ```
 
 ```{ojs}
 //| panel: fill
 //| echo: false
-//| fig-cap: "Plot of the linear function E[Y] = β₀+ β₁X"
 xRange = [-10,10]
 lineData = xRange.map(x => ({x, y: (b1 * x) + b0}))
 Plot.plot({
@@ -114,11 +114,12 @@ Plot.plot({
   marks: [
     Plot.line(lineData, { x: "x", y: "y" })]
 })
+tex.block`E[Y] = ${b0} + ${b1}X`
 ```
 
--   Here, $\beta_0$ represents the expected value of $Y$ ($E[Y]$) when $X=0$, and $\beta_1$ represents the change in $E[Y]$ for a one-unit increase in $X$.
+-   Here, $\alpha$ represents the expected value of $Y$ ($E[Y]$) when $X=0$ - termed the *intercept* -, and $\beta$ represents the change in $E[Y]$ for a one-unit increase in $X$ - the *slope*. We aslo call $beta$ the *coefficient* of the predictor variable $X$.
 
-::: Assumption {#assumption-linearity}
+::: Assumption
 Y and X have a linear relationship
 :::
 
@@ -167,21 +168,21 @@ A second company also has a job available. The *starting salary* ishigher here -
 You want to use a simple linear prediction to calculate your expectedsalary ($E[Y]$) after $X$ years of employment.
 
 $$
-E[Y] = \beta_0 + \beta_1 X
+E[Y] = \alpha + \beta X
 $$
 
 ::::{}
 #### Choosing parameters
 
-What are the coefficients $\beta_0$ and $\beta_1$ in this case?
+What are the coefficients $\alpha$ and $\beta$ in this case?
 
 Assign the relevant values to variables in R
 
 ```{webr}
 #| exercise: ex_1.1.1
 #| envir: Ex1
-beta_0 <- _______
-beta_1 <- _______
+alpha <- _______
+beta <- _______
 ```
 
 ::::: {.solution exercise="ex_1.1.1"}
@@ -192,8 +193,8 @@ beta_1 <- _______
 #| exercise: ex_1.1.1
 #| solution: true
 #| envir: Ex1
-beta_0 <- 70000
-beta_1 <- 3000
+alpha <- 70000
+beta <- 3000
 ```
 :::::
 
@@ -210,7 +211,7 @@ gradethis::grade_this_code()
 
 #### Linear prediction
 
-Great, so our linear predictor of the expected salary looks something like: 
+Great, so our linear predictor of the expected salary at company 2 looks something like: 
 $$
 E[Y]= \$70,000 + \$3,000\cdot X
 $$
@@ -260,7 +261,7 @@ E_Y <- _____+(_____*_____)
 #| exercise: ex_1.1.2
 #| envir: Ex1
 #| solution: true
-E_Y <- beta_0 + (beta_1*10)
+E_Y <- alpha + (beta*10)
 ```
 :::::
 
@@ -296,8 +297,8 @@ Now to finish this section lets turn this linear prediction into our own R funct
 
 ```{webr}
 #| edit: false
-simple_linear_prediction <- function(X, beta_0=7e4, beta_1=4e3){
-  beta_0 + (beta_1*X)
+simple_linear_prediction <- function(X, alpha=7e4, beta=4e3){
+  alpha + (beta*X)
   }
 ```
 
@@ -344,7 +345,7 @@ Next we'll add the second main component to our linear predictor to make it a li
 -   As mentioned in Section 1.x, to account for this variation we add an *error term*, $\varepsilon$, to our model
 
 $$
-Y=\beta_0 + \beta_1X + \varepsilon
+Y=\alpha + \beta X + \varepsilon
 $$
 
 ### Mean Zero
@@ -559,17 +560,17 @@ Here $\varepsilon$ represents random deviations from the expected (average) sala
 Putting these pieces together we are left with:
 
 $$
-Y=\beta_0+\beta_1X+\varepsilon, \quad{\varepsilon \sim N(0,\sigma^2)}
+Y=\alpha+\beta X+\varepsilon, \quad{\varepsilon \sim N(0,\sigma^2)}
 $$
 
-This 'simple linear model' is the starting place for conducting linear regression - in which we 'fit' (i.e. estimate the values of $\beta_0$, $\beta_1$, and $\sigma^2$) from data.
+This 'simple linear model' is the starting place for conducting linear regression - in which we 'fit' (i.e. estimate the values of $\alpha$, $\beta$, and $\sigma^2$) from data.
 
 ```{ojs}
 //| panel: sidebar
 //| echo: false
 
-viewof b1_2 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β₁)"})
-viewof b0_2 = Inputs.range([-10, 10], {step: 1, label: "Intercept (β₀)"})
+viewof b1_2 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β)"})
+viewof b0_2 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
 viewof sigma_2 = Inputs.range([0.2, 5], {step: 0.1, value: 2.5, label: "Std. deviation (σ)"})
 
 viewof n_cs = Inputs.range([10, 50], {step: 1, value: 50, label: "Number of cross sections visualised"})
@@ -647,12 +648,12 @@ head(X)
 Next, we construct our simple linear model
 
 ```{r}
-beta_0 <- 4
-beta_1 <- 1.2
+alpha <- 4
+beta <- 1.2
 sigma <- 4
 
-simple_linear_model <- function(X, beta_0, beta_1, sigma) {
-  mu <- beta_0 + (beta_1 * X) 
+simple_linear_model <- function(X, alpha, beta, sigma) {
+  mu <- alpha + (beta * X) 
   mu + rnorm(length(X), mean = 0, sd = sigma)
 }
 ```
@@ -662,7 +663,7 @@ simple_linear_model <- function(X, beta_0, beta_1, sigma) {
 -   Now we can simulate observations of $Y$ given our list of $X$ values and out linear model:
 
 ```{r}
-Y <- simple_linear_model(X, beta_0, beta_1, sigma)
+Y <- simple_linear_model(X, alpha, beta, sigma)
 head(Y)
 ```
 
@@ -673,7 +674,7 @@ lets look at the joint distribution of X and Y:
 ```{r}
 #| echo: false
 #| label: fig-plot
-#| fig-cap: "Data generated from the simple linear model $Y=4+1.2\\times X + \\varepsilon$, with $\\varepsilon\\sim N(0,16)$. Dashed line shows E[Y|X] = β0 + β1X"
+#| fig-cap: "Data generated from the simple linear model $Y=4+1.2\\times X + \\varepsilon$, with $\\varepsilon\\sim N(0,16)$. Dashed line shows E[Y|X] = α + βX"
 
 library(ggplot2)
 
@@ -681,7 +682,7 @@ df <- data.frame(X = X, Y = Y)
 
 ggplot(df, aes(X, Y)) +
   geom_point(alpha = 0.7) +
-  geom_abline(intercept = beta_0, slope = beta_1, linetype = "dashed") +
+  geom_abline(intercept = alpha, slope = beta, linetype = "dashed") +
   labs(x = "X", y = "Y") +
   theme_minimal()
 ```
@@ -695,7 +696,7 @@ df <- data.frame(X = X, Y = Y)
 
 ggplot(df, aes(X, Y)) +
   geom_point(alpha = 0.7) +
-  geom_abline(intercept = beta_0, slope = beta_1, linetype = "dashed") +
+  geom_abline(intercept = alpha, slope = beta, linetype = "dashed") +
   labs(x = "X", y = "Y") +
   theme_minimal()
 ```
@@ -709,16 +710,16 @@ Heres the same code running in webR - try adjusting some of the parameters (e.g.
 n <- 100
 X <- runif(n, min=0, max= 50)
 
-beta_0 <- 4
-beta_1 <- 1.2
+alpha <- 4
+beta <- 1.2
 sigma <- 4
 
-simple_linear_model <- function(X, beta_0, beta_1, sigma) {
-  mu <- beta_0 + (beta_1 * X) 
+simple_linear_model <- function(X, alpha, beta, sigma) {
+  mu <- alpha + (beta * X) 
   mu + rnorm(length(X), mean = 0, sd = sigma)
 }
 
-Y <- simple_linear_model(X, beta_0, beta_1, sigma)
+Y <- simple_linear_model(X, alpha, beta, sigma)
 
 library(ggplot2)
 
@@ -726,5 +727,5 @@ df <- data.frame(X = X, Y = Y)
 
 ggplot(df, aes(X, Y)) +
   geom_point(alpha = 0.7) +
-  geom_abline(intercept = beta_0, slope = beta_1, linetype = "dashed")
+  geom_abline(intercept = alpha, slope = beta, linetype = "dashed")
 ```
