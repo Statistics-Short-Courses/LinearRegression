@@ -6,7 +6,7 @@ engine: knitr
 
 # Variable Screening
 
-## Chapter 6 outline (slides + Mendenhall & Sincich, 2012)
+## Chapter 6 outline
 - Parsimony in statistical modelling and model fitting; SLR vs MLR contrasts and common issues (multicollinearity, unexpected signs, non-significant terms).
 - Information criteria and selection mechanics: Akaike’s Information Criterion, stepwise regression workflow (forward/backward/combined) with sequential steps.
 - Worked illustrations: exploratory plots and pairs plots, pig carcass measurements, concrete strength, and other example regressions with coefficient estimates and confidence intervals.
