@@ -1,0 +1,344 @@
+---
+format: 
+  live-html:
+    toc: true
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Note:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+webr:
+  render-df: gt-interactive
+---
+# Multiple Linear Regression (MLR)
+
+## Introduction
+
+Multiple linear regression (MLR) extends simple linear regression by allowing $Y$ to depend on more than one predictor variable. This enables richer models and allows us to estimate the *partial* contribution of each predictor while accounting for others.
+
+### When to Extend SLR
+
+SLR is limited to one predictor. MLR becomes appropriate when:
+
+* Multiple factors plausibly influence the response.
+* Excluding predictors may bias results.
+* You wish to measure the unique contribution of each predictor while controlling for others.
+
+### A graphical motivation
+
+Lets consider a simple example using the `trees` data
+```{r}
+data(trees)
+```
+This dataset records the height, girth (diameter) and volume
+$
+
+We might look at each bivariate (i.e. two variables) relationship separately:
+```{r}
+set.seed(123)
+n  <- 200
+x1 <- runif(n, 0, 10)
+x2 <- runif(n, 0, 10)
+y  <- 2 + 0.5 * x1 + 1.5 * x2 + rnorm(n, sd = 2)
+
+sim_df <- data.frame(y, x1, x2)
+```
+
+::: {.panel-tabset}
+## $Y \sim X_1$
+```{r}
+library(ggplot2)
+
+ggplot(sim_df, aes(x = x1, y = y)) +
+  geom_point() +
+  scale_colour_viridis_c() +
+  labs(x = "X[1]", y = "Y")
+```
+## $Y\sim X_2$
+```{r}
+ggplot(sim_df, aes(x = x2, y = y)) +
+  geom_point() +
+  scale_colour_viridis_c() +
+  labs(x = expression(X[2]), y = "Y")
+```
+:::
+
+However we might also look at the *multivariate* relationship
+```{r}
+ggplot(sim_df, aes(x = x1, y = y, colour = x2)) +
+  geom_point() +
+  scale_colour_viridis_c() +
+  labs(x = expression(X[1]), y = "Y", colour = expression(X[2]))
+```
+in the case of 3 variables we can also extend our visualisation to 3 dimensions:
+```{r}
+library(plotly)
+
+plot_ly(sim_df, x = ~x1, y = ~x2, z = ~y,
+        type = "scatter3d", mode = "markers")
+```
+
+- [ ] Continue
+
+## The multiple regression linear model
+
+The multiple linear model extends the simple linear model from @sec-simple_linear_model straightforwardly by adding the extra variables to the deterministic linear predictor each with its own parameter.  
+
+$$
+Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilon \sim N(0,\sigma^2)
+$$
+
+Now, instead of a single predictor $X$, we may have several ($k$) predictors $x_1, x_2, \ldots, x_k$, each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor $x_i$ has a corresponding parameter $\beta_i$ governing its effect on the response. Note that we have updated the intercept parameter $\alpha$ from the simple linear regression section to $\beta_0$, because it is simply another parameter in the model!
+
+The random error term, $\varepsilon$ stays the same, so the assumptions of MLR are very similar to those of SLR:
+
+::: Assumption
+### Assumptions of the MLR model
+- A *linear* predictor, e.g. $E[Y]=\beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k$. 
+- *Independent* and identically distributed random error terms that
+  - Have a mean $\mu=0$, and a constant variance $Var(\varepsilon)=\sigma^2$
+  - Follow a normal distribution: $N(0,\sigma^2)$
+:::
+
+::: Note
+### Multivariate Linearity
+Although this is still a *linear* model, the term “linear” no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, “linear” means that the model is **linear in its parameters**: each $\beta_i$ multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: $Y$ + two predictors: $X_1$, $X_2$), a linear model will instead look like a three dimensional *plane*
+```{r}
+# Fit least squares plane
+fit <- lm(y ~ x1 + x2, data = sim_df)
+
+# Create grid for the plane
+x1_seq <- seq(min(sim_df$x1), max(sim_df$x1), length.out = 30)
+x2_seq <- seq(min(sim_df$x2), max(sim_df$x2), length.out = 30)
+grid   <- expand.grid(x1 = x1_seq, x2 = x2_seq)
+grid$yhat <- predict(fit, newdata = grid)
+
+z_mat <- matrix(grid$yhat, nrow = length(x1_seq), ncol = length(x2_seq))
+
+# Plotly 3D scatter + plane
+fig <- plot_ly() |>
+  add_markers(
+    data = sim_df,
+    x = ~x2, y = ~x1, z = ~y,
+    type = "scatter3d",
+    mode = "markers",
+    name = "Data"
+  ) |>
+  add_surface(
+    x = x2_seq,
+    y = x1_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "x1"),
+      yaxis = list(title = "x2"),
+      zaxis = list(title = "y")
+    )
+  )
+
+fig
+```
+:::
+
+### Partial Regression Coefficients
+Even though our model is no longer just a straight line, the *slope* interpretation from simple linear regression is still relevant in multiple regression. Now however, $\beta_i$ describes the expected change in the mean response for a one-unit increase in $x_i$, **holding all other predictors constant**. 
+
+::: Example
+**Interpreting a partial coefficient**
+If the fitted model for life expectancy includes Internet usage and BirthRate,
+
+```
+Internet: 0.112
+BirthRate: -0.594
+```
+Then:
+
+* A 1% increase in internet usage is associated with an expected 0.11-year increase in life expectancy, holding other predictors fixed.
+* A one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.
+:::
+
+## Fitting MLR Models in R and the `tidy()` function 
+Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares: Residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique 'least squares estimates' for the model parameters $b_0, \ldots, b_k$.
+$$
+min
+$$
+
+MLR uses the same `lm()` function as SLR (these are both 'linear models', after all):
+
+```{r}
+mod <- lm(LifeExp ~ Population + Health + Internet + BirthRate,
+          data = countries.df)
+```
+
+and we can extract our model coefficients ($\beta_0, \ldots,\beta_3$) in analogous way: 
+```{r}
+mod$coefficients
+```
+We can also use the `tidy` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter
+
+```{r}
+library(broom)
+tidy(mod, conf.int = TRUE)
+```
+The hypotheses being tested for each coefficient is analagous to that in the SLR case @sec-beta_inference:
+$$
+H_0 : \beta_i = 0 
+\qquad\text{vs}\qquad
+H_a : \beta_i \ne 0.
+$$
+And is tested the same way - using the t-statistic:
+$$
+t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
+$$
+
+However, the interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of \beta_i here does not represent the relationship between $Y$ and $X_i$ without qualification - but only when the other variables are held constant. Analogously, the hypothesis being tested by $t_i$ is whether $X_i$ is related to to $Y$ *once the other predictors are accounted for*. 
+::: Key-point
+### interpreting partial regression coefficients, $\beta_i$
+:::
+
+Because of this:
+
+- The significance of a predictor can change when variables are added or removed.
+- A small p-value for $\beta_i$ suggests a meaningful **partial effect**, not necessarily a *marginal* (unadjusted) one.
+
+### Warning: Multicollinearity
+- least squares is an amazing method for fitting but it has a weakness
+- correlated predictors can cause unstable parameter estimates
+- Check for correlation using a correlation matrix or using `vif`
+- this will be adressed more comprehensively in module 6: diagnostics an transformations. 
+
+## Global model statistics: The F-Test and measures of model fit
+
+Having multiple predictor variables expands the scope of the kind of questions we can ask about our linear model. Rather than looking at each coefficient separately, we can ask whether our model *as a whole* is effective in explaining the outcome $Y$ In other words, is the combined contribution of the predictors enough to conclude that a linear relationship exists?
+
+Formally, the global hypothesis test is:
+
+- $H_0$: all slope coefficients are zero (no linear relationship between $Y$ and the predictors)  
+- $H_a$: at least one slope coefficient is non-zero (the model is useful)
+
+This shift parallels the move from multiple t-tests to an ANOVA F-test: instead of testing individual “effects,” we examine **explained variance**.
+
+### Why an F-statistic?
+
+The F-statistic compares:
+
+- **variation explained by the model** (mean regression sum of squares, MSR),  
+- **residual variation** (mean squared error, MSE).
+
+Because each of these quantities is constructed from squared normal deviations, the ratio
+
+$$
+F = \frac{\text{MSR}}{\text{MSE}}
+$$
+
+follows an F-distribution under $H_0$.  
+If the model truly explains some structure in the data, MSR will be noticeably larger than MSE.
+
+[#^1] The links between ANOVA and linear regression will be futher explored here in @sec-qualitative_predictors. 
+
+::: Example
+In the life expectancy example, the output might report
+
+```
+F-statistic: 28.2 on 4 and 44 DF,  p-value: 1.19e-11
+```
+
+The very small p-value indicates strong evidence against $H_0$. We conclude that at least one of the predictors (Population, Health, Internet, BirthRate) is useful for predicting life expectancy, and that the model is useful overall.
+:::
+
+::: Exercise
+Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.
+:::
+#### global statistics with `glance()`
+We can obtain the model F-statistic using the `glance()` function from the `broom` package
+
+```{r}
+glance(mod)
+```
+
+This output includes several global model features besides the global test statistic and p-value. 
+
+### Adjusted $R^2$
+
+Once we have established that the model is useful overall, we can quantify *how much* of the variation in $Y$ it explains. The measure $R^2$ was introduced in SLR and extends naturally to MLR In multiple regression, $R^2$ plays the same descriptive role, but its
+interpretation changes subtly because the model now includes several predictors.
+
+### $R^2$ in Multiple Regression
+
+We define
+$$
+R^2 = 1 - \frac{\text{SSE}}{\text{SST}},
+$$
+exactly as before. The difference lies in what $R^2$ represents:
+
+- In SLR, $R^2$ reflects how well a *single predictor* explains variation in $Y$.
+- In MLR, $R^2$ reflects the **combined explanatory power of all predictors working together**.
+
+Because adding a new predictor can never increase SSE, it follows that **$R^2$ can never decrease when more predictors are added**, even if the new predictor has little or no real relationship with the response.
+For this reason, $R^2$ is not reliable for comparing models with different numbers of predictors.
+
+### Adjusted $R^2$
+
+To address the fact that $R^2$ is overly optimistic in larger models, we use the *adjusted coefficient of determination*:
+$$
+R^2_{\text{adj}} = 1 -\frac{\text{SSE}/(n - k - 1)}{\text{SST}/(n - 1)}.
+$$
+
+Adjusted $R^2$:
+
+- **penalises** the inclusion of additional predictors,
+- increases only when a predictor provides meaningful explanatory value,
+- and may decrease when a predictor contributes little or nothing.
+
+Thus,
+
+- **$R^2$** is appropriate as a descriptive measure of how much variation the fitted model explains,
+- **adjusted $R^2$** is more appropriate for comparing different models, especially those with differing numbers of predictors.
+
+This completes our introduction to multiple linear regression: we now have a
+model with several predictors, an interpretation for its coefficients, and
+tools to judge whether the model is useful and how well it fits the data.
+
+### Other model fit statistics: logLikelihood, AIC, and BIC
+
+The `glance()` output also includes two additional quantities: **AIC** (Akaike Information Criterion) and **BIC** (Bayesian Information Criterion).  
+Although they appear alongside the F-statistic and $R^2$, they serve a different purpose.
+
+AIC and BIC are **not** measures of how well a single model fits the data in an absolute sense.  
+Instead, they are designed for **comparing multiple competing models**, balancing goodness of fit against model complexity. Lower values indicate a preferable trade-off, but only **relative** comparisons are meaningful.
+
+Because AIC and BIC are tools for *model selection* rather than model assessment, we do not interpret them here. They will be discussed in detail in **Module 5 (Principles of Model Building)**, where they are used to guide decisions about which predictors to include in a regression model.
+
+## Summary
+
+This chapter introduced the multiple regression model, the interpretation of partial coefficients, and the core inferential tools used to assess model usefulness. Later modules will extend these ideas to interactions, categorical predictors, model selection, and diagnostic analysis.

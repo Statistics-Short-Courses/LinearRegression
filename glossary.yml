@@ -1,1 +1,13 @@
-Residual-Standard-error: the standard deviation of the residual distribution 
+Simple-linear-regression: a linear model with one predictor; E[Y] = beta0 + beta1*X with iid errors
+Multiple-linear-regression: a linear model with two or more predictors; each coefficient is a partial effect holding others fixed
+Residual: the observed value minus the fitted value from the model
+Residual-standard-error: the estimated standard deviation of the residuals (sqrt of residual variance)
+Adjusted-R-squared: R-squared adjusted for the number of predictors to penalise unnecessary terms
+AIC: Akaike Information Criterion; compares models by balancing fit and complexity (lower is better)
+Multicollinearity: strong correlation among predictors that inflates standard errors and destabilises estimates
+Interaction: a model term that lets the effect of one predictor depend on the level of another predictor
+Dummy-variable: an indicator (0/1) used to code categories in regression
+Leverage: a measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence
+Cooks-distance: combines residual size and leverage to flag influential observations
+Box-Cox-transformation: a family of power transformations used to stabilise variance or improve linearity
+Parsimony: the principle of choosing the simplest adequate model that answers the scientific question

@@ -1,0 +1,53 @@
+---
+title: "Qualitative Predictors"
+format:
+  live-html:
+    toc: true
+---
+
+## Dummy-variable coding
+
+- Represent $k$-level categorical predictors with $k-1$ indicator
+  variables ([dummy variables](#gloss-dummy)); the omitted level is the
+  baseline.
+
+```{r}
+cat_mod <- lm(mpg ~ factor(cyl), data = mtcars)
+model.matrix(cat_mod)[1:5, ]
+```
+
+## Baseline category interpretation
+
+- Each indicator coefficient compares its level to the baseline.
+- Re-level with `relevel()` for more meaningful comparisons.
+
+```{r}
+mtcars$cyl <- relevel(factor(mtcars$cyl), ref = "6")
+relevel_mod <- lm(mpg ~ cyl, data = mtcars)
+coef(relevel_mod)
+```
+
+## Regression with multi-level factors
+
+- Fit models with multiple factors and quantitative predictors; ensure
+  design matrix is full rank (no redundant indicators).
+
+```{r}
+mix_mod <- lm(mpg ~ wt + factor(carb), data = mtcars)
+```
+
+## Mixing categorical and continuous predictors
+
+- Combine factors and continuous terms; interaction terms allow
+  different slopes by group (e.g., `wt * cyl`).
+
+```{r}
+group_slope <- lm(mpg ~ wt * factor(gear), data = mtcars)
+```
+
+## Connection to ANOVA-style hypotheses
+
+- ANOVA table for a factor tests whether any level differs from the
+  baseline (joint $H_0$ on all indicators).
+- In R, compare models with `anova()` or read the factor-level F-test in
+  `summary()` output when using treatment coding.

@@ -1,0 +1,67 @@
+---
+title: "Residual Analysis and Diagnostics"
+format:
+  live-html:
+    toc: true
+---
+
+## Residual plots vs predictors and fitted values
+
+- Plot residuals against fitted values to check linearity and constant
+  variance; add predictor-specific plots to spot functional-form issues
+  ([residual](#gloss-residual)).
+
+```{r}
+diag_mod <- lm(mpg ~ wt + hp + am, data = mtcars)
+par(mfrow = c(1, 2))
+plot(diag_mod, which = 1)      # residuals vs fitted
+plot(mtcars$wt, resid(diag_mod), xlab = "wt", ylab = "Residuals")
+par(mfrow = c(1, 1))
+```
+
+## Diagnosing nonconstant variance and nonlinearity
+
+- Funnel shapes or curved trends in residual plots suggest
+  heteroskedasticity or missing curvature; consider transformations or
+  adding interactions/polynomials.
+
+## Assessing normality of residuals
+
+- Use Q-Q plots and compare $t$- and $p$-values to Normal reference.
+
+```{r}
+qqnorm(resid(diag_mod)); qqline(resid(diag_mod))
+```
+
+## Standardised residuals, leverage, Cook's distance
+
+- Standardised (or studentised) residuals scale by estimated variance
+  and flag unusual outcomes (|r| > 2 as a heuristic).
+- Leverage (`hatvalues()`) flags unusual predictor combinations
+  ([leverage](#gloss-leverage)).
+- Cook's distance combines leverage and residual size to assess
+  influence ([Cook's distance](#gloss-cooks-distance)).
+
+```{r}
+cbind(rstudent(diag_mod),
+      hatvalues(diag_mod),
+      cooks.distance(diag_mod))[1:5, ]
+```
+
+## Transformations including Box–Cox
+
+- Transformations can stabilise variance or linearise relationships; for
+  strictly positive $Y$, consider [Box–Cox transformations](#gloss-box-cox)
+  to guide power choices.
+
+```{r}
+MASS::boxcox(diag_mod, plotit = TRUE)
+```
+
+## Handling outliers and influential observations
+
+- Investigate data quality first (entry errors, unusual units).
+- If influential points are real, fit with and without them to assess
+  robustness; report how conclusions change.
+- Prefer model adjustments (functional form, variance stabilisation)
+  over automatic deletion; document any exclusions explicitly.

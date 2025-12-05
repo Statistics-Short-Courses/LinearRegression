@@ -1,0 +1,123 @@
+{
+  "course_title": "Short Course: Linear Regression and Model Selection",
+  "course_description": "A concise graduate-level introduction to linear regression, covering model formulation, interpretation, model building, variable screening, and diagnostic assessment. Designed for researchers and professionals needing a rigorous refresher.",
+  "learning_outcomes": [
+    "Formulate simple and multiple linear regression models and articulate their assumptions.",
+    "Interpret regression coefficients, including partial, interaction, and categorical effects.",
+    "Evaluate model utility using hypothesis tests, R-squared metrics, and prediction accuracy.",
+    "Identify when additive models fail and implement interaction or polynomial terms.",
+    "Incorporate qualitative predictors using indicator (dummy) variables.",
+    "Apply principles of parsimony and evidence-based model building.",
+    "Use AIC, multicollinearity diagnostics, and stepwise procedures for model selection.",
+    "Perform residual analysis, identify influential observations, and apply transformations."
+  ],
+  "modules": [
+    {
+      "module_number": 0,
+      "title": "Linear statistical models",
+      "topics": [
+        "Purpose of statistical modelling and framing predictors/outcomes",
+        "Linear prediction as E[Y]=alpha+beta X with slope/intercept interpretation",
+        "Role of random error: mean-zero, constant-variance, and normality ideas",
+        "Specification of the simple linear model and visualising simulated data"
+      ]
+    },
+    {
+      "module_number": 1,
+      "title": "Simple Linear Regression (SLR)",
+      "topics": [
+        "Deciding when SLR is appropriate",
+        "Fitting models to data via least squares and residuals",
+        "Estimating coefficients with lm() and visual checks",
+        "Variance estimation, residual standard error, correlation, and R-squared",
+        "Inference for the slope: t-tests, confidence intervals, and p-values",
+        "Prediction for Y: confidence intervals and prediction intervals"
+      ]
+    },
+    {
+      "module_number": 2,
+      "title": "Multiple Linear Regression (MLR)",
+      "topics": [
+        "When to extend SLR to multiple predictors",
+        "MLR model structure with continuous predictors and partial coefficients",
+        "Least-squares estimation and inference in higher dimensions",
+        "Global F-test for overall usefulness",
+        "Multicollinearity considerations",
+        "Adjusted R-squared, model fit, and interpreting summary(lm) output"
+      ]
+    },
+    {
+      "module_number": 3,
+      "title": "Interaction and Nonlinearity",
+      "topics": [
+        "Interaction models with quantitative predictors",
+        "Graphical interpretation of interaction effects",
+        "Polynomial models: quadratic and cubic",
+        "When and how to model curvature",
+        "Extrapolation risks and overfitting concerns"
+      ]
+    },
+    {
+      "module_number": 4,
+      "title": "Qualitative Predictors",
+      "topics": [
+        "Dummy-variable coding",
+        "Baseline category interpretation",
+        "Regression with multi-level factors",
+        "Mixing categorical and continuous predictors",
+        "Connection to ANOVA-style hypotheses"
+      ]
+    },
+    {
+      "module_number": 5,
+      "title": "Principles of Model Building",
+      "topics": [
+        "Exploratory analysis for model formulation",
+        "Systematic vs random variation",
+        "Choosing first- vs second-order functional forms",
+        "Model adequacy and interpretability",
+        "Parsimony as a guiding principle"
+      ]
+    },
+    {
+      "module_number": 6,
+      "title": "Variable Screening and Model Selection",
+      "topics": [
+        "Multicollinearity: detection and implications",
+        "Akaike Information Criterion (AIC)",
+        "Forward, backward, and stepwise selection",
+        "Limitations and cautions for stepwise methods",
+        "Balancing prediction and explanation"
+      ]
+    },
+    {
+      "module_number": 7,
+      "title": "Residual Analysis and Diagnostics",
+      "topics": [
+        "Residual plots vs predictors and fitted values",
+        "Diagnosing nonconstant variance and nonlinearity",
+        "Assessing normality of residuals",
+        "Standardised residuals, leverage, Cook's distance",
+        "Transformations including Box-Cox",
+        "Handling outliers and influential observations"
+      ]
+    }
+  ],
+  "assessment_options": {
+    "exercises": "Short practical or theoretical exercises linked to each module.",
+    "capstone_project": {
+      "description": "A modelling project requiring exploratory analysis, model formulation, model selection, diagnostics, and interpretation.",
+      "components": [
+        "Exploratory data analysis",
+        "Justified model specification",
+        "Model selection using AIC and diagnostic checks",
+        "Residual analysis and influence assessment",
+        "Written or presented interpretation of results"
+      ]
+    }
+  },
+  "references": [
+    "Mendenhall & Sincich, A Second Course in Statistics: Regression Analysis",
+    "STAT210/410 lecture materials on MLR, Model Building, Variable Screening, and Residual Analysis"
+  ]
+}

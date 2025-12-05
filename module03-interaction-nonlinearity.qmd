@@ -1,0 +1,54 @@
+---
+title: "Interaction and Nonlinearity"
+format:
+  live-html:
+    toc: true
+---
+
+## Interaction models with quantitative predictors
+
+- Allow the effect of one predictor to depend on another
+  ([interaction](#gloss-interaction)):
+  $$E[Y] = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2.$$
+- $\beta_3$ shifts the slope of $X_1$ per-unit change in $X_2$ (and
+  vice versa).
+
+```{r}
+int_mod <- lm(mpg ~ wt * hp, data = mtcars)
+coef(int_mod)[c("wt", "hp", "wt:hp")]
+```
+
+## Graphical interpretation of interaction effects
+
+- Plot fitted lines across a grid to see slope changes.
+
+```{r}
+library(ggplot2)
+grid <- expand.grid(wt = seq(2, 4, 0.5), hp = c(90, 150))
+grid$fit <- predict(int_mod, grid)
+ggplot(grid, aes(wt, fit, colour = factor(hp))) +
+  geom_line() + labs(colour = "HP level", y = "Fitted mpg")
+```
+
+## Polynomial models: quadratic and cubic
+
+- Capture curvature by adding powers: $$E[Y] = \beta_0 + \beta_1 X +
+  \beta_2 X^2 \;(+\; \beta_3 X^3).$$
+- Use `poly()` or explicit powers; center $X$ to reduce collinearity.
+
+```{r}
+poly_mod <- lm(mpg ~ wt + I(wt^2), data = mtcars)
+```
+
+## When and how to model curvature
+
+- Use scatterplots and residual-vs-fitted plots to spot nonlinearity.
+- Prefer low-order polynomials for interpretability; consider splines
+  for flexible shapes if allowed.
+
+## Extrapolation risks and overfitting concerns
+
+- Polynomial terms can explode outside the data range—avoid predicting
+  far beyond observed $X$.
+- Guard against overfitting with cross-validation or an independent
+  validation set when sample size permits.
