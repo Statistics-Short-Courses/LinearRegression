@@ -1,9 +1,19 @@
----
-title: "Residual Analysis and Diagnostics"
+title: "Regression Pitfalls and Diagnostics"
 format:
   live-html:
     toc: true
 ---
+
+## Common pitfalls to avoid
+
+- Ignoring model misspecification: linear fits to nonlinear patterns
+  inflate residual structure.
+- Extrapolating far beyond observed predictor ranges can explode
+  predictions.
+- Blind stepwise selection can drop theory-driven terms; keep scientific
+  context in view.
+- Unchecked multicollinearity or leverage points can destabilise
+  inference; diagnose before concluding.
 
 ## Residual plots vs predictors and fitted values
 

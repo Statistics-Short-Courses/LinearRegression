@@ -10,11 +10,9 @@ book:
     - module00-lm.qmd
     - module01-slr.qmd
     - module02-mlr.qmd
-    - module03-interaction-nonlinearity.qmd
-    - module04-qualitative-predictors.qmd
-    - module05-model-building-selection.qmd
-    - module06-diagnostics.qmd
-    - module07-case-naplan.qmd
+    - module03-model-building.qmd
+    - module04-regression-pitfalls-diagnostics.qmd
+    - module05-case-naplan.qmd
     - glossary.qmd
   page-navigation: false
 format:

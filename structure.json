@@ -48,58 +48,39 @@
     },
     {
       "module_number": 3,
-      "title": "Interaction and Nonlinearity",
+      "title": "Model Building and Variable Screening",
       "topics": [
-        "Interaction models with quantitative predictors",
-        "Graphical interpretation of interaction effects",
-        "Polynomial models: quadratic and cubic",
-        "When and how to model curvature",
-        "Extrapolation risks and overfitting concerns"
+        "Exploratory analysis and theory-driven model formulation",
+        "Systematic vs random variation, adequacy, and parsimony",
+        "Choosing first- vs second-order functional forms; interactions and curvature",
+        "Qualitative predictors: dummy coding, baselines, ANOVA-style tests, and mixed predictors",
+        "Variable screening: multicollinearity checks, AIC, and stepwise strategies",
+        "Balancing prediction and explanation while guarding against overfitting/extrapolation"
       ]
     },
     {
       "module_number": 4,
-      "title": "Qualitative Predictors",
+      "title": "Regression Pitfalls and Diagnostics",
       "topics": [
-        "Dummy-variable coding",
-        "Baseline category interpretation",
-        "Regression with multi-level factors",
-        "Mixing categorical and continuous predictors",
-        "Connection to ANOVA-style hypotheses"
-      ]
-    },
-    {
-      "module_number": 5,
-      "title": "Principles of Model Building",
-      "topics": [
-        "Exploratory analysis for model formulation",
-        "Systematic vs random variation",
-        "Choosing first- vs second-order functional forms",
-        "Model adequacy and interpretability",
-        "Parsimony as a guiding principle"
-      ]
-    },
-    {
-      "module_number": 6,
-      "title": "Variable Screening and Model Selection",
-      "topics": [
-        "Multicollinearity: detection and implications",
-        "Akaike Information Criterion (AIC)",
-        "Forward, backward, and stepwise selection",
-        "Limitations and cautions for stepwise methods",
-        "Balancing prediction and explanation"
-      ]
-    },
-    {
-      "module_number": 7,
-      "title": "Residual Analysis and Diagnostics",
-      "topics": [
-        "Residual plots vs predictors and fitted values",
+        "Common pitfalls: misspecification, extrapolation, overfitting, and leverage outliers",
+        "Residual plots versus fitted values and predictors",
         "Diagnosing nonconstant variance and nonlinearity",
         "Assessing normality of residuals",
         "Standardised residuals, leverage, Cook's distance",
         "Transformations including Box-Cox",
         "Handling outliers and influential observations"
+      ]
+    },
+    {
+      "module_number": 5,
+      "title": "Case Study: NAPLAN",
+      "topics": [
+        "Defining the research question",
+        "Importing data",
+        "Exploratory plot",
+        "Fitting the least-squares model",
+        "Model refinement and interpretation",
+        "Reporting the results"
       ]
     }
   ],
