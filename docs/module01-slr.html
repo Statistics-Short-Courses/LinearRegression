@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Simple Linear Regression (SLR) – Linear Regression and Model Selection with R</title>
+<title>3  Simple Linear Regression (SLR) – Linear Regression and Model Selection with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -28125,7 +28125,7 @@ initializeRuntime();
 </script>
 <script type="ojs-define">
 
-{"contents":[{"name":"linearData","value":{"x":[6.376,6.6371,-3.0353,-8.2389,-3.0513,-0.5572,-2.2348,7.1979,3.9164,2.2322,4.2098,2.1158,6.9788,1.1704,-2.0982,1.7439,-0.5356,-2.1432,8.2799,-1.396],"y":[0.6456,0.4036,-3.8,-9.5449,-2.541,-4.7277,-6.3123,-0.8795,1.7114,-6.8158,-0.1668,-4.0352,-1.2738,-2.5712,-3.9099,-1.571,-2.4107,-4.6993,1.7388,-5.0202]}}]}
+{"contents":[{"name":"linearData","value":{"x":[-2.7389,-3.4175,1.5563,-0.7205,-1.0333,-5.2722,-4.1228,-1.409,-6.5453,3.8237,-2.5204,0.3069,-4.6372,8.5162,-5.328,-1.5421,2.139,-6.1578,2.1462,2.4439],"y":[-3.7993,-3.1918,-4.4134,-1.6912,-5.5044,-9.4761,-4.4032,-3.8305,-4.498,-1.1073,-3.0433,-1.094,-4.7388,2.8214,-3.8498,-3.8826,-1.275,-9.8351,-1.583,-1.6565]}}]}
 
 </script>
 
@@ -28134,10 +28134,6 @@ initializeRuntime();
 --color1: #FFF9C4;
 --color2: #FFEB3B;
 }
-.Exercise {
---color1: #C8E6C9;
---color2: #4CAF50;
-}
 .Assumption {
 --color1: #FFCDD2;
 --color2: #F44336;
@@ -28145,6 +28141,10 @@ initializeRuntime();
 .Example {
 --color1: #BBDEFB;
 --color2: #2196F3;
+}
+.Exercise {
+--color1: #C8E6C9;
+--color2: #4CAF50;
 }
 </style>
 
@@ -28309,7 +28309,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module01-slr.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module01-slr.html"><span class="chapter-number">3</span>  <span class="chapter-title">Simple Linear Regression (SLR)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -28331,7 +28331,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
+        <div id="quarto-search" class title="Search"></div>
         </div>
         </div>
     <div class="sidebar-menu-container"> 
@@ -28339,49 +28339,55 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Course Overview</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>  <span class="chapter-title">Course Overview</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./module00-lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>  <span class="chapter-title">Introduction to linear models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module01-slr.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>  <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module02-mlr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>  <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module03-interaction-nonlinearity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Interaction and Nonlinearity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>  <span class="chapter-title">Interaction and Nonlinearity</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module04-qualitative-predictors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Qualitative Predictors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>  <span class="chapter-title">Qualitative Predictors</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module05-model-building-selection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>  <span class="chapter-title">Model Building and Selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module06-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Residual Analysis and Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>  <span class="chapter-title">Residual Analysis and Diagnostics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module07-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>  <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -28403,7 +28409,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>  <span class="chapter-title">Simple Linear Regression (SLR)</span></h1>
 </div>
 
 
@@ -28440,22 +28446,22 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 </script>
 </div>
 </div>
-<section id="when-to-use-slr" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="when-to-use-slr"><span class="header-section-number">2.1</span> When to use SLR</h2>
+<section id="when-to-use-slr" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="when-to-use-slr"><span class="header-section-number">3.1</span> When to use SLR</h2>
 </section>
-<section id="sec-LinearFit" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="sec-LinearFit"><span class="header-section-number">2.2</span> Fitting models to data</h2>
+<section id="sec-LinearFit" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="sec-LinearFit"><span class="header-section-number">3.2</span> Fitting models to data</h2>
 <p>in the previous section, you were given a linear model - we knew the values of <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> and even <span class="math inline">\(\sigma\)</span>. However, in most contexts we don’t know the true relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> in advance. Instead, we are given <em>data</em> and try to <em>infer</em> the values of <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\sigma\)</span> by analysing the data.</p>
 <p>Indeed, at the end of the last session we generated data from a linear model. In preparation for this chapter, we’ve generated data from a similar such linear model. Here it is:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Data</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href>Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href>Data</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell" data-input="linearData">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img role="img" src="data:image/png;base64,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" class="img-fluid figure-img" width="672"></p>
+<p><img role="img" src="data:image/png;base64,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" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -28464,27 +28470,27 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell" data-input="linearData">
 <div class="cell-output cell-output-stdout">
-<pre><code>            x          y
-1   6.3760079  0.6455654
-2   6.6370954  0.4035721
-3  -3.0352540 -3.7999662
-4  -8.2389353 -9.5449309
-5  -3.0513450 -2.5410170
-6  -0.5572173 -4.7276965
-7  -2.2347887 -6.3122787
-8   7.1978811 -0.8794810
-9   3.9163960  1.7113658
-10  2.2322167 -6.8158073
-11  4.2098264 -0.1668024
-12  2.1158231 -4.0352427
-13  6.9788314 -1.2737527
-14  1.1704133 -2.5711720
-15 -2.0981967 -3.9098972
-16  1.7438984 -1.5709797
-17 -0.5355881 -2.4107105
-18 -2.1431666 -4.6993037
-19  8.2798920  1.7387922
-20 -1.3959860 -5.0201586</code></pre>
+<pre><code>            x         y
+1  -2.7389302 -3.799346
+2  -3.4174580 -3.191814
+3   1.5562859 -4.413416
+4  -0.7204612 -1.691161
+5  -1.0332731 -5.504402
+6  -5.2721929 -9.476080
+7  -4.1228157 -4.403159
+8  -1.4089812 -3.830456
+9  -6.5453354 -4.498013
+10  3.8237114 -1.107325
+11 -2.5203871 -3.043336
+12  0.3068596 -1.094032
+13 -4.6372429 -4.738825
+14  8.5162454  2.821438
+15 -5.3280172 -3.849822
+16 -1.5421414 -3.882558
+17  2.1389556 -1.275018
+18 -6.1577965 -9.835073
+19  2.1462069 -1.583011
+20  2.4439241 -1.656532</code></pre>
 </div>
 </div>
 </div>
@@ -28496,7 +28502,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 </ul>
 <section id="estimating-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="estimating-parameters">Estimating parameters</h3>
-<p>We call the process of trying to guess the parameters in the data generating model (i.e.&nbsp;<span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\sigma\)</span>), <em>estimation</em>, and our guesses are <em>estimates</em>. To avoid confusion, we’ll denote the estimated intercept by <span class="math inline">\(a\)</span> and the estimated slope by <span class="math inline">\(b\)</span>. So, we have</p>
+<p>We call the process of trying to guess the parameters in the data generating model (i.e. <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\sigma\)</span>), <em>estimation</em>, and our guesses are <em>estimates</em>. To avoid confusion, we’ll denote the estimated intercept by <span class="math inline">\(a\)</span> and the estimated slope by <span class="math inline">\(b\)</span>. So, we have</p>
 <p><span class="math display">\[
 a: \text{Estimated intercept}
 \]</span> <span class="math display">\[
@@ -28508,12 +28514,12 @@ b: \text{Estimated slope}
 \]</span> Looking at some data, we try to find the values of our parameters that best ‘fit’ its distribution. Adjust the sliders below to find a line that you think fits the data:</p>
 <div class="panel-grid layout-sidebar ms-md-0 layout-sidebar-left">
 <div class="cell panel-sidebar card bg-light p-2 g-col-24 g-col-lg-7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="119" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 118;"><span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>viewof b0adj_1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`a`</span><span class="sc">}</span><span class="vs">: Estimated Intercept (asjust)`</span>})</span>
-<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>viewof b1_1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">2</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span>  <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`b`</span><span class="sc">}</span><span class="vs">: Estimated Slope`</span>})</span>
-<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>b0_1 <span class="op">=</span> (<span class="op">-</span><span class="dv">3</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">*</span>b1_1) <span class="op">+</span> b0adj_1</span>
-<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\h</span><span class="vs">at{Y} = </span><span class="sc">${</span>b0_1<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>b1_1<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">x`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="118" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 117;"><span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>viewof b0adj_1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`a`</span><span class="sc">}</span><span class="vs">: Estimated Intercept (asjust)`</span>})</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>viewof b1_1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">2</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span>  <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`b`</span><span class="sc">}</span><span class="vs">: Estimated Slope`</span>})</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>b0_1 <span class="op">=</span> (<span class="op">-</span><span class="dv">3</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">*</span>b1_1) <span class="op">+</span> b0adj_1</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\h</span><span class="vs">at{Y} = </span><span class="sc">${</span>b0_1<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>b1_1<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">x`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -28546,19 +28552,19 @@ b: \text{Estimated slope}
 <div class="panel-fill panel-grid g-col-24 g-col-lg-17 pt-3 pt-lg-0">
 <div class="g-col-24">
 <div class="cell panel-fill">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="131" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 130;"><span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>xRange <span class="op">=</span> d3<span class="op">.</span><span class="fu">extent</span>(linearData<span class="op">.</span><span class="at">x</span>)</span>
-<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>lineData_1 <span class="op">=</span> xRange<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> ({x<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> b1_1 <span class="op">*</span> x <span class="op">+</span> b0_1}))</span>
-<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(lineData_1<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span> })<span class="op">,</span></span>
-<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(<span class="fu">transpose</span>(linearData)<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span> })</span>
-<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
-<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> xRange }<span class="op">,</span></span>
-<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> [<span class="op">-</span><span class="dv">10</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"y"</span> }<span class="op">,</span></span>
-<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="130" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 129;"><span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>xRange <span class="op">=</span> d3<span class="op">.</span><span class="fu">extent</span>(linearData<span class="op">.</span><span class="at">x</span>)</span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a>lineData_1 <span class="op">=</span> xRange<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> ({x<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> b1_1 <span class="op">*</span> x <span class="op">+</span> b0_1}))</span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(lineData_1<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">&quot;x&quot;</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">&quot;y&quot;</span> })<span class="op">,</span></span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(<span class="fu">transpose</span>(linearData)<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">&quot;x&quot;</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">&quot;y&quot;</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span> })</span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> xRange }<span class="op">,</span></span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> [<span class="op">-</span><span class="dv">10</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;y&quot;</span> }<span class="op">,</span></span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -28585,7 +28591,7 @@ b: \text{Estimated slope}
 </div>
 </div>
 <div id="Exercise-1" class="Exercise">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 1</strong></summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 1</strong></summary><div>
 <p>What is your best estimate for the values of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> that best fit the given data?</p>
 <div class="cell" data-exercise="ex_2.1" data-envir="Ex2" data-define="[&quot;my_a&quot;,&quot;my_b&quot;]">
 <div>
@@ -28617,7 +28623,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJjbGFzcyI6IndhaXQiLCJlZGl0Ijp0cnVlLCJlbnZpciI6IkV4
 <h3 class="anchored" data-anchor-id="section"></h3>
 <p>Ok great, so we have an estimate for our line-of-best-fit:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="180" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 179;"><span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\h</span><span class="vs">at{Y} = </span><span class="sc">${</span>my_a<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>my_b<span class="sc">}\c</span><span class="vs">dot X`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="179" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 178;"><span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\h</span><span class="vs">at{Y} = </span><span class="sc">${</span>my_a<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>my_b<span class="sc">}\c</span><span class="vs">dot X`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="expression">
 
@@ -28651,26 +28657,26 @@ SSR=\sum_{i=1}^{n} e_i^2
 <p>where <span class="math inline">\(e_i = Y_i - \hat{Y}_i\)</span>. This gives us a numerical measure of how well the line fits the data - see how low you can get the SSR by adjusting slope and intercept.</p>
 <div class="panel-grid layout-sidebar ms-md-0 layout-sidebar-left">
 <div class="cell panel-sidebar card bg-light p-2 g-col-24 g-col-lg-7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="216" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 215;"><span id="cb5-216"><a href="#cb5-216" aria-hidden="true" tabindex="-1"></a>viewof b0adj <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`a`</span><span class="sc">}</span><span class="vs">: Estimated Intercept`</span>})</span>
-<span id="cb5-217"><a href="#cb5-217" aria-hidden="true" tabindex="-1"></a>viewof b1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">2</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span>  <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`b`</span><span class="sc">}</span><span class="vs">: Estimated Slope`</span>})</span>
-<span id="cb5-218"><a href="#cb5-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-219"><a href="#cb5-219" aria-hidden="true" tabindex="-1"></a>b0 <span class="op">=</span> <span class="op">-</span><span class="dv">3</span> <span class="op">+</span> b0adj</span>
-<span id="cb5-220"><a href="#cb5-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-221"><a href="#cb5-221" aria-hidden="true" tabindex="-1"></a>residualData <span class="op">=</span> <span class="fu">transpose</span>(linearData)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> {</span>
-<span id="cb5-222"><a href="#cb5-222" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> yhat <span class="op">=</span> b1 <span class="op">*</span> d<span class="op">.</span><span class="at">x</span> <span class="op">+</span> b0<span class="op">;</span></span>
-<span id="cb5-223"><a href="#cb5-223" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> res  <span class="op">=</span> d<span class="op">.</span><span class="at">y</span> <span class="op">-</span> yhat<span class="op">;</span></span>
-<span id="cb5-224"><a href="#cb5-224" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
-<span id="cb5-225"><a href="#cb5-225" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span>d<span class="op">,</span></span>
-<span id="cb5-226"><a href="#cb5-226" aria-hidden="true" tabindex="-1"></a>    yhat<span class="op">,</span></span>
-<span id="cb5-227"><a href="#cb5-227" aria-hidden="true" tabindex="-1"></a>    <span class="dt">residual</span><span class="op">:</span> res<span class="op">,</span></span>
-<span id="cb5-228"><a href="#cb5-228" aria-hidden="true" tabindex="-1"></a>    <span class="dt">sign</span><span class="op">:</span> res <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">"positive"</span> <span class="op">:</span> <span class="st">"negative"</span><span class="op">,</span></span>
-<span id="cb5-229"><a href="#cb5-229" aria-hidden="true" tabindex="-1"></a>    <span class="dt">absRes</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(res)</span>
-<span id="cb5-230"><a href="#cb5-230" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb5-231"><a href="#cb5-231" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb5-232"><a href="#cb5-232" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-233"><a href="#cb5-233" aria-hidden="true" tabindex="-1"></a>SSRes <span class="op">=</span> d3<span class="op">.</span><span class="fu">sum</span>(residualData<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">residual</span> <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb5-234"><a href="#cb5-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-235"><a href="#cb5-235" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\h</span><span class="vs">at{Y} = </span><span class="sc">${</span>b0<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>b1<span class="sc">}</span><span class="vs">X`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="215" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 214;"><span id="cb5-215"><a href="#cb5-215" aria-hidden="true" tabindex="-1"></a>viewof b0adj <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`a`</span><span class="sc">}</span><span class="vs">: Estimated Intercept`</span>})</span>
+<span id="cb5-216"><a href="#cb5-216" aria-hidden="true" tabindex="-1"></a>viewof b1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">2</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span>  <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">tex</span><span class="vs">`b`</span><span class="sc">}</span><span class="vs">: Estimated Slope`</span>})</span>
+<span id="cb5-217"><a href="#cb5-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-218"><a href="#cb5-218" aria-hidden="true" tabindex="-1"></a>b0 <span class="op">=</span> <span class="op">-</span><span class="dv">3</span> <span class="op">+</span> b0adj</span>
+<span id="cb5-219"><a href="#cb5-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-220"><a href="#cb5-220" aria-hidden="true" tabindex="-1"></a>residualData <span class="op">=</span> <span class="fu">transpose</span>(linearData)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> {</span>
+<span id="cb5-221"><a href="#cb5-221" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> yhat <span class="op">=</span> b1 <span class="op">*</span> d<span class="op">.</span><span class="at">x</span> <span class="op">+</span> b0<span class="op">;</span></span>
+<span id="cb5-222"><a href="#cb5-222" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> res  <span class="op">=</span> d<span class="op">.</span><span class="at">y</span> <span class="op">-</span> yhat<span class="op">;</span></span>
+<span id="cb5-223"><a href="#cb5-223" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
+<span id="cb5-224"><a href="#cb5-224" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span>d<span class="op">,</span></span>
+<span id="cb5-225"><a href="#cb5-225" aria-hidden="true" tabindex="-1"></a>    yhat<span class="op">,</span></span>
+<span id="cb5-226"><a href="#cb5-226" aria-hidden="true" tabindex="-1"></a>    <span class="dt">residual</span><span class="op">:</span> res<span class="op">,</span></span>
+<span id="cb5-227"><a href="#cb5-227" aria-hidden="true" tabindex="-1"></a>    <span class="dt">sign</span><span class="op">:</span> res <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">&quot;positive&quot;</span> <span class="op">:</span> <span class="st">&quot;negative&quot;</span><span class="op">,</span></span>
+<span id="cb5-228"><a href="#cb5-228" aria-hidden="true" tabindex="-1"></a>    <span class="dt">absRes</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(res)</span>
+<span id="cb5-229"><a href="#cb5-229" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb5-230"><a href="#cb5-230" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-231"><a href="#cb5-231" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-232"><a href="#cb5-232" aria-hidden="true" tabindex="-1"></a>SSRes <span class="op">=</span> d3<span class="op">.</span><span class="fu">sum</span>(residualData<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">residual</span> <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb5-233"><a href="#cb5-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-234"><a href="#cb5-234" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\h</span><span class="vs">at{Y} = </span><span class="sc">${</span>b0<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>b1<span class="sc">}</span><span class="vs">X`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-4-1" data-nodetype="declaration">
@@ -28713,7 +28719,7 @@ SSR=\sum_{i=1}^{n} e_i^2
 </div>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="237" data-source-offset="-528"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 236;"><span id="cb6-237"><a href="#cb6-237" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\s</span><span class="vs">um_{i} e_i^{2} = </span><span class="sc">${</span>SSRes<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="236" data-source-offset="-528"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 235;"><span id="cb6-236"><a href="#cb6-236" aria-hidden="true" tabindex="-1"></a>tex<span class="op">.</span><span class="fu">block</span><span class="vs">`</span><span class="sc">\s</span><span class="vs">um_{i} e_i^{2} = </span><span class="sc">${</span>SSRes<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-4-7" data-nodetype="expression">
@@ -28725,24 +28731,24 @@ SSR=\sum_{i=1}^{n} e_i^2
 <div class="panel-fill panel-grid g-col-24 g-col-lg-17 pt-3 pt-lg-0">
 <div class="g-col-24">
 <div class="cell panel-fill">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="243" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 242;"><span id="cb7-243"><a href="#cb7-243" aria-hidden="true" tabindex="-1"></a>lineData <span class="op">=</span> xRange<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> ({x<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> b1 <span class="op">*</span> x <span class="op">+</span> b0}))</span>
-<span id="cb7-244"><a href="#cb7-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-245"><a href="#cb7-245" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb7-246"><a href="#cb7-246" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb7-247"><a href="#cb7-247" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleX</span>(residualData<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span></span>
-<span id="cb7-248"><a href="#cb7-248" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y1</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span></span>
-<span id="cb7-249"><a href="#cb7-249" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y2</span><span class="op">:</span> <span class="st">"yhat"</span><span class="op">,</span></span>
-<span id="cb7-250"><a href="#cb7-250" aria-hidden="true" tabindex="-1"></a>      <span class="dt">stroke</span><span class="op">:</span> <span class="st">"sign"</span><span class="op">,</span> </span>
-<span id="cb7-251"><a href="#cb7-251" aria-hidden="true" tabindex="-1"></a>      <span class="dt">strokeOpacity</span><span class="op">:</span> <span class="fl">0.75</span><span class="op">,</span></span>
-<span id="cb7-252"><a href="#cb7-252" aria-hidden="true" tabindex="-1"></a>      <span class="dt">strokeWidth</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="dv">1</span> <span class="op">+</span> d<span class="op">.</span><span class="at">absRes</span>})<span class="op">,</span></span>
-<span id="cb7-253"><a href="#cb7-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-254"><a href="#cb7-254" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(lineData<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span> })<span class="op">,</span></span>
-<span id="cb7-255"><a href="#cb7-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-256"><a href="#cb7-256" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(<span class="fu">transpose</span>(linearData)<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span> })</span>
-<span id="cb7-257"><a href="#cb7-257" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
-<span id="cb7-258"><a href="#cb7-258" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> xRange }<span class="op">,</span></span>
-<span id="cb7-259"><a href="#cb7-259" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> [<span class="op">-</span><span class="dv">10</span><span class="op">,</span><span class="dv">5</span>]<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"y"</span> }<span class="op">,</span></span>
-<span id="cb7-260"><a href="#cb7-260" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="242" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 241;"><span id="cb7-242"><a href="#cb7-242" aria-hidden="true" tabindex="-1"></a>lineData <span class="op">=</span> xRange<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> ({x<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> b1 <span class="op">*</span> x <span class="op">+</span> b0}))</span>
+<span id="cb7-243"><a href="#cb7-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-244"><a href="#cb7-244" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb7-245"><a href="#cb7-245" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb7-246"><a href="#cb7-246" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleX</span>(residualData<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">&quot;x&quot;</span><span class="op">,</span></span>
+<span id="cb7-247"><a href="#cb7-247" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y1</span><span class="op">:</span> <span class="st">&quot;y&quot;</span><span class="op">,</span></span>
+<span id="cb7-248"><a href="#cb7-248" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y2</span><span class="op">:</span> <span class="st">&quot;yhat&quot;</span><span class="op">,</span></span>
+<span id="cb7-249"><a href="#cb7-249" aria-hidden="true" tabindex="-1"></a>      <span class="dt">stroke</span><span class="op">:</span> <span class="st">&quot;sign&quot;</span><span class="op">,</span> </span>
+<span id="cb7-250"><a href="#cb7-250" aria-hidden="true" tabindex="-1"></a>      <span class="dt">strokeOpacity</span><span class="op">:</span> <span class="fl">0.75</span><span class="op">,</span></span>
+<span id="cb7-251"><a href="#cb7-251" aria-hidden="true" tabindex="-1"></a>      <span class="dt">strokeWidth</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="dv">1</span> <span class="op">+</span> d<span class="op">.</span><span class="at">absRes</span>})<span class="op">,</span></span>
+<span id="cb7-252"><a href="#cb7-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-253"><a href="#cb7-253" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(lineData<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">&quot;x&quot;</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">&quot;y&quot;</span> })<span class="op">,</span></span>
+<span id="cb7-254"><a href="#cb7-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-255"><a href="#cb7-255" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(<span class="fu">transpose</span>(linearData)<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">&quot;x&quot;</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">&quot;y&quot;</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span> })</span>
+<span id="cb7-256"><a href="#cb7-256" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb7-257"><a href="#cb7-257" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> xRange }<span class="op">,</span></span>
+<span id="cb7-258"><a href="#cb7-258" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">domain</span><span class="op">:</span> [<span class="op">-</span><span class="dv">10</span><span class="op">,</span><span class="dv">5</span>]<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;y&quot;</span> }<span class="op">,</span></span>
+<span id="cb7-259"><a href="#cb7-259" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-5-1" data-nodetype="declaration">
@@ -28762,7 +28768,7 @@ SSR=\sum_{i=1}^{n} e_i^2
 </div>
 </div>
 <div id="Exercise-2" class="Exercise">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 2</strong></summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 2</strong></summary><div>
 <p>Based on this visualisation, what do you think is the minimum possible <span class="math inline">\(SSR\)</span> achievable?</p>
 <div class="cell" data-exercise="Ex_2.2" data-envir="Ex2" data-define="SSR">
 <div>
@@ -28846,7 +28852,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiY29lZihsbV8xKSJ9
 </ul>
 <p>Lets compare the estimated linear fits graphically:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href>Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href>Code</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell" data-exercise="comparePlot" data-envir="Ex2" data-edit="false">
@@ -28880,8 +28886,8 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjpmYWxzZX0sImNvZGUiOiJnZ3Bsb3QobGluZWFyRGF0
 </section>
 <section id="estimating-variance" class="level3">
 <h3 class="anchored" data-anchor-id="estimating-variance">Estimating variance</h3>
-<p>Once the line has been fitted (i.e.&nbsp;<span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> have been estimated as <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>), we also have to estimate the distribution of error terms (remember, as per <span class="quarto-unresolved-ref">?sec-varAssumption</span>, the error distribution has a constant variance defined by <span class="math inline">\(\sigma^2\)</span>). As you might expect, we again utilise the residuals from our least squares linear predictor to estimate <span class="math inline">\(\sigma\)</span>. The spread of the error terms will be estimated by the spread of the residuals around our line of best fit.</p>
-<p>We can extract the individual residual values from the fitted <code>lm</code> object by indexing (e.g.&nbsp;<code>my_lm$residuals</code>) or with the <code>residuals()</code> function.</p>
+<p>Once the line has been fitted (i.e. <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> have been estimated as <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>), we also have to estimate the distribution of error terms (remember, as per <a href="#sec-varAssumption" class="quarto-xref"><span class="quarto-unresolved-ref">sec-varAssumption</span></a>, the error distribution has a constant variance defined by <span class="math inline">\(\sigma^2\)</span>). As you might expect, we again utilise the residuals from our least squares linear predictor to estimate <span class="math inline">\(\sigma\)</span>. The spread of the error terms will be estimated by the spread of the residuals around our line of best fit.</p>
+<p>We can extract the individual residual values from the fitted <code>lm</code> object by indexing (e.g. <code>my_lm$residuals</code>) or with the <code>residuals()</code> function.</p>
 <div class="cell">
 <div>
 <div id="webr-19" class="exercise-cell">
@@ -28892,9 +28898,9 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoicmVzaWR1YWxzKGxtXzEpIn0=
 </script>
 </div>
 </div>
-<p>The resulting <code>R</code> object is a vector of the residual for each observation. i.e.&nbsp;residuals(lm_1)[[3]] <span class="math inline">\(= e_3\)</span></p>
+<p>The resulting <code>R</code> object is a vector of the residual for each observation. i.e. residuals(lm_1)[[3]] <span class="math inline">\(= e_3\)</span></p>
 <div id="extracting-residuals-from-an-lm-object" class="Exercise" title="Extracting residuals from an lm object">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 3: </strong>Extracting residuals from an lm object</summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 3: </strong>Extracting residuals from an lm object</summary><div>
 <p>Extract the residuals from your least squares fitted model <code>lm_1</code><em>by indexing</em> and assign them to the variable <code>e</code></p>
 <div class="cell" data-exercise="ex_2.2.1" data-envir="ex_2.2">
 <div>
@@ -28955,12 +28961,12 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJjbGFzcyI6IndhaXQiLCJlZGl0Ijp0cnVlLCJlbnZpciI6ImV4
 </section>
 <section id="correlation-and-r2" class="level3">
 <h3 class="anchored" data-anchor-id="correlation-and-r2">Correlation and <span class="math inline">\(R^2\)</span></h3>
-<p>The <button class="glossary" title="">Pearson-Correlation</button> coefficient, <span class="math inline">\(r\)</span>, measures how strongly <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> move together along a straight line, taking values between <span class="math inline">\(-1\)</span> (perfect negative linear relationship) and <span class="math inline">\(1\)</span> (perfect positive linear relationship).</p>
-<p>In simple linear regression with an intercept, the <button class="glossary" title="">R-Squared</button> value can be written as <span class="math display">\[
+<p>The <button class="glossary" title>Pearson-Correlation</button> coefficient, <span class="math inline">\(r\)</span>, measures how strongly <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> move together along a straight line, taking values between <span class="math inline">\(-1\)</span> (perfect negative linear relationship) and <span class="math inline">\(1\)</span> (perfect positive linear relationship).</p>
+<p>In simple linear regression with an intercept, the <button class="glossary" title>R-Squared</button> value can be written as <span class="math display">\[
 R^2 = 1 - \frac{\text{RSS}}{\text{TSS}} = r^2,
 \]</span> so <span class="math inline">\(R^2\)</span> captures the proportion of the total variation in <span class="math inline">\(Y\)</span> that is explained by the fitted line.</p>
 <div id="correlation-and-r2-in-our-example" class="Exercise" title="Correlation and R^2 in our example">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 4: </strong>Correlation and <span class="math inline">\(R^2\)</span> in our example</summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 4: </strong>Correlation and <span class="math inline">\(R^2\)</span> in our example</summary><div>
 <p>Calculate the correlation between <code>x</code> and <code>y</code>, then compute <span class="math inline">\(R^2\)</span> using the residuals from <code>lm_1</code>.</p>
 <div class="cell" data-exercise="ex_2.2.4" data-envir="ex_2.2">
 <div>
@@ -29001,8 +29007,8 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZW52aXIiOiJleF8yLjIiLCJldmFsIjp0
 </div>
 </section>
 </section>
-<section id="inference-for-slr" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="inference-for-slr"><span class="header-section-number">2.3</span> Inference for SLR</h2>
+<section id="inference-for-slr" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="inference-for-slr"><span class="header-section-number">3.3</span> Inference for SLR</h2>
 <p>Up to this point, we have fitted a straight-line model to a <em>sample</em> of data, obtaining estimates <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> for the intercept and slope. These estimates describe the pattern visible in the sample, but they do not tell us how closely they reflect the <strong>true population parameters</strong> <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Because sampling introduces randomness, different samples would produce different fitted lines.</p>
 <p>This raises the central question:</p>
 <p><strong>How much confidence can we place in the slope and intercept we estimated, and what do they tell us about the true relationship in the population?</strong></p>
@@ -29016,7 +29022,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZW52aXIiOiJleF8yLjIiLCJldmFsIjp0
 </ul>
 <p>The Normality assumption is what allows us to derive the sampling distributions of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, leading directly to the <strong>t-tests</strong> and <strong>confidence intervals</strong> used for inference. Without these assumptions—especially Normality—the exact forms of these inferential tools would not hold.</p>
 <div id="Note-1" class="Note">
-<p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note 1</strong></summary><div>For a broader introduction to statistical inference, see the <em>Inferential Statistics with R</em> short course. If concepts such as the Normal distribution or t-tests feel unfamiliar, please review that material before continuing.<p></p>
+<p></p><details class="Note fbx-simplebox fbx-default" open><summary><strong>Note 1</strong></summary><div>For a broader introduction to statistical inference, see the <em>Inferential Statistics with R</em> short course. If concepts such as the Normal distribution or t-tests feel unfamiliar, please review that material before continuing.<p></p>
 </div></details>
 </div>
 <hr>
@@ -29034,11 +29040,11 @@ H_a: \beta \ne 0.
 \]</span></p>
 <ul>
 <li>Under <span class="math inline">\(H_0\)</span>, changes in <span class="math inline">\(x\)</span> do not affect the mean of <span class="math inline">\(Y\)</span> (a change in <span class="math inline">\(X\)</span> will lead to <span class="math inline">\(\beta\cdot X = 0\cdot X = 0\)</span> change in <span class="math inline">\(Y\)</span>).</li>
-<li>Under <span class="math inline">\(H_a\)</span>, there is evidence of a real linear effect (i.e.&nbsp;a change in <span class="math inline">\(X\)</span> will lead to a non-zero change in <span class="math inline">\(Y\)</span>).</li>
+<li>Under <span class="math inline">\(H_a\)</span>, there is evidence of a real linear effect (i.e. a change in <span class="math inline">\(X\)</span> will lead to a non-zero change in <span class="math inline">\(Y\)</span>).</li>
 </ul>
 <p>Because the Normality assumption implies that the estimator <span class="math inline">\(b\)</span> has a Normal sampling distribution (and hence a <span class="math inline">\(t\)</span> distribution once <span class="math inline">\(\sigma\)</span> is estimated), we are able to quantify how unusual our observed slope would be if <span class="math inline">\(H_0\)</span> were correct.</p>
 <div id="hypothesis-testing-revision-p-values" class="Exercise" title="Hypothesis testing revision (p-values)">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 5: </strong>Hypothesis testing revision (p-values)</summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 5: </strong>Hypothesis testing revision (p-values)</summary><div>
 </div></details>
 </div>
 <section id="the-t-test-for-the-slope" class="level4">
@@ -29055,15 +29061,15 @@ t = \frac{b}{\text{SE}(b)},
 </ul>
 <p>The validity of this test relies on the Normality of the errors, which guarantees that this <span class="math inline">\(t\)</span> statistic follows the appropriate reference distribution.</p>
 <div id="Note-2" class="Note">
-<p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note 2</strong></summary><div>While the assumption of Normality is what theoretically grounds the use of the t-test for parameter estimates, SLR is quite robust to violations of this assumption and inferences about our slope parameters may be of interest even with non-normal residual distributions.<p></p>
+<p></p><details class="Note fbx-simplebox fbx-default" open><summary><strong>Note 2</strong></summary><div>While the assumption of Normality is what theoretically grounds the use of the t-test for parameter estimates, SLR is quite robust to violations of this assumption and inferences about our slope parameters may be of interest even with non-normal residual distributions.<p></p>
 </div></details>
 </div>
 <div id="t-test-for-slope" class="Example" title="t-test for slope">
-<details class="Example fbx-simplebox fbx-default" open=""><summary><strong>Example 1: </strong>t-test for slope</summary><div>
+<details class="Example fbx-simplebox fbx-default" open><summary><strong>Example 1: </strong>t-test for slope</summary><div>
 </div></details>
 </div>
 <div id="t-test-for-slope-1" class="Exercise" title="t-test for slope">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 6: </strong>t-test for slope</summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 6: </strong>t-test for slope</summary><div>
 </div></details>
 </div>
 </section>
@@ -29106,7 +29112,7 @@ s\sqrt{
 }.
 \]</span></p>
 <p>This interval quantifies uncertainty in the <em>average</em> value of <span class="math inline">\(Y\)</span> for units with predictor value <span class="math inline">\(x_0\)</span>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> new_point, <span class="at">interval =</span> <span class="st">"confidence"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> new_point, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="prediction-interval-for-a-new-observation" class="level4">
 <h4 class="anchored" data-anchor-id="prediction-interval-for-a-new-observation">Prediction Interval for a New Observation</h4>
@@ -29122,7 +29128,7 @@ s\sqrt{
 }.
 \]</span></p>
 <p>Because of the extra “1” term, prediction intervals are <strong>always wider</strong> than confidence intervals.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> new_point, <span class="at">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> new_point, <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="summary" class="level4">
 <h4 class="anchored" data-anchor-id="summary">Summary</h4>
