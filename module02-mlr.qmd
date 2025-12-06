@@ -93,7 +93,7 @@ ads
 We might look at each bivariate (i.e. two variables) relationship between sales and advertising expendature separately:
 
 :::: {.panel-tabset}
-### $Sales \sim TV$
+### $\text{Sales} \sim \text{TV}$
 ```{webr}
 #| edit: false
 #| echo: false
@@ -101,7 +101,7 @@ ggplot(ads, aes(x = TV, y = Sales)) +
   geom_point() +
   labs(x = "TV", y = "Sales")
 ```
-### $Sales\sim Radio$
+### $\text{Sales}\sim \text{Radio}$
 ```{webr}
 #| edit: false
 #| echo: false
@@ -130,7 +130,7 @@ In the case of 3 variables we can also extend our visualisation to 3 dimensions
 #| edit: false
 #| echo: false
 plot_ly(ads, x = ~TV, y = ~Radio, z = ~Sales,
-        type = "scatter3d", mode = "markers", showlegend=FALSE)
+        type = "scatter3d", mode = "markers", showlegend=FALSE, opacity=0.8)
 ```
 ::::
 Using multiple predictors simultaneously gives us more information than using each variable separately - this is a great case for applying multiple regression!
@@ -172,8 +172,8 @@ Although this is still a *linear* model, the term "linear" no longer refers to a
 fit <- lm(Sales ~ TV + Radio, data = ads)
 
 # Create grid for the plane
-tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 30)
-radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 30)
+tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 4)
+radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 4)
 grid   <- expand.grid(TV = tv_seq, Radio = radio_seq)
 grid$sales_hat <- predict(fit, newdata = grid)
 
@@ -211,49 +211,114 @@ Even though our model is no longer just a straight line, the *slope* interpretat
 
 ::: Example
 #### Interpreting a partial coefficient, $\beta_i$
-We may propose a model for `Sales` whereby the baseline sales (when no money is invested in advertising) is $beta_0=3$,  $\beta_{TV}= 0.1$ and $\beta_{Radio}= 0.2$, i.e. 
+We may propose a model for `Sales` whereby the baseline sales (when no money is invested in advertising) is $\beta_0=3$,  $\beta_{TV}= 0.1$ and $\beta_{Radio}= 0.2$, i.e. 
 $$
 E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
 $$
-
+In this model:
 * A $1k increase in TV advertising expenditure is associated with an expected 100 unit (0.1*1000units - the scale of the outcome) increase in sales, holding Radio expenditure constant.
 * Converely, at a fixed level of `TV` advertising expenditure, a $1k increase in Radio advertisin expenditure corresponds to an expected 200 unit increase in sales.
+
+
+- [ ] Continue
+
+For example, lets fix one predictor.  Say, we have already have invested $5k in Radio,  then our linear predictor becomes
+
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot 5= 4 + 0.1\cdot\text{TV}
+$$
+
+i.e. only one *variable* (`TV`) remains (`Radio` no longer varies but is held constant - contributing $0.2\cdot 5=1$k units to $E[Y]$), so the parameter $\beta_1$ can be interpreted as the slope of the SLR line:
+
+```{r}
+ggplot()+
+  geom_abline(intercept=4,slope= 0.1, color='#2196F3')+
+  lims(x=c(0,50),y=c(0,10))
+```
 :::
 
 
 ::: Exercise
-### Calculating the expected value of a multiple regression model
-Given this model 
+### Calculating the expected outcome of a multiple regression model
+Given this model of sales by TV and Radio advertising, 
 $$
 E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
 $$
-Calcultate the expected sales (in thousands of units) for 5k TV and 8k Radio advertising expenditure 
+
+$12k has been spent on TV advertising due to a persisting contract. How much should the company invest in Radio advertising so that the expected sales matches their inventory of 8k units?
 
 ```{webr}
 
 ```
 :::
 
-### Fitting MLR Models in R and the `tidy()` function 
-Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares: Residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique 'least squares estimates' for the model parameters $b_0, \ldots, b_k$.
+### Fitting MLR Models in R
+Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares: residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique *least squares estimates* for the model parameters $\hat{\beta}_0, \ldots, \hat{\beta}_k$.
 
-MLR uses the same `lm()` function as SLR (these are both 'linear models', after all). Now, the model `formula` (the first argument, identified by the `~` separating the LHS and RHS) includes both predictors on the RHS, separated by a `+`:
+In `R` we use the same `lm()` function as SLR (these are both 'linear models', after all). Now however, the model `formula` includes both predictors on the RHS, separated by a `+`:
 ```{webr}
-mod <- lm(Sales ~ TV + Radio, data = ads)
+ads_mod <- lm(Sales ~ TV + Radio, data = ads)
 ```
+
 ::: Note
 ### R `formulas`
-
+(the first argument, identified by the `~` separating the LHS and RHS)
 :::
-and we can extract our model coefficients ($\beta_0, \ldots,\beta_3$) in the same way: 
+
+Lets visualise our fitted model:
+
+```{webr}
+#| echo: false
+#| edit: false
+
+# Fit least squares plane
+fit <- lm(Sales ~ TV + Radio, data = ads)
+
+# Create grid for the plane
+tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 4)
+radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 4)
+grid   <- expand.grid(TV = tv_seq, Radio = radio_seq)
+grid$sales_hat <- predict(fit, newdata = grid)
+
+z_mat <- matrix(grid$sales_hat, nrow = length(tv_seq), ncol = length(radio_seq))
+
+# 3D scatter + plane
+fig <- plot_ly() |>
+  add_markers(
+    data = ads,
+    x = ~Radio, y = ~TV, z = ~Sales,
+    type = "scatter3d",
+    mode = "markers") |>
+  add_surface(
+    x = radio_seq,
+    y = tv_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "Radio"),
+      yaxis = list(title = "TV"),
+      zaxis = list(title = "Sales")
+    ),
+    showlegend = FALSE
+  ) 
+
+fig
+
+```
+
+We can extract our fitted model coefficients in the same way: 
 
 ::: {.panel-tabset}
-#### indexing
+#### Using indexing
 ```{webr}
 #| echo: true
-mod$coefficients
+ads_mod$coefficients
 ```
-#### coef() function
+#### The `coef()` function
 
 ```{webr}
 #| echo: true
@@ -262,21 +327,23 @@ coef(mod)
 :::
 
 ::: Exercise
-## extracting coefficients from an `lm` model
-Use the the least-squares coefficients from `mod` to complete these partial regression plots
+#### extracting coefficients from an `lm` model
+Use the the least-squares coefficients from `abs mod` to complete these partial regression plots
 
 ```{webr}
 ggplot(ads)+
   aes(x=TV, y=Sales)+
   geom_point()+
-  geom_abline(intercept = mod$coefficients[1], slope = ______)
+  geom_abline(intercept = ads_mod$coefficients[1], ads_slope = ______)
 ```
 :::
 
-We can also use the `tidy` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter:
+### `broom::tidy()`
+We can also use the `tidy()` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter:
 ```{webr}
+#| edit: false
 library(broom)
-tidy(mod, conf.int = TRUE)
+tidy(ads_mod, conf.int = TRUE)
 ```
 The hypotheses being tested for each coefficient is analagous to that in the SLR case @sec-beta_inference:
 $$
@@ -284,28 +351,38 @@ H_0 : \beta_i = 0
 \qquad\text{vs}\qquad
 H_a : \beta_i \ne 0.
 $$
-And is tested the same way - using the t-statistic:
+using t-statistic which takes into account the size of the estimate along with its standard error:
 $$
 t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
 $$
 
-However, the interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of \beta_i here does not represent the relationship between $Y$ and $X_i$ without qualification - but only when the other variables are held constant. Analogously, the hypothesis being tested by $t_i$ is whether $X_i$ is related to to $Y$ *once the other predictors are accounted for*. 
+The main difference in calculation here is that this test statistic has degrees of freedom that depend on the number of predictors in the model. Specifically, $t_i$ has $n - (k+1)$ degrees of freedom - where $n$ is the number of observations and $k$ is the number of predictor variables. Note that this is consistent with the df used for SLR.  
+
+The interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of $\beta_i$ here does not represent the relationship between $Y$ and $X_i$ without qualification - but only as the other variables are held constant. Analogously, the hypothesis being tested by $t_i$ is whether $X_i$ is related to to $Y$ - *once we account for the other predictors in the model*. 
+
 ::: Key-point
-### interpreting partial regression coefficients, $\beta_i$
+#### Interpreting the t-test of $\beta_i$
+$t_i$ is a $n-k+1$ statistic which tests the null hypothesis that $\beta_i=0$ in the multiple regression model. A significant p-value for this test entails that *given the other predictors in the model*.
 :::
 
 Because of this:
 
 - The significance of a predictor can change when variables are added or removed.
 - A small p-value for $\beta_i$ suggests a meaningful **partial effect**, not necessarily a *marginal* (unadjusted) one.
-
-### Warning: Multicollinearity
+::: Warning
+###  Multicollinearity
 - least squares is an amazing method for fitting but it has a weakness
 - correlated predictors can cause unstable parameter estimates
 - Check for correlation using a correlation matrix or using `vif`
 - this will be adressed more comprehensively in module 6: diagnostics an transformations. 
+:::
 
-## Global model statistics: The F-Test and measures of model fit
+::: Note 
+### Multiple t-tests and type I error inflation
+While it is easy to compute t-tests for each model coefficient individually, this is generally not a good way to determine whether the model as a whole is contributing useful information for the prediction of $Y$. While the model above only has two predictors, larger datasets have the potential for dozens, hundreds, or thousands of predictors! If we were to rely on this series of $t$-tests alone to determine whether we have *any* useful predictors of the outcome, we would be compounding our chance of making a 'type I error' (i.e. concluding there is a effect where there is none) with each test. Instead of performing several small tests, we have reason to want a single *global* test - one that encompasses all the $\beta$ parameters. 
+:::
+
+## The F-Test for model model usefulness. :  and measures of model fit
 
 Having multiple predictor variables expands the scope of the kind of questions we can ask about our linear model. Rather than looking at each coefficient separately, we can ask whether our model *as a whole* is effective in explaining the outcome $Y$ In other words, is the combined contribution of the predictors enough to conclude that a linear relationship exists?
 
