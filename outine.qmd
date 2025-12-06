@@ -1,0 +1,69 @@
+---
+title: Book Outline
+format: live-html
+---
+
+# Book Outline
+
+## Preface (`index.qmd`)
+- Introduces linear regression as a fundamental tool, outlining goals such as understanding model assumptions, fitting and interpreting simple and multiple regression in R, diagnosing fit with residual plots and summary statistics, making predictions with uncertainty, and presenting results.
+
+## Simple Linear Regression
+
+### `SimpleLinearRegression.qmd`
+- Marks the start of the simple linear regression part of the book.
+
+### `SLModels.qmd`
+- Describes statistical models with outcomes $Y$, predictors $X$, and a random error term, framing $Y=f(X)+\varepsilon$ with $\varepsilon$ capturing unexplained variation.
+- Chooses a linear predictor $E[Y]=\alpha+\beta X$, explains intercept and slope, and illustrates the idea with salary growth examples and hands-on exercises building linear predictors in R.
+- Introduces assumptions on the random errors: mean zero, constant variance, and normality, linking them to how data scatter around the fitted line.
+- Presents the simple linear model $Y=\alpha+\beta X+\varepsilon$ and demonstrates data generation and visualisation for a model with known parameters.
+
+### `SLRFitting.qmd`
+- Shifts from known models to estimating parameters $a$, $b$, and $\hat\sigma$ from data, using interactive fitting to match lines to a simulated dataset.
+- Defines residuals $e=Y-\hat Y$ and uses the sum of squared residuals to motivate least-squares estimation.
+- Shows how R’s `lm()` function computes the unique least-squares line and compares user guesses to the fitted model.
+- Estimates error spread via residuals, introducing residual standard error and exercises on extracting residuals.
+- Connects correlation and $R^2$ to the fitted model, relating $R^2$ to the share of variation explained by the line.
+
+### `SLRDiagnostics.qmd`
+- Restates the simple linear model assumptions (linearity of $E[Y]$, independent errors with mean 0, constant variance, and normality) and frames diagnostics as checks of whether data suit the model.
+- Uses residual plots (including the default `plot(lm)` suite) to assess fit, starting with linearity checks where curved patterns remain in residuals (e.g., cholesterol vs fat intake).
+- Discusses independence violations with an IQ vs alcohol intake example where repeated measures cluster by participant.
+- Reviews constant-variance expectations, warning signs like funnel-shaped residuals, and remedies such as transformations or weighted least squares, with a heteroscedasticity illustration.
+- Covers normality diagnostics via Q-Q plots, highlighting heavy-tailed residual patterns and suggesting transformations or robust methods when normality fails.
+
+### `SLRInference.qmd`
+- Frames inference as quantifying uncertainty in sample-based estimates of population parameters, focusing on the slope $\beta$ as the main target.
+- Summarises distributional results for coefficient estimators, confidence intervals, and hypothesis tests for $\alpha$ and $\beta$, and notes chi-squared results for $\sigma$ with related intervals and tests.
+- Walks through interpreting `summary()` output: coefficients with standard errors and $t$-tests, residual standard error, $R^2$/adjusted $R^2$, and the connection between the $F$-statistic and the slope test.
+- Outlines responsible prediction: using `predict()` for fitted values, distinguishing confidence vs prediction intervals, reporting uncertainty, and avoiding extrapolation beyond observed $x$.
+
+### `SLRCase.qmd`
+- Presents a case study using `naplan_reading.csv`: predicting NAPLAN reading scores (outcome) from socioeconomic status index (predictor) across Australian students.
+- States the simple linear model for reading score vs SES, imports the data, plots the scatter, fits the least-squares line with `lm()`, interprets the intercept and slope estimates, and visualises the fitted relationship.
+
+## Multiple Regression
+
+### `MultipleRegression.qmd`
+- Motivates moving beyond a single predictor, defining the multiple linear regression model $y=\alpha+\beta_1X_1+\beta_2X_2+\cdots+\beta_iX_i+\varepsilon$ with $\varepsilon\sim N(0,\sigma^2)$ and noting that simple-regression ideas extend with additional predictors.
+
+### `MLRNewFeatures.qmd`
+- Demonstrates adding predictors with a worked example fitting a least-squares plane (`lm(y ~ x1 + x2)`) and visualising the 3D scatter and fitted surface.
+- Covers quantitative predictors: partial regression coefficients “holding others constant,” and the benefits of centring or standardising predictors for interpretation and stability.
+- Highlights multicollinearity diagnostics (VIFs, tolerance), the impact on standard errors, and remedies such as combining variables or removing redundancies.
+- Discusses qualitative predictors: dummy coding, reference categories, treatment vs sum coding, and interpreting adjusted means, with suggested examples and exercises on encoding and reading coefficients.
+
+### `MLRDerivedFeatures.qmd`
+- Builds models by constructing terms: polynomial predictors to capture smooth curvature (with notes on degree, bias–variance trade-offs, and plotting fitted curves) and interaction terms to allow slopes to vary across predictor levels.
+- Emphasises interpreting interaction effects, visualising marginal effects, and handling continuous-by-categorical and continuous-by-continuous interactions, with examples (e.g., salary vs experience by gender) and exercises computing simple slopes or predicted outcomes.
+
+### `VariableScreening.qmd`
+- Outlines variable selection themes: parsimony, contrasts between SLR and MLR, and common multiple-regression issues like multicollinearity or unexpected signs.
+- Summarises information-criterion tools and stepwise procedures (forward/backward/combined), plus illustrative regressions (exploratory plots, pig carcass and concrete strength examples) with coefficient estimates and confidence intervals.
+- Notes diagnostics and cautions for screening (VIFs, sign and magnitude checks, extrapolation risks) and maps the textbook structure: 6.1 motivation for screening, 6.2 stepwise regression, 6.3 all-possible-regressions, 6.4 caveats and appropriate use.
+
+## Reference Material
+
+### `glossary.qmd`
+- Provides the glossary table for definitions used throughout the book.

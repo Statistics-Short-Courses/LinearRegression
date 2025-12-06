@@ -3,21 +3,31 @@ format: live-html
 ---
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-# Preface {.unnumbered}
+# Course Overview
 
-This notebook provides an introduction (or refresher) to **linear
-regression**, a fundamental tool for modeling relationships between
-variables. We'll explore the concepts, fit models in R, interpret
-results, and visualize fits.
 
-By the end, you should be able to:
+## What you will learn
 
--   Understand the linear regression model and its assumptions.
+- Formulate simple and multiple linear regression models and articulate
+  their assumptions.
+- Interpret regression coefficients, including partial, interaction, and
+  categorical effects.
+- Evaluate model utility using hypothesis tests, R-squared metrics, and
+  prediction accuracy.
+- Identify when additive models fail and implement interaction or
+  polynomial terms.
+- Incorporate qualitative predictors using indicator (dummy) variables.
+- Apply principles of parsimony and evidence-based model building.
+- Use AIC, multicollinearity diagnostics, and stepwise procedures for
+  model selection.
+- Perform residual analysis, identify influential observations, and
+  apply transformations.
 
--   Fit and interpret simple and multiple regression models in R.
+## How to use this book
 
--   Diagnose model fit using residual plots and summary statistics.
-
--   Use model output to make predictions and assess uncertainty.
-
--   Present the results of a linear regression analysis for publication. 
+- Each chapter corresponds to a module in the syllabus and ends with
+  short practice prompts.
+- R examples use base `lm()` and standard diagnostics; you can run code
+  chunks directly if you enable execution.
+- The *Assessments* chapter outlines optional exercises and a capstone
+  project that integrate exploration, model selection, and diagnostics. 

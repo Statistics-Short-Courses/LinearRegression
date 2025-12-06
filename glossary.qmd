@@ -1,3 +1,40 @@
-# Glossary
+# Glossary {.unnumbered}
 
-{{< glossary table=true >}}
+## Simple linear regression {#gloss-slr .unnumbered}
+A linear model with one predictor: $E[Y] = \beta_0 + \beta_1 X$ with independent, mean-zero errors.
+
+## Multiple linear regression {#gloss-mlr .unnumbered}
+A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.
+
+## Residual {#gloss-residual .unnumbered}
+An observed value minus its fitted value from the model: $e_i = y_i - \hat y_i$.
+
+## Residual standard error {#gloss-rse .unnumbered}
+The estimated standard deviation of the residuals (square root of the residual variance).
+
+## Adjusted R-squared {#gloss-adjusted-r-squared .unnumbered}
+$R^2$ penalised for the number of predictors to discourage unnecessary terms.
+
+## Akaike Information Criterion (AIC) {#gloss-aic .unnumbered}
+Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.
+
+## Multicollinearity {#gloss-multicollinearity .unnumbered}
+Strong correlation among predictors that inflates standard errors and destabilises estimates.
+
+## Interaction {#gloss-interaction .unnumbered}
+A term that allows the effect of one predictor to depend on the level of another (e.g., $X_1 X_2$).
+
+## Dummy variable {#gloss-dummy .unnumbered}
+An indicator (0/1) used to code categories in regression relative to a baseline.
+
+## Leverage {#gloss-leverage .unnumbered}
+A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.
+
+## Cook’s distance {#gloss-cooks-distance .unnumbered}
+Influence measure combining residual size and leverage to flag points that change fitted values when omitted.
+
+## Box–Cox transformation {#gloss-box-cox .unnumbered}
+A family of power transformations used to stabilise variance or improve linearity for positive responses.
+
+## Parsimony {#gloss-parsimony .unnumbered}
+Choosing the simplest adequate model that answers the scientific question.

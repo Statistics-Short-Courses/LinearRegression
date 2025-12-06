@@ -4,22 +4,16 @@ project:
 engine: knitr
 
 book:
-  title: Introduction to Linear Regression in R
+  title: "Linear Regression and Model Selection with R"
   chapters:
-  - index.qmd
-  - part: SimpleLinearRegression.qmd
-    chapters:
-    - SLModels.qmd
-    - SLRFitting.qmd
-    - SLRDiagnostics.qmd
-    - SLRInference.qmd
-    - SLRCase.qmd
-  - part: MultipleRegression.qmd
-    chapters:
-      - MLRNewFeatures.qmd
-      - MLRDerivedFeatures.qmd
-      - VariableScreening.qmd
-  - glossary.qmd
+    - index.qmd
+    - module00-lm.qmd
+    - module01-slr.qmd
+    - module02-mlr.qmd
+    - module03-model-building.qmd
+    - module04-regression-pitfalls-diagnostics.qmd
+    - module05-case-naplan.qmd
+    - glossary.qmd
   page-navigation: false
 format:
   live-html:
