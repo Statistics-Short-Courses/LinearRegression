@@ -52,54 +52,44 @@ SLR is limited to one predictor. MLR becomes appropriate when:
 
 ### A graphical motivation
 
-Lets consider a simple example using the `trees` data
+Lets consider a simple example using the Advertising data (TV, Radio, Newspaper ad spend and resulting sales)
 ```{r}
-data(trees)
+ads <- read.csv("Data/Advertising.csv")
+names(ads) <- c("TV", "Radio", "Newspaper", "Sales")
+ads <- ads[, c("Sales", "TV", "Radio")]
 ```
-This dataset records the height, girth (diameter) and volume
 
 We might look at each bivariate (i.e. two variables) relationship separately:
-```{r}
-set.seed(123)
-n  <- 200
-x1 <- runif(n, 0, 10)
-x2 <- runif(n, 0, 10)
-y  <- 2 + 0.5 * x1 + 1.5 * x2 + rnorm(n, sd = 2)
-
-sim_df <- data.frame(y, x1, x2)
-```
 
 ::: {.panel-tabset}
-## $Y \sim X_1$
+## $Sales \sim TV$
 ```{r}
 library(ggplot2)
 
-ggplot(sim_df, aes(x = x1, y = y)) +
+ggplot(ads, aes(x = TV, y = Sales)) +
   geom_point() +
-  scale_colour_viridis_c() +
-  labs(x = "X[1]", y = "Y")
+  labs(x = "TV", y = "Sales")
 ```
-## $Y\sim X_2$
+## $Sales\sim Radio$
 ```{r}
-ggplot(sim_df, aes(x = x2, y = y)) +
+ggplot(ads, aes(x = Radio, y = Sales)) +
   geom_point() +
-  scale_colour_viridis_c() +
-  labs(x = expression(X[2]), y = "Y")
+  labs(x = "Radio", y = "Sales")
 ```
 :::
 
 However we might also look at the *multivariate* relationship
 ```{r}
-ggplot(sim_df, aes(x = x1, y = y, colour = x2)) +
+ggplot(ads, aes(x = TV, y = Sales, colour = Radio)) +
   geom_point() +
   scale_colour_viridis_c() +
-  labs(x = expression(X[1]), y = "Y", colour = expression(X[2]))
+  labs(x = "TV", y = "Sales", colour = "Radio")
 ```
 in the case of 3 variables we can also extend our visualisation to 3 dimensions:
 ```{r}
 library(plotly)
 
-plot_ly(sim_df, x = ~x1, y = ~x2, z = ~y,
+plot_ly(ads, x = ~TV, y = ~Radio, z = ~Sales,
         type = "scatter3d", mode = "markers")
 ```
 
@@ -127,31 +117,31 @@ The random error term, $\varepsilon$ stays the same, so the assumptions of MLR a
 
 ::: Note
 ### Multivariate Linearity
-Although this is still a *linear* model, the term “linear” no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, “linear” means that the model is **linear in its parameters**: each $\beta_i$ multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: $Y$ + two predictors: $X_1$, $X_2$), a linear model will instead look like a three dimensional *plane*
+Although this is still a *linear* model, the term ??olinear??? no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, ??olinear??? means that the model is **linear in its parameters**: each $\beta_i$ multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model will instead look like a three dimensional *plane*
 ```{r}
 # Fit least squares plane
-fit <- lm(y ~ x1 + x2, data = sim_df)
+fit <- lm(Sales ~ TV + Radio, data = ads)
 
 # Create grid for the plane
-x1_seq <- seq(min(sim_df$x1), max(sim_df$x1), length.out = 30)
-x2_seq <- seq(min(sim_df$x2), max(sim_df$x2), length.out = 30)
-grid   <- expand.grid(x1 = x1_seq, x2 = x2_seq)
-grid$yhat <- predict(fit, newdata = grid)
+tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 30)
+radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 30)
+grid   <- expand.grid(TV = tv_seq, Radio = radio_seq)
+grid$sales_hat <- predict(fit, newdata = grid)
 
-z_mat <- matrix(grid$yhat, nrow = length(x1_seq), ncol = length(x2_seq))
+z_mat <- matrix(grid$sales_hat, nrow = length(tv_seq), ncol = length(radio_seq))
 
 # Plotly 3D scatter + plane
 fig <- plot_ly() |>
   add_markers(
-    data = sim_df,
-    x = ~x2, y = ~x1, z = ~y,
+    data = ads,
+    x = ~Radio, y = ~TV, z = ~Sales,
     type = "scatter3d",
     mode = "markers",
     name = "Data"
   ) |>
   add_surface(
-    x = x2_seq,
-    y = x1_seq,
+    x = radio_seq,
+    y = tv_seq,
     z = z_mat,
     opacity = 0.6,
     showscale = FALSE,
@@ -159,16 +149,15 @@ fig <- plot_ly() |>
   ) |>
   layout(
     scene = list(
-      xaxis = list(title = "x1"),
-      yaxis = list(title = "x2"),
-      zaxis = list(title = "y")
+      xaxis = list(title = "Radio"),
+      yaxis = list(title = "TV"),
+      zaxis = list(title = "Sales")
     )
   )
 
 fig
 ```
 :::
-
 ### Partial Regression Coefficients
 Even though our model is no longer just a straight line, the *slope* interpretation from simple linear regression is still relevant in multiple regression. Now however, $\beta_i$ describes the expected change in the mean response for a one-unit increase in $x_i$, **holding all other predictors constant**. 
 
@@ -195,7 +184,7 @@ Fitting a multiple linear regression uses the exact same conceptual process from
 
 MLR uses the same `lm()` function as SLR (these are both 'linear models', after all). Now, the model `formula` (the first argument, identified by the `~` separating the LHS and RHS) includes both predictors on the RHS, separated by a `+`:
 ```{r}
-mod <- lm(y ~ x1 + x2, data = sim_df)
+mod <- lm(Sales ~ TV + Radio, data = ads)
 ```
 ::: Note
 ## R `formulas`
