@@ -181,13 +181,6 @@ z_mat <- matrix(grid$sales_hat, nrow = length(tv_seq), ncol = length(radio_seq))
 
 # Plotly 3D scatter + plane
 fig <- plot_ly() |>
-  add_markers(
-    data = ads,
-    x = ~Radio, y = ~TV, z = ~Sales,
-    type = "scatter3d",
-    mode = "markers",
-    name = "Data"
-  ) |>
   add_surface(
     x = radio_seq,
     y = tv_seq,
