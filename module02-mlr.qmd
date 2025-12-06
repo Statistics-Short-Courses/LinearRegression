@@ -107,7 +107,7 @@ plot_ly(sim_df, x = ~x1, y = ~x2, z = ~y,
 
 ## The multiple regression linear model
 
-The multiple linear model extends the simple linear model from @sec-simple_linear_model straightforwardly by adding the extra variables to the deterministic linear predictor each with its own parameter.  
+The multiple linear model extends the simple linear model from @sec-simple_linear_model straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter.  
 
 $$
 Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilon \sim N(0,\sigma^2)
@@ -186,25 +186,38 @@ Then:
 * A one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.
 :::
 
+
+::: Exercise
+### Calculating the expected value of a multiple regression model
+
 ## Fitting MLR Models in R and the `tidy()` function 
 Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares: Residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique 'least squares estimates' for the model parameters $b_0, \ldots, b_k$.
-$$
-min
-$$
 
-MLR uses the same `lm()` function as SLR (these are both 'linear models', after all):
-
+MLR uses the same `lm()` function as SLR (these are both 'linear models', after all). Now, the model `formula` (the first argument, identified by the `~` separating the LHS and RHS) includes both predictors on the RHS, separated by a `+`:
 ```{r}
-mod <- lm(LifeExp ~ Population + Health + Internet + BirthRate,
-          data = countries.df)
+mod <- lm(y ~ x1 + x2, data = sim_df)
 ```
+::: Note
+## R `formulas`
 
-and we can extract our model coefficients ($\beta_0, \ldots,\beta_3$) in analogous way: 
+:::
+and we can extract our model coefficients ($\beta_0, \ldots,\beta_3$) in the same way: 
+
+::: {.panel-tabset}
+#### indexing
 ```{r}
+#| echo: true
 mod$coefficients
 ```
-We can also use the `tidy` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter
+#### coef() function
 
+```{r}
+#| echo: true
+coef(mod)
+```
+:::
+
+We can also use the `tidy` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter:
 ```{r}
 library(broom)
 tidy(mod, conf.int = TRUE)

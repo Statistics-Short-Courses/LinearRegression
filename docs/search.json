@@ -1,0 +1,552 @@
+[
+  {
+    "objectID": "module02-mlr.html",
+    "href": "module02-mlr.html",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "",
+    "text": "4.1 Introduction\nMultiple linear regression (MLR) extends simple linear regression by allowing \\(Y\\) to depend on more than one predictor variable. This enables richer models and allows us to estimate the partial contribution of each predictor while accounting for others.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#introduction",
+    "href": "module02-mlr.html#introduction",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "",
+    "text": "When to Extend SLR\nSLR is limited to one predictor. MLR becomes appropriate when:\n\nMultiple factors plausibly influence the response.\nExcluding predictors may bias results.\nYou wish to measure the unique contribution of each predictor while controlling for others.\n\n\n\nA graphical motivation\nLets consider a simple example using the trees data\nThis dataset records the height, girth (diameter) and volume\nWe might look at each bivariate (i.e. two variables) relationship separately:\n\n\\(Y \\sim X_1\\)\\(Y\\sim X_2\\)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHowever we might also look at the multivariate relationship\n\n\n\n\n\n\n\n\n\nin the case of 3 variables we can also extend our visualisation to 3 dimensions:\n\n\n\n\n\n\n\nContinue",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#the-multiple-regression-linear-model",
+    "href": "module02-mlr.html#the-multiple-regression-linear-model",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.2 The multiple regression linear model",
+    "text": "4.2 The multiple regression linear model\nThe multiple linear model extends the simple linear model from Section 2.4 straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter.  \n\\[\nY = \\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k + \\varepsilon, \\quad \\varepsilon \\sim N(0,\\sigma^2)\n\\]\nNow, instead of a single predictor \\(X\\), we may have several (\\(k\\)) predictors \\(x_1, x_2, \\ldots, x_k\\), each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor \\(x_i\\) has a corresponding parameter \\(\\beta_i\\) governing its effect on the response. Note that we have updated the intercept parameter \\(\\alpha\\) from the simple linear regression section to \\(\\beta_0\\), because it is simply another parameter in the model!\nThe random error term, \\(\\varepsilon\\) stays the same, so the assumptions of MLR are very similar to those of SLR:\n\nAssumption: Assumptions of the MLR model\n\nA linear predictor, e.g. \\(E[Y]=\\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k\\).\nIndependent and identically distributed random error terms that\n\nHave a mean \\(\\mu=0\\), and a constant variance \\(Var(\\varepsilon)=\\sigma^2\\)\nFollow a normal distribution: \\(N(0,\\sigma^2)\\)\n\n\n\n\n\nNote: Multivariate Linearity\nAlthough this is still a linear model, the term “linear” no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, “linear” means that the model is linear in its parameters: each \\(\\beta_i\\) multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: \\(Y\\) + two predictors: \\(X_1\\), \\(X_2\\)), a linear model will instead look like a three dimensional plane\n\n\n\n\n\n\n\n\n\nPartial Regression Coefficients\nEven though our model is no longer just a straight line, the slope interpretation from simple linear regression is still relevant in multiple regression. Now however, \\(\\beta_i\\) describes the expected change in the mean response for a one-unit increase in \\(x_i\\), holding all other predictors constant.\n\nExample 1\nInterpreting a partial coefficient If the fitted model for life expectancy includes Internet usage and BirthRate,\nInternet: 0.112\nBirthRate: -0.594\nThen:\n\nA 1% increase in internet usage is associated with an expected 0.11-year increase in life expectancy, holding other predictors fixed.\nA one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.\n\n\n\n\nExercise 1: Calculating the expected value of a multiple regression model\n\n4.3 Fitting MLR Models in R and the tidy() function\nFitting a multiple linear regression uses the exact same conceptual process from ?sec-leastsquares: Residuals are still defined \\(e = Y- \\hat{Y}\\), and minimising the sum of squared residuals provides optimal and unique ‘least squares estimates’ for the model parameters \\(b_0, \\ldots, b_k\\).\nMLR uses the same lm() function as SLR (these are both ‘linear models’, after all). Now, the model formula (the first argument, identified by the ~ separating the LHS and RHS) includes both predictors on the RHS, separated by a +:\n\nNote: R formulas\n\n\nand we can extract our model coefficients (\\(\\beta_0, \\ldots,\\beta_3\\)) in the same way:\n\nindexingcoef() function\n\n\n\nmod$coefficients\n\n(Intercept)          x1          x2 \n  1.8184485   0.5587775   1.4934882 \n\n\n\n\n\ncoef(mod)\n\n(Intercept)          x1          x2 \n  1.8184485   0.5587775   1.4934882 \n\n\n\n\n\nWe can also use the tidy function from the broom package for a nice summary of the relevant inferential statistics for each parameter:\n\n\n# A tibble: 3 × 7\n  term        estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)    1.82     0.388       4.68 5.21e- 6    1.05      2.58 \n2 x1             0.559    0.0517     10.8  1.10e-21    0.457     0.661\n3 x2             1.49     0.0483     30.9  1.48e-77    1.40      1.59 \n\n\nThe hypotheses being tested for each coefficient is analagous to that in the SLR case ?sec-beta_inference: \\[\nH_0 : \\beta_i = 0\n\\qquad\\text{vs}\\qquad\nH_a : \\beta_i \\ne 0.\n\\] And is tested the same way - using the t-statistic: \\[\nt_i = \\frac{\\hat\\beta_i}{\\operatorname{SE}(\\hat\\beta_i)}.\n\\]\nHowever, the interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of _i here does not represent the relationship between \\(Y\\) and \\(X_i\\) without qualification - but only when the other variables are held constant. Analogously, the hypothesis being tested by \\(t_i\\) is whether \\(X_i\\) is related to to \\(Y\\) once the other predictors are accounted for. ::: Key-point ### interpreting partial regression coefficients, \\(\\beta_i\\)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#fitting-mlr-models-in-r-and-the-tidy-function",
+    "href": "module02-mlr.html#fitting-mlr-models-in-r-and-the-tidy-function",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.3 Fitting MLR Models in R and the tidy() function",
+    "text": "4.3 Fitting MLR Models in R and the tidy() function\nFitting a multiple linear regression uses the exact same conceptual process from ?sec-leastsquares: Residuals are still defined \\(e = Y- \\hat{Y}\\), and minimising the sum of squared residuals provides optimal and unique ‘least squares estimates’ for the model parameters \\(b_0, \\ldots, b_k\\).\nMLR uses the same lm() function as SLR (these are both ‘linear models’, after all). Now, the model formula (the first argument, identified by the ~ separating the LHS and RHS) includes both predictors on the RHS, separated by a +:\n\nNote: R formulas\n\n\nand we can extract our model coefficients (\\(\\beta_0, \\ldots,\\beta_3\\)) in the same way:\n\nindexingcoef() function\n\n\n\nmod$coefficients\n\n(Intercept)          x1          x2 \n  1.8184485   0.5587775   1.4934882 \n\n\n\n\n\ncoef(mod)\n\n(Intercept)          x1          x2 \n  1.8184485   0.5587775   1.4934882 \n\n\n\n\n\nWe can also use the tidy function from the broom package for a nice summary of the relevant inferential statistics for each parameter:\n\n\n# A tibble: 3 × 7\n  term        estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)    1.82     0.388       4.68 5.21e- 6    1.05      2.58 \n2 x1             0.559    0.0517     10.8  1.10e-21    0.457     0.661\n3 x2             1.49     0.0483     30.9  1.48e-77    1.40      1.59 \n\n\nThe hypotheses being tested for each coefficient is analagous to that in the SLR case ?sec-beta_inference: \\[\nH_0 : \\beta_i = 0\n\\qquad\\text{vs}\\qquad\nH_a : \\beta_i \\ne 0.\n\\] And is tested the same way - using the t-statistic: \\[\nt_i = \\frac{\\hat\\beta_i}{\\operatorname{SE}(\\hat\\beta_i)}.\n\\]\nHowever, the interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of _i here does not represent the relationship between \\(Y\\) and \\(X_i\\) without qualification - but only when the other variables are held constant. Analogously, the hypothesis being tested by \\(t_i\\) is whether \\(X_i\\) is related to to \\(Y\\) once the other predictors are accounted for. ::: Key-point ### interpreting partial regression coefficients, \\(\\beta_i\\)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#global-model-statistics-the-f-test-and-measures-of-model-fit",
+    "href": "module02-mlr.html#global-model-statistics-the-f-test-and-measures-of-model-fit",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.4 Global model statistics: The F-Test and measures of model fit",
+    "text": "4.4 Global model statistics: The F-Test and measures of model fit\nHaving multiple predictor variables expands the scope of the kind of questions we can ask about our linear model. Rather than looking at each coefficient separately, we can ask whether our model as a whole is effective in explaining the outcome \\(Y\\) In other words, is the combined contribution of the predictors enough to conclude that a linear relationship exists?\nFormally, the global hypothesis test is:\n\n\\(H_0\\): all slope coefficients are zero (no linear relationship between \\(Y\\) and the predictors)\n\n\\(H_a\\): at least one slope coefficient is non-zero (the model is useful)\n\nThis shift parallels the move from multiple t-tests to an ANOVA - instead of testing individual “effects,” we examine the overall variance explained by a model.\nThe F-statistic compares:\n\nvariation explained by the model (mean regression sum of squares, MSR),\n\nresidual variation (mean squared error, MSE).\n\nBecause each of these quantities is constructed from squared normal deviations, the ratio\n\\[\nF = \\frac{\\text{MSR}}{\\text{MSE}}\n\\]\nfollows an F-distribution under \\(H_0\\).\nIf the model truly explains some structure in the data, MSR will be noticeably larger than MSE.\n[#^1] The links between ANOVA and linear regression will be futher explored here in ?sec-qualitative_predictors.\n\nExample 2In the life expectancy example, the output might report\nF-statistic: 28.2 on 4 and 44 DF,  p-value: 1.19e-11\nThe very small p-value indicates strong evidence against \\(H_0\\). We conclude that at least one of the predictors (Population, Health, Internet, BirthRate) is useful for predicting life expectancy, and that the model is useful overall.\n\n\n\nExercise 2Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.\n\n\n\nglobal statistics with glance()\nWe can obtain the model F-statistic using the glance() function from the broom package\n\n\n# A tibble: 1 × 12\n  r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC\n      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1     0.841         0.839  2.00      521. 2.24e-79     2  -420.  849.  862.\n# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;\n\n\nThis output includes several global model features besides the global test statistic and p-value.\n\n\nAdjusted \\(R^2\\)\nOnce we have established that the model is useful overall, we can quantify how much of the variation in \\(Y\\) it explains. The measure \\(R^2\\) was introduced in SLR and extends naturally to MLR In multiple regression, \\(R^2\\) plays the same descriptive role, but its interpretation changes subtly because the model now includes several predictors.\n\n\n\\(R^2\\) in Multiple Regression\nWe define \\[\nR^2 = 1 - \\frac{\\text{SSE}}{\\text{SST}},\n\\] exactly as before. The difference lies in what \\(R^2\\) represents:\n\nIn SLR, \\(R^2\\) reflects how well a single predictor explains variation in \\(Y\\).\nIn MLR, \\(R^2\\) reflects the combined explanatory power of all predictors working together.\n\nBecause adding a new predictor can never increase SSE, it follows that \\(R^2\\) can never decrease when more predictors are added, even if the new predictor has little or no real relationship with the response. For this reason, \\(R^2\\) is not reliable for comparing models with different numbers of predictors.\n\n\nAdjusted \\(R^2\\)\nTo address the fact that \\(R^2\\) is overly optimistic in larger models, we use the adjusted coefficient of determination: \\[\nR^2_{\\text{adj}} = 1 -\\frac{\\text{SSE}/(n - k - 1)}{\\text{SST}/(n - 1)}.\n\\]\nAdjusted \\(R^2\\):\n\npenalises the inclusion of additional predictors,\nincreases only when a predictor provides meaningful explanatory value,\nand may decrease when a predictor contributes little or nothing.\n\nThus,\n\n\\(R^2\\) is appropriate as a descriptive measure of how much variation the fitted model explains,\nadjusted \\(R^2\\) is more appropriate for comparing different models, especially those with differing numbers of predictors.\n\nThis completes our introduction to multiple linear regression: we now have a model with several predictors, an interpretation for its coefficients, and tools to judge whether the model is useful and how well it fits the data.\n\n\nOther model fit statistics: logLikelihood, AIC, and BIC\nThe glance() output also includes two additional quantities: AIC (Akaike Information Criterion) and BIC (Bayesian Information Criterion).\nAlthough they appear alongside the F-statistic and \\(R^2\\), they serve a different purpose.\nAIC and BIC are not measures of how well a single model fits the data in an absolute sense.\nInstead, they are designed for comparing multiple competing models, balancing goodness of fit against model complexity. Lower values indicate a preferable trade-off, but only relative comparisons are meaningful.\nBecause AIC and BIC are tools for model selection rather than model assessment, we do not interpret them here. They will be discussed in detail in Module 5 (Principles of Model Building), where they are used to guide decisions about which predictors to include in a regression model.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html",
+    "href": "module03-model-building.html",
+    "title": "5  toc: true",
+    "section": "",
+    "text": "5.1 Exploratory analysis for model formulation\ntitle: “Model Building and Variable Screening” format: live-html:",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#exploratory-analysis-for-model-formulation",
+    "href": "module03-model-building.html#exploratory-analysis-for-model-formulation",
+    "title": "5  toc: true",
+    "section": "",
+    "text": "Start with plots (pairs, scatterplots, boxplots) to understand ranges, outliers, and plausible functional forms.\nUse subject-matter knowledge to posit candidate predictors and interactions.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#systematic-vs-random-variation",
+    "href": "module03-model-building.html#systematic-vs-random-variation",
+    "title": "5  toc: true",
+    "section": "5.2 Systematic vs random variation",
+    "text": "5.2 Systematic vs random variation\n\nDistinguish signal (systematic trend with predictors) from noise (unexplained scatter).\nResidual SD estimates random variation; large unexplained scatter may indicate missing predictors or wrong functional form.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#choosing-first--vs-second-order-functional-forms",
+    "href": "module03-model-building.html#choosing-first--vs-second-order-functional-forms",
+    "title": "5  toc: true",
+    "section": "5.3 Choosing first- vs second-order functional forms",
+    "text": "5.3 Choosing first- vs second-order functional forms\n\nStart with additive, first-order (linear) terms; add interactions or low-order polynomials when plots or theory suggest them.\nPrefer centered predictors to stabilise estimates when adding higher-order terms.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#model-adequacy-and-interpretability",
+    "href": "module03-model-building.html#model-adequacy-and-interpretability",
+    "title": "5  toc: true",
+    "section": "5.4 Model adequacy and interpretability",
+    "text": "5.4 Model adequacy and interpretability\n\nAdequate models fit the data (diagnostics pass) and support the scientific question.\nAvoid models that obscure interpretation with unnecessary complexity or unidentifiable effects.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#parsimony-as-a-guiding-principle",
+    "href": "module03-model-building.html#parsimony-as-a-guiding-principle",
+    "title": "5  toc: true",
+    "section": "5.5 Parsimony as a guiding principle",
+    "text": "5.5 Parsimony as a guiding principle\n\nFavor the simplest model that explains the data and meets assumptions.\nRemove immaterial terms when they do not improve fit or align with theory; compare nested models via F-tests or information criteria.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#interaction-models-with-quantitative-predictors",
+    "href": "module03-model-building.html#interaction-models-with-quantitative-predictors",
+    "title": "5  toc: true",
+    "section": "5.6 Interaction models with quantitative predictors",
+    "text": "5.6 Interaction models with quantitative predictors\n\nAllow the effect of one predictor to depend on another (interaction): \\[E[Y] = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + \\beta_3 X_1X_2.\\]\n\\(\\beta_3\\) shifts the slope of \\(X_1\\) per-unit change in \\(X_2\\) (and vice versa).\n\n\nint_mod &lt;- lm(mpg ~ wt * hp, data = mtcars)\ncoef(int_mod)[c(\"wt\", \"hp\", \"wt:hp\")]\n\n         wt          hp       wt:hp \n-8.21662430 -0.12010209  0.02784815",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#graphical-interpretation-of-interaction-effects",
+    "href": "module03-model-building.html#graphical-interpretation-of-interaction-effects",
+    "title": "5  toc: true",
+    "section": "5.7 Graphical interpretation of interaction effects",
+    "text": "5.7 Graphical interpretation of interaction effects\n\nPlot fitted lines across a grid to see slope changes.\n\n\nlibrary(ggplot2)\ngrid &lt;- expand.grid(wt = seq(2, 4, 0.5), hp = c(90, 150))\ngrid$fit &lt;- predict(int_mod, grid)\nggplot(grid, aes(wt, fit, colour = factor(hp))) +\n  geom_line() + labs(colour = \"HP level\", y = \"Fitted mpg\")",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#polynomial-models-quadratic-and-cubic",
+    "href": "module03-model-building.html#polynomial-models-quadratic-and-cubic",
+    "title": "5  toc: true",
+    "section": "5.8 Polynomial models: quadratic and cubic",
+    "text": "5.8 Polynomial models: quadratic and cubic\n\nCapture curvature by adding powers: \\[E[Y] = \\beta_0 + \\beta_1 X +\n\\beta_2 X^2 \\;(+\\; \\beta_3 X^3).\\]\nUse poly() or explicit powers; center \\(X\\) to reduce collinearity.\n\n\npoly_mod &lt;- lm(mpg ~ wt + I(wt^2), data = mtcars)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#when-and-how-to-model-curvature",
+    "href": "module03-model-building.html#when-and-how-to-model-curvature",
+    "title": "5  toc: true",
+    "section": "5.9 When and how to model curvature",
+    "text": "5.9 When and how to model curvature\n\nUse scatterplots and residual-vs-fitted plots to spot nonlinearity.\nPrefer low-order polynomials for interpretability; consider splines for flexible shapes if allowed.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#extrapolation-risks-and-overfitting-concerns",
+    "href": "module03-model-building.html#extrapolation-risks-and-overfitting-concerns",
+    "title": "5  toc: true",
+    "section": "5.10 Extrapolation risks and overfitting concerns",
+    "text": "5.10 Extrapolation risks and overfitting concerns\n\nPolynomial terms can explode outside the data range—avoid predicting far beyond observed \\(X\\).\nGuard against overfitting with cross-validation or an independent validation set when sample size permits.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#variable-screening-and-model-selection",
+    "href": "module03-model-building.html#variable-screening-and-model-selection",
+    "title": "5  toc: true",
+    "section": "5.11 Variable screening and model selection",
+    "text": "5.11 Variable screening and model selection\n\nAim for models that balance predictive accuracy with interpretability.\nPreserve theory-driven terms, but remove noise predictors that do not improve fit or align with the research question.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#multicollinearity-detection-and-implications",
+    "href": "module03-model-building.html#multicollinearity-detection-and-implications",
+    "title": "5  toc: true",
+    "section": "5.12 Multicollinearity: detection and implications",
+    "text": "5.12 Multicollinearity: detection and implications\n\nSymptoms: unstable coefficients, inflated standard errors, signs flipping with small data changes (multicollinearity).\nQuick checks: pairwise correlations, variance inflation factors (VIF), or condition numbers.\n\n\ncor(mtcars[, c(\"wt\", \"hp\", \"disp\", \"drat\")])\n\n             wt         hp       disp       drat\nwt    1.0000000  0.6587479  0.8879799 -0.7124406\nhp    0.6587479  1.0000000  0.7909486 -0.4487591\ndisp  0.8879799  0.7909486  1.0000000 -0.7102139\ndrat -0.7124406 -0.4487591 -0.7102139  1.0000000\n\nkappa(model.matrix(~ wt + hp + disp, data = mtcars))\n\n[1] 1639.418",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#akaike-information-criterion-aic",
+    "href": "module03-model-building.html#akaike-information-criterion-aic",
+    "title": "5  toc: true",
+    "section": "5.13 Akaike Information Criterion (AIC)",
+    "text": "5.13 Akaike Information Criterion (AIC)\n\nBalances fit and complexity: \\(\\text{AIC} = -2\\ell + 2k\\); lower is better (AIC).\nCompare non-nested models with AIC(model1, model2, ...).",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#forward-backward-and-stepwise-selection",
+    "href": "module03-model-building.html#forward-backward-and-stepwise-selection",
+    "title": "5  toc: true",
+    "section": "5.14 Forward, backward, and stepwise selection",
+    "text": "5.14 Forward, backward, and stepwise selection\n\nForward: start simple, add terms that reduce AIC or improve fit.\nBackward: start saturated, remove weak terms.\nStepwise: alternate add/drop using step() (AIC by default).\n\n\nfull_mod &lt;- lm(mpg ~ ., data = mtcars)\nstep(full_mod, direction = \"both\", trace = 0)\n\n\nCall:\nlm(formula = mpg ~ wt + qsec + am, data = mtcars)\n\nCoefficients:\n(Intercept)           wt         qsec           am  \n      9.618       -3.917        1.226        2.936",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#limitations-and-cautions-for-stepwise-methods",
+    "href": "module03-model-building.html#limitations-and-cautions-for-stepwise-methods",
+    "title": "5  toc: true",
+    "section": "5.15 Limitations and cautions for stepwise methods",
+    "text": "5.15 Limitations and cautions for stepwise methods\n\nData-driven searches can overfit and inflate Type I error.\nSelected models depend on starting set and may ignore theory; always validate with diagnostics and, if possible, new data.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#balancing-prediction-and-explanation",
+    "href": "module03-model-building.html#balancing-prediction-and-explanation",
+    "title": "5  toc: true",
+    "section": "5.16 Balancing prediction and explanation",
+    "text": "5.16 Balancing prediction and explanation\n\nFor explanation, prioritise interpretability and scientific plausibility; for prediction, prioritise out-of-sample performance.\nConsider cross-validation or a hold-out set when sample size permits; report uncertainty from the final, diagnostically-sound model.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#working-with-qualitative-predictors",
+    "href": "module03-model-building.html#working-with-qualitative-predictors",
+    "title": "5  toc: true",
+    "section": "5.17 Working with qualitative predictors",
+    "text": "5.17 Working with qualitative predictors\n\nRepresent \\(k\\)-level categorical predictors with \\(k-1\\) indicator variables (dummy variables); the omitted level is the baseline.\n\n\ncat_mod &lt;- lm(mpg ~ factor(cyl), data = mtcars)\nmodel.matrix(cat_mod)[1:5, ]\n\n                  (Intercept) factor(cyl)6 factor(cyl)8\nMazda RX4                   1            1            0\nMazda RX4 Wag               1            1            0\nDatsun 710                  1            0            0\nHornet 4 Drive              1            1            0\nHornet Sportabout           1            0            1",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#baseline-category-interpretation",
+    "href": "module03-model-building.html#baseline-category-interpretation",
+    "title": "5  toc: true",
+    "section": "5.18 Baseline category interpretation",
+    "text": "5.18 Baseline category interpretation\n\nEach indicator coefficient compares its level to the baseline.\nRe-level with relevel() for more meaningful comparisons.\n\n\nmtcars$cyl &lt;- relevel(factor(mtcars$cyl), ref = \"6\")\nrelevel_mod &lt;- lm(mpg ~ cyl, data = mtcars)\ncoef(relevel_mod)\n\n(Intercept)        cyl4        cyl8 \n  19.742857    6.920779   -4.642857",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#regression-with-multi-level-factors",
+    "href": "module03-model-building.html#regression-with-multi-level-factors",
+    "title": "5  toc: true",
+    "section": "5.19 Regression with multi-level factors",
+    "text": "5.19 Regression with multi-level factors\n\nFit models with multiple factors and quantitative predictors; ensure design matrix is full rank (no redundant indicators).\n\n\nmix_mod &lt;- lm(mpg ~ wt + factor(carb), data = mtcars)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#mixing-categorical-and-continuous-predictors",
+    "href": "module03-model-building.html#mixing-categorical-and-continuous-predictors",
+    "title": "5  toc: true",
+    "section": "5.20 Mixing categorical and continuous predictors",
+    "text": "5.20 Mixing categorical and continuous predictors\n\nCombine factors and continuous terms; interaction terms allow different slopes by group (e.g., wt * cyl).\n\n\ngroup_slope &lt;- lm(mpg ~ wt * factor(gear), data = mtcars)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#connection-to-anova-style-hypotheses",
+    "href": "module03-model-building.html#connection-to-anova-style-hypotheses",
+    "title": "5  toc: true",
+    "section": "5.21 Connection to ANOVA-style hypotheses",
+    "text": "5.21 Connection to ANOVA-style hypotheses\n\nANOVA table for a factor tests whether any level differs from the baseline (joint \\(H_0\\) on all indicators).\nIn R, compare models with anova() or read the factor-level F-test in summary() output when using treatment coding.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html",
+    "href": "module04-regression-pitfalls-diagnostics.html",
+    "title": "6  toc: true",
+    "section": "",
+    "text": "6.1 Common pitfalls to avoid\ntitle: “Regression Pitfalls and Diagnostics” format: live-html:",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#common-pitfalls-to-avoid",
+    "href": "module04-regression-pitfalls-diagnostics.html#common-pitfalls-to-avoid",
+    "title": "6  toc: true",
+    "section": "",
+    "text": "Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.\nExtrapolating far beyond observed predictor ranges can explode predictions.\nBlind stepwise selection can drop theory-driven terms; keep scientific context in view.\nUnchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#residual-plots-vs-predictors-and-fitted-values",
+    "href": "module04-regression-pitfalls-diagnostics.html#residual-plots-vs-predictors-and-fitted-values",
+    "title": "6  toc: true",
+    "section": "6.2 Residual plots vs predictors and fitted values",
+    "text": "6.2 Residual plots vs predictors and fitted values\n\nPlot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (residual).\n\n\ndiag_mod &lt;- lm(mpg ~ wt + hp + am, data = mtcars)\npar(mfrow = c(1, 2))\nplot(diag_mod, which = 1)      # residuals vs fitted\nplot(mtcars$wt, resid(diag_mod), xlab = \"wt\", ylab = \"Residuals\")\n\n\n\n\n\n\n\npar(mfrow = c(1, 1))",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#diagnosing-nonconstant-variance-and-nonlinearity",
+    "href": "module04-regression-pitfalls-diagnostics.html#diagnosing-nonconstant-variance-and-nonlinearity",
+    "title": "6  toc: true",
+    "section": "6.3 Diagnosing nonconstant variance and nonlinearity",
+    "text": "6.3 Diagnosing nonconstant variance and nonlinearity\n\nFunnel shapes or curved trends in residual plots suggest heteroskedasticity or missing curvature; consider transformations or adding interactions/polynomials.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#assessing-normality-of-residuals",
+    "href": "module04-regression-pitfalls-diagnostics.html#assessing-normality-of-residuals",
+    "title": "6  toc: true",
+    "section": "6.4 Assessing normality of residuals",
+    "text": "6.4 Assessing normality of residuals\n\nUse Q-Q plots and compare \\(t\\)- and \\(p\\)-values to Normal reference.\n\n\nqqnorm(resid(diag_mod)); qqline(resid(diag_mod))",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#standardised-residuals-leverage-cooks-distance",
+    "href": "module04-regression-pitfalls-diagnostics.html#standardised-residuals-leverage-cooks-distance",
+    "title": "6  toc: true",
+    "section": "6.5 Standardised residuals, leverage, Cook’s distance",
+    "text": "6.5 Standardised residuals, leverage, Cook’s distance\n\nStandardised (or studentised) residuals scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).\nLeverage (hatvalues()) flags unusual predictor combinations (leverage).\nCook’s distance combines leverage and residual size to assess influence (Cook’s distance).\n\n\ncbind(rstudent(diag_mod),\n      hatvalues(diag_mod),\n      cooks.distance(diag_mod))[1:5, ]\n\n                        [,1]       [,2]        [,3]\nMazda RX4         -1.4433354 0.09320650 0.051538041\nMazda RX4 Wag     -1.1371729 0.12316145 0.044939134\nDatsun 710        -1.3051372 0.08856401 0.040365321\nHornet 4 Drive     0.3121886 0.07518198 0.002046732\nHornet Sportabout  0.4688483 0.07867173 0.004827051",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#transformations-including-boxcox",
+    "href": "module04-regression-pitfalls-diagnostics.html#transformations-including-boxcox",
+    "title": "6  toc: true",
+    "section": "6.6 Transformations including Box–Cox",
+    "text": "6.6 Transformations including Box–Cox\n\nTransformations can stabilise variance or linearise relationships; for strictly positive \\(Y\\), consider Box–Cox transformations to guide power choices.\n\n\nMASS::boxcox(diag_mod, plotit = TRUE)",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#handling-outliers-and-influential-observations",
+    "href": "module04-regression-pitfalls-diagnostics.html#handling-outliers-and-influential-observations",
+    "title": "6  toc: true",
+    "section": "6.7 Handling outliers and influential observations",
+    "text": "6.7 Handling outliers and influential observations\n\nInvestigate data quality first (entry errors, unusual units).\nIf influential points are real, fit with and without them to assess robustness; report how conclusions change.\nPrefer model adjustments (functional form, variance stabilisation) over automatic deletion; document any exclusions explicitly.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>toc: true</span>"
+    ]
+  },
+  {
+    "objectID": "module05-case-naplan.html",
+    "href": "module05-case-naplan.html",
+    "title": "7  Case Study: NAPLAN Reading Scores",
+    "section": "",
+    "text": "7.1 Defining the research question",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Case Study: NAPLAN Reading Scores</span>"
+    ]
+  },
+  {
+    "objectID": "module05-case-naplan.html#defining-the-research-question",
+    "href": "module05-case-naplan.html#defining-the-research-question",
+    "title": "7  Case Study: NAPLAN Reading Scores",
+    "section": "",
+    "text": "Investigate how student and school-level predictors relate to NAPLAN Reading scores. Clarify outcome, units, and any grouping structure.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Case Study: NAPLAN Reading Scores</span>"
+    ]
+  },
+  {
+    "objectID": "module05-case-naplan.html#importing-data",
+    "href": "module05-case-naplan.html#importing-data",
+    "title": "7  Case Study: NAPLAN Reading Scores",
+    "section": "7.2 Importing data",
+    "text": "7.2 Importing data\n\n# Replace path with the appropriate CSV or RDS from the Resources/naplan reading folder\n# naplan &lt;- read.csv(\"Resources/naplan reading/naplan_reading.csv\")",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Case Study: NAPLAN Reading Scores</span>"
+    ]
+  },
+  {
+    "objectID": "module05-case-naplan.html#exploratory-plot",
+    "href": "module05-case-naplan.html#exploratory-plot",
+    "title": "7  Case Study: NAPLAN Reading Scores",
+    "section": "7.3 Exploratory plot",
+    "text": "7.3 Exploratory plot\n\nStart with scatterplots and boxplots for key predictors (e.g., study time, SES, gender) against Reading scores.\n\n\n# Example placeholder using mtcars structure; swap to naplan data\nlibrary(ggplot2)\nggplot(mtcars, aes(wt, mpg)) +\n  geom_point() +\n  labs(x = \"Predictor\", y = \"Reading score\")",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Case Study: NAPLAN Reading Scores</span>"
+    ]
+  },
+  {
+    "objectID": "module05-case-naplan.html#fitting-the-least-squares-model",
+    "href": "module05-case-naplan.html#fitting-the-least-squares-model",
+    "title": "7  Case Study: NAPLAN Reading Scores",
+    "section": "7.4 Fitting the least-squares model",
+    "text": "7.4 Fitting the least-squares model\n\nBegin with a first-order additive model; consider interactions or polynomials if exploratory plots suggest curvature.\n\n\n# model &lt;- lm(Reading ~ predictor1 + predictor2, data = naplan)\n# summary(model)",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Case Study: NAPLAN Reading Scores</span>"
+    ]
+  },
+  {
+    "objectID": "module05-case-naplan.html#model-refinement-and-interpretation",
+    "href": "module05-case-naplan.html#model-refinement-and-interpretation",
+    "title": "7  Case Study: NAPLAN Reading Scores",
+    "section": "7.5 Model refinement and interpretation",
+    "text": "7.5 Model refinement and interpretation\n\nCheck residual diagnostics (see Module 6). Address nonlinearity, heteroskedasticity, or influential points.\nInterpret coefficients, including categorical contrasts and any interaction terms.\n\n\n# plot(model, which = 1:2)\n# coef(summary(model))",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Case Study: NAPLAN Reading Scores</span>"
+    ]
+  },
+  {
+    "objectID": "module05-case-naplan.html#reporting-the-results",
+    "href": "module05-case-naplan.html#reporting-the-results",
+    "title": "7  Case Study: NAPLAN Reading Scores",
+    "section": "7.6 Reporting the results",
+    "text": "7.6 Reporting the results\n\nPresent fitted effects with confidence intervals, and provide a prediction interval for a meaningful scenario (e.g., a student profile of interest).\nSummarise key findings in plain language and note any limitations (e.g., omitted variables, sample size).",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Case Study: NAPLAN Reading Scores</span>"
+    ]
+  },
+  {
+    "objectID": "glossary.html",
+    "href": "glossary.html",
+    "title": "Glossary",
+    "section": "",
+    "text": "Simple linear regression\nA linear model with one predictor: \\(E[Y] = \\beta_0 + \\beta_1 X\\) with independent, mean-zero errors.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-mlr",
+    "href": "glossary.html#gloss-mlr",
+    "title": "Glossary",
+    "section": "Multiple linear regression",
+    "text": "Multiple linear regression\nA linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-residual",
+    "href": "glossary.html#gloss-residual",
+    "title": "Glossary",
+    "section": "Residual",
+    "text": "Residual\nAn observed value minus its fitted value from the model: \\(e_i = y_i - \\hat y_i\\).",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-rse",
+    "href": "glossary.html#gloss-rse",
+    "title": "Glossary",
+    "section": "Residual standard error",
+    "text": "Residual standard error\nThe estimated standard deviation of the residuals (square root of the residual variance).",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-adjusted-r-squared",
+    "href": "glossary.html#gloss-adjusted-r-squared",
+    "title": "Glossary",
+    "section": "Adjusted R-squared",
+    "text": "Adjusted R-squared\n\\(R^2\\) penalised for the number of predictors to discourage unnecessary terms.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-aic",
+    "href": "glossary.html#gloss-aic",
+    "title": "Glossary",
+    "section": "Akaike Information Criterion (AIC)",
+    "text": "Akaike Information Criterion (AIC)\nModel comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-multicollinearity",
+    "href": "glossary.html#gloss-multicollinearity",
+    "title": "Glossary",
+    "section": "Multicollinearity",
+    "text": "Multicollinearity\nStrong correlation among predictors that inflates standard errors and destabilises estimates.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-interaction",
+    "href": "glossary.html#gloss-interaction",
+    "title": "Glossary",
+    "section": "Interaction",
+    "text": "Interaction\nA term that allows the effect of one predictor to depend on the level of another (e.g., \\(X_1 X_2\\)).",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-dummy",
+    "href": "glossary.html#gloss-dummy",
+    "title": "Glossary",
+    "section": "Dummy variable",
+    "text": "Dummy variable\nAn indicator (0/1) used to code categories in regression relative to a baseline.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-leverage",
+    "href": "glossary.html#gloss-leverage",
+    "title": "Glossary",
+    "section": "Leverage",
+    "text": "Leverage\nA measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-cooks-distance",
+    "href": "glossary.html#gloss-cooks-distance",
+    "title": "Glossary",
+    "section": "Cook’s distance",
+    "text": "Cook’s distance\nInfluence measure combining residual size and leverage to flag points that change fitted values when omitted.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-box-cox",
+    "href": "glossary.html#gloss-box-cox",
+    "title": "Glossary",
+    "section": "Box–Cox transformation",
+    "text": "Box–Cox transformation\nA family of power transformations used to stabilise variance or improve linearity for positive responses.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-parsimony",
+    "href": "glossary.html#gloss-parsimony",
+    "title": "Glossary",
+    "section": "Parsimony",
+    "text": "Parsimony\nChoosing the simplest adequate model that answers the scientific question.",
+    "crumbs": [
+      "Glossary"
+    ]
+  }
+]
