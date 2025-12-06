@@ -1,9 +1,9 @@
-title: "Model Building and Variable Screening"
+---
 format:
   live-html:
     toc: true
 ---
-
+# Model Building and Variable Screening
 ## Exploratory analysis for model formulation
 
 - Start with plots (pairs, scatterplots, boxplots) to understand ranges,

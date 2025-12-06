@@ -65,7 +65,7 @@ ojs_define(linearData)
 ## When to use SLR
 
 ## Fitting models to data {#sec-LinearFit}
-in the previous section, you were given a linear model - we knew the values of $\alpha$, $\beta$ and even $\sigma$. However, in most contexts we don't know the true relationship between $X$ and $Y$ in advance. Instead, we are given *data* and try to *infer* the values of $\alpha$, $\beta$, and $\sigma$ by analysing the data.
+in the previous section, you were given a linear model - we knew the values of $\alpha$, $\beta$ and even $\sigma$. However, in most contexts we don't know the true relationship between $x$ and $Y$ in advance. Instead, we are given *data* and try to *infer* the values of $\alpha$, $\beta$, and $\sigma$ by analysing the data.
 
 Indeed, at the end of the last session we generated data from a linear model. In preparation for this chapter, we've generated data from a similar such linear model. Here it is:
 
@@ -108,7 +108,7 @@ $$
 $$
 We also define $\hat{Y}$ as the predicted value of $Y$ given our estimated model:
 $$
-\hat{Y}=a+bX
+\hat{Y}=a+bx
 $$
 Looking at some data, we try to find the values of our parameters that best 'fit' its distribution. Adjust the sliders below to find a line that you think fits the data:
 
@@ -177,7 +177,7 @@ grade_this({
 Ok great, so we have an estimate for our line-of-best-fit:
 ```{ojs}
 //| echo: false
-tex.block`\hat{Y} = ${my_a} + ${my_b}\cdot X`
+tex.block`\hat{Y} = ${my_a} + ${my_b}\cdot x`
 ```
 but what do we mean by 'best' fit here? How do we evaluate this estimate and maybe compare it to other estimates?
 
@@ -187,10 +187,10 @@ but what do we mean by 'best' fit here? How do we evaluate this estimate and may
 
 Residuals are the difference between observed values of $Y$, and the value predicted by our estimated linear predictor $\hat{Y}$. We denote residuals with the letter $e$:
 $$
-e=Y-\hat{Y} = Y - (a + bX). 
+e=Y-\hat{Y} = Y - (a + bx). 
 $$
 
-Residuals, $e$, are similar to the errors, $\varepsilon$, that we encountered in chapter 1 - but they are distinct. In many situations, we do not know the 'acutual' values of $\alpha$ and $\beta$ - so we cannot calculate the errors, $\varepsilon= Y- E[Y]= Y-\alpha + \beta X$. However, we do  have our estimates, $a$ and $b$, so we can calculate residuals. 
+Residuals, $e$, are similar to the errors, $\varepsilon$, that we encountered in chapter 1 - but they are distinct. In many situations, we do not know the 'acutual' values of $\alpha$ and $\beta$ - so we cannot calculate the errors, $\varepsilon= Y- E[Y]= Y-\alpha + \beta x$. However, we do  have our estimates, $a$ and $b$, so we can calculate residuals. 
 
 Indeed - calculating residuals gives us a way to assess how well our estimated model fits the data.  We can think of the residuals as being the 'mismatch' between our estimated linear predictor and each data point. By *minimizing* the size of residuals (minimisiong the mismatch of our model to the data), we can get a better fit of our line to data.
 
@@ -231,7 +231,7 @@ residualData = transpose(linearData).map(d => {
   
 SSRes = d3.sum(residualData, d => d.residual ** 2)
 
-tex.block`\hat{Y} = ${b0} + ${b1}X`
+tex.block`\hat{Y} = ${b0} + ${b1}x`
 
 tex.block`\sum_{i} e_i^{2} = ${SSRes.toFixed(2)}`
 ```
@@ -443,7 +443,7 @@ grade_this_code()
 
 ### Correlation and $R^2$
 
-The {{< glossary Pearson-Correlation >}} coefficient, $r$, measures how strongly $X$ and $Y$ move together along a straight line, taking values between $-1$ (perfect negative linear relationship) and $1$ (perfect positive linear relationship). 
+The {{< glossary Pearson-Correlation >}} coefficient, $r$, measures how strongly $x$ and $Y$ move together along a straight line, taking values between $-1$ (perfect negative linear relationship) and $1$ (perfect positive linear relationship). 
 
 In simple linear regression with an intercept, the {{< glossary R-Squared >}} value can be written as
 $$
@@ -527,8 +527,8 @@ H_0: \beta = 0
 H_a: \beta \ne 0.
 $$
 
-* Under $H_0$, changes in $x$ do not affect the mean of $Y$ (a change in $X$ will lead to $\beta\cdot X = 0\cdot X = 0$ change in $Y$).
-* Under $H_a$, there is evidence of a real linear effect (i.e. a change in $X$ will lead to a non-zero change in $Y$).
+* Under $H_0$, changes in $x$ do not affect the mean of $Y$ (a change in $x$ will lead to $\beta\cdot x = 0\cdot x = 0$ change in $Y$).
+* Under $H_a$, there is evidence of a real linear effect (i.e. a change in $x$ will lead to a non-zero change in $Y$).
 
 Because the Normality assumption implies that the estimator $b$ has a Normal sampling distribution (and hence a $t$ distribution once $\sigma$ is estimated), we are able to quantify how unusual our observed slope would be if $H_0$ were correct.
 

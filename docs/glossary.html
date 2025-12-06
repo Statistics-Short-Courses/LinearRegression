@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Regression Pitfalls and Diagnostics – Linear Regression and Model Selection with R</title>
+<title>Glossary – Linear Regression and Model Selection with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -151,7 +116,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module04-regression-pitfalls-diagnostics.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glossary.html">Glossary</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -203,13 +168,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Building and Variable Screening</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">toc: true</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
+  <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">toc: true</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -220,7 +185,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="./glossary.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Glossary</span></a>
   </div>
 </li>
@@ -237,7 +202,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></h1>
+<h1 class="title">Glossary</h1>
 </div>
 
 
@@ -254,101 +219,57 @@ window.Quarto = {
 </header>
 
 
-<section id="common-pitfalls-to-avoid" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">6.1</span> Common pitfalls to avoid</h2>
-<ul>
-<li>Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.</li>
-<li>Extrapolating far beyond observed predictor ranges can explode predictions.</li>
-<li>Blind stepwise selection can drop theory-driven terms; keep scientific context in view.</li>
-<li>Unchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.</li>
-</ul>
+<section id="gloss-slr" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-slr">Simple linear regression</h2>
+<p>A linear model with one predictor: <span class="math inline">\(E[Y] = \beta_0 + \beta_1 X\)</span> with independent, mean-zero errors.</p>
 </section>
-<section id="residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">6.2</span> Residual plots vs predictors and fitted values</h2>
-<ul>
-<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#gloss-residual">residual</a>).</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>diag_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(diag_mod, <span class="at">which =</span> <span class="dv">1</span>)      <span class="co"># residuals vs fitted</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>wt, <span class="fu">resid</span>(diag_mod), <span class="at">xlab =</span> <span class="st">"wt"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="gloss-mlr" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-mlr">Multiple linear regression</h2>
+<p>A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.</p>
 </section>
-<section id="diagnosing-nonconstant-variance-and-nonlinearity" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">6.3</span> Diagnosing nonconstant variance and nonlinearity</h2>
-<ul>
-<li>Funnel shapes or curved trends in residual plots suggest heteroskedasticity or missing curvature; consider transformations or adding interactions/polynomials.</li>
-</ul>
+<section id="gloss-residual" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-residual">Residual</h2>
+<p>An observed value minus its fitted value from the model: <span class="math inline">\(e_i = y_i - \hat y_i\)</span>.</p>
 </section>
-<section id="assessing-normality-of-residuals" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="assessing-normality-of-residuals"><span class="header-section-number">6.4</span> Assessing normality of residuals</h2>
-<ul>
-<li>Use Q-Q plots and compare <span class="math inline">\(t\)</span>- and <span class="math inline">\(p\)</span>-values to Normal reference.</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(diag_mod)); <span class="fu">qqline</span>(<span class="fu">resid</span>(diag_mod))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<section id="gloss-rse" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-rse">Residual standard error</h2>
+<p>The estimated standard deviation of the residuals (square root of the residual variance).</p>
 </section>
-<section id="standardised-residuals-leverage-cooks-distance" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="standardised-residuals-leverage-cooks-distance"><span class="header-section-number">6.5</span> Standardised residuals, leverage, Cook’s distance</h2>
-<ul>
-<li>Standardised (or studentised) residuals scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).</li>
-<li>Leverage (<code>hatvalues()</code>) flags unusual predictor combinations (<a href="glossary.html#gloss-leverage">leverage</a>).</li>
-<li>Cook’s distance combines leverage and residual size to assess influence (<a href="glossary.html#gloss-cooks-distance">Cook’s distance</a>).</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">rstudent</span>(diag_mod),</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">hatvalues</span>(diag_mod),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cooks.distance</span>(diag_mod))[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                        [,1]       [,2]        [,3]
-Mazda RX4         -1.4433354 0.09320650 0.051538041
-Mazda RX4 Wag     -1.1371729 0.12316145 0.044939134
-Datsun 710        -1.3051372 0.08856401 0.040365321
-Hornet 4 Drive     0.3121886 0.07518198 0.002046732
-Hornet Sportabout  0.4688483 0.07867173 0.004827051</code></pre>
-</div>
-</div>
+<section id="gloss-adjusted-r-squared" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-adjusted-r-squared">Adjusted R-squared</h2>
+<p><span class="math inline">\(R^2\)</span> penalised for the number of predictors to discourage unnecessary terms.</p>
 </section>
-<section id="transformations-including-boxcox" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="transformations-including-boxcox"><span class="header-section-number">6.6</span> Transformations including Box–Cox</h2>
-<ul>
-<li>Transformations can stabilise variance or linearise relationships; for strictly positive <span class="math inline">\(Y\)</span>, consider <a href="glossary.html#gloss-box-cox">Box–Cox transformations</a> to guide power choices.</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>MASS<span class="sc">::</span><span class="fu">boxcox</span>(diag_mod, <span class="at">plotit =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<section id="gloss-aic" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-aic">Akaike Information Criterion (AIC)</h2>
+<p>Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.</p>
 </section>
-<section id="handling-outliers-and-influential-observations" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="handling-outliers-and-influential-observations"><span class="header-section-number">6.7</span> Handling outliers and influential observations</h2>
-<ul>
-<li>Investigate data quality first (entry errors, unusual units).</li>
-<li>If influential points are real, fit with and without them to assess robustness; report how conclusions change.</li>
-<li>Prefer model adjustments (functional form, variance stabilisation) over automatic deletion; document any exclusions explicitly.</li>
-</ul>
+<section id="gloss-multicollinearity" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-multicollinearity">Multicollinearity</h2>
+<p>Strong correlation among predictors that inflates standard errors and destabilises estimates.</p>
+</section>
+<section id="gloss-interaction" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-interaction">Interaction</h2>
+<p>A term that allows the effect of one predictor to depend on the level of another (e.g., <span class="math inline">\(X_1 X_2\)</span>).</p>
+</section>
+<section id="gloss-dummy" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-dummy">Dummy variable</h2>
+<p>An indicator (0/1) used to code categories in regression relative to a baseline.</p>
+</section>
+<section id="gloss-leverage" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-leverage">Leverage</h2>
+<p>A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.</p>
+</section>
+<section id="gloss-cooks-distance" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-cooks-distance">Cook’s distance</h2>
+<p>Influence measure combining residual size and leverage to flag points that change fitted values when omitted.</p>
+</section>
+<section id="gloss-box-cox" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-box-cox">Box–Cox transformation</h2>
+<p>A family of power transformations used to stabilise variance or improve linearity for positive responses.</p>
+</section>
+<section id="gloss-parsimony" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-parsimony">Parsimony</h2>
+<p>Choosing the simplest adequate model that answers the scientific question.</p>
 
 
 <script type="ojs-module-contents">

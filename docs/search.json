@@ -1,0 +1,572 @@
+[
+  {
+    "objectID": "module01-slr.html",
+    "href": "module01-slr.html",
+    "title": "3  Simple Linear Regression (SLR)",
+    "section": "",
+    "text": "3.1 When to use SLR",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Simple Linear Regression (SLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module01-slr.html#sec-LinearFit",
+    "href": "module01-slr.html#sec-LinearFit",
+    "title": "3  Simple Linear Regression (SLR)",
+    "section": "3.2 Fitting models to data",
+    "text": "3.2 Fitting models to data\nin the previous section, you were given a linear model - we knew the values of \\(\\alpha\\), \\(\\beta\\) and even \\(\\sigma\\). However, in most contexts we don’t know the true relationship between \\(X\\) and \\(Y\\) in advance. Instead, we are given data and try to infer the values of \\(\\alpha\\), \\(\\beta\\), and \\(\\sigma\\) by analysing the data.\nIndeed, at the end of the last session we generated data from a linear model. In preparation for this chapter, we’ve generated data from a similar such linear model. Here it is:\n\nPlotData\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n             x          y\n1   5.18497865 -2.8251142\n2   0.29521488 -1.3946652\n3  -0.08612014 -3.0950395\n4   2.25598639 -4.9859672\n5  -5.43896723 -5.0261380\n6   0.13416787 -3.1047139\n7  -3.17254897 -4.7834502\n8   2.31675287  0.4618911\n9   3.65496270 -0.5488129\n10  1.29305891 -3.8288519\n11 -5.64277619 -5.7957369\n12 -0.85149609 -0.5995026\n13  0.22520431 -0.4851539\n14  3.39848935 -0.9053325\n15 -1.12778581 -0.9169298\n16 -1.27875221 -4.2598956\n17  2.10024097 -0.4008980\n18  1.11780972 -5.2612606\n19  1.45872577 -4.3081710\n20  0.93170652 -1.7726307\n\n\n\n\n\nyour task for the remainder of the chapter (and in regression generally) is to try an make a (educated) guess about what model produced this data.\n\nContinue\n\n\nEstimating parameters\nWe call the process of trying to guess the parameters in the data generating model (i.e. \\(\\alpha\\), \\(\\beta\\) and \\(\\sigma\\)), estimation, and our guesses are estimates. To avoid confusion, we’ll denote the estimated intercept by \\(a\\) and the estimated slope by \\(b\\). So, we have\n\\[\na: \\text{Estimated intercept}\n\\] \\[\nb: \\text{Estimated slope}\n\\] \\[\n\\hat{\\sigma}: \\text{Estimated standard deviation}.\n\\] We also define \\(\\hat{Y}\\) as the predicted value of \\(Y\\) given our estimated model: \\[\n\\hat{Y}=a+bX\n\\] Looking at some data, we try to find the values of our parameters that best ‘fit’ its distribution. Adjust the sliders below to find a line that you think fits the data:\n\n\nviewof b0adj_1 = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept (asjust)`})\nviewof b1_1 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})\n\nb0_1 = (-3 - 0.5*b1_1) + b0adj_1\n\ntex.block`\\hat{Y} = ${b0_1.toFixed(2)} + ${b1_1.toFixed(2)}x`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nxRange = d3.extent(linearData.x)\n\nlineData_1 = xRange.map(x =&gt; ({x, y: b1_1 * x + b0_1}))\n\nPlot.plot({\n  marks: [\n    Plot.line(lineData_1, { x: \"x\", y: \"y\" }),\n\n    Plot.dot(transpose(linearData), { x: \"x\", y: \"y\", r: 3 })\n  ],\n  x: { domain: xRange },\n  y: { domain: [-10, 5], label: \"y\" },\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExercise 1\nWhat is your best estimate for the values of \\(\\alpha\\) and \\(\\beta\\) that best fit the given data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOk great, so we have an estimate for our line-of-best-fit:\n\ntex.block`\\hat{Y} = ${my_a} + ${my_b}\\cdot X`\n\n\n\n\n\n\nbut what do we mean by ‘best’ fit here? How do we evaluate this estimate and maybe compare it to other estimates?\n\nContinue\n\n\n\nResiduals\nResiduals are the difference between observed values of \\(Y\\), and the value predicted by our estimated linear predictor \\(\\hat{Y}\\). We denote residuals with the letter \\(e\\): \\[\ne=Y-\\hat{Y} = Y - (a + bX).\n\\]\nResiduals, \\(e\\), are similar to the errors, \\(\\varepsilon\\), that we encountered in chapter 1 - but they are distinct. In many situations, we do not know the ‘acutual’ values of \\(\\alpha\\) and \\(\\beta\\) - so we cannot calculate the errors, \\(\\varepsilon= Y- E[Y]= Y-\\alpha + \\beta X\\). However, we do have our estimates, \\(a\\) and \\(b\\), so we can calculate residuals.\nIndeed - calculating residuals gives us a way to assess how well our estimated model fits the data. We can think of the residuals as being the ‘mismatch’ between our estimated linear predictor and each data point. By minimizing the size of residuals (minimisiong the mismatch of our model to the data), we can get a better fit of our line to data.\n\nContinue\n\n\n\nEstimating coefficients\n\nOptimising model fit by minimising (squared) residuals\nBelow, the plot now also displays residuals for each data point. Underneath the model equation is the Sum of Squared Residuals (SSR), which gives a measure of the absolute difference between our linear predictor and the observed outcomes.\n\\[\nSSR=\\sum_{i=1}^{n} e_i^2\n\\]\nwhere \\(e_i = Y_i - \\hat{Y}_i\\). This gives us a numerical measure of how well the line fits the data - see how low you can get the SSR by adjusting slope and intercept.\n\n\nviewof b0adj = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})\nviewof b1 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})\n\nb0 = -3 + b0adj\n\nresidualData = transpose(linearData).map(d =&gt; {\n  const yhat = b1 * d.x + b0;\n  const res  = d.y - yhat;\n  return {\n    ...d,\n    yhat,\n    residual: res,\n    sign: res &gt;= 0 ? \"positive\" : \"negative\",\n    absRes: Math.abs(res)\n  };\n})\n  \nSSRes = d3.sum(residualData, d =&gt; d.residual ** 2)\n\ntex.block`\\hat{Y} = ${b0} + ${b1}X`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntex.block`\\sum_{i} e_i^{2} = ${SSRes.toFixed(2)}`\n\n\n\n\n\n\n\n\n\n\n\nlineData = xRange.map(x =&gt; ({x, y: b1 * x + b0}))\n\nPlot.plot({\n  marks: [\n    Plot.ruleX(residualData, {x: \"x\",\n      y1: \"y\",\n      y2: \"yhat\",\n      stroke: \"sign\", \n      strokeOpacity: 0.75,\n      strokeWidth: d =&gt; 1 + d.absRes}),\n\n    Plot.line(lineData, { x: \"x\", y: \"y\" }),\n\n    Plot.dot(transpose(linearData), { x: \"x\", y: \"y\", r: 3 })\n  ],\n  x: { domain: xRange },\n  y: { domain: [-10,5], label: \"y\" },\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExercise 2\nBased on this visualisation, what do you think is the minimum possible \\(SSR\\) achievable?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIf you want you can update your \\(a\\) and \\(b\\) estimates too (otherwise just proceed):\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe least-squares estimate\nWe call the estimates \\(a\\) and \\(b\\) which minimise the sum of squares the least squares estimates. Some nice mathematics tells us that the least squares esimates for a simple linear model are unique - that is, there is one set of values for \\(a\\) and \\(b\\) which satisfy this property. Moreover, we don’t have to manually adjust our parameters to keep lowering SSR - there is a convenient closed form expression which allows us to compute \\(a\\) and \\(b\\) very efficiently. As a statistical programming language, this is something R does very easily..\n\n\nFitting a model with the lm() function\nIn R the lm() function computes the least squares estimates \\(a\\) and \\(b\\) for our simple linear model (among other things) in a single command:\n\n\n\n\n\n\n\n\nWe can extract the coefficients from the lm by indexing:\n\n\n\n\n\n\n\n\nor by the coef() function:\n\n\n\n\n\n\n\n\n\nHow do these estimates compare with yours?\n\nLets compare the estimated linear fits graphically:\n\nPlotCode\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nContinue\n\n\n\nEstimating variance\nOnce the line has been fitted (i.e. \\(\\alpha\\) and \\(\\beta\\) have been estimated as \\(a\\) and \\(b\\)), we also have to estimate the distribution of error terms (remember, as per ?sec-varAssumption, the error distribution has a constant variance defined by \\(\\sigma^2\\)). As you might expect, we again utilise the residuals from our least squares linear predictor to estimate \\(\\sigma\\). The spread of the error terms will be estimated by the spread of the residuals around our line of best fit.\nWe can extract the individual residual values from the fitted lm object by indexing (e.g. my_lm$residuals) or with the residuals() function.\n\n\n\n\n\n\n\n\nThe resulting R object is a vector of the residual for each observation. i.e. residuals(lm_1)[[3]] \\(= e_3\\)\n\nExercise 3: Extracting residuals from an lm object\nExtract the residuals from your least squares fitted model lm_1by indexing and assign them to the variable e\n\n\n\n\n\n\n\n\n\n\n\ne &lt;- lm_1$residuals\ne &lt;- lm_1$residuals\n\n\n\n\n\n\n\n\n\n\nResidual Standard Error\nDividing the residual sum of squares by \\(n-2\\) (one degree of freedom lost per fitted coefficient) gives the mean squared error, and taking the square root yields the residual standard deviation (aka. the Residual-Standard-Error) \\[\ns^2 = \\frac{1}{n-2}\\sum_{i=1}^{n} e_i^2= \\frac{SSE}{n-2}, \\quad s=\\sqrt{s^2}.\n\\] Interpreting \\(\\hat \\sigma\\) is often easier on the original \\(y\\) scale: a typical observation falls about \\(\\hat \\sigma\\) units away from the fitted line.\n\\(s^2\\) and \\(s\\) are our estimators for \\(\\sigma^2\\) and \\(\\sigma\\), respectively. ::: Exercise #### Calculate the Residual Standard Error using your e object defined in the previous exercise, calculate the residual standard error of the least squares model (hint - there are 20 observations in the linearData dataset)\n\n\n\n\n\n\n\n\n\n\n\nrse &lt;- sqrt(sum(e^2)/(nrow(linearData)-2))\nrse &lt;- sqrt(sum(e^2)/(nrow(linearData)-2))\n\n\n\n\n\n\n:::\n\n\nCorrelation and \\(R^2\\)\nThe Pearson-Correlation coefficient, \\(r\\), measures how strongly \\(X\\) and \\(Y\\) move together along a straight line, taking values between \\(-1\\) (perfect negative linear relationship) and \\(1\\) (perfect positive linear relationship).\nIn simple linear regression with an intercept, the R-Squared value can be written as \\[\nR^2 = 1 - \\frac{\\text{RSS}}{\\text{TSS}} = r^2,\n\\] so \\(R^2\\) captures the proportion of the total variation in \\(Y\\) that is explained by the fitted line.\n\nExercise 4: Correlation and \\(R^2\\) in our example\nCalculate the correlation between x and y, then compute \\(R^2\\) using the residuals from lm_1.\n\n\n\n\n\n\n\n\n\n\n\nr &lt;- cor(linearData$x, linearData$y)\nr_squared &lt;- 1 - sum(e^2) / sum((linearData$y - mean(linearData$y))^2)\nr &lt;- cor(linearData$x, linearData$y)\nr_squared &lt;- 1 - sum(e^2) / sum((linearData$y - mean(linearData$y))^2)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Simple Linear Regression (SLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module01-slr.html#inference-for-slr",
+    "href": "module01-slr.html#inference-for-slr",
+    "title": "3  Simple Linear Regression (SLR)",
+    "section": "3.3 Inference for SLR",
+    "text": "3.3 Inference for SLR\nUp to this point, we have fitted a straight-line model to a sample of data, obtaining estimates \\(a\\) and \\(b\\) for the intercept and slope. These estimates describe the pattern visible in the sample, but they do not tell us how closely they reflect the true population parameters \\(\\alpha\\) and \\(\\beta\\). Because sampling introduces randomness, different samples would produce different fitted lines.\nThis raises the central question:\nHow much confidence can we place in the slope and intercept we estimated, and what do they tell us about the true relationship in the population?\nTo answer this, we rely on statistical inference, which quantifies the uncertainty in the estimates and evaluates whether the predictor genuinely influences the response.\nImportantly, the inferential procedures we use rest on the assumptions of the linear regression model:\n\nThe errors \\(\\varepsilon\\) have mean \\(0\\).\nThey have constant variance \\(\\sigma^2\\) (homoscedasticity).\nThey are independent.\nThey are Normally distributed.\n\nThe Normality assumption is what allows us to derive the sampling distributions of \\(a\\) and \\(b\\), leading directly to the t-tests and confidence intervals used for inference. Without these assumptions—especially Normality—the exact forms of these inferential tools would not hold.\n\nNote 1For a broader introduction to statistical inference, see the Inferential Statistics with R short course. If concepts such as the Normal distribution or t-tests feel unfamiliar, please review that material before continuing.\n\n\n\n\nInference About the Slope, \\(\\beta\\)\nIn simple linear regression, the population relationship is modelled as\n\\[\nY = \\alpha + \\beta x + \\varepsilon.\n\\]\nTo determine whether \\(x\\) is genuinely associated with \\(Y\\), we test:\n\\[\nH_0: \\beta = 0\n\\qquad \\text{vs.} \\qquad\nH_a: \\beta \\ne 0.\n\\]\n\nUnder \\(H_0\\), changes in \\(x\\) do not affect the mean of \\(Y\\) (a change in \\(X\\) will lead to \\(\\beta\\cdot X = 0\\cdot X = 0\\) change in \\(Y\\)).\nUnder \\(H_a\\), there is evidence of a real linear effect (i.e. a change in \\(X\\) will lead to a non-zero change in \\(Y\\)).\n\nBecause the Normality assumption implies that the estimator \\(b\\) has a Normal sampling distribution (and hence a \\(t\\) distribution once \\(\\sigma\\) is estimated), we are able to quantify how unusual our observed slope would be if \\(H_0\\) were correct.\n\nExercise 5: Hypothesis testing revision (p-values)\n\n\n\nThe t-Test for the Slope\nThe hypothesis test is carried out using the statistic\n\\[\nt = \\frac{b}{\\text{SE}(b)},\n\\]\nwhich follows a \\(t\\)-distribution with \\(n - 2\\) degrees of freedom.\nInterpretation:\n\nA large value of \\(|t|\\) (small p-value) indicates evidence that \\(\\beta \\ne 0\\).\nA small value of \\(|t|\\) suggests the data are consistent with no linear effect.\n\nThe validity of this test relies on the Normality of the errors, which guarantees that this \\(t\\) statistic follows the appropriate reference distribution.\n\nNote 2While the assumption of Normality is what theoretically grounds the use of the t-test for parameter estimates, SLR is quite robust to violations of this assumption and inferences about our slope parameters may be of interest even with non-normal residual distributions.\n\n\n\nExample 1: t-test for slope\n\n\n\nExercise 6: t-test for slope\n\n\n\n\nConfidence Interval for the Slope\nA \\((1-\\alpha)100%\\) confidence interval for \\(\\beta\\) is\n\\[\nb ;\\pm; t_{\\alpha/2,,n-2},\\text{SE}(b).\n\\]\nInterpretation:\n\nAn interval excluding zero indicates a likely genuine relationship.\nAn interval including zero suggests weaker evidence.\n\nConfidence intervals complement hypothesis tests by communicating both the direction and plausible magnitude of the effect.\n\n\n\nInference About the Response, \\(Y\\)\nOnce we have fitted a regression model, we often want to make statements about the value of the response at a given predictor value \\(x_0\\). There are two distinct quantities of interest:\n\nThe mean (average) response at \\(x_0\\): \\[\n\\mu_Y(x_0) = \\alpha + \\beta x_0.\n\\]\nA new individual response at \\(x_0\\): \\[\nY_{\\text{new}} = \\alpha + \\beta x_0 + \\varepsilon.\n\\]\n\nThese involve different uncertainties, and therefore require different intervals.\n\nConfidence Interval for the Mean Response\nLet \\(\\hat{y}_0 = a + b x_0\\) be the fitted value at \\(x_0\\). A confidence interval for the mean response is:\n\\[\n\\hat{y}*0\n;\\pm;\nt*{\\alpha/2,,n-2} ,\ns\\sqrt{\n\\frac{1}{n} +\n\\frac{(x_0 - \\bar{x})^2}{\\sum (x_i - \\bar{x})^2}\n}.\n\\]\nThis interval quantifies uncertainty in the average value of \\(Y\\) for units with predictor value \\(x_0\\).\npredict(fit, newdata = new_point, interval = \"confidence\")\n\n\nPrediction Interval for a New Observation\nTo predict an individual outcome at \\(x_0\\), we must include the additional uncertainty from the random error \\(\\varepsilon\\):\n\\[\n\\hat{y}*0\n;\\pm;\nt*{\\alpha/2, , n-2} ,\ns\\sqrt{\n1 +\n\\frac{1}{n} +\n\\frac{(x_0 - \\bar{x})^2}{\\sum (x_i - \\bar{x})^2}\n}.\n\\]\nBecause of the extra “1” term, prediction intervals are always wider than confidence intervals.\npredict(fit, newdata = new_point, interval = \"prediction\")\n\n\nSummary\n\nConfidence interval → uncertainty in the expected value at \\(x_0\\)\nPrediction interval → uncertainty in a new outcome at \\(x_0\\)\n\n\n\nContinue\n\nShould I include a (brief) section on residuals diagnostics here or save that for the dedicated chapter??",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Simple Linear Regression (SLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html",
+    "href": "module03-model-building.html",
+    "title": "5  Model Building and Variable Screening",
+    "section": "",
+    "text": "5.1 Exploratory analysis for model formulation",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#exploratory-analysis-for-model-formulation",
+    "href": "module03-model-building.html#exploratory-analysis-for-model-formulation",
+    "title": "5  Model Building and Variable Screening",
+    "section": "",
+    "text": "Start with plots (pairs, scatterplots, boxplots) to understand ranges, outliers, and plausible functional forms.\nUse subject-matter knowledge to posit candidate predictors and interactions.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#systematic-vs-random-variation",
+    "href": "module03-model-building.html#systematic-vs-random-variation",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.2 Systematic vs random variation",
+    "text": "5.2 Systematic vs random variation\n\nDistinguish signal (systematic trend with predictors) from noise (unexplained scatter).\nResidual SD estimates random variation; large unexplained scatter may indicate missing predictors or wrong functional form.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#choosing-first--vs-second-order-functional-forms",
+    "href": "module03-model-building.html#choosing-first--vs-second-order-functional-forms",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.3 Choosing first- vs second-order functional forms",
+    "text": "5.3 Choosing first- vs second-order functional forms\n\nStart with additive, first-order (linear) terms; add interactions or low-order polynomials when plots or theory suggest them.\nPrefer centered predictors to stabilise estimates when adding higher-order terms.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#model-adequacy-and-interpretability",
+    "href": "module03-model-building.html#model-adequacy-and-interpretability",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.4 Model adequacy and interpretability",
+    "text": "5.4 Model adequacy and interpretability\n\nAdequate models fit the data (diagnostics pass) and support the scientific question.\nAvoid models that obscure interpretation with unnecessary complexity or unidentifiable effects.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#parsimony-as-a-guiding-principle",
+    "href": "module03-model-building.html#parsimony-as-a-guiding-principle",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.5 Parsimony as a guiding principle",
+    "text": "5.5 Parsimony as a guiding principle\n\nFavor the simplest model that explains the data and meets assumptions.\nRemove immaterial terms when they do not improve fit or align with theory; compare nested models via F-tests or information criteria.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#interaction-models-with-quantitative-predictors",
+    "href": "module03-model-building.html#interaction-models-with-quantitative-predictors",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.6 Interaction models with quantitative predictors",
+    "text": "5.6 Interaction models with quantitative predictors\n\nAllow the effect of one predictor to depend on another (interaction): \\[E[Y] = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + \\beta_3 X_1X_2.\\]\n\\(\\beta_3\\) shifts the slope of \\(X_1\\) per-unit change in \\(X_2\\) (and vice versa).\n\n\nint_mod &lt;- lm(mpg ~ wt * hp, data = mtcars)\ncoef(int_mod)[c(\"wt\", \"hp\", \"wt:hp\")]\n\n         wt          hp       wt:hp \n-8.21662430 -0.12010209  0.02784815",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#graphical-interpretation-of-interaction-effects",
+    "href": "module03-model-building.html#graphical-interpretation-of-interaction-effects",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.7 Graphical interpretation of interaction effects",
+    "text": "5.7 Graphical interpretation of interaction effects\n\nPlot fitted lines across a grid to see slope changes.\n\n\nlibrary(ggplot2)\ngrid &lt;- expand.grid(wt = seq(2, 4, 0.5), hp = c(90, 150))\ngrid$fit &lt;- predict(int_mod, grid)\nggplot(grid, aes(wt, fit, colour = factor(hp))) +\n  geom_line() + labs(colour = \"HP level\", y = \"Fitted mpg\")",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#polynomial-models-quadratic-and-cubic",
+    "href": "module03-model-building.html#polynomial-models-quadratic-and-cubic",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.8 Polynomial models: quadratic and cubic",
+    "text": "5.8 Polynomial models: quadratic and cubic\n\nCapture curvature by adding powers: \\[E[Y] = \\beta_0 + \\beta_1 X +\n\\beta_2 X^2 \\;(+\\; \\beta_3 X^3).\\]\nUse poly() or explicit powers; center \\(X\\) to reduce collinearity.\n\n\npoly_mod &lt;- lm(mpg ~ wt + I(wt^2), data = mtcars)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#when-and-how-to-model-curvature",
+    "href": "module03-model-building.html#when-and-how-to-model-curvature",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.9 When and how to model curvature",
+    "text": "5.9 When and how to model curvature\n\nUse scatterplots and residual-vs-fitted plots to spot nonlinearity.\nPrefer low-order polynomials for interpretability; consider splines for flexible shapes if allowed.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#extrapolation-risks-and-overfitting-concerns",
+    "href": "module03-model-building.html#extrapolation-risks-and-overfitting-concerns",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.10 Extrapolation risks and overfitting concerns",
+    "text": "5.10 Extrapolation risks and overfitting concerns\n\nPolynomial terms can explode outside the data range—avoid predicting far beyond observed \\(X\\).\nGuard against overfitting with cross-validation or an independent validation set when sample size permits.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#variable-screening-and-model-selection",
+    "href": "module03-model-building.html#variable-screening-and-model-selection",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.11 Variable screening and model selection",
+    "text": "5.11 Variable screening and model selection\n\nAim for models that balance predictive accuracy with interpretability.\nPreserve theory-driven terms, but remove noise predictors that do not improve fit or align with the research question.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#multicollinearity-detection-and-implications",
+    "href": "module03-model-building.html#multicollinearity-detection-and-implications",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.12 Multicollinearity: detection and implications",
+    "text": "5.12 Multicollinearity: detection and implications\n\nSymptoms: unstable coefficients, inflated standard errors, signs flipping with small data changes (multicollinearity).\nQuick checks: pairwise correlations, variance inflation factors (VIF), or condition numbers.\n\n\ncor(mtcars[, c(\"wt\", \"hp\", \"disp\", \"drat\")])\n\n             wt         hp       disp       drat\nwt    1.0000000  0.6587479  0.8879799 -0.7124406\nhp    0.6587479  1.0000000  0.7909486 -0.4487591\ndisp  0.8879799  0.7909486  1.0000000 -0.7102139\ndrat -0.7124406 -0.4487591 -0.7102139  1.0000000\n\nkappa(model.matrix(~ wt + hp + disp, data = mtcars))\n\n[1] 1639.418",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#akaike-information-criterion-aic",
+    "href": "module03-model-building.html#akaike-information-criterion-aic",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.13 Akaike Information Criterion (AIC)",
+    "text": "5.13 Akaike Information Criterion (AIC)\n\nBalances fit and complexity: \\(\\text{AIC} = -2\\ell + 2k\\); lower is better (AIC).\nCompare non-nested models with AIC(model1, model2, ...).",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#forward-backward-and-stepwise-selection",
+    "href": "module03-model-building.html#forward-backward-and-stepwise-selection",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.14 Forward, backward, and stepwise selection",
+    "text": "5.14 Forward, backward, and stepwise selection\n\nForward: start simple, add terms that reduce AIC or improve fit.\nBackward: start saturated, remove weak terms.\nStepwise: alternate add/drop using step() (AIC by default).\n\n\nfull_mod &lt;- lm(mpg ~ ., data = mtcars)\nstep(full_mod, direction = \"both\", trace = 0)\n\n\nCall:\nlm(formula = mpg ~ wt + qsec + am, data = mtcars)\n\nCoefficients:\n(Intercept)           wt         qsec           am  \n      9.618       -3.917        1.226        2.936",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#limitations-and-cautions-for-stepwise-methods",
+    "href": "module03-model-building.html#limitations-and-cautions-for-stepwise-methods",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.15 Limitations and cautions for stepwise methods",
+    "text": "5.15 Limitations and cautions for stepwise methods\n\nData-driven searches can overfit and inflate Type I error.\nSelected models depend on starting set and may ignore theory; always validate with diagnostics and, if possible, new data.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#balancing-prediction-and-explanation",
+    "href": "module03-model-building.html#balancing-prediction-and-explanation",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.16 Balancing prediction and explanation",
+    "text": "5.16 Balancing prediction and explanation\n\nFor explanation, prioritise interpretability and scientific plausibility; for prediction, prioritise out-of-sample performance.\nConsider cross-validation or a hold-out set when sample size permits; report uncertainty from the final, diagnostically-sound model.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#working-with-qualitative-predictors",
+    "href": "module03-model-building.html#working-with-qualitative-predictors",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.17 Working with qualitative predictors",
+    "text": "5.17 Working with qualitative predictors\n\nRepresent \\(k\\)-level categorical predictors with \\(k-1\\) indicator variables (dummy variables); the omitted level is the baseline.\n\n\ncat_mod &lt;- lm(mpg ~ factor(cyl), data = mtcars)\nmodel.matrix(cat_mod)[1:5, ]\n\n                  (Intercept) factor(cyl)6 factor(cyl)8\nMazda RX4                   1            1            0\nMazda RX4 Wag               1            1            0\nDatsun 710                  1            0            0\nHornet 4 Drive              1            1            0\nHornet Sportabout           1            0            1",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#baseline-category-interpretation",
+    "href": "module03-model-building.html#baseline-category-interpretation",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.18 Baseline category interpretation",
+    "text": "5.18 Baseline category interpretation\n\nEach indicator coefficient compares its level to the baseline.\nRe-level with relevel() for more meaningful comparisons.\n\n\nmtcars$cyl &lt;- relevel(factor(mtcars$cyl), ref = \"6\")\nrelevel_mod &lt;- lm(mpg ~ cyl, data = mtcars)\ncoef(relevel_mod)\n\n(Intercept)        cyl4        cyl8 \n  19.742857    6.920779   -4.642857",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#regression-with-multi-level-factors",
+    "href": "module03-model-building.html#regression-with-multi-level-factors",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.19 Regression with multi-level factors",
+    "text": "5.19 Regression with multi-level factors\n\nFit models with multiple factors and quantitative predictors; ensure design matrix is full rank (no redundant indicators).\n\n\nmix_mod &lt;- lm(mpg ~ wt + factor(carb), data = mtcars)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#mixing-categorical-and-continuous-predictors",
+    "href": "module03-model-building.html#mixing-categorical-and-continuous-predictors",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.20 Mixing categorical and continuous predictors",
+    "text": "5.20 Mixing categorical and continuous predictors\n\nCombine factors and continuous terms; interaction terms allow different slopes by group (e.g., wt * cyl).\n\n\ngroup_slope &lt;- lm(mpg ~ wt * factor(gear), data = mtcars)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "module03-model-building.html#connection-to-anova-style-hypotheses",
+    "href": "module03-model-building.html#connection-to-anova-style-hypotheses",
+    "title": "5  Model Building and Variable Screening",
+    "section": "5.21 Connection to ANOVA-style hypotheses",
+    "text": "5.21 Connection to ANOVA-style hypotheses\n\nANOVA table for a factor tests whether any level differs from the baseline (joint \\(H_0\\) on all indicators).\nIn R, compare models with anova() or read the factor-level F-test in summary() output when using treatment coding.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model Building and Variable Screening</span>"
+    ]
+  },
+  {
+    "objectID": "glossary.html",
+    "href": "glossary.html",
+    "title": "Glossary",
+    "section": "",
+    "text": "Simple linear regression\nA linear model with one predictor: \\(E[Y] = \\beta_0 + \\beta_1 X\\) with independent, mean-zero errors.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-mlr",
+    "href": "glossary.html#gloss-mlr",
+    "title": "Glossary",
+    "section": "Multiple linear regression",
+    "text": "Multiple linear regression\nA linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-residual",
+    "href": "glossary.html#gloss-residual",
+    "title": "Glossary",
+    "section": "Residual",
+    "text": "Residual\nAn observed value minus its fitted value from the model: \\(e_i = y_i - \\hat y_i\\).",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-rse",
+    "href": "glossary.html#gloss-rse",
+    "title": "Glossary",
+    "section": "Residual standard error",
+    "text": "Residual standard error\nThe estimated standard deviation of the residuals (square root of the residual variance).",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-adjusted-r-squared",
+    "href": "glossary.html#gloss-adjusted-r-squared",
+    "title": "Glossary",
+    "section": "Adjusted R-squared",
+    "text": "Adjusted R-squared\n\\(R^2\\) penalised for the number of predictors to discourage unnecessary terms.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-aic",
+    "href": "glossary.html#gloss-aic",
+    "title": "Glossary",
+    "section": "Akaike Information Criterion (AIC)",
+    "text": "Akaike Information Criterion (AIC)\nModel comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-multicollinearity",
+    "href": "glossary.html#gloss-multicollinearity",
+    "title": "Glossary",
+    "section": "Multicollinearity",
+    "text": "Multicollinearity\nStrong correlation among predictors that inflates standard errors and destabilises estimates.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-interaction",
+    "href": "glossary.html#gloss-interaction",
+    "title": "Glossary",
+    "section": "Interaction",
+    "text": "Interaction\nA term that allows the effect of one predictor to depend on the level of another (e.g., \\(X_1 X_2\\)).",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-dummy",
+    "href": "glossary.html#gloss-dummy",
+    "title": "Glossary",
+    "section": "Dummy variable",
+    "text": "Dummy variable\nAn indicator (0/1) used to code categories in regression relative to a baseline.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-leverage",
+    "href": "glossary.html#gloss-leverage",
+    "title": "Glossary",
+    "section": "Leverage",
+    "text": "Leverage\nA measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-cooks-distance",
+    "href": "glossary.html#gloss-cooks-distance",
+    "title": "Glossary",
+    "section": "Cook’s distance",
+    "text": "Cook’s distance\nInfluence measure combining residual size and leverage to flag points that change fitted values when omitted.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-box-cox",
+    "href": "glossary.html#gloss-box-cox",
+    "title": "Glossary",
+    "section": "Box–Cox transformation",
+    "text": "Box–Cox transformation\nA family of power transformations used to stabilise variance or improve linearity for positive responses.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "glossary.html#gloss-parsimony",
+    "href": "glossary.html#gloss-parsimony",
+    "title": "Glossary",
+    "section": "Parsimony",
+    "text": "Parsimony\nChoosing the simplest adequate model that answers the scientific question.",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Linear Regression and Model Selection with R",
+    "section": "",
+    "text": "1 Course Overview",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Course Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#what-you-will-learn",
+    "href": "index.html#what-you-will-learn",
+    "title": "Linear Regression and Model Selection with R",
+    "section": "1.1 What you will learn",
+    "text": "1.1 What you will learn\n\nFormulate simple and multiple linear regression models and articulate their assumptions.\nInterpret regression coefficients, including partial, interaction, and categorical effects.\nEvaluate model utility using hypothesis tests, R-squared metrics, and prediction accuracy.\nIdentify when additive models fail and implement interaction or polynomial terms.\nIncorporate qualitative predictors using indicator (dummy) variables.\nApply principles of parsimony and evidence-based model building.\nUse AIC, multicollinearity diagnostics, and stepwise procedures for model selection.\nPerform residual analysis, identify influential observations, and apply transformations.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Course Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use-this-book",
+    "href": "index.html#how-to-use-this-book",
+    "title": "Linear Regression and Model Selection with R",
+    "section": "1.2 How to use this book",
+    "text": "1.2 How to use this book\n\nEach chapter corresponds to a module in the syllabus and ends with short practice prompts.\nR examples use base lm() and standard diagnostics; you can run code chunks directly if you enable execution.\nThe Assessments chapter outlines optional exercises and a capstone project that integrate exploration, model selection, and diagnostics.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Course Overview</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html",
+    "href": "module02-mlr.html",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "",
+    "text": "4.1 When to extend SLR\nMost practical applications of linear regression require models more complex than the simple linear regression(SLR) model introduced in Section 2.4. Multiple linear regression (MLR) extends simple linear regression by allowing \\(Y\\) to depend on more than one predictor variable. This enables richer models and allows us to estimate the partial contribution of each predictor while accounting for others.\nSLR is limited to one predictor. MLR becomes appropriate when:",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#introduction",
+    "href": "module02-mlr.html#introduction",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.2 The multiple regression linear model",
+    "text": "When to Extend SLR\nSLR is limited to one predictor. MLR becomes appropriate when:\n\nMultiple factors plausibly influence the response.\nExcluding predictors may bias results.\nYou wish to measure the unique contribution of each predictor while controlling for others.\n\n\nExample 1: Advertising sales\nLets consider a simple example using the Advertising dataset\nSuppose that we are statistical consultants hired by a client to investigate the association between advertising and sales of a particular product. The Advertising dataset (which we have imported as ads) consists of the sales of that product in 200 different markets, along with advertising budgets for the product in each of those markets for two different media: TV, and radio. [^1]\n[#^1]: This exmple is adapted from “Introduction to Statistical Learning (2)” - an excellent (and freely available) text on statistical modelling.\nWe might look at each bivariate (i.e. two variables) relationship between sales and advertising expendature separately:\n\n\\(Sales \\sim TV\\)\\(Sales\\sim Radio\\)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHowever we might also look at the multivariate relationship\n\n\n\n\n\n\n\n\n\nin the case of 3 variables we can also extend our visualisation to 3 dimensions:\n\n\n\n\n\n\n\nContinue\n\n\n4.2 The multiple regression linear model\nThe multiple linear model extends the simple linear model from Section 2.4 straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter.  \n\\[\nY = \\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k + \\varepsilon, \\quad \\varepsilon \\sim N(0,\\sigma^2)\n\\]\nNow, instead of a single predictor \\(X\\), we may have several (\\(k\\)) predictors \\(x_1, x_2, \\ldots, x_k\\), each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor \\(x_i\\) has a corresponding parameter \\(\\beta_i\\) governing its effect on the response. Note that we have updated the intercept parameter \\(\\alpha\\) from the simple linear regression section to \\(\\beta_0\\), because it is simply another parameter in the model!\nThe random error term, \\(\\varepsilon\\) stays the same, so the assumptions of MLR are very similar to those of SLR:\n\nAssumption: Assumptions of the MLR model\n\nA linear predictor, e.g. \\(E[Y]=\\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k\\).\nIndependent and identically distributed random error terms that\n\nHave a mean \\(\\mu=0\\), and a constant variance \\(Var(\\varepsilon)=\\sigma^2\\)\nFollow a normal distribution: \\(N(0,\\sigma^2)\\)\n\n\n\n\n\nNote: Multivariate Linearity\nAlthough this is still a linear model, the term ??olinear??? no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, ??olinear??? means that the model is linear in its parameters: each \\(\\beta_i\\) multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model will instead look like a three dimensional plane\n\n\n\n\n\n\n\n\n\nPartial Regression Coefficients\nEven though our model is no longer just a straight line, the slope interpretation from simple linear regression is still relevant in multiple regression. Now however, \\(\\beta_i\\) describes the expected change in the mean response for a one-unit increase in \\(x_i\\), holding all other predictors constant.\n\nExample\nInterpreting a partial coefficient If the fitted model for life expectancy includes Internet usage and BirthRate,\nInternet: 0.112\nBirthRate: -0.594\nThen:\n\nA 1% increase in internet usage is associated with an expected 0.11-year increase in life expectancy, holding other predictors fixed.\nA one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.\n\n\n\n\nExercise: Calculating the expected value of a multiple regression model\n\n4.3 Fitting MLR Models in R and the tidy() function\nFitting a multiple linear regression uses the exact same conceptual process from ?sec-leastsquares: Residuals are still defined \\(e = Y- \\hat{Y}\\), and minimising the sum of squared residuals provides optimal and unique ‘least squares estimates’ for the model parameters \\(b_0, \\ldots, b_k\\).\nMLR uses the same lm() function as SLR (these are both ‘linear models’, after all). Now, the model formula (the first argument, identified by the ~ separating the LHS and RHS) includes both predictors on the RHS, separated by a +:\n\nNote: R formulas\n\n\nand we can extract our model coefficients (\\(\\beta_0, \\ldots,\\beta_3\\)) in the same way:\n\nindexingcoef() function\n\n\n\nmod$coefficients\n\n(Intercept)          TV       Radio \n 2.92109991  0.04575482  0.18799423 \n\n\n\n\n\ncoef(mod)\n\n(Intercept)          TV       Radio \n 2.92109991  0.04575482  0.18799423 \n\n\n\n\n\nWe can also use the tidy function from the broom package for a nice summary of the relevant inferential statistics for each parameter:\n\n\n# A tibble: 3 × 7\n  term        estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)   2.92     0.294        9.92 4.57e-19   2.34      3.50  \n2 TV            0.0458   0.00139     32.9  5.44e-82   0.0430    0.0485\n3 Radio         0.188    0.00804     23.4  9.78e-59   0.172     0.204 \n\n\nThe hypotheses being tested for each coefficient is analagous to that in the SLR case ?sec-beta_inference: \\[\nH_0 : \\beta_i = 0\n\\qquad\\text{vs}\\qquad\nH_a : \\beta_i \\ne 0.\n\\] And is tested the same way - using the t-statistic: \\[\nt_i = \\frac{\\hat\\beta_i}{\\operatorname{SE}(\\hat\\beta_i)}.\n\\]\nHowever, the interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of _i here does not represent the relationship between \\(Y\\) and \\(X_i\\) without qualification - but only when the other variables are held constant. Analogously, the hypothesis being tested by \\(t_i\\) is whether \\(X_i\\) is related to to \\(Y\\) once the other predictors are accounted for. ::: Key-point ### interpreting partial regression coefficients, \\(\\beta_i\\)\n\n\n\nBecause of this:\n\nThe significance of a predictor can change when variables are added or removed.\nA small p-value for \\(\\beta_i\\) suggests a meaningful partial effect, not necessarily a marginal (unadjusted) one.\n\n\n\nWarning: Multicollinearity\n\nleast squares is an amazing method for fitting but it has a weakness\ncorrelated predictors can cause unstable parameter estimates\nCheck for correlation using a correlation matrix or using vif\nthis will be adressed more comprehensively in module 6: diagnostics an transformations.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#the-multiple-regression-linear-model",
+    "href": "module02-mlr.html#the-multiple-regression-linear-model",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.3 Fitting MLR Models in R and the tidy() function",
+    "text": "The multiple linear model extends the simple linear model from Section 2.4 straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter.  \n\\[\nY = \\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k + \\varepsilon, \\quad \\varepsilon \\sim N(0,\\sigma^2)\n\\]\nNow, instead of a single predictor \\(X\\), we may have several (\\(k\\)) predictors \\(x_1, x_2, \\ldots, x_k\\), each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor \\(x_i\\) has a corresponding parameter \\(\\beta_i\\) governing its effect on the response. Note that we have updated the intercept parameter \\(\\alpha\\) from the simple linear regression section to \\(\\beta_0\\), because it is simply another parameter in the model!\nThe random error term, \\(\\varepsilon\\) stays the same, so the assumptions of MLR are very similar to those of SLR:\n\nAssumption: Assumptions of the MLR model\n\nA linear predictor, e.g. \\(E[Y]=\\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k\\).\nIndependent and identically distributed random error terms that\n\nHave a mean \\(\\mu=0\\), and a constant variance \\(Var(\\varepsilon)=\\sigma^2\\)\nFollow a normal distribution: \\(N(0,\\sigma^2)\\)\n\n\n\n\n\nNote: Multivariate Linearity\nAlthough this is still a linear model, the term ??olinear??? no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, ??olinear??? means that the model is linear in its parameters: each \\(\\beta_i\\) multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model will instead look like a three dimensional plane\n\n\n\n\n\n\n\n\n\nPartial Regression Coefficients\nEven though our model is no longer just a straight line, the slope interpretation from simple linear regression is still relevant in multiple regression. Now however, \\(\\beta_i\\) describes the expected change in the mean response for a one-unit increase in \\(x_i\\), holding all other predictors constant.\n\nExample\nInterpreting a partial coefficient If the fitted model for life expectancy includes Internet usage and BirthRate,\nInternet: 0.112\nBirthRate: -0.594\nThen:\n\nA 1% increase in internet usage is associated with an expected 0.11-year increase in life expectancy, holding other predictors fixed.\nA one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.\n\n\n\n\nExercise: Calculating the expected value of a multiple regression model\n\n4.3 Fitting MLR Models in R and the tidy() function\nFitting a multiple linear regression uses the exact same conceptual process from ?sec-leastsquares: Residuals are still defined \\(e = Y- \\hat{Y}\\), and minimising the sum of squared residuals provides optimal and unique ‘least squares estimates’ for the model parameters \\(b_0, \\ldots, b_k\\).\nMLR uses the same lm() function as SLR (these are both ‘linear models’, after all). Now, the model formula (the first argument, identified by the ~ separating the LHS and RHS) includes both predictors on the RHS, separated by a +:\n\nNote: R formulas\n\n\nand we can extract our model coefficients (\\(\\beta_0, \\ldots,\\beta_3\\)) in the same way:\n\nindexingcoef() function\n\n\n\nmod$coefficients\n\n(Intercept)          TV       Radio \n 2.92109991  0.04575482  0.18799423 \n\n\n\n\n\ncoef(mod)\n\n(Intercept)          TV       Radio \n 2.92109991  0.04575482  0.18799423 \n\n\n\n\n\nWe can also use the tidy function from the broom package for a nice summary of the relevant inferential statistics for each parameter:\n\n\n# A tibble: 3 × 7\n  term        estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)   2.92     0.294        9.92 4.57e-19   2.34      3.50  \n2 TV            0.0458   0.00139     32.9  5.44e-82   0.0430    0.0485\n3 Radio         0.188    0.00804     23.4  9.78e-59   0.172     0.204 \n\n\nThe hypotheses being tested for each coefficient is analagous to that in the SLR case ?sec-beta_inference: \\[\nH_0 : \\beta_i = 0\n\\qquad\\text{vs}\\qquad\nH_a : \\beta_i \\ne 0.\n\\] And is tested the same way - using the t-statistic: \\[\nt_i = \\frac{\\hat\\beta_i}{\\operatorname{SE}(\\hat\\beta_i)}.\n\\]\nHowever, the interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of _i here does not represent the relationship between \\(Y\\) and \\(X_i\\) without qualification - but only when the other variables are held constant. Analogously, the hypothesis being tested by \\(t_i\\) is whether \\(X_i\\) is related to to \\(Y\\) once the other predictors are accounted for. ::: Key-point ### interpreting partial regression coefficients, \\(\\beta_i\\)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#fitting-mlr-models-in-r-and-the-tidy-function",
+    "href": "module02-mlr.html#fitting-mlr-models-in-r-and-the-tidy-function",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.3 Fitting MLR Models in R and the tidy() function",
+    "text": "4.3 Fitting MLR Models in R and the tidy() function\nFitting a multiple linear regression uses the exact same conceptual process from ?sec-leastsquares: Residuals are still defined \\(e = Y- \\hat{Y}\\), and minimising the sum of squared residuals provides optimal and unique ‘least squares estimates’ for the model parameters \\(b_0, \\ldots, b_k\\).\nMLR uses the same lm() function as SLR (these are both ‘linear models’, after all). Now, the model formula (the first argument, identified by the ~ separating the LHS and RHS) includes both predictors on the RHS, separated by a +:\n\n\n\n\n\n\n\n\n\nNote: R formulas\n\n\nand we can extract our model coefficients (\\(\\beta_0, \\ldots,\\beta_3\\)) in the same way:\n\nindexingcoef() function\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWe can also use the tidy function from the broom package for a nice summary of the relevant inferential statistics for each parameter:\n\n\n\n\n\n\n\n\nThe hypotheses being tested for each coefficient is analagous to that in the SLR case ?sec-beta_inference: \\[\nH_0 : \\beta_i = 0\n\\qquad\\text{vs}\\qquad\nH_a : \\beta_i \\ne 0.\n\\] And is tested the same way - using the t-statistic: \\[\nt_i = \\frac{\\hat\\beta_i}{\\operatorname{SE}(\\hat\\beta_i)}.\n\\]\nHowever, the interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of _i here does not represent the relationship between \\(Y\\) and \\(X_i\\) without qualification - but only when the other variables are held constant. Analogously, the hypothesis being tested by \\(t_i\\) is whether \\(X_i\\) is related to to \\(Y\\) once the other predictors are accounted for. ::: Key-point ### interpreting partial regression coefficients, \\(\\beta_i\\) :::\nBecause of this:\n\nThe significance of a predictor can change when variables are added or removed.\nA small p-value for \\(\\beta_i\\) suggests a meaningful partial effect, not necessarily a marginal (unadjusted) one.\n\n\nWarning: Multicollinearity\n\nleast squares is an amazing method for fitting but it has a weakness\ncorrelated predictors can cause unstable parameter estimates\nCheck for correlation using a correlation matrix or using vif\nthis will be adressed more comprehensively in module 6: diagnostics an transformations.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#global-model-statistics-the-f-test-and-measures-of-model-fit",
+    "href": "module02-mlr.html#global-model-statistics-the-f-test-and-measures-of-model-fit",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.4 Global model statistics: The F-Test and measures of model fit",
+    "text": "4.4 Global model statistics: The F-Test and measures of model fit\nHaving multiple predictor variables expands the scope of the kind of questions we can ask about our linear model. Rather than looking at each coefficient separately, we can ask whether our model as a whole is effective in explaining the outcome \\(Y\\) In other words, is the combined contribution of the predictors enough to conclude that a linear relationship exists?\nFormally, the global hypothesis test is:\n\n\\(H_0\\): all slope coefficients are zero (no linear relationship between \\(Y\\) and the predictors)\n\n\\(H_a\\): at least one slope coefficient is non-zero (the model is useful)\n\nThis shift parallels the move from multiple t-tests to an ANOVA - instead of testing individual “effects,” we examine the overall variance explained by a model.\nThe F-statistic compares:\n\nvariation explained by the model (mean regression sum of squares, MSR),\n\nresidual variation (mean squared error, MSE).\n\nBecause each of these quantities is constructed from squared normal deviations, the ratio\n\\[\nF = \\frac{\\text{MSR}}{\\text{MSE}}\n\\]\nfollows an F-distribution under \\(H_0\\).\nIf the model truly explains some structure in the data, MSR will be noticeably larger than MSE.\n[#^1] The links between ANOVA and linear regression will be futher explored here in ?sec-qualitative_predictors.\n\nExample 3In the life expectancy example, the output might report\nF-statistic: 28.2 on 4 and 44 DF,  p-value: 1.19e-11\nThe very small p-value indicates strong evidence against \\(H_0\\). We conclude that at least one of the predictors (Population, Health, Internet, BirthRate) is useful for predicting life expectancy, and that the model is useful overall.\n\n\n\nExercise 2Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.\n\n\n\nglobal statistics with glance()\nWe can obtain the model F-statistic using the glance() function from the broom package\n\n\n\n\n\n\n\n\nThis output includes several global model features besides the global test statistic and p-value.\n\n\nAdjusted \\(R^2\\)\nOnce we have established that the model is useful overall, we can quantify how much of the variation in \\(Y\\) it explains. The measure \\(R^2\\) was introduced in SLR and extends naturally to MLR In multiple regression, \\(R^2\\) plays the same descriptive role, but its interpretation changes subtly because the model now includes several predictors.\n\n\n\\(R^2\\) in Multiple Regression\nWe define \\[\nR^2 = 1 - \\frac{\\text{SSE}}{\\text{SST}},\n\\] exactly as before. The difference lies in what \\(R^2\\) represents:\n\nIn SLR, \\(R^2\\) reflects how well a single predictor explains variation in \\(Y\\).\nIn MLR, \\(R^2\\) reflects the combined explanatory power of all predictors working together.\n\nBecause adding a new predictor can never increase SSE, it follows that \\(R^2\\) can never decrease when more predictors are added, even if the new predictor has little or no real relationship with the response. For this reason, \\(R^2\\) is not reliable for comparing models with different numbers of predictors.\n\n\nAdjusted \\(R^2\\)\nTo address the fact that \\(R^2\\) is overly optimistic in larger models, we use the adjusted coefficient of determination: \\[\nR^2_{\\text{adj}} = 1 -\\frac{\\text{SSE}/(n - k - 1)}{\\text{SST}/(n - 1)}.\n\\]\nAdjusted \\(R^2\\):\n\npenalises the inclusion of additional predictors,\nincreases only when a predictor provides meaningful explanatory value,\nand may decrease when a predictor contributes little or nothing.\n\nThus,\n\n\\(R^2\\) is appropriate as a descriptive measure of how much variation the fitted model explains,\nadjusted \\(R^2\\) is more appropriate for comparing different models, especially those with differing numbers of predictors.\n\nThis completes our introduction to multiple linear regression: we now have a model with several predictors, an interpretation for its coefficients, and tools to judge whether the model is useful and how well it fits the data.\n\n\nOther model fit statistics: logLikelihood, AIC, and BIC\nThe glance() output also includes two additional quantities: AIC (Akaike Information Criterion) and BIC (Bayesian Information Criterion).\nAlthough they appear alongside the F-statistic and \\(R^2\\), they serve a different purpose.\nAIC and BIC are not measures of how well a single model fits the data in an absolute sense.\nInstead, they are designed for comparing multiple competing models, balancing goodness of fit against model complexity. Lower values indicate a preferable trade-off, but only relative comparisons are meaningful.\nBecause AIC and BIC are tools for model selection rather than model assessment, we do not interpret them here. They will be discussed in detail in Module 5 (Principles of Model Building), where they are used to guide decisions about which predictors to include in a regression model.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html",
+    "href": "module04-regression-pitfalls-diagnostics.html",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "",
+    "text": "6.1 Common pitfalls to avoid",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#common-pitfalls-to-avoid",
+    "href": "module04-regression-pitfalls-diagnostics.html#common-pitfalls-to-avoid",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "",
+    "text": "Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.\nExtrapolating far beyond observed predictor ranges can explode predictions.\nBlind stepwise selection can drop theory-driven terms; keep scientific context in view.\nUnchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#residual-plots-vs-predictors-and-fitted-values",
+    "href": "module04-regression-pitfalls-diagnostics.html#residual-plots-vs-predictors-and-fitted-values",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "6.2 Residual plots vs predictors and fitted values",
+    "text": "6.2 Residual plots vs predictors and fitted values\n\nPlot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (residual).\n\n\ndiag_mod &lt;- lm(mpg ~ wt + hp + am, data = mtcars)\npar(mfrow = c(1, 2))\nplot(diag_mod, which = 1)      # residuals vs fitted\nplot(mtcars$wt, resid(diag_mod), xlab = \"wt\", ylab = \"Residuals\")\n\n\n\n\n\n\n\npar(mfrow = c(1, 1))",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#diagnosing-nonconstant-variance-and-nonlinearity",
+    "href": "module04-regression-pitfalls-diagnostics.html#diagnosing-nonconstant-variance-and-nonlinearity",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "6.3 Diagnosing nonconstant variance and nonlinearity",
+    "text": "6.3 Diagnosing nonconstant variance and nonlinearity\n\nFunnel shapes or curved trends in residual plots suggest heteroskedasticity or missing curvature; consider transformations or adding interactions/polynomials.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#assessing-normality-of-residuals",
+    "href": "module04-regression-pitfalls-diagnostics.html#assessing-normality-of-residuals",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "6.4 Assessing normality of residuals",
+    "text": "6.4 Assessing normality of residuals\n\nUse Q-Q plots and compare \\(t\\)- and \\(p\\)-values to Normal reference.\n\n\nqqnorm(resid(diag_mod)); qqline(resid(diag_mod))",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#standardised-residuals-leverage-cooks-distance",
+    "href": "module04-regression-pitfalls-diagnostics.html#standardised-residuals-leverage-cooks-distance",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "6.5 Standardised residuals, leverage, Cook’s distance",
+    "text": "6.5 Standardised residuals, leverage, Cook’s distance\n\nStandardised (or studentised) residuals scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).\nLeverage (hatvalues()) flags unusual predictor combinations (leverage).\nCook’s distance combines leverage and residual size to assess influence (Cook’s distance).\n\n\ncbind(rstudent(diag_mod),\n      hatvalues(diag_mod),\n      cooks.distance(diag_mod))[1:5, ]\n\n                        [,1]       [,2]        [,3]\nMazda RX4         -1.4433354 0.09320650 0.051538041\nMazda RX4 Wag     -1.1371729 0.12316145 0.044939134\nDatsun 710        -1.3051372 0.08856401 0.040365321\nHornet 4 Drive     0.3121886 0.07518198 0.002046732\nHornet Sportabout  0.4688483 0.07867173 0.004827051",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#transformations-including-boxcox",
+    "href": "module04-regression-pitfalls-diagnostics.html#transformations-including-boxcox",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "6.6 Transformations including Box–Cox",
+    "text": "6.6 Transformations including Box–Cox\n\nTransformations can stabilise variance or linearise relationships; for strictly positive \\(Y\\), consider Box–Cox transformations to guide power choices.\n\n\nMASS::boxcox(diag_mod, plotit = TRUE)",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module04-regression-pitfalls-diagnostics.html#handling-outliers-and-influential-observations",
+    "href": "module04-regression-pitfalls-diagnostics.html#handling-outliers-and-influential-observations",
+    "title": "6  Regression Pitfalls and Diagnostics",
+    "section": "6.7 Handling outliers and influential observations",
+    "text": "6.7 Handling outliers and influential observations\n\nInvestigate data quality first (entry errors, unusual units).\nIf influential points are real, fit with and without them to assess robustness; report how conclusions change.\nPrefer model adjustments (functional form, variance stabilisation) over automatic deletion; document any exclusions explicitly.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Regression Pitfalls and Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#when-to-extend-slr",
+    "href": "module02-mlr.html#when-to-extend-slr",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "",
+    "text": "Multiple factors plausibly influence the response.\nExcluding predictors may bias results.\nYou wish to measure the unique contribution of each predictor while controlling for others.\n\n\nExample 1: Advertising salesLets consider a simple example using the Advertising dataset\n\n\n\n\n\n\n\n\nSuppose that we are statistical consultants hired by a client to investigate the association between advertising and sales of a particular product. The Advertising dataset (which we have imported as ads) consists of the sales of that product in 200 different markets, along with advertising budgets for the product in each of those markets for two different media: TV, and radio. 1\n\n\n\n\n\n\n\n\nWe might look at each bivariate (i.e. two variables) relationship between sales and advertising expendature separately:\n\n\\(Sales \\sim TV\\)\\(Sales\\sim Radio\\)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHowever we might also look at the multivariate relationship:\n\nColoured Scatter3-D Scatter\n\n\nHere we encode the values of the second predictor (Radio) with colour\n\n\n\n\n\n\n\n\n\n\nIn the case of 3 variables we can also extend our visualisation to 3 dimensions\n\n\n\n\n\n\n\n\n\n\n\nUsing multiple predictors simultaneously gives us more information than using each variable separately - this is a great case for applying multiple regression!\n\n\n\nContinue",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#the-multiple-linear-regression-model",
+    "href": "module02-mlr.html#the-multiple-linear-regression-model",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "4.2 The multiple linear regression model",
+    "text": "4.2 The multiple linear regression model\nThe multiple linear model extends the simple linear model from Section 2.4 straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter:\n\nKey-point: The MLR model\\[\nY = \\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k + \\varepsilon, \\quad \\varepsilon \\sim N(0,\\sigma^2)\n\\]\n\n\nNow, instead of a single predictor \\(x\\), we may have several (\\(k\\)) predictors \\(x_1, x_2, \\ldots, x_k\\), each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor \\(x_i\\) has a corresponding parameter \\(\\beta_i\\) governing its effect on the response. Note that we have updated the intercept parameter \\(\\alpha\\) from the simple linear regression section to \\(\\beta_0\\), because it is simply another parameter in the model!\nThe random error term, \\(\\varepsilon\\), stays the same, so the assumptions of MLR are very similar to those of SLR:\n\nAssumption: Assumptions of the MLR model\n\nA linear predictor, e.g. \\(E[Y]=\\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_k x_k\\).\nIndependent and identically distributed random error terms that\n\nHave a mean \\(\\mu=0\\), and a constant variance \\(Var(\\varepsilon)=\\sigma^2\\)\nFollow a normal distribution: \\(N(0,\\sigma^2)\\)\n\n\n\n\n\nNote: Multivariate LinearityAlthough this is still a linear model, the term “linear” no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, “linear” means that the model is linear in its parameters: each \\(\\beta_i\\) multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model may instead look like a plane - the three dimensional equivalent of a line in two dimensions.\n\n\n\n\n\n\n\n\nA further discussion of linearity will take place in ?sec-non_linearity, when we discuss higher order multiple regression models.\n\n\n\nContinue\n\n\nPartial Regression Coefficients\nEven though our model is no longer just a straight line, the slope interpretation from simple linear regression is still relevant in multiple regression. Now however, \\(\\beta_i\\) describes the expected change in the mean response for a one-unit increase in \\(x_i\\), holding all other predictors constant.\n\nExample 2\nInterpreting a partial coefficient If the fitted model for life expectancy includes Internet usage and BirthRate,\nInternet: 0.112\nBirthRate: -0.594\nThen:\n\nA 1% increase in internet usage is associated with an expected 0.11-year increase in life expectancy, holding other predictors fixed.\nA one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.\n\n\n\n\nExercise 1: Calculating the expected value of a multiple regression model",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  },
+  {
+    "objectID": "module02-mlr.html#footnotes",
+    "href": "module02-mlr.html#footnotes",
+    "title": "4  Multiple Linear Regression (MLR)",
+    "section": "",
+    "text": "This exmple is adapted from “Introduction to Statistical Learning (2)” - an excellent (and freely available) text on statistical modelling.↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multiple Linear Regression (MLR)</span>"
+    ]
+  }
+]

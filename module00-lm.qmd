@@ -50,35 +50,35 @@ theme_set(theme_bw())
 
 ## Statistical models
 
-A central aim of statistical modelling is to understand how one *variable* changes in relation to others. In your own work, these variables will have concrete meaning - perhaps plant growth, reaction time, exam score, or income - but for now we will simply call them $X$ and $Y$.
+A central aim of statistical modelling is to understand how one *variable* changes in relation to others. In your own work, these variables will have concrete meaning - perhaps plant growth, reaction time, exam score, or income - but for now we will simply call them $x$ and $Y$.
 
-In regression, we choose one variable $Y$ to treat as the **outcome** we want to explain or predict, and $X$ as one or more **predictors**. Our goal is to describe how changes in $X$ are associated with changes in $Y$.
+In regression, we choose one variable $Y$ to treat as the **outcome** we want to explain or predict, and $x$ as one or more **predictors**. Our goal is to describe how changes in $x$ are associated with changes in $Y$.
 
 A simple way to express this idea is
 
-$Y = f(X)$,
+$Y = f(x)$,
 
-meaning that the value of $Y$ can be described by some function of $X$. If we knew this function exactly, and if the world behaved perfectly, then knowing $X$ would tell us everything about $Y$. Many physical laws look like this—for example, $E = mc^2$—but real data rarely follow a perfectly deterministic relationship.
+meaning that the value of $Y$ can be described by some function of $x$. If we knew this function exactly, and if the world behaved perfectly, then knowing $x$ would tell us everything about $Y$. Many physical laws look like this—for example, $E = mc^2$—but real data rarely follow a perfectly deterministic relationship.
 
-In practice, even when $X$ is held constant, repeated observations of $Y$ will vary. People respond differently, instruments fluctuate, biological systems are noisy, and experimental conditions change. To recognise this, statistical models include a **random error term**:
+In practice, even when $x$ is held constant, repeated observations of $Y$ will vary. People respond differently, instruments fluctuate, biological systems are noisy, and experimental conditions change. To recognise this, statistical models include a **random error term**:
 
-$Y = f(X) + \varepsilon$.
+$Y = f(x) + \varepsilon$.
 
 Here, $\varepsilon$ represents natural variability: the part of $Y$ that our model does not or cannot explain. 
 
 ## Linear prediction
 
-To make our model concrete, we need to choose a form for the function $f(X)$. A natural starting point—because it is simple, interpretable, and surprisingly powerful—is a **linear function**:
+To make our model concrete, we need to choose a form for the function $f(x)$. A natural starting point—because it is simple, interpretable, and surprisingly powerful—is a **linear function**:
 
-$f(X) = \alpha + \beta X$.
+$f(x) = \alpha + \beta x$.
 
 This allows us to describe the **expected value** of $Y$ as
 
-$E[Y] = \alpha + \beta X$.
+$E[Y] = \alpha + \beta x$.
 
 This is the familiar straight-line relationship:  
 - $\alpha$ is the point where the line meets the vertical axis, and  
-- $\beta$ is the slope, describing how we expect $Y$ to change when $X$ increases by one unit.
+- $\beta$ is the slope, describing how we expect $Y$ to change when $x$ increases by one unit.
 
 
 ```{ojs}
@@ -94,16 +94,16 @@ viewof b0 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
 xRange = [-10,10]
 lineData = xRange.map(x => ({x, y: (b1 * x) + b0}))
 Plot.plot({
-  x:{domain: [-10,10], label: "X", grid: true},
+  x:{domain: [-10,10], label: "x", grid: true},
   y:{domain: [-10,10], label: "Y", grid: true},
   marks: [
     Plot.line(lineData, { x: "x", y: "y" })]
 })
-tex.block`E[Y] = ${b0} + ${b1}X`
+tex.block`E[Y] = ${b0} + ${b1}x`
 ```
 
 ::: Assumption
-Y and X have a linear relationship
+Y and x have a linear relationship
 :::
 
 -  [ ] Continue
@@ -114,7 +114,7 @@ Y and X have a linear relationship
 
 Suppose you have received a job offer from *Company A*, and you want to predict your salary after working there for 10 years. You are told that the **average starting salary** at this company is $50,000, and that salaries **increase by $5,000 per year** of employment.
 
-We can represent this relationship using a simple linear predictor. For an employee with $X = x$ years at the company, the expected salary is
+We can represent this relationship using a simple linear predictor. For an employee with $x$ years at the company, the expected salary is
 
 $$
 E[Y] = 50{,}000 + 5{,}000 \cdot x.
@@ -145,7 +145,7 @@ ggplot() +
 
 :::
 
-After 10 years of employment ($X = 10$), our linear predictor gives
+After 10 years of employment ($x = 10$), our linear predictor gives
 
 $$
 E[Y] = 50{,}000 + 5{,}000 \times 10 = 100{,}000.
@@ -160,10 +160,10 @@ $$
 
 A second company also offers you a position. Their **starting salary** is higher—$70,000 on average—but their yearly pay increases are smaller. Employees who have been at the company for 6 years earn, on average, **$18,000 more** than when they started.
 
-We model expected salary after $X$ years as:
+We model expected salary after $x$ years as:
 
 $$
-E[Y] = \alpha + \beta X.
+E[Y] = \alpha + \beta x.
 $$
 
 ::::{}
@@ -215,7 +215,7 @@ gradethis::grade_this_code()
 Thus the linear predictor for Company B is
 
 $$
-E[Y] = 70{,}000 + 3{,}000 \cdot X.
+E[Y] = 70{,}000 + 3{,}000 \cdot x.
 $$
 
 Below is a plot comparing salary trends for both companies:
@@ -357,12 +357,12 @@ Next we will extend our linear predictor to form a full linear *statistical* mod
 
 ## Random Errors
 
--   In practice, data rarely fall perfectly on a straight line. Even if the underlying relationship between $X$ and $Y$ is approximately linear, individual observations tend to vary around that line.
+-   In practice, data rarely fall perfectly on a straight line. Even if the underlying relationship between $x$ and $Y$ is approximately linear, individual observations tend to vary around that line.
 
 -   As mentioned in Section 1.x, to account for this variation we add an *error term*, $\varepsilon$, to our model
 
 $$
-Y=\alpha + \beta X + \varepsilon
+Y=\alpha + \beta x + \varepsilon
 $$
 
 ### Mean Zero
@@ -385,10 +385,10 @@ i.e. The linear predictor gives the correct value of $Y$ on average
 
 -   While correct on average, we expect there to be some *spread* of data around the line (this is why we have the error term). The amount of spread is measured by the *variance* of the errors.
 
--   We assume that this variance is *constant* - like $mu=0$, it is the same for all values of $X$ however we dont specify which particular value it takes:
+-   We assume that this variance is *constant* - like $mu=0$, it is the same for all values of $x$ however we dont specify which particular value it takes:
 
 ::: Assumption 
-The variance of the error term is constant for all values of X: $$Var(\varepsilon)=\sigma^2$$
+The variance of the error term is constant for all values of x: $$Var(\varepsilon)=\sigma^2$$
 :::
 
 ### Normal distribution
@@ -466,9 +466,9 @@ $$
 Salary = 50,000 + 5,000\times Years + \varepsilon, \quad{\varepsilon \sim \mathcal{N}(0,4000^2)}
 $$
 
-This means that for a given number of years $X$: - The expected salary is $50,000 + 5,000\cdot X$ - Actual salaries will vary around that average, typically within about ±\$4,000
+This means that for a given number of years $x$: - The expected salary is $50,000 + 5,000\cdot x$ - Actual salaries will vary around that average, typically within about ±\$4,000
 
-For example, after 5 years (X=5): 
+For example, after 5 years (x=5): 
 $$
 E[Y]=\$50,000 + \$5,000 \times 5 = \$75,000 
 $$
@@ -479,7 +479,7 @@ $$
 Y\sim \mathcal{N}(75,000, 4,000^2)
 $$
 
-Since we have a probability distribution over $Y$, we can use R to evaluate the probability of any given salary after X years at the company.
+Since we have a probability distribution over $Y$, we can use R to evaluate the probability of any given salary after x years at the company.
 
 For example, we want to know if employed at *company A*, what is the probabity after working there for 10 years I will have a salary of at least \$110,000?
 
@@ -564,7 +564,7 @@ Plot.plot({
 
 ```
 
-Here $\varepsilon$ represents random deviations from the expected (average) salary for a given number of years X. - Same model as above - given standard deviation - Example Y values - Illustrate error with normal overay - Excersises: - which variance is larger? - (hard) probability of finding E\[Y\]+2sd observation
+Here $\varepsilon$ represents random deviations from the expected (average) salary for a given number of years x. - Same model as above - given standard deviation - Example Y values - Illustrate error with normal overay - Excersises: - which variance is larger? - (hard) probability of finding E\[Y\]+2sd observation
 :::
 
 ## The Simple Linear Model {#sec-simple_linear_model}
@@ -572,7 +572,7 @@ Here $\varepsilon$ represents random deviations from the expected (average) sala
 Putting these pieces together we are left with:
 
 $$
-Y=\alpha+\beta X+\varepsilon, \quad{\varepsilon \sim N(0,\sigma^2)}
+Y=\alpha+\beta x+\varepsilon, \quad{\varepsilon \sim N(0,\sigma^2)}
 $$
 
 This 'simple linear model' is the starting place for conducting linear regression - in which we 'fit' (i.e. estimate the values of $\alpha$, $\beta$, and $\sigma^2$) from data.
@@ -587,7 +587,7 @@ viewof sigma_2 = Inputs.range([0.2, 5], {step: 0.1, value: 2.5, label: "Std. dev
 
 viewof n_cs = Inputs.range([10, 50], {step: 1, value: 50, label: "Number of cross sections visualised"})
 
-tex.block`Y = ${b0_2} + ${b1_2}X + \varepsilon, \quad \varepsilon \sim \text{Normal}(0, ${sigma_2}^2)`
+tex.block`Y = ${b0_2} + ${b1_2}x + \varepsilon, \quad \varepsilon \sim \text{Normal}(0, ${sigma_2}^2)`
 ```
 
 ```{ojs}
@@ -623,7 +623,7 @@ crossSectionTrendLine = xSampleValues.map(x => ({
 }))
 
 Plot.plot({
-  x: {domain: [-10, 10], label: "X", grid: true},
+  x: {domain: [-10, 10], label: "x", grid: true},
   y: {domain: [-10, 10], label: "Y", grid: true},
   marks: [
     Plot.line(densityCurveData, {
@@ -645,7 +645,7 @@ Plot.plot({
 
 -   simulate observations of Y from a specified linear model
 
-1.  to begin, we start with a collection of X values (we might imagine we measure these values in the wild)
+1.  to begin, we start with a collection of x values (we might imagine we measure these values in the wild)
 
 ```{r}
 n <- 100
@@ -670,23 +670,23 @@ simple_linear_model <- function(X, alpha, beta, sigma) {
 }
 ```
 
--   This is function takes X values and returns the specified linear function with normally distributed random noise added.
+-   This is function takes x values and returns the specified linear function with normally distributed random noise added.
 
--   Now we can simulate observations of $Y$ given our list of $X$ values and out linear model:
+-   Now we can simulate observations of $Y$ given our list of $x$ values and out linear model:
 
 ```{r}
 Y <- simple_linear_model(X, alpha, beta, sigma)
 head(Y)
 ```
 
-lets look at the joint distribution of X and Y:
+lets look at the joint distribution of x and Y:
 
 ::: {.panel-tabset}
 ## Plot
 ```{r}
 #| echo: false
 #| label: fig-plot
-#| fig-cap: "Data generated from the simple linear model $Y=4+1.2\\times X + \\varepsilon$, with $\\varepsilon\\sim N(0,16)$. Dashed line shows E[Y|X] = α + βX"
+#| fig-cap: "Data generated from the simple linear model $Y=4+1.2\\times x + \\varepsilon$, with $\\varepsilon\\sim N(0,16)$. Dashed line shows E[Y|x] = α + βx"
 
 library(ggplot2)
 
@@ -695,7 +695,7 @@ df <- data.frame(X = X, Y = Y)
 ggplot(df, aes(X, Y)) +
   geom_point(alpha = 0.7) +
   geom_abline(intercept = alpha, slope = beta, linetype = "dashed") +
-  labs(x = "X", y = "Y") +
+  labs(x = "x", y = "Y") +
   theme_minimal()
 ```
 ## Code
@@ -709,7 +709,7 @@ df <- data.frame(X = X, Y = Y)
 ggplot(df, aes(X, Y)) +
   geom_point(alpha = 0.7) +
   geom_abline(intercept = alpha, slope = beta, linetype = "dashed") +
-  labs(x = "X", y = "Y") +
+  labs(x = "x", y = "Y") +
   theme_minimal()
 ```
 :::

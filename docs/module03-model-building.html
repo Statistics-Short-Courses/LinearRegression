@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Regression Pitfalls and Diagnostics – Linear Regression and Model Selection with R</title>
+<title>5&nbsp; Model Building and Variable Screening – Linear Regression and Model Selection with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -151,7 +151,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module04-regression-pitfalls-diagnostics.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module03-model-building.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Building and Variable Screening</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -202,13 +202,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
+  <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Building and Variable Screening</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link active">
+  <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
   </div>
 </li>
@@ -237,7 +237,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Building and Variable Screening</span></h1>
 </div>
 
 
@@ -254,100 +254,228 @@ window.Quarto = {
 </header>
 
 
-<section id="common-pitfalls-to-avoid" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">6.1</span> Common pitfalls to avoid</h2>
+<section id="exploratory-analysis-for-model-formulation" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="exploratory-analysis-for-model-formulation"><span class="header-section-number">5.1</span> Exploratory analysis for model formulation</h2>
 <ul>
-<li>Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.</li>
-<li>Extrapolating far beyond observed predictor ranges can explode predictions.</li>
-<li>Blind stepwise selection can drop theory-driven terms; keep scientific context in view.</li>
-<li>Unchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.</li>
+<li>Start with plots (pairs, scatterplots, boxplots) to understand ranges, outliers, and plausible functional forms.</li>
+<li>Use subject-matter knowledge to posit candidate predictors and interactions.</li>
 </ul>
 </section>
-<section id="residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">6.2</span> Residual plots vs predictors and fitted values</h2>
+<section id="systematic-vs-random-variation" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="systematic-vs-random-variation"><span class="header-section-number">5.2</span> Systematic vs random variation</h2>
 <ul>
-<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#gloss-residual">residual</a>).</li>
+<li>Distinguish signal (systematic trend with predictors) from noise (unexplained scatter).</li>
+<li>Residual SD estimates random variation; large unexplained scatter may indicate missing predictors or wrong functional form.</li>
+</ul>
+</section>
+<section id="choosing-first--vs-second-order-functional-forms" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="choosing-first--vs-second-order-functional-forms"><span class="header-section-number">5.3</span> Choosing first- vs second-order functional forms</h2>
+<ul>
+<li>Start with additive, first-order (linear) terms; add interactions or low-order polynomials when plots or theory suggest them.</li>
+<li>Prefer centered predictors to stabilise estimates when adding higher-order terms.</li>
+</ul>
+</section>
+<section id="model-adequacy-and-interpretability" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="model-adequacy-and-interpretability"><span class="header-section-number">5.4</span> Model adequacy and interpretability</h2>
+<ul>
+<li>Adequate models fit the data (diagnostics pass) <em>and</em> support the scientific question.</li>
+<li>Avoid models that obscure interpretation with unnecessary complexity or unidentifiable effects.</li>
+</ul>
+</section>
+<section id="parsimony-as-a-guiding-principle" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="parsimony-as-a-guiding-principle"><span class="header-section-number">5.5</span> Parsimony as a guiding principle</h2>
+<ul>
+<li>Favor the simplest model that explains the data and meets assumptions.</li>
+<li>Remove immaterial terms when they do not improve fit or align with theory; compare nested models via F-tests or information criteria.</li>
+</ul>
+</section>
+<section id="interaction-models-with-quantitative-predictors" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="interaction-models-with-quantitative-predictors"><span class="header-section-number">5.6</span> Interaction models with quantitative predictors</h2>
+<ul>
+<li>Allow the effect of one predictor to depend on another (<a href="glossary.html#gloss-interaction">interaction</a>): <span class="math display">\[E[Y] = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2.\]</span></li>
+<li><span class="math inline">\(\beta_3\)</span> shifts the slope of <span class="math inline">\(X_1\)</span> per-unit change in <span class="math inline">\(X_2\)</span> (and vice versa).</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>diag_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(diag_mod, <span class="at">which =</span> <span class="dv">1</span>)      <span class="co"># residuals vs fitted</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>wt, <span class="fu">resid</span>(diag_mod), <span class="at">xlab =</span> <span class="st">"wt"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="diagnosing-nonconstant-variance-and-nonlinearity" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">6.3</span> Diagnosing nonconstant variance and nonlinearity</h2>
-<ul>
-<li>Funnel shapes or curved trends in residual plots suggest heteroskedasticity or missing curvature; consider transformations or adding interactions/polynomials.</li>
-</ul>
-</section>
-<section id="assessing-normality-of-residuals" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="assessing-normality-of-residuals"><span class="header-section-number">6.4</span> Assessing normality of residuals</h2>
-<ul>
-<li>Use Q-Q plots and compare <span class="math inline">\(t\)</span>- and <span class="math inline">\(p\)</span>-values to Normal reference.</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(diag_mod)); <span class="fu">qqline</span>(<span class="fu">resid</span>(diag_mod))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="standardised-residuals-leverage-cooks-distance" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="standardised-residuals-leverage-cooks-distance"><span class="header-section-number">6.5</span> Standardised residuals, leverage, Cook’s distance</h2>
-<ul>
-<li>Standardised (or studentised) residuals scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).</li>
-<li>Leverage (<code>hatvalues()</code>) flags unusual predictor combinations (<a href="glossary.html#gloss-leverage">leverage</a>).</li>
-<li>Cook’s distance combines leverage and residual size to assess influence (<a href="glossary.html#gloss-cooks-distance">Cook’s distance</a>).</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">rstudent</span>(diag_mod),</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">hatvalues</span>(diag_mod),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cooks.distance</span>(diag_mod))[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>int_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">*</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(int_mod)[<span class="fu">c</span>(<span class="st">"wt"</span>, <span class="st">"hp"</span>, <span class="st">"wt:hp"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                        [,1]       [,2]        [,3]
-Mazda RX4         -1.4433354 0.09320650 0.051538041
-Mazda RX4 Wag     -1.1371729 0.12316145 0.044939134
-Datsun 710        -1.3051372 0.08856401 0.040365321
-Hornet 4 Drive     0.3121886 0.07518198 0.002046732
-Hornet Sportabout  0.4688483 0.07867173 0.004827051</code></pre>
+<pre><code>         wt          hp       wt:hp 
+-8.21662430 -0.12010209  0.02784815 </code></pre>
 </div>
 </div>
 </section>
-<section id="transformations-including-boxcox" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="transformations-including-boxcox"><span class="header-section-number">6.6</span> Transformations including Box–Cox</h2>
+<section id="graphical-interpretation-of-interaction-effects" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="graphical-interpretation-of-interaction-effects"><span class="header-section-number">5.7</span> Graphical interpretation of interaction effects</h2>
 <ul>
-<li>Transformations can stabilise variance or linearise relationships; for strictly positive <span class="math inline">\(Y\)</span>, consider <a href="glossary.html#gloss-box-cox">Box–Cox transformations</a> to guide power choices.</li>
+<li>Plot fitted lines across a grid to see slope changes.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>MASS<span class="sc">::</span><span class="fu">boxcox</span>(diag_mod, <span class="at">plotit =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">wt =</span> <span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="fl">0.5</span>), <span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">150</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">predict</span>(int_mod, grid)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(grid, <span class="fu">aes</span>(wt, fit, <span class="at">colour =</span> <span class="fu">factor</span>(hp))) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">"HP level"</span>, <span class="at">y =</span> <span class="st">"Fitted mpg"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="module03-model-building_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="handling-outliers-and-influential-observations" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="handling-outliers-and-influential-observations"><span class="header-section-number">6.7</span> Handling outliers and influential observations</h2>
+<section id="polynomial-models-quadratic-and-cubic" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="polynomial-models-quadratic-and-cubic"><span class="header-section-number">5.8</span> Polynomial models: quadratic and cubic</h2>
 <ul>
-<li>Investigate data quality first (entry errors, unusual units).</li>
-<li>If influential points are real, fit with and without them to assess robustness; report how conclusions change.</li>
-<li>Prefer model adjustments (functional form, variance stabilisation) over automatic deletion; document any exclusions explicitly.</li>
+<li>Capture curvature by adding powers: <span class="math display">\[E[Y] = \beta_0 + \beta_1 X +
+\beta_2 X^2 \;(+\; \beta_3 X^3).\]</span></li>
+<li>Use <code>poly()</code> or explicit powers; center <span class="math inline">\(X\)</span> to reduce collinearity.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>poly_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> <span class="fu">I</span>(wt<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> mtcars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="when-and-how-to-model-curvature" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="when-and-how-to-model-curvature"><span class="header-section-number">5.9</span> When and how to model curvature</h2>
+<ul>
+<li>Use scatterplots and residual-vs-fitted plots to spot nonlinearity.</li>
+<li>Prefer low-order polynomials for interpretability; consider splines for flexible shapes if allowed.</li>
+</ul>
+</section>
+<section id="extrapolation-risks-and-overfitting-concerns" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="extrapolation-risks-and-overfitting-concerns"><span class="header-section-number">5.10</span> Extrapolation risks and overfitting concerns</h2>
+<ul>
+<li>Polynomial terms can explode outside the data range—avoid predicting far beyond observed <span class="math inline">\(X\)</span>.</li>
+<li>Guard against overfitting with cross-validation or an independent validation set when sample size permits.</li>
+</ul>
+</section>
+<section id="variable-screening-and-model-selection" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="variable-screening-and-model-selection"><span class="header-section-number">5.11</span> Variable screening and model selection</h2>
+<ul>
+<li>Aim for models that balance predictive accuracy with interpretability.</li>
+<li>Preserve theory-driven terms, but remove noise predictors that do not improve fit or align with the research question.</li>
+</ul>
+</section>
+<section id="multicollinearity-detection-and-implications" class="level2" data-number="5.12">
+<h2 data-number="5.12" class="anchored" data-anchor-id="multicollinearity-detection-and-implications"><span class="header-section-number">5.12</span> Multicollinearity: detection and implications</h2>
+<ul>
+<li>Symptoms: unstable coefficients, inflated standard errors, signs flipping with small data changes (<a href="glossary.html#gloss-multicollinearity">multicollinearity</a>).</li>
+<li>Quick checks: pairwise correlations, variance inflation factors (VIF), or condition numbers.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(mtcars[, <span class="fu">c</span>(<span class="st">"wt"</span>, <span class="st">"hp"</span>, <span class="st">"disp"</span>, <span class="st">"drat"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             wt         hp       disp       drat
+wt    1.0000000  0.6587479  0.8879799 -0.7124406
+hp    0.6587479  1.0000000  0.7909486 -0.4487591
+disp  0.8879799  0.7909486  1.0000000 -0.7102139
+drat -0.7124406 -0.4487591 -0.7102139  1.0000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> disp, <span class="at">data =</span> mtcars))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1639.418</code></pre>
+</div>
+</div>
+</section>
+<section id="akaike-information-criterion-aic" class="level2" data-number="5.13">
+<h2 data-number="5.13" class="anchored" data-anchor-id="akaike-information-criterion-aic"><span class="header-section-number">5.13</span> Akaike Information Criterion (AIC)</h2>
+<ul>
+<li>Balances fit and complexity: <span class="math inline">\(\text{AIC} = -2\ell + 2k\)</span>; lower is better (<a href="glossary.html#gloss-aic">AIC</a>).</li>
+<li>Compare non-nested models with <code>AIC(model1, model2, ...)</code>.</li>
+</ul>
+</section>
+<section id="forward-backward-and-stepwise-selection" class="level2" data-number="5.14">
+<h2 data-number="5.14" class="anchored" data-anchor-id="forward-backward-and-stepwise-selection"><span class="header-section-number">5.14</span> Forward, backward, and stepwise selection</h2>
+<ul>
+<li>Forward: start simple, add terms that reduce AIC or improve fit.</li>
+<li>Backward: start saturated, remove weak terms.</li>
+<li>Stepwise: alternate add/drop using <code>step()</code> (AIC by default).</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>full_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">step</span>(full_mod, <span class="at">direction =</span> <span class="st">"both"</span>, <span class="at">trace =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mpg ~ wt + qsec + am, data = mtcars)
+
+Coefficients:
+(Intercept)           wt         qsec           am  
+      9.618       -3.917        1.226        2.936  </code></pre>
+</div>
+</div>
+</section>
+<section id="limitations-and-cautions-for-stepwise-methods" class="level2" data-number="5.15">
+<h2 data-number="5.15" class="anchored" data-anchor-id="limitations-and-cautions-for-stepwise-methods"><span class="header-section-number">5.15</span> Limitations and cautions for stepwise methods</h2>
+<ul>
+<li>Data-driven searches can overfit and inflate Type I error.</li>
+<li>Selected models depend on starting set and may ignore theory; always validate with diagnostics and, if possible, new data.</li>
+</ul>
+</section>
+<section id="balancing-prediction-and-explanation" class="level2" data-number="5.16">
+<h2 data-number="5.16" class="anchored" data-anchor-id="balancing-prediction-and-explanation"><span class="header-section-number">5.16</span> Balancing prediction and explanation</h2>
+<ul>
+<li>For explanation, prioritise interpretability and scientific plausibility; for prediction, prioritise out-of-sample performance.</li>
+<li>Consider cross-validation or a hold-out set when sample size permits; report uncertainty from the final, diagnostically-sound model.</li>
+</ul>
+</section>
+<section id="working-with-qualitative-predictors" class="level2" data-number="5.17">
+<h2 data-number="5.17" class="anchored" data-anchor-id="working-with-qualitative-predictors"><span class="header-section-number">5.17</span> Working with qualitative predictors</h2>
+<ul>
+<li>Represent <span class="math inline">\(k\)</span>-level categorical predictors with <span class="math inline">\(k-1\)</span> indicator variables (<a href="glossary.html#gloss-dummy">dummy variables</a>); the omitted level is the baseline.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cat_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(cat_mod)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  (Intercept) factor(cyl)6 factor(cyl)8
+Mazda RX4                   1            1            0
+Mazda RX4 Wag               1            1            0
+Datsun 710                  1            0            0
+Hornet 4 Drive              1            1            0
+Hornet Sportabout           1            0            1</code></pre>
+</div>
+</div>
+</section>
+<section id="baseline-category-interpretation" class="level2" data-number="5.18">
+<h2 data-number="5.18" class="anchored" data-anchor-id="baseline-category-interpretation"><span class="header-section-number">5.18</span> Baseline category interpretation</h2>
+<ul>
+<li>Each indicator coefficient compares its level to the baseline.</li>
+<li>Re-level with <code>relevel()</code> for more meaningful comparisons.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mtcars<span class="sc">$</span>cyl <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(mtcars<span class="sc">$</span>cyl), <span class="at">ref =</span> <span class="st">"6"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>relevel_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl, <span class="at">data =</span> mtcars)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(relevel_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)        cyl4        cyl8 
+  19.742857    6.920779   -4.642857 </code></pre>
+</div>
+</div>
+</section>
+<section id="regression-with-multi-level-factors" class="level2" data-number="5.19">
+<h2 data-number="5.19" class="anchored" data-anchor-id="regression-with-multi-level-factors"><span class="header-section-number">5.19</span> Regression with multi-level factors</h2>
+<ul>
+<li>Fit models with multiple factors and quantitative predictors; ensure design matrix is full rank (no redundant indicators).</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mix_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> <span class="fu">factor</span>(carb), <span class="at">data =</span> mtcars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="mixing-categorical-and-continuous-predictors" class="level2" data-number="5.20">
+<h2 data-number="5.20" class="anchored" data-anchor-id="mixing-categorical-and-continuous-predictors"><span class="header-section-number">5.20</span> Mixing categorical and continuous predictors</h2>
+<ul>
+<li>Combine factors and continuous terms; interaction terms allow different slopes by group (e.g., <code>wt * cyl</code>).</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>group_slope <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">*</span> <span class="fu">factor</span>(gear), <span class="at">data =</span> mtcars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="connection-to-anova-style-hypotheses" class="level2" data-number="5.21">
+<h2 data-number="5.21" class="anchored" data-anchor-id="connection-to-anova-style-hypotheses"><span class="header-section-number">5.21</span> Connection to ANOVA-style hypotheses</h2>
+<ul>
+<li>ANOVA table for a factor tests whether any level differs from the baseline (joint <span class="math inline">\(H_0\)</span> on all indicators).</li>
+<li>In R, compare models with <code>anova()</code> or read the factor-level F-test in <code>summary()</code> output when using treatment coding.</li>
 </ul>
 
 

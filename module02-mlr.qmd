@@ -33,16 +33,40 @@ custom-numbered-blocks:
       boxstyle: foldbox.simple
       collapse: false
       numbered: false
+    Key-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
 webr:
   render-df: gt-interactive
+
+resources:
+  - Data
 ---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+```{webr}
+#| include: false
+library(tidyverse)
+library(plotly)
+theme_set(theme_bw())
+```
+
+```{r}
+#| include: false
+library(tidyverse)
+theme_set(theme_bw())
+```
+
 # Multiple Linear Regression (MLR)
 
-## Introduction
+Most practical applications of linear regression require models more complex than the simple linear regression(SLR) model introduced in @sec-simple_linear_model.  Multiple linear regression (MLR) extends simple linear regression by allowing $Y$ to depend on more than one predictor variable. This enables richer models and allows us to estimate the *partial* contribution of each predictor while accounting for others.
 
-Multiple linear regression (MLR) extends simple linear regression by allowing $Y$ to depend on more than one predictor variable. This enables richer models and allows us to estimate the *partial* contribution of each predictor while accounting for others.
+- [ ] Continue
 
-### When to Extend SLR
+## When to extend SLR
 
 SLR is limited to one predictor. MLR becomes appropriate when:
 
@@ -50,62 +74,84 @@ SLR is limited to one predictor. MLR becomes appropriate when:
 * Excluding predictors may bias results.
 * You wish to measure the unique contribution of each predictor while controlling for others.
 
-### A graphical motivation
-
-Lets consider a simple example using the Advertising data (TV, Radio, Newspaper ad spend and resulting sales)
-```{r}
+::: Example
+### Advertising sales
+Lets consider a simple example using the `Advertising` dataset
+```{webr}
+#| edit: false
 ads <- read.csv("Data/Advertising.csv")
-names(ads) <- c("TV", "Radio", "Newspaper", "Sales")
-ads <- ads[, c("Sales", "TV", "Radio")]
+```
+Suppose that we are statistical consultants hired by a client to investigate the association between advertising and sales of a particular product. The `Advertising` dataset (which we have imported as `ads`) consists of the sales of that product in 200 different markets, along with advertising budgets for the product in each of those markets for two different media: TV, and radio. [^1]
+
+```{webr}
+#| edit: false
+ads
 ```
 
-We might look at each bivariate (i.e. two variables) relationship separately:
+[^1]: This exmple is adapted from "Introduction to Statistical Learning (2)" - an excellent (and freely available) text on statistical modelling.  
 
-::: {.panel-tabset}
-## $Sales \sim TV$
-```{r}
-library(ggplot2)
+We might look at each bivariate (i.e. two variables) relationship between sales and advertising expendature separately:
 
+:::: {.panel-tabset}
+### $Sales \sim TV$
+```{webr}
+#| edit: false
+#| echo: false
 ggplot(ads, aes(x = TV, y = Sales)) +
   geom_point() +
   labs(x = "TV", y = "Sales")
 ```
-## $Sales\sim Radio$
-```{r}
+### $Sales\sim Radio$
+```{webr}
+#| edit: false
+#| echo: false
 ggplot(ads, aes(x = Radio, y = Sales)) +
   geom_point() +
   labs(x = "Radio", y = "Sales")
 ```
-:::
+::::
 
-However we might also look at the *multivariate* relationship
-```{r}
+However we might also look at the *multivariate* relationship:
+
+:::: {.panel-tabset}
+### Coloured Scatter
+Here we encode the values of the second predictor (`Radio`) with colour
+```{webr}
+#| edit: false
+#| echo: false
 ggplot(ads, aes(x = TV, y = Sales, colour = Radio)) +
   geom_point() +
   scale_colour_viridis_c() +
   labs(x = "TV", y = "Sales", colour = "Radio")
 ```
-in the case of 3 variables we can also extend our visualisation to 3 dimensions:
-```{r}
-library(plotly)
-
+### 3-D Scatter
+In the case of 3 variables we can also extend our visualisation to 3 dimensions
+```{webr}
+#| edit: false
+#| echo: false
 plot_ly(ads, x = ~TV, y = ~Radio, z = ~Sales,
-        type = "scatter3d", mode = "markers")
+        type = "scatter3d", mode = "markers", showlegend=FALSE)
 ```
+::::
+Using multiple predictors simultaneously gives us more information than using each variable separately - this is a great case for applying multiple regression!
+:::
 
 - [ ] Continue
 
-## The multiple regression linear model
+## The multiple linear regression model
 
-The multiple linear model extends the simple linear model from @sec-simple_linear_model straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter.  
+The multiple linear model extends the simple linear model from @sec-simple_linear_model straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter:
 
+::: Key-point
+### The MLR model
 $$
 Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilon \sim N(0,\sigma^2)
 $$
+:::
 
-Now, instead of a single predictor $X$, we may have several ($k$) predictors $x_1, x_2, \ldots, x_k$, each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor $x_i$ has a corresponding parameter $\beta_i$ governing its effect on the response. Note that we have updated the intercept parameter $\alpha$ from the simple linear regression section to $\beta_0$, because it is simply another parameter in the model!
+Now, instead of a single predictor $x$, we may have several ($k$) predictors $x_1, x_2, \ldots, x_k$, each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor $x_i$ has a corresponding parameter $\beta_i$ governing its effect on the response. Note that we have updated the intercept parameter $\alpha$ from the simple linear regression section to $\beta_0$, because it is simply another parameter in the model!
 
-The random error term, $\varepsilon$ stays the same, so the assumptions of MLR are very similar to those of SLR:
+The random error term, $\varepsilon$, stays the same, so the assumptions of MLR are very similar to those of SLR:
 
 ::: Assumption
 ### Assumptions of the MLR model
@@ -117,8 +163,11 @@ The random error term, $\varepsilon$ stays the same, so the assumptions of MLR a
 
 ::: Note
 ### Multivariate Linearity
-Although this is still a *linear* model, the term ??olinear??? no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, ??olinear??? means that the model is **linear in its parameters**: each $\beta_i$ multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model will instead look like a three dimensional *plane*
-```{r}
+Although this is still a *linear* model, the term "linear" no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, "linear" means that the model is **linear in its parameters**: each $\beta_i$ multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model may instead look like a *plane* - the three dimensional equivalent of a line in two dimensions.
+```{webr}
+#| echo: false
+#| edit: false
+
 # Fit least squares plane
 fit <- lm(Sales ~ TV + Radio, data = ads)
 
@@ -152,25 +201,27 @@ fig <- plot_ly() |>
       xaxis = list(title = "Radio"),
       yaxis = list(title = "TV"),
       zaxis = list(title = "Sales")
-    )
-  )
+    ),
+    showlegend = FALSE
+  ) 
 
 fig
 ```
+
+A further discussion of *linearity* will take place in @sec-non_linearity, when we discuss higher order multiple regression models. 
 :::
-### Partial Regression Coefficients
-Even though our model is no longer just a straight line, the *slope* interpretation from simple linear regression is still relevant in multiple regression. Now however, $\beta_i$ describes the expected change in the mean response for a one-unit increase in $x_i$, **holding all other predictors constant**. 
+
+- [ ] Continue 
+
+## Partial Regression Coefficients, $\beta_i$
+Even though our model is no longer just a straight line, the *slope* interpretation from SLR is still relevant in MLR. Now however, $\beta_i$ describes the expected change in the mean response for a one-unit increase in $x_i$, **holding all other predictors constant**. 
 
 ::: Example
-**Interpreting a partial coefficient**
-If the fitted model for life expectancy includes Internet usage and BirthRate,
-
-```
-Internet: 0.112
-BirthRate: -0.594
-```
-Then:
-
+#### Interpreting a partial coefficient
+We may propose a model for `Sales` whereby the baseline sales (when no money is invested in advertising) is $beta_0=3$,  $\beta_{TV}= 0.1$ and $\beta_{Radio}= 0.2$, i.e. 
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
+$$
 * A 1% increase in internet usage is associated with an expected 0.11-year increase in life expectancy, holding other predictors fixed.
 * A one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.
 :::
@@ -178,36 +229,37 @@ Then:
 
 ::: Exercise
 ### Calculating the expected value of a multiple regression model
+:::
 
-## Fitting MLR Models in R and the `tidy()` function 
+### Fitting MLR Models in R and the `tidy()` function 
 Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares: Residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique 'least squares estimates' for the model parameters $b_0, \ldots, b_k$.
 
 MLR uses the same `lm()` function as SLR (these are both 'linear models', after all). Now, the model `formula` (the first argument, identified by the `~` separating the LHS and RHS) includes both predictors on the RHS, separated by a `+`:
-```{r}
+```{webr}
 mod <- lm(Sales ~ TV + Radio, data = ads)
 ```
 ::: Note
-## R `formulas`
+### R `formulas`
 
 :::
 and we can extract our model coefficients ($\beta_0, \ldots,\beta_3$) in the same way: 
 
 ::: {.panel-tabset}
 #### indexing
-```{r}
+```{webr}
 #| echo: true
 mod$coefficients
 ```
 #### coef() function
 
-```{r}
+```{webr}
 #| echo: true
 coef(mod)
 ```
 :::
 
 We can also use the `tidy` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter:
-```{r}
+```{webr}
 library(broom)
 tidy(mod, conf.int = TRUE)
 ```
@@ -281,7 +333,7 @@ Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hyp
 #### global statistics with `glance()`
 We can obtain the model F-statistic using the `glance()` function from the `broom` package
 
-```{r}
+```{webr}
 glance(mod)
 ```
 

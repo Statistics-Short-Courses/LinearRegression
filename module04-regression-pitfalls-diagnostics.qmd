@@ -1,9 +1,9 @@
-title: "Regression Pitfalls and Diagnostics"
+---
 format:
   live-html:
     toc: true
 ---
-
+# Regression Pitfalls and Diagnostics
 ## Common pitfalls to avoid
 
 - Ignoring model misspecification: linear fits to nonlinear patterns
