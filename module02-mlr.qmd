@@ -217,18 +217,28 @@ A further discussion of *linearity* will take place in @sec-non_linearity, when 
 Even though our model is no longer just a straight line, the *slope* interpretation from SLR is still relevant in MLR. Now however, $\beta_i$ describes the expected change in the mean response for a one-unit increase in $x_i$, **holding all other predictors constant**. 
 
 ::: Example
-#### Interpreting a partial coefficient
+#### Interpreting a partial coefficient, $\beta_i$
 We may propose a model for `Sales` whereby the baseline sales (when no money is invested in advertising) is $beta_0=3$,  $\beta_{TV}= 0.1$ and $\beta_{Radio}= 0.2$, i.e. 
 $$
 E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
 $$
-* A 1% increase in internet usage is associated with an expected 0.11-year increase in life expectancy, holding other predictors fixed.
-* A one‑unit increase in birth rate corresponds to an expected 0.59‑year decrease in life expectancy, controlling for all other predictors.
+
+* A $1k increase in TV advertising expenditure is associated with an expected 100 unit (0.1*1000units - the scale of the outcome) increase in sales, holding Radio expenditure constant.
+* Converely, at a fixed level of `TV` advertising expenditure, a $1k increase in Radio advertisin expenditure corresponds to an expected 200 unit increase in sales.
 :::
 
 
 ::: Exercise
 ### Calculating the expected value of a multiple regression model
+Given this model 
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
+$$
+Calcultate the expected sales (in thousands of units) for 5k TV and 8k Radio advertising expenditure 
+
+```{webr}
+
+```
 :::
 
 ### Fitting MLR Models in R and the `tidy()` function 
@@ -255,6 +265,18 @@ mod$coefficients
 ```{webr}
 #| echo: true
 coef(mod)
+```
+:::
+
+::: Exercise
+## extracting coefficients from an `lm` model
+Use the the least-squares coefficients from `mod` to complete these partial regression plots
+
+```{webr}
+ggplot(ads)+
+  aes(x=TV, y=Sales)+
+  geom_point()+
+  geom_abline(intercept = mod$coefficients[1], slope = ______)
 ```
 :::
 
