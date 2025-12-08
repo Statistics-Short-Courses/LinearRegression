@@ -1,246 +1,82 @@
 ---
 format:
-  live-html:
-    toc: true
+live-html:
+toc: true
+
+execute:
+echo: false
+warning: false
+message: false
+
+embed-resources: true
+
+filters:
+  custom-numbered-blocks
+
+custom-numbered-blocks:
+classes:
+Assumption:
+colors: [FFCDD2, F44336]
+boxstyle: foldbox.simple
+collapse: false
+numbered: false
+Example:
+colors: [BBDEFB, 2196F3]
+boxstyle: foldbox.simple
+collapse: false
+Exercise:
+colors: [C8E6C9, 4CAF50]
+boxstyle: foldbox.simple
+collapse: false
+Note:
+colors: [FFF9C4, FFEB3B]
+boxstyle: foldbox.simple
+collapse: false
+numbered: false
+Key-point:
+colors: [FFF9C4, FFEB3B]
+boxstyle: foldbox.simple
+collapse: false
+numbered: false
+webr:
+render-df: gt-interactive
+
+resources:
+  Data
+
 ---
-# Model Building and Variable Screening
-## Exploratory analysis for model formulation
+# Model Building and Selection
 
-- Start with plots (pairs, scatterplots, boxplots) to understand ranges,
-  outliers, and plausible functional forms.
-- Use subject-matter knowledge to posit candidate predictors and
-  interactions.
+::: Key-point
+Model building balances **flexibility** and **simplicity**. Too simple a model can miss important structure, while an overly complex model can chase noise in the data. The goal is to find a model that captures meaningful patterns without overfitting.
+:::3
 
-## Systematic vs random variation
+## Increasing model complexity to model complex relationships
 
-- Distinguish signal (systematic trend with predictors) from noise
-  (unexplained scatter).
-- Residual SD estimates random variation; large unexplained scatter may
-  indicate missing predictors or wrong functional form.
+### Why increase model complexity?
 
-## Choosing first- vs second-order functional forms
+We began this course with the simple linear regression model: a single continuous predictor with a straight-line effect,
+$$
+E[Y] = \beta_0 + \beta_1 X.
+$$
+This is termed a 'first-order model' because 
 
-- Start with additive, first-order (linear) terms; add interactions or
-  low-order polynomials when plots or theory suggest them.
-- Prefer centered predictors to stabilise estimates when adding
-  higher-order terms.
+ each is often a reasonable starting point, but real data may show structure a straight line cannot capture—such as curvature, changing slopes, or differences between groups.
 
-## Model adequacy and interpretability
+Exploratory plots help reveal:
 
-- Adequate models fit the data (diagnostics pass) *and* support the
-  scientific question.
-- Avoid models that obscure interpretation with unnecessary complexity
-  or unidentifiable effects.
+- Curvature in the relationship between predictors and the response.
+- Situations where the effect of one predictor depends on another.
+- Groupings or clusters that suggest categorical effects.
 
-## Parsimony as a guiding principle
-
-- Favor the simplest model that explains the data and meets assumptions.
-- Remove immaterial terms when they do not improve fit or align with
-  theory; compare nested models via F-tests or information criteria.
-
-## Interaction models with quantitative predictors
-
-- Allow the effect of one predictor to depend on another
-  ([interaction](#gloss-interaction)):
-  $$E[Y] = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2.$$
-- $\beta_3$ shifts the slope of $X_1$ per-unit change in $X_2$ (and
-  vice versa).
+::: Note
+Even when terms like $X^2$ or $X_1X_2$ appear, these are still **linear models** because the parameters enter additively. “Linearity” refers to the parameters, *not* the shape of the fitted curve.
+:::
 
 ```{r}
-int_mod <- lm(mpg ~ wt * hp, data = mtcars)
-coef(int_mod)[c("wt", "hp", "wt:hp")]
-```
-
-## Graphical interpretation of interaction effects
-
-- Plot fitted lines across a grid to see slope changes.
-
-```{r}
-library(ggplot2)
-grid <- expand.grid(wt = seq(2, 4, 0.5), hp = c(90, 150))
-grid$fit <- predict(int_mod, grid)
-ggplot(grid, aes(wt, fit, colour = factor(hp))) +
-  geom_line() + labs(colour = "HP level", y = "Fitted mpg")
-```
-
-## Polynomial models: quadratic and cubic
-
-- Capture curvature by adding powers: $$E[Y] = \beta_0 + \beta_1 X +
-  \beta_2 X^2 \;(+\; \beta_3 X^3).$$
-- Use `poly()` or explicit powers; center $X$ to reduce collinearity.
-
-```{r}
-poly_mod <- lm(mpg ~ wt + I(wt^2), data = mtcars)
-```
-
-### Explore polynomial degree interactively
-
-An Observable widget lets you adjust the polynomial degree for a simple
-one-predictor model and see how the fitted curve responds. Higher-degree
-polynomials can capture curvature but may also overfit.
-
-```{ojs}
-import * as Plot from "npm:@observablehq/plot";
-import {slider} from "npm:@observablehq/inputs";
-import {regressionPoly} from "npm:d3-regression";
-import {extent} from "npm:d3-array";
-
-let seed = 7;
-const random = () => (seed = (seed * 48271) % 2147483647) / 2147483647;
-
-const polyData = Array.from({length: 32}, (_, i) => {
-  const x = -3 + (6 / 31) * i;
-  const signal = 4 - 1.2 * x + 0.7 * x ** 2 - 0.25 * x ** 3;
-  const y = signal + (random() - 0.5) * 2;
-  return {x, y};
-});
-
-viewof degree = slider({
-  min: 1,
-  max: 6,
-  step: 1,
-  value: 3,
-  label: "Polynomial degree",
-});
-
-function fittedCurve(order) {
-  const regression = regressionPoly()
-    .x((d) => d.x)
-    .y((d) => d.y)
-    .order(order)
-    .domain(extent(polyData, (d) => d.x));
-  const curve = regression(polyData);
-  return curve.map(([x, y]) => ({x, y}));
-}
-
-Plot.plot({
-  marginLeft: 50,
-  height: 320,
-  x: {label: "Predictor (x)"},
-  y: {label: "Outcome (y)"},
-  marks: [
-    Plot.dot(polyData, {
-      x: "x",
-      y: "y",
-      r: 4,
-      fill: "#1f77b4",
-      opacity: 0.8,
-      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
-    }),
-    Plot.line(fittedCurve(degree), {
-      x: "x",
-      y: "y",
-      stroke: "#d62728",
-      strokeWidth: 2,
-    }),
-  ],
-});
-```
-
-## When and how to model curvature
-
-- Use scatterplots and residual-vs-fitted plots to spot nonlinearity.
-- Prefer low-order polynomials for interpretability; consider splines
-  for flexible shapes if allowed.
-
-## Extrapolation risks and overfitting concerns
-
-- Polynomial terms can explode outside the data range—avoid predicting
-  far beyond observed $X$.
-- Guard against overfitting with cross-validation or an independent
-  validation set when sample size permits.
-
-## Variable screening and model selection
-
-- Aim for models that balance predictive accuracy with interpretability.
-- Preserve theory-driven terms, but remove noise predictors that do not
-  improve fit or align with the research question.
-
-## Multicollinearity: detection and implications
-
-- Symptoms: unstable coefficients, inflated standard errors, signs
-  flipping with small data changes ([multicollinearity](#gloss-multicollinearity)).
-- Quick checks: pairwise correlations, variance inflation factors (VIF),
-  or condition numbers.
-
-```{r}
-cor(mtcars[, c("wt", "hp", "disp", "drat")])
-kappa(model.matrix(~ wt + hp + disp, data = mtcars))
-```
-
-## Akaike Information Criterion (AIC)
-
-- Balances fit and complexity: $\text{AIC} = -2\ell + 2k$; lower is
-  better ([AIC](#gloss-aic)).
-- Compare non-nested models with `AIC(model1, model2, ...)`.
-
-## Forward, backward, and stepwise selection
-
-- Forward: start simple, add terms that reduce AIC or improve fit.
-- Backward: start saturated, remove weak terms.
-- Stepwise: alternate add/drop using `step()` (AIC by default).
-
-```{r}
-full_mod <- lm(mpg ~ ., data = mtcars)
-step(full_mod, direction = "both", trace = 0)
-```
-
-## Limitations and cautions for stepwise methods
-
-- Data-driven searches can overfit and inflate Type I error.
-- Selected models depend on starting set and may ignore theory; always
-  validate with diagnostics and, if possible, new data.
-
-## Balancing prediction and explanation
-
-- For explanation, prioritise interpretability and scientific
-  plausibility; for prediction, prioritise out-of-sample performance.
-- Consider cross-validation or a hold-out set when sample size permits;
-  report uncertainty from the final, diagnostically-sound model.
-
-## Working with qualitative predictors
-
-- Represent $k$-level categorical predictors with $k-1$ indicator
-  variables ([dummy variables](#gloss-dummy)); the omitted level is the
-  baseline.
-
-```{r}
-cat_mod <- lm(mpg ~ factor(cyl), data = mtcars)
-model.matrix(cat_mod)[1:5, ]
-```
-
-## Baseline category interpretation
-
-- Each indicator coefficient compares its level to the baseline.
-- Re-level with `relevel()` for more meaningful comparisons.
-
-```{r}
-mtcars$cyl <- relevel(factor(mtcars$cyl), ref = "6")
-relevel_mod <- lm(mpg ~ cyl, data = mtcars)
-coef(relevel_mod)
-```
-
-## Regression with multi-level factors
-
-- Fit models with multiple factors and quantitative predictors; ensure
-  design matrix is full rank (no redundant indicators).
-
-```{r}
-mix_mod <- lm(mpg ~ wt + factor(carb), data = mtcars)
-```
-
-## Mixing categorical and continuous predictors
-
-- Combine factors and continuous terms; interaction terms allow
-  different slopes by group (e.g., `wt * cyl`).
-
-```{r}
-group_slope <- lm(mpg ~ wt * factor(gear), data = mtcars)
-```
-
-## Connection to ANOVA-style hypotheses
-
-- ANOVA table for a factor tests whether any level differs from the
-  baseline (joint $H_0$ on all indicators).
-- In R, compare models with `anova()` or read the factor-level F-test in
-  `summary()` output when using treatment coding.
+# Simple straight-line model: fuel efficiency on weight
+data(mtcars)
+plot(mtcars$wt, mtcars$mpg,
+     xlab = "Weight (1000 lbs)", ylab = "Miles per gallon")
+lin_mod <- lm(mpg ~ wt, data = mtcars)
+abline(lin_mod, col = "blue")
