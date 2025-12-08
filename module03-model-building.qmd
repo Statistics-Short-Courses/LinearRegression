@@ -73,6 +73,70 @@ ggplot(grid, aes(wt, fit, colour = factor(hp))) +
 poly_mod <- lm(mpg ~ wt + I(wt^2), data = mtcars)
 ```
 
+### Explore polynomial degree interactively
+
+An Observable widget lets you adjust the polynomial degree for a simple
+one-predictor model and see how the fitted curve responds. Higher-degree
+polynomials can capture curvature but may also overfit.
+
+```{ojs}
+import * as Plot from "npm:@observablehq/plot";
+import {slider} from "npm:@observablehq/inputs";
+import {regressionPoly} from "npm:d3-regression";
+import {extent} from "npm:d3-array";
+
+let seed = 7;
+const random = () => (seed = (seed * 48271) % 2147483647) / 2147483647;
+
+const polyData = Array.from({length: 32}, (_, i) => {
+  const x = -3 + (6 / 31) * i;
+  const signal = 4 - 1.2 * x + 0.7 * x ** 2 - 0.25 * x ** 3;
+  const y = signal + (random() - 0.5) * 2;
+  return {x, y};
+});
+
+viewof degree = slider({
+  min: 1,
+  max: 6,
+  step: 1,
+  value: 3,
+  label: "Polynomial degree",
+});
+
+function fittedCurve(order) {
+  const regression = regressionPoly()
+    .x((d) => d.x)
+    .y((d) => d.y)
+    .order(order)
+    .domain(extent(polyData, (d) => d.x));
+  const curve = regression(polyData);
+  return curve.map(([x, y]) => ({x, y}));
+}
+
+Plot.plot({
+  marginLeft: 50,
+  height: 320,
+  x: {label: "Predictor (x)"},
+  y: {label: "Outcome (y)"},
+  marks: [
+    Plot.dot(polyData, {
+      x: "x",
+      y: "y",
+      r: 4,
+      fill: "#1f77b4",
+      opacity: 0.8,
+      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
+    }),
+    Plot.line(fittedCurve(degree), {
+      x: "x",
+      y: "y",
+      stroke: "#d62728",
+      strokeWidth: 2,
+    }),
+  ],
+});
+```
+
 ## When and how to model curvature
 
 - Use scatterplots and residual-vs-fitted plots to spot nonlinearity.
