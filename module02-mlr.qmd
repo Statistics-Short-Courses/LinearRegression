@@ -422,8 +422,19 @@ The very small p-value indicates strong evidence against $H_0$. We conclude that
 ::: Exercise
 Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.
 :::
+#### global statistics with `anova()`
+We can obtain the model F-statistic using the `anova()` function, which reinforces the
+connection between regression and the ANOVA framework introduced earlier.
+
+```{webr}
+anova(mod)
+```
+
+The final row of the ANOVA table reports the global F-test for the model.
+
 #### global statistics with `glance()`
-We can obtain the model F-statistic using the `glance()` function from the `broom` package
+The `glance()` function from the `broom` package also reports the model F-statistic
+while providing several additional summary measures in one place.
 
 ```{webr}
 glance(mod)
