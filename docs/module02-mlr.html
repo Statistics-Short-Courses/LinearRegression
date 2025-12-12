@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Multiple Linear Regression (MLR) – Linear Regression and Model Selection with R</title>
+<title>4  Multiple Linear Regression (MLR) – Linear Regression and Model Selection with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -28037,6 +28037,10 @@ initializeRuntime();
 
 </script>
 <style>
+.Assumption {
+--color1: #FFCDD2;
+--color2: #F44336;
+}
 .Key-point {
 --color1: #FFF9C4;
 --color2: #FFEB3B;
@@ -28044,10 +28048,6 @@ initializeRuntime();
 .Exercise {
 --color1: #C8E6C9;
 --color2: #4CAF50;
-}
-.Assumption {
---color1: #FFCDD2;
---color2: #F44336;
 }
 .Note {
 --color1: #FFF9C4;
@@ -28220,7 +28220,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module02-mlr.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module02-mlr.html"><span class="chapter-number">4</span>  <span class="chapter-title">Multiple Linear Regression (MLR)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -28240,7 +28240,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
+        <div id="quarto-search" class title="Search"></div>
         </div>
         </div>
     <div class="sidebar-menu-container"> 
@@ -28248,43 +28248,43 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Course Overview</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>  <span class="chapter-title">Course Overview</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module00-lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>  <span class="chapter-title">Introduction to linear models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module01-slr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>  <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module02-mlr.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>  <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Building and Variable Screening</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>  <span class="chapter-title">Model Building and Selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>  <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>  <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -28306,7 +28306,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>  <span class="chapter-title">Multiple Linear Regression (MLR)</span></h1>
 </div>
 
 
@@ -28343,7 +28343,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 </script>
 </div>
 </div>
-<p>Most practical applications of linear regression require models more complex than the simple linear regression(SLR) model introduced in <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 2.4</span></a>. Multiple linear regression (MLR) extends simple linear regression by allowing <span class="math inline">\(Y\)</span> to depend on more than one predictor variable. This enables richer models and allows us to estimate the <em>partial</em> contribution of each predictor while accounting for others.</p>
+<p>Most practical applications of linear regression require models more complex than the simple linear regression(SLR) model introduced in <a href="#sec-simple_linear_model" class="quarto-xref"><span class="quarto-unresolved-ref">sec-simple_linear_model</span></a>. Multiple linear regression (MLR) extends simple linear regression by allowing <span class="math inline">\(Y\)</span> to depend on more than one predictor variable. This enables richer models and allows us to estimate the <em>partial</em> contribution of each predictor while accounting for others.</p>
 <ul class="task-list">
 <li><label><input type="checkbox">Continue</label></li>
 </ul>
@@ -28356,7 +28356,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 <li>You wish to measure the unique contribution of each predictor while controlling for others.</li>
 </ul>
 <div id="advertising-sales" class="Example" title="Advertising sales">
-<p></p><details class="Example fbx-simplebox fbx-default" open=""><summary><strong>Example 1: </strong>Advertising sales</summary><div>Lets consider a simple example using the <code>Advertising</code> dataset<p></p>
+<p></p><details class="Example fbx-simplebox fbx-default" open><summary><strong>Example 1: </strong>Advertising sales</summary><div>Lets consider a simple example using the <code>Advertising</code> dataset<p></p>
 <div class="cell" data-edit="false">
 <div>
 <div id="webr-3" class="exercise-cell">
@@ -28378,9 +28378,9 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImFkcyJ9
 </script>
 </div>
 </div>
-<p>We might look at each bivariate (i.e.&nbsp;two variables) relationship between sales and advertising expendature separately:</p>
+<p>We might look at each bivariate (i.e. two variables) relationship between sales and advertising expendature separately:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href=""><span class="math inline">\(\text{Sales} \sim \text{TV}\)</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href=""><span class="math inline">\(\text{Sales}\sim \text{Radio}\)</span></a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href><span class="math inline">\(\text{Sales} \sim \text{TV}\)</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href><span class="math inline">\(\text{Sales}\sim \text{Radio}\)</span></a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell" data-edit="false">
@@ -28410,7 +28410,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJnZ3Bs
 </div>
 <p>However we might also look at the <em>multivariate</em> relationship:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Coloured Scatter</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">3-D Scatter</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href>Coloured Scatter</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href>3-D Scatter</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p>Here we encode the values of the second predictor (<code>Radio</code>) with colour</p>
@@ -28449,9 +28449,9 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJwbG90
 </section>
 <section id="the-multiple-linear-regression-model" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="the-multiple-linear-regression-model"><span class="header-section-number">4.2</span> The multiple linear regression model</h2>
-<p>The multiple linear model extends the simple linear model from <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 2.4</span></a> straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter:</p>
+<p>The multiple linear model extends the simple linear model from <a href="#sec-simple_linear_model" class="quarto-xref"><span class="quarto-unresolved-ref">sec-simple_linear_model</span></a> straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter:</p>
 <div id="the-mlr-model" class="Key-point" title="The MLR model">
-<p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point: </strong>The MLR model</summary><div><span class="math display">\[
+<p></p><details class="Key-point fbx-simplebox fbx-default" open><summary><strong>Key-point: </strong>The MLR model</summary><div><span class="math display">\[
 Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilon \sim N(0,\sigma^2)
 \]</span><p></p>
 </div></details>
@@ -28459,9 +28459,9 @@ Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilo
 <p>Now, instead of a single predictor <span class="math inline">\(x\)</span>, we may have several (<span class="math inline">\(k\)</span>) predictors <span class="math inline">\(x_1, x_2, \ldots, x_k\)</span>, each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor <span class="math inline">\(x_i\)</span> has a corresponding parameter <span class="math inline">\(\beta_i\)</span> governing its effect on the response. Note that we have updated the intercept parameter <span class="math inline">\(\alpha\)</span> from the simple linear regression section to <span class="math inline">\(\beta_0\)</span>, because it is simply another parameter in the model!</p>
 <p>The random error term, <span class="math inline">\(\varepsilon\)</span>, stays the same, so the assumptions of MLR are very similar to those of SLR:</p>
 <div id="assumptions-of-the-mlr-model" class="Assumption" title="Assumptions of the MLR model">
-<details class="Assumption fbx-simplebox fbx-default" open=""><summary><strong>Assumption: </strong>Assumptions of the MLR model</summary><div>
+<details class="Assumption fbx-simplebox fbx-default" open><summary><strong>Assumption: </strong>Assumptions of the MLR model</summary><div>
 <ul>
-<li>A <em>linear</em> predictor, e.g.&nbsp;<span class="math inline">\(E[Y]=\beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k\)</span>.</li>
+<li>A <em>linear</em> predictor, e.g. <span class="math inline">\(E[Y]=\beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k\)</span>.</li>
 <li><em>Independent</em> and identically distributed random error terms that
 <ul>
 <li>Have a mean <span class="math inline">\(\mu=0\)</span>, and a constant variance <span class="math inline">\(Var(\varepsilon)=\sigma^2\)</span></li>
@@ -28471,7 +28471,7 @@ Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilo
 </div></details>
 </div>
 <div id="multivariate-linearity" class="Note" title="Multivariate Linearity">
-<p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note: </strong>Multivariate Linearity</summary><div>Although this is still a <em>linear</em> model, the term “linear” no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, “linear” means that the model is <strong>linear in its parameters</strong>: each <span class="math inline">\(\beta_i\)</span> multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model may instead look like a <em>plane</em> - the three dimensional equivalent of a line in two dimensions.<p></p>
+<p></p><details class="Note fbx-simplebox fbx-default" open><summary><strong>Note: </strong>Multivariate Linearity</summary><div>Although this is still a <em>linear</em> model, the term “linear” no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, “linear” means that the model is <strong>linear in its parameters</strong>: each <span class="math inline">\(\beta_i\)</span> multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model may instead look like a <em>plane</em> - the three dimensional equivalent of a line in two dimensions.<p></p>
 <div class="cell" data-edit="false">
 <div>
 <div id="webr-9" class="exercise-cell">
@@ -28482,7 +28482,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJcbiMg
 </script>
 </div>
 </div>
-<p>A further discussion of <em>linearity</em> will take place in <span class="quarto-unresolved-ref">?sec-non_linearity</span>, when we discuss higher order multiple regression models.</p>
+<p>A further discussion of <em>linearity</em> will take place in <a href="#sec-non_linearity" class="quarto-xref"><span class="quarto-unresolved-ref">sec-non_linearity</span></a>, when we discuss higher order multiple regression models.</p>
 </div></details>
 </div>
 <ul class="task-list">
@@ -28493,8 +28493,8 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJcbiMg
 <h2 data-number="4.3" class="anchored" data-anchor-id="partial-regression-coefficients-beta_i"><span class="header-section-number">4.3</span> Partial Regression Coefficients, <span class="math inline">\(\beta_i\)</span></h2>
 <p>Even though our model is no longer just a straight line, the <em>slope</em> interpretation from SLR is still relevant in MLR. Now however, <span class="math inline">\(\beta_i\)</span> describes the expected change in the mean response for a one-unit increase in <span class="math inline">\(x_i\)</span>, <strong>holding all other predictors constant</strong>.</p>
 <div id="interpreting-a-partial-coefficient-beta_i" class="Example" title="Interpreting a partial coefficient, \beta_i">
-<details class="Example fbx-simplebox fbx-default" open=""><summary><strong>Example 2: </strong>Interpreting a partial coefficient, <span class="math inline">\(\beta_i\)</span></summary><div>
-<p>We may propose a model for <code>Sales</code> whereby the baseline sales (when no money is invested in advertising) is <span class="math inline">\(\beta_0=3\)</span>, <span class="math inline">\(\beta_{TV}= 0.1\)</span> and <span class="math inline">\(\beta_{Radio}= 0.2\)</span>, i.e.&nbsp; <span class="math display">\[
+<details class="Example fbx-simplebox fbx-default" open><summary><strong>Example 2: </strong>Interpreting a partial coefficient, <span class="math inline">\(\beta_i\)</span></summary><div>
+<p>We may propose a model for <code>Sales</code> whereby the baseline sales (when no money is invested in advertising) is <span class="math inline">\(\beta_0=3\)</span>, <span class="math inline">\(\beta_{TV}= 0.1\)</span> and <span class="math inline">\(\beta_{Radio}= 0.2\)</span>, i.e.  <span class="math display">\[
 E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
 \]</span> In this model: * A $1k increase in TV advertising expenditure is associated with an expected 100 unit (0.1<em>1000units - the scale of the outcome) increase in sales, holding Radio expenditure constant. </em> Converely, at a fixed level of <code>TV</code> advertising expenditure, a $1k increase in Radio advertisin expenditure corresponds to an expected 200 unit increase in sales.</p>
 <ul class="task-list">
@@ -28504,7 +28504,7 @@ E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
 <p><span class="math display">\[
 E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot 5= 4 + 0.1\cdot\text{TV}
 \]</span></p>
-<p>i.e.&nbsp;only one <em>variable</em> (<code>TV</code>) remains (<code>Radio</code> no longer varies but is held constant - contributing <span class="math inline">\(0.2\cdot 5=1\)</span>k units to <span class="math inline">\(E[Y]\)</span>), so the parameter <span class="math inline">\(\beta_1\)</span> can be interpreted as the slope of the SLR line:</p>
+<p>i.e. only one <em>variable</em> (<code>TV</code>) remains (<code>Radio</code> no longer varies but is held constant - contributing <span class="math inline">\(0.2\cdot 5=1\)</span>k units to <span class="math inline">\(E[Y]\)</span>), so the parameter <span class="math inline">\(\beta_1\)</span> can be interpreted as the slope of the SLR line:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -28517,7 +28517,7 @@ E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot 5= 4 + 0.1\cdot\text{TV}
 </div></details>
 </div>
 <div id="calculating-the-expected-outcome-of-a-multiple-regression-model" class="Exercise" title="Calculating the expected outcome of a multiple regression model">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 1: </strong>Calculating the expected outcome of a multiple regression model</summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 1: </strong>Calculating the expected outcome of a multiple regression model</summary><div>
 <p>Given this model of sales by TV and Radio advertising, <span class="math display">\[
 E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
 \]</span></p>
@@ -28536,7 +28536,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIn0=
 </div>
 <section id="fitting-mlr-models-in-r" class="level3">
 <h3 class="anchored" data-anchor-id="fitting-mlr-models-in-r">Fitting MLR Models in R</h3>
-<p>Fitting a multiple linear regression uses the exact same conceptual process from <span class="quarto-unresolved-ref">?sec-leastsquares</span>: residuals are still defined <span class="math inline">\(e = Y- \hat{Y}\)</span>, and minimising the sum of squared residuals provides optimal and unique <em>least squares estimates</em> for the model parameters <span class="math inline">\(\hat{\beta}_0, \ldots, \hat{\beta}_k\)</span>.</p>
+<p>Fitting a multiple linear regression uses the exact same conceptual process from <a href="#sec-leastsquares" class="quarto-xref"><span class="quarto-unresolved-ref">sec-leastsquares</span></a>: residuals are still defined <span class="math inline">\(e = Y- \hat{Y}\)</span>, and minimising the sum of squared residuals provides optimal and unique <em>least squares estimates</em> for the model parameters <span class="math inline">\(\hat{\beta}_0, \ldots, \hat{\beta}_k\)</span>.</p>
 <p>In <code>R</code> we use the same <code>lm()</code> function as SLR (these are both ‘linear models’, after all). Now however, the model <code>formula</code> includes both predictors on the RHS, separated by a <code>+</code>:</p>
 <div class="cell">
 <div>
@@ -28549,7 +28549,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiYWRzX21vZCA8LSBsbShTYWxl
 </div>
 </div>
 <div id="r-formulas" class="Note" title="R formulas">
-<p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note: </strong>R formulas</summary><div>(the first argument, identified by the <code>~</code> separating the LHS and RHS)<p></p>
+<p></p><details class="Note fbx-simplebox fbx-default" open><summary><strong>Note: </strong>R formulas</summary><div>(the first argument, identified by the <code>~</code> separating the LHS and RHS)<p></p>
 </div></details>
 </div>
 <p>Lets visualise our fitted model:</p>
@@ -28565,7 +28565,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJcbiMg
 </div>
 <p>We can extract our fitted model coefficients in the same way:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Using indexing</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">The <code>coef()</code> function</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href>Using indexing</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href>The <code>coef()</code> function</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
@@ -28594,7 +28594,7 @@ eyJhdHRyIjp7ImVjaG8iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiY29lZiht
 </div>
 </div>
 <div id="extracting-coefficients-from-an-lm-model" class="Exercise" title="extracting coefficients from an lm model">
-<details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 2: </strong>extracting coefficients from an lm model</summary><div>
+<details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 2: </strong>extracting coefficients from an lm model</summary><div>
 <p>Use the the least-squares coefficients from <code>abs mod</code> to complete these partial regression plots</p>
 <div class="cell">
 <div>
@@ -28622,7 +28622,7 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImxpYnJhcnkoYnJvb20pXG50
 </script>
 </div>
 </div>
-<p>The hypotheses being tested for each coefficient is analagous to that in the SLR case <span class="quarto-unresolved-ref">?sec-beta_inference</span>: <span class="math display">\[
+<p>The hypotheses being tested for each coefficient is analagous to that in the SLR case <a href="#sec-beta_inference" class="quarto-xref"><span class="quarto-unresolved-ref">sec-beta_inference</span></a>: <span class="math display">\[
 H_0 : \beta_i = 0
 \qquad\text{vs}\qquad
 H_a : \beta_i \ne 0.
@@ -28632,7 +28632,7 @@ t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
 <p>The main difference in calculation here is that this test statistic has degrees of freedom that depend on the number of predictors in the model. Specifically, <span class="math inline">\(t_i\)</span> has <span class="math inline">\(n - (k+1)\)</span> degrees of freedom - where <span class="math inline">\(n\)</span> is the number of observations and <span class="math inline">\(k\)</span> is the number of predictor variables. Note that this is consistent with the df used for SLR.</p>
 <p>The interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of <span class="math inline">\(\beta_i\)</span> here does not represent the relationship between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X_i\)</span> without qualification - but only as the other variables are held constant. Analogously, the hypothesis being tested by <span class="math inline">\(t_i\)</span> is whether <span class="math inline">\(X_i\)</span> is related to to <span class="math inline">\(Y\)</span> - <em>once we account for the other predictors in the model</em>.</p>
 <div id="interpreting-the-t-test-of-beta_i" class="Key-point" title="Interpreting the t-test of \beta_i">
-<p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point: </strong>Interpreting the t-test of <span class="math inline">\(\beta_i\)</span></summary><div><span class="math inline">\(t_i\)</span> is a <span class="math inline">\(n-k+1\)</span> statistic which tests the null hypothesis that <span class="math inline">\(\beta_i=0\)</span> in the multiple regression model. A significant p-value for this test entails that <em>given the other predictors in the model</em>.<p></p>
+<p></p><details class="Key-point fbx-simplebox fbx-default" open><summary><strong>Key-point: </strong>Interpreting the t-test of <span class="math inline">\(\beta_i\)</span></summary><div><span class="math inline">\(t_i\)</span> is a <span class="math inline">\(n-k+1\)</span> statistic which tests the null hypothesis that <span class="math inline">\(\beta_i=0\)</span> in the multiple regression model. A significant p-value for this test entails that <em>given the other predictors in the model</em>.<p></p>
 </div></details>
 </div>
 <p>Because of this:</p>
@@ -28645,7 +28645,7 @@ t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
 <li>this will be adressed more comprehensively in module 6: diagnostics an transformations. :::</li>
 </ul>
 <div id="multiple-t-tests-and-type-i-error-inflation" class="Note" title="Multiple t-tests and type I error inflation">
-<p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note: </strong>Multiple t-tests and type I error inflation</summary><div>While it is easy to compute t-tests for each model coefficient individually, this is generally not a good way to determine whether the model as a whole is contributing useful information for the prediction of <span class="math inline">\(Y\)</span>. While the model above only has two predictors, larger datasets have the potential for dozens, hundreds, or thousands of predictors! If we were to rely on this series of <span class="math inline">\(t\)</span>-tests alone to determine whether we have <em>any</em> useful predictors of the outcome, we would be compounding our chance of making a ‘type I error’ (i.e.&nbsp;concluding there is a effect where there is none) with each test. Instead of performing several small tests, we have reason to want a single <em>global</em> test - one that encompasses all the <span class="math inline">\(\beta\)</span> parameters.<p></p>
+<p></p><details class="Note fbx-simplebox fbx-default" open><summary><strong>Note: </strong>Multiple t-tests and type I error inflation</summary><div>While it is easy to compute t-tests for each model coefficient individually, this is generally not a good way to determine whether the model as a whole is contributing useful information for the prediction of <span class="math inline">\(Y\)</span>. While the model above only has two predictors, larger datasets have the potential for dozens, hundreds, or thousands of predictors! If we were to rely on this series of <span class="math inline">\(t\)</span>-tests alone to determine whether we have <em>any</em> useful predictors of the outcome, we would be compounding our chance of making a ‘type I error’ (i.e. concluding there is a effect where there is none) with each test. Instead of performing several small tests, we have reason to want a single <em>global</em> test - one that encompasses all the <span class="math inline">\(\beta\)</span> parameters.<p></p>
 </div></details>
 </div>
 </section>
@@ -28672,15 +28672,15 @@ F = \frac{\text{MSR}}{\text{MSE}}
 \]</span></p>
 <p>follows an F-distribution under <span class="math inline">\(H_0\)</span>.<br>
 If the model truly explains some structure in the data, MSR will be noticeably larger than MSE.</p>
-<p>[#^1] The links between ANOVA and linear regression will be futher explored here in <span class="quarto-unresolved-ref">?sec-qualitative_predictors</span>.</p>
+<p>[#^1] The links between ANOVA and linear regression will be futher explored here in <a href="#sec-qualitative_predictors" class="quarto-xref"><span class="quarto-unresolved-ref">sec-qualitative_predictors</span></a>.</p>
 <div id="Example-3" class="Example">
-<p></p><details class="Example fbx-simplebox fbx-default" open=""><summary><strong>Example 3</strong></summary><div>In the life expectancy example, the output might report<p></p>
+<p></p><details class="Example fbx-simplebox fbx-default" open><summary><strong>Example 3</strong></summary><div>In the life expectancy example, the output might report<p></p>
 <pre><code>F-statistic: 28.2 on 4 and 44 DF,  p-value: 1.19e-11</code></pre>
 <p>The very small p-value indicates strong evidence against <span class="math inline">\(H_0\)</span>. We conclude that at least one of the predictors (Population, Health, Internet, BirthRate) is useful for predicting life expectancy, and that the model is useful overall.</p>
 </div></details>
 </div>
 <div id="Exercise-3" class="Exercise">
-<p></p><details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 3</strong></summary><div>Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.<p></p>
+<p></p><details class="Exercise fbx-simplebox fbx-default" open><summary><strong>Exercise 3</strong></summary><div>Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.<p></p>
 </div></details>
 </div>
 <section id="global-statistics-with-anova" class="level4">

@@ -1,82 +1,626 @@
 ---
 format:
-live-html:
-toc: true
+  live-html:
+    toc: true
 
 execute:
-echo: false
-warning: false
-message: false
+  echo: false
+  warning: false
+  message: false
 
 embed-resources: true
 
 filters:
-  custom-numbered-blocks
+  - custom-numbered-blocks
 
 custom-numbered-blocks:
-classes:
-Assumption:
-colors: [FFCDD2, F44336]
-boxstyle: foldbox.simple
-collapse: false
-numbered: false
-Example:
-colors: [BBDEFB, 2196F3]
-boxstyle: foldbox.simple
-collapse: false
-Exercise:
-colors: [C8E6C9, 4CAF50]
-boxstyle: foldbox.simple
-collapse: false
-Note:
-colors: [FFF9C4, FFEB3B]
-boxstyle: foldbox.simple
-collapse: false
-numbered: false
-Key-point:
-colors: [FFF9C4, FFEB3B]
-boxstyle: foldbox.simple
-collapse: false
-numbered: false
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Note:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+
 webr:
-render-df: gt-interactive
+  render-df: gt-interactive
 
 resources:
   Data
-
 ---
 # Model Building and Selection
 
-::: Key-point
-Model building balances **flexibility** and **simplicity**. Too simple a model can miss important structure, while an overly complex model can chase noise in the data. The goal is to find a model that captures meaningful patterns without overfitting.
-:::3
+In this module, we explore strategies for building effective regression models. We cover:
+- Increasing model complexity to capture non-linear relationships and interactions,
+- Assessing model fit while balancing complexity,
+- Techniques for selecting parsimonious models.
 
 ## Increasing model complexity to model complex relationships
 
 ### Why increase model complexity?
 
 We began this course with the simple linear regression model: a single continuous predictor with a straight-line effect,
+
+::: Key-point
+#### The 'first-order' single predictor model
+Is another name for the simple linear model from @sec-slm
 $$
 E[Y] = \beta_0 + \beta_1 X.
 $$
-This is termed a 'first-order model' because 
+:::
+This is termed a 'first-order model' because $x$ only appears once, 'as is' (you'll understand why this terminology is used shortly) but the relevant point is that this is the simplest linear model we can make with $X$.
 
- each is often a reasonable starting point, but real data may show structure a straight line cannot capture—such as curvature, changing slopes, or differences between groups.
+This simple model is often a reasonable starting point, and can go a long way to modeling real-world phenomena (especially in the multiple regression case), but real data may also show structure a straight line cannot capture, such as curvature.
 
-Exploratory plots help reveal:
+::: Example
+#### Non-linear relationships in data
+For example, fitting a straight line to the following data is not ideal:
+```{r}
+#| echo: false
+#| define:
+#|  - quadData
+set.seed(12)
+n <- 50
+x <- runif(n,-4,4)
+y <- 1+ x + x^2 + rnorm(n,0, 2)
 
-- Curvature in the relationship between predictors and the response.
-- Situations where the effect of one predictor depends on another.
-- Groupings or clusters that suggest categorical effects.
+quadData <- data.frame(x,y)
+ojs_define(quadData)
+```
 
-::: Note
-Even when terms like $X^2$ or $X_1X_2$ appear, these are still **linear models** because the parameters enter additively. “Linearity” refers to the parameters, *not* the shape of the fitted curve.
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+quadPoints = transpose(quadData)
+quadXDomain = d3.extent(quadData.x)
+
+xRange = d3.extent(quadData.x)
+yRange = d3.extent(quadData.y)
+
+viewof b0adj_1 = Inputs.range([-1,16], {step: 1, label: html`${tex`\beta_0`}: Intercept `})
+viewof b1_1 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`\beta_1`}: Slope`})
+
+b0_1 = b0adj_1
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+tex.block`\hat{Y} = ${b0_1.toFixed(0)} + ${b1_1.toFixed(2)}x`
+
+lineData = xRange.map(x => ({x, y: b1_1 * x + b0_1}))
+lineResiduals = quadPoints.map((d) => {
+  const fit = b0_1 + b1_1 * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+lineMaxAbsResid = d3.max(lineResiduals, (d) => Math.abs(d.resid)) || 1;
+Plot.plot({
+  marks: [
+    Plot.link(lineResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / lineMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.line(lineData, { x: "x", y: "y" }),
+
+    Plot.dot(quadPoints, { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange },
+  y: { domain: yRange, label: "y" },
+})
+```
 :::
 
+- [ ] Continue
+
+### Square, Cubic, and Higher-Order Univariate Models
+
+We enrich the basic linear model by adding **powers of a predictor**, allowing the fitted relationship to bend. In the above case, the "U" shape suggests a quadratic (squared) term may be appropriate
+
+#### Second-order (Quadratic) univariate model
+  $$E[Y] = \beta_0 + \beta_1X + \beta_2X^2$$
+::: Example
+#### Seeing how $\beta_2$ bends the curve
+Adjust the slider for the squared term to see how changing $\beta_2$ adds curvature to the fitted relationship (with optional tweaks to $\beta_0$ and $\beta_1$). Try to find a good fit to the data (can you guess what model generated this data?).
+
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+viewof b0_quad = Inputs.range([-4, 4], {step: 0.25, value: 0, label: html`${tex`\beta_0`}: Intercept`})
+viewof b1_quad = Inputs.range([-3, 3], {step: 0.1, value: 0, label: html`${tex`\beta_1`}: Linear term`})
+viewof b2_quad = Inputs.range([-1, 3], {step: 0.05, value: 0, label: html`${tex`\beta_2`}: Squared term`})
+
+tex.block`\hat{Y} = ${b0_quad.toFixed(2)} + ${b1_quad.toFixed(2)}x + ${b2_quad.toFixed(2)}x^2`
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+quadCurve = d3.range(quadXDomain[0], quadXDomain[1] + 0.05, 0.05).map((x) => ({
+  x,
+  y: b0_quad + b1_quad * x + b2_quad * x * x
+}))
+
+quadResiduals = quadPoints.map((d) => {
+  const fit = b0_quad + b1_quad * d.x + b2_quad * d.x * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+quadMaxAbsResid = d3.max(quadResiduals, (d) => Math.abs(d.resid)) || 1;
+
+Plot.plot({
+  height: 320,
+  marginLeft: 50,
+  x: {label: "Predictor (x)", domain: xRange},
+  y: {label: "Outcome (y)", domain: yRange},
+  marks: [
+    Plot.link(quadResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / quadMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(quadPoints, {
+      x: "x",
+      y: "y",
+      r: 3,
+      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
+    }),
+    Plot.line(quadCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2
+    })
+  ]
+})
+```
+:::
+
+#### Third-order (cubic) univariate model
+$$
+E[Y] = \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3
+$$
+
+allows more complex curvature with two
+
+#### N-th order univariate model 
+We can extend this process of deriving new terms by adding further powers of $X$ - allowing ius to to fit arbitrarily complex curves:
+$$
+E[Y] = \beta_0 + \beta_1X +  \dots + \beta_nX^n.
+$$
+
+Note that each term gets its own parameter ($\beta_i$). If we have $n$ data points, a (n-1)^th-order model will have a parameter for each point, meaning it will fit the data perfectly!
+
+::: Example
+#### Fitting higher-order polynomial models
 ```{r}
-# Simple straight-line model: fuel efficiency on weight
-data(mtcars)
-plot(mtcars$wt, mtcars$mpg,
-     xlab = "Weight (1000 lbs)", ylab = "Miles per gallon")
-lin_mod <- lm(mpg ~ wt, data = mtcars)
-abline(lin_mod, col = "blue")
+#| echo: false
+#| define:
+#|  - linearData
+set.seed(1)
+n <- 10
+x <- runif(n,0,4)
+y <- sin(2.3*x) + rnorm(n,0, 0.8)
+
+nonlinearData <- data.frame(x,y)
+ojs_define(nonlinearData)
+```
+
+```{ojs}
+//| echo: false
+
+reg= require("d3-regression")
+polyData=transpose(nonlinearData)
+viewof degree = Inputs.range([1, 9], {step: 1, label: "Model Order", value: 1})
+
+polyRegression = reg.regressionPoly()
+  .x((d) => d.x)
+  .y((d) => d.y)
+  .order(degree)
+  .domain(d3.extent(polyData, (d) => d.x));
+
+polyCurveRaw = polyRegression(polyData)
+polyCurve = polyCurveRaw.map(([x, y]) => ({ x, y }))
+polyPredict = (x) => {
+  if (typeof polyRegression.predict === "function") return polyRegression.predict(x);
+  if (polyCurveRaw.coefficients) {
+    return polyCurveRaw.coefficients.reduce((acc, coeff, i) => acc + coeff * x ** i, 0);
+  }
+  return NaN;
+}
+polyResiduals = polyData.map((d) => {
+  const fit = polyPredict(d.x);
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+polyMaxAbsResid = d3.max(polyResiduals, (d) => Math.abs(d.resid)) || 1;
+```
+
+```{ojs}
+//| echo: false
+
+polyTerms = Array.from({length: degree + 1}, (_, k) => {
+  if (k === 0) return `\\beta_{0}`;
+  if (k === 1) return `\\beta_{1} x`;
+  return `\\beta_{${k}} x^{${k}}`;
+}).join(" + ");
+
+html`<div style="text-align:center; margin: 0.5rem 0;">${tex`E[Y] = ${polyTerms}`}</div>`
+```
+
+```{ojs}
+polyYDomain = d3.extent([
+  ...polyData.map((d) => d.y),
+  ...polyCurve.map((d) => d.y),
+  ...polyResiduals.map((d) => d.fit)
+])
+
+Plot.plot({
+  marginLeft: 50,
+  height: 320,
+  x: {label: "Predictor (x)"},
+  y: {label: "Outcome (y)", domain: polyYDomain},
+  marks: [
+    Plot.link(polyResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / polyMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(polyData, {
+      x: "x",
+      y: "y",
+      r: 4,
+    }), 
+    Plot.line(polyCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2,
+    }),
+  ],
+});
+```
+:::
+
+Higher-order terms increase flexibility, but also increase the risk of fitting random noise rather than meaningful structure. We will return to this important issue later in the module.
+
+::: Note
+### The meaning of "linear" in linear models
+Even though higher-order models can model nonlinear relationships between the outcome and predictors, they are still **linear models** because each *parameter* enters additively. “Linearity” here refers to the parameters, *not* the shape of the fitted curve.
+:::
+
+### Fitting higher-order univariate models in R
+In R, higher-order polynomial terms can be included using the `I()` function to indicate 'as is' operations. For example, to fit a quadratic model:
+```{r}
+#| echo: true
+lm(y ~ x + I(x^2), data = nonlinearData)
+```
+or using the `poly()` function:
+```{r}
+#| echo: true
+lm(y ~ poly(x, 2), data = nonlinearData)
+```
+
+
+- [ ] Continue
+
+### Interaction Models with Continuous Predictors
+
+In @sec-slr we saw a multiple regression model with two continuous predictors: 
+
+$$
+E[Y] = \beta_0 + \beta_1X_1 + \beta_2X_2.
+$$
+
+This again is a first-order model - each predictor appears only once, 'as is'.  Of course, we can add higher-order terms for each predictor separately (e.g., $X_1^2$, $X_2^3$) to capture curvature in their individual effects as we did above.
+
+
+Now however, we can also consider a different form of higher order term: what happens when we multiply predictors together? This gives us an **interaction term** - a term that combines two (or more) predictors.  
+For two continuous predictors, the second-order interaction model is:
+
+::: Key-point
+### Second-order interaction model
+$$
+E[Y] = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_1X_2.
+$$
+:::
+
+If $\beta_3 = 0$ (i.e. as in the first-order model), predictors act *independently* of one another. If $\beta_3 \neq 0$, however, the effect on $E[Y]$ of changes in $X_1$ varies with $X_2$, and vice versa.
+
+::: Example
+#### Fitting an interaction model to the `advertising` dataset.
+If we recall our plot of the `advertising` dataset from @sec-mlr, our fist order linear model did not fit the data in particular ways:
+
+```{r}
+#| echo: true
+#| edit: false
+ads <- read.csv("Data/Advertising.csv")
+fit <- lm(Sales ~ TV + Radio, data = ads)
+```
+
+```{r}
+#| edit: false
+#| echo: false
+library(plotly)
+
+# Create grid for the plane
+tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 4)
+radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 4)
+grid   <- expand.grid(TV = tv_seq, Radio = radio_seq)
+grid$sales_hat <- predict(fit, newdata = grid)
+
+z_mat <- matrix(grid$sales_hat, nrow = length(tv_seq), ncol = length(radio_seq))
+
+# Plotly 3D scatter + plane
+fig <- plot_ly() |>
+  add_markers(
+    data = ads,
+    x = ~Radio, y = ~TV, z = ~Sales,
+    type = "scatter3d",
+    mode = "markers") |>
+  add_surface(
+    x = radio_seq,
+    y = tv_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "Radio"),
+      yaxis = list(title = "TV"),
+      zaxis = list(title = "Sales")
+    ),
+    showlegend = FALSE
+  ) 
+
+fig
+```
+The plane does not fit the data at the edges - it overestimates sales when either Radio or TV advertising is low (separately), but underestimates sales when both are high. This suggests that the effect of increasing one type of advertising depends on the level of the other type - an interaction effect. 
+
+We can fit a second-order interaction model to capture this:
+$$
+E[Sales] = \beta_0 + \beta_1TV + \beta_2Radio + \beta_3(TV \times Radio).
+$$
+
+```{r}
+#| echo: true
+#| edit: false
+fit_int <- lm(Sales ~ TV * Radio, data = ads)
+```
+
+```{r}
+#| edit: false
+#| echo: false
+
+# Fit least squares plane
+
+# Create grid for the plane
+tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 4)
+radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 4)
+grid   <- expand.grid(TV = tv_seq, Radio = radio_seq)
+grid$sales_hat <- predict(fit_int, newdata = grid)
+
+z_mat <- matrix(grid$sales_hat, nrow = length(tv_seq), ncol = length(radio_seq))
+
+# Plotly 3D scatter + plane
+fig <- plot_ly() |>
+  add_markers(
+    data = ads,
+    x = ~Radio, y = ~TV, z = ~Sales,
+    type = "scatter3d",
+    mode = "markers") |>
+  add_surface(
+    x = radio_seq,
+    y = tv_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "Radio"),
+      yaxis = list(title = "TV"),
+      zaxis = list(title = "Sales")
+    ),
+    showlegend = FALSE
+  ) 
+
+fig
+```
+
+The interaction effect can also be visualised by fixing one predictor and plotting the relationship between the other predictor and the outcome. The slope of this relationship changes depending on the fixed value, illustrating the interaction.
+```{r}
+
+```
+
+:::
+
+- [ ] Continue
+
+When our first order model has more than two predictors, we can include interaction terms between any pair (or more) of predictors. For example, with three predictors $X_1$, $X_2$, and $X_3$, a second-order interaction model would include interactions between each pair:
+$$
+E[Y] = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3 + \beta_4X_1X_2 + \beta_5X_1X_3 + \beta_6X_2X_3.
+$$
+
+
+#### Higher-order interaction models
+We can also consider higher-order interaction models that include products of three or more predictors. For example, a third-order interaction model with three predictors would include the three-way interaction term:
+$$
+E[Y] = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3 + \beta_4X_1X_2 + \beta_5X_1X_3 + \beta_6X_2X_3 + \beta_7X_1X_2X_3.
+$$
+This term captures how the interaction between two predictors changes depending on the level of the third predictor.
+
+As in the case of higher-order univariate models, we can extend this idea to include both higher-order interaction terms and higher-order univariate terms for each predictor, allowing for very flexible modeling of complex relationships.
+
+However, as before, increasing model complexity in this way raises the risk of overfitting and interpretability challenges, which we will discuss later in this module.
+---
+
+- [ ] Continue
+
+
+#### Fitting interaction models in R
+In R, interaction terms can be included using the `*` operator in the formula. For example, to fit a second-order interaction model with two predictors:
+```{r}
+#| echo: true
+lm(Y ~ X1 * X2, data = mydata)
+```
+This expands to include both main effects and the interaction term. To include only the interaction term without main effects, use the `:` operator:
+```{r}
+#| echo: true 
+#| edit: false
+lm(Y ~ X1:X2, data = mydata)
+```
+- [ ] Continue
+
+### Interaction Models with Categorical Predictors
+
+A categorical variable with $k$ levels is represented by $k-1$ dummy variables:
+$$
+E[Y] = \beta_0 + \beta_1X + \gamma_1D_1 + \dots + \gamma_{k-1}D_{k-1}.
+$$
+
+* Each $\gamma_j$ measures the difference between level $j$ and the baseline.
+* Changing the baseline changes interpretations but not fitted values.a
+
+Categorical predictors may also interact with continuous predictors:
+$$
+E[Y] = \beta_0 + \beta_1X + \gamma_1D_1 + \delta_1(XD_1),
+$$
+allowing each group to have its own slope.
+
+::: Note
+Earlier tools such as t-tests and one-way ANOVA are special cases of linear models with categorical predictors. Regression provides a unified framework that handles categorical, continuous, and interaction effects together.
+:::
+
+---
+
+## Assessing model fit and model complexity
+
+### Why not increase model complexity?
+
+Adding terms always reduces residual error numerically, but may:
+
+* Introduce unnecessary noise,
+* Create unstable estimates,
+* Reduce interpretability,
+* Increase sensitivity to outliers,
+* Encourage overfitting.
+
+A good model is **no more complex than necessary** to describe the main structure of the data.
+
+---
+
+### Multicollinearity
+
+Multicollinearity occurs when predictors are highly correlated, leading to:
+
+* Inflated standard errors,
+* Unstable coefficient estimates,
+* High sensitivity to small data changes.
+
+Diagnostics include:
+
+* Correlation matrices
+* Variance Inflation Factors (VIF)
+* Condition numbers
+
+::: Example
+If weight and engine displacement in a dataset are nearly perfectly correlated, including both may cause unstable coefficient signs and large standard errors.
+:::
+
+---
+
+### Fit Metrics
+
+#### $R^2$
+
+Proportion of variation explained by the model. Always increases when predictors are added.
+
+#### Adjusted $R^2$
+
+Penalises extra predictors. Increases only when a new term improves explanatory power beyond chance.
+
+#### Information Criteria: AIC, BIC
+
+AIC balances fit and complexity:
+$$
+\text{AIC} = -2\ell + 2k.
+$$
+BIC penalises complexity more heavily:
+$$
+\text{BIC} = -2\ell + k\log(n).
+$$
+Lower values indicate better trade-offs.
+
+::: Note
+AIC is often preferred for prediction-oriented modelling; BIC tends to select simpler models.
+:::
+
+---
+
+## Methods for building parsimonious models
+
+### Stepwise Regression
+
+Stepwise methods provide automated ways to search for simpler models.
+
+#### Forward Selection
+
+Begin with a minimal model (often the intercept). Add predictors one at a time when they improve AIC or adjusted $R^2$.
+
+#### Backward Selection
+
+Begin with a saturated model containing all candidate predictors. Remove predictors that do not meaningfully contribute.
+
+::: Note
+Stepwise procedures should be treated as **screening tools**, not definitive modelling strategies. Final model decisions should consider diagnostics, interpretability, and subject-matter knowledge.
+:::
+
+---
+
+## Exercises
+
+::: Exercise
+A scatterplot of $Y$ vs. $X$ shows curvature.
+
+1. Fit a straight-line model and inspect residuals.
+2. Fit a model including $X^2$.
+3. Compare AIC and adjusted $R^2$ between the models.
+4. Discuss whether the added complexity is justified.
+   :::
