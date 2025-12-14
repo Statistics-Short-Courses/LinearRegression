@@ -579,17 +579,15 @@ The interaction effect can also be visualised by fixing one predictor and plotti
 library(ggplot2)
 library(scales)
 
-# Create a color function matching the default ggplot gradient
 radio_colors <- col_numeric(
-
-palette = c("#132B43", "#56B1F7"),
+palette = "viridis",
 domain = range(ads$Radio)
 )
-# This uses the default ggplot2 continuous color scale
 
 ads |>
 ggplot(aes(x = TV, y = Sales, colour = Radio)) +
 geom_point() +
+scale_colour_viridis_c() +
 geom_abline(
 intercept = coef(ads_mod_int)[1],
 slope = coef(ads_mod_int)[2],
