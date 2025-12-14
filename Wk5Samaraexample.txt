@@ -1,0 +1,132 @@
+1 Samara example
+
+In autumn, small winged fruit called samara fall off maple trees, spinning as they go. A forest scientist studied the relationship between how fast they fell (Velocity) and their “disk loading” (Load), a quantity based on their size and weight. The samara disk loading is related to the aerodynamics of helicopters. Also in the dataset is the Tree the measurment was taken from. Here we are going to treat Tree and a qualitative variable. The data are in the file samara.csv. Your task for today is to determine if the rate of change in Velocity based on Load varies between Tree.
+
+Make sure you have your STAT210 or STAT410 project open and start a new R script. Name your new script something useful. EG Workshop 5 Regression pitfalls. Use the options() command from last week to set the number of significant figures and hide the significance stars in outputs. Finally, load the samara.csv data file and declare Tree as a factor.
+1.1 Exploratory analysis
+Produce an exploratory plot. What does this plot suggest about the research question?
+
+HINT: Look at the slopes of each line. Do these slopes look parallel for all trees?
+CHECK
+
+Having multiple groups of scatter and lines overlap like above is a little messy. So lets introduce a new part of the command in ggplot(), facet_grid(). What the command facet_grid() does is to separate your scatter and your lines into different panels based on some qualitative variable. In this case, Tree.
+
+library(ggplot2)
+ggplot(data=samara.df, aes(x=Load, y=Velocity)) +
+  geom_point(col="salmon", size=2) +
+  facet_grid(~Tree)+
+  geom_smooth(method="lm", se=FALSE)
+
+1.2 Fit models and determine the preferred model
+
+Lets look at three different model options to explain the relationship between Velocity, Load and Tree. From the variables we have to describe Velocity, we could fit:
+
+    Velocity changes based on Load and that this change is the same across all Trees. EG the first plot.
+
+Velocity^=β0+β1Load
+
+    Velocity changes based on Load and Tree has some additive effect. EG just the intercepts for the lines of the different trees change but the slopes are the same.
+
+Velocity^=β0+β1Load+β2Tree2+β3Tree3
+
+    Velocity changes based on Load and this change is different based on Tree. EG the slopes and intercepts of the lines for each tree change.
+
+Velocity^=β0+β1Load+β2Tree2+β3Tree3+β4Load∗Tree2+β5Load∗Tree3
+
+Note: We have decided not to fit polynomial terms as the relationship does not look bendy from the plots. We have also not fit a Tree only model, as from the plot it does appear that Velocity is changing in response to Load.
+
+Lets define these in Rstudio:
+
+mod1<-lm(Velocity~Load, data=samara.df)
+mod2<-lm(Velocity~Load+Tree, data=samara.df)
+mod3<-lm(Velocity~Load*Tree, data=samara.df)
+
+1.2.1 Comparing models using ANOVA() (p-values)
+
+We can compare these three models using ANOVA:
+
+anova(mod1, mod2, mod3)
+
+## Analysis of Variance Table
+## 
+## Model 1: Velocity ~ Load
+## Model 2: Velocity ~ Load + Tree
+## Model 3: Velocity ~ Load * Tree
+##   Res.Df   RSS Df Sum of Sq    F Pr(>F)
+## 1     33 0.215                         
+## 2     31 0.203  2    0.0113 0.99   0.38
+## 3     29 0.166  2    0.0379 3.33   0.05
+
+Remember that anova compare increasingly complex models. Here we can see that Model 2 does not explain signifcantly more variation in Velocity than model 1 (p=0.38>0.5). Also that model 3 does not explain signifcantly more variation in Velocity than model 2 (p=0.05>0.05) (Note the very close p-value!). This output suggests that change in Velocity based on Load is not different across the three trees.
+1.3 Comparing models using AIC and stepwise regression
+
+Lets use stepwise regression to see if the interaction should be retained in the model.
+
+AIC is a numerical metric of assessing model fit. It is calculated by trading off between model complexity and model selection. It maximises the explanation of the variation in the response while minimising the number of parameters. OR it gives the best fit to the data while using the least number of parameters. When comparing models using AIC, the model with the smallest value is the model which has the best fit to the data. In general if the difference between two models is less than 2, we can say that the two models are basically indistinguishable.
+
+There are some good points of view on the different methods of model comparison that you could read here. NOTE that we do not cover Bayes factor in this unit.
+
+In the lectures we used stepwise regression based on the principles of AIC to find a preferred model. Stepwise regression adds or removes individual parameters in a step by step procedure. AIC is used to determine if a 1 parameter more complex model is better than the reference model. The stepwise procedure stops when adding or removing a parameter does not lower the AIC any further.
+
+Lets look at this using the samara.df data. Here we have performed a forward stepwise procedure. EG adding parameters.
+
+The code is broken into 4 lines of code. The first two lines of code define the simplest and most complex model that you want to test. In this example, we want our simplest model to be an intercept only model (defined with the ~1) and our most complex to be an interaction model between Tree and Load. The third line of code defines the starting model. Becuase we are running a forward stepise, this starting model needs to be an intercept only model. The final line of code runs the stepwise procedure using the scope we defined in lines 1 and 2 and the starting model from lines 3. We also specify the direction here as “forward”.
+
+formL<-formula(~1, data=samara.df)
+formU<-formula(~Load*Tree, data=samara.df)
+start.mod.f<-lm(Velocity~1, data=samara.df)
+step.mod.f<-step(start.mod.f, scope=list(upper=formU, lower=formL), direction="forward")
+
+## Start:  AIC=-120
+## Velocity ~ 1
+## 
+##        Df Sum of Sq   RSS  AIC
+## + Load  1     0.844 0.215 -174
+## + Tree  2     0.539 0.519 -141
+## <none>              1.058 -120
+## 
+## Step:  AIC=-174
+## Velocity ~ Load
+## 
+##        Df Sum of Sq   RSS  AIC
+## <none>              0.215 -174
+## + Tree  2    0.0113 0.203 -172
+
+There are two steps to our stepwise procedure. In the first step, the AIC for the starting (intercept only) model is -120. The procedure has determined that a model including Load (AIC=-174) or Tree (AIC=-141) will reduce the AIC. However, since including Load reduced the AIC more than including Tree, the procedure has decided to add Load. In the second step, the model with Load has an AIC of -174. If Tree was to be added to the model, then the AIC value would increase to -172. In this case the procedure stops and determines that a model with just Load in it is the model that maximises the variation in the data while retaining the least number of parameters.
+
+There is a drawback with this method though. With the additive nature of the procedure, some terms may not be tested. In this example, we could not check the interaction between Load and Tree because the stepwise procedure determined that adding Tree would increase the AIC. Because the main effects of Tree and `Load were not both in the model, the stepwise procedure could test the addition of the interaction. If we want to specifically check the interaction, we should run a backwards stepwise instead.
+
+NOTE: We can reuse the first two lines of code from the forward stepwise because we haven’t changed the bounds of our model. We do need to change our starting model to the most complex model because with a backwards stepwise we are taking parameters out. Also the direction has changed to “backward”
+
+start.mod.b<-lm(Velocity~Load*Tree, data=samara.df)
+step.mod.b<-step(start.mod.b, scope=list(upper=formU, lower=formL), direction="backward")
+
+## Start:  AIC=-175
+## Velocity ~ Load * Tree
+## 
+##             Df Sum of Sq   RSS  AIC
+## <none>                   0.166 -175
+## - Load:Tree  2    0.0379 0.203 -172
+
+Here we just have the one step testing the interaction term. Removing the interaction term increases the AIC, which indicates that the interaction term should remain in the model. Despite the addition of the extra parameters, this model fits the Velocity data better.
+
+Using the two different stepwise procedures has now determined that two separate models are a good fit to the data. Is there a way to compare which of these two might be the better fit?
+
+Unlike ANOVA() where you need to compare models that differ by one parameter, AIC can be used to compare very different models. Lets calculate AIC for both models and see which has the smallest AIC value.
+
+NOTE: The way R calculates the AIC value in step() differs slightly to how it calculates the AIC value in AIC(). However, the concept of using the smallest AIC to determine the preferred models remains the same. If you want to know more about the difference in AIC calculation methods, you can run ?extractAIC.
+
+AIC(step.mod.b, step.mod.f)
+
+##            df   AIC
+## step.mod.b  7 -74.1
+## step.mod.f  3 -72.9
+
+#alternatively
+AIC(mod1,mod3)
+
+##      df   AIC
+## mod1  3 -72.9
+## mod3  7 -74.1
+
+The model determined by the backwards stepwise regression (or the third model) has the smallest AIC between them, so the model with the interaction is the better fit when modelling Velocity.
