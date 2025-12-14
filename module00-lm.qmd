@@ -56,13 +56,13 @@ In regression, we choose one variable $Y$ to treat as the **outcome** we want to
 
 A simple way to express this idea is
 
-$Y = f(x)$,
+$$Y = f(x)$$
 
 meaning that the value of $Y$ can be described by some function of $x$. If we knew this function exactly, and if the world behaved perfectly, then knowing $x$ would tell us everything about $Y$. Many physical laws look like this—for example, $E = mc^2$—but real data rarely follow a perfectly deterministic relationship.
 
 In practice, even when $x$ is held constant, repeated observations of $Y$ will vary. People respond differently, instruments fluctuate, biological systems are noisy, and experimental conditions change. To recognise this, statistical models include a **random error term**:
 
-$Y = f(x) + \varepsilon$.
+$$Y = f(x) + \varepsilon$$.
 
 Here, $\varepsilon$ represents natural variability: the part of $Y$ that our model does not or cannot explain. 
 
@@ -70,11 +70,11 @@ Here, $\varepsilon$ represents natural variability: the part of $Y$ that our mod
 
 To make our model concrete, we need to choose a form for the function $f(x)$. A natural starting point—because it is simple, interpretable, and surprisingly powerful—is a **linear function**:
 
-$f(x) = \alpha + \beta x$.
+$$ f(x) = \alpha + \beta x $$.
 
 This allows us to describe the **expected value** of $Y$ as
 
-$E[Y] = \alpha + \beta x$.
+$$ E[Y] = \alpha + \beta x $$
 
 This is the familiar straight-line relationship:  
 - $\alpha$ is the point where the line meets the vertical axis, and  

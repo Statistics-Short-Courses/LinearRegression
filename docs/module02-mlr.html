@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Multiple Linear Regression (MLR) – Linear Regression and Model Selection with R</title>
+<title>3&nbsp; Multiple Linear Regression (MLR) – Linear Regression and Model Selection with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -28037,25 +28037,25 @@ initializeRuntime();
 
 </script>
 <style>
-.Note {
---color1: #FFF9C4;
---color2: #FFEB3B;
-}
-.Exercise {
---color1: #C8E6C9;
---color2: #4CAF50;
-}
-.Assumption {
---color1: #FFCDD2;
---color2: #F44336;
+.Example {
+--color1: #BBDEFB;
+--color2: #2196F3;
 }
 .Key-point {
 --color1: #FFF9C4;
 --color2: #FFEB3B;
 }
-.Example {
---color1: #BBDEFB;
---color2: #2196F3;
+.Assumption {
+--color1: #FFCDD2;
+--color2: #F44336;
+}
+.Exercise {
+--color1: #C8E6C9;
+--color2: #4CAF50;
+}
+.Note {
+--color1: #FFF9C4;
+--color2: #FFEB3B;
 }
 </style>
 
@@ -28220,7 +28220,7 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module02-mlr.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module02-mlr.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -28248,43 +28248,43 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Course Overview</span></span></a>
+ <span class="menu-text">Course Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module00-lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module01-slr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module02-mlr.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -28298,15 +28298,24 @@ body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="t
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="3">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#when-to-extend-slr" id="toc-when-to-extend-slr" class="nav-link active" data-scroll-target="#when-to-extend-slr"><span class="header-section-number">3.1</span> When to extend SLR</a></li>
+  <li><a href="#the-multiple-linear-regression-model" id="toc-the-multiple-linear-regression-model" class="nav-link" data-scroll-target="#the-multiple-linear-regression-model"><span class="header-section-number">3.2</span> The multiple linear regression model</a></li>
+  <li><a href="#partial-regression-coefficients-beta_i" id="toc-partial-regression-coefficients-beta_i" class="nav-link" data-scroll-target="#partial-regression-coefficients-beta_i"><span class="header-section-number">3.3</span> Partial Regression Coefficients, <span class="math inline">\(\beta_i\)</span></a></li>
+  <li><a href="#the-f-test-for-model-model-usefulness.-and-measures-of-model-fit" id="toc-the-f-test-for-model-model-usefulness.-and-measures-of-model-fit" class="nav-link" data-scroll-target="#the-f-test-for-model-model-usefulness.-and-measures-of-model-fit"><span class="header-section-number">3.4</span> The F-Test for model model usefulness. : and measures of model fit</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></h1>
 </div>
 
 
@@ -28343,12 +28352,12 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 </script>
 </div>
 </div>
-<p>Most practical applications of linear regression require models more complex than the simple linear regression(SLR) model introduced in <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 2.4</span></a>. Multiple linear regression (MLR) extends simple linear regression by allowing <span class="math inline">\(Y\)</span> to depend on more than one predictor variable. This enables richer models and allows us to estimate the <em>partial</em> contribution of each predictor while accounting for others.</p>
+<p>Most practical applications of linear regression require models more complex than the simple linear regression(SLR) model introduced in <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a>. Multiple linear regression (MLR) extends simple linear regression by allowing <span class="math inline">\(Y\)</span> to depend on more than one predictor variable. This enables richer models and allows us to estimate the <em>partial</em> contribution of each predictor while accounting for others.</p>
 <ul class="task-list">
 <li><label><input type="checkbox">Continue</label></li>
 </ul>
-<section id="when-to-extend-slr" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="when-to-extend-slr"><span class="header-section-number">4.1</span> When to extend SLR</h2>
+<section id="when-to-extend-slr" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="when-to-extend-slr"><span class="header-section-number">3.1</span> When to extend SLR</h2>
 <p>SLR is limited to one predictor. MLR becomes appropriate when:</p>
 <ul>
 <li>Multiple factors plausibly influence the response.</li>
@@ -28447,9 +28456,9 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJwbG90
 <li><label><input type="checkbox">Continue</label></li>
 </ul>
 </section>
-<section id="the-multiple-linear-regression-model" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="the-multiple-linear-regression-model"><span class="header-section-number">4.2</span> The multiple linear regression model</h2>
-<p>The multiple linear model extends the simple linear model from <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 2.4</span></a> straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter:</p>
+<section id="the-multiple-linear-regression-model" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="the-multiple-linear-regression-model"><span class="header-section-number">3.2</span> The multiple linear regression model</h2>
+<p>The multiple linear model extends the simple linear model from <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> straightforwardly by adding the extra variables to the deterministic linear predictor, each with its own parameter:</p>
 <div id="the-mlr-model" class="Key-point" title="The MLR model">
 <p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point: </strong>The MLR model</summary><div><span class="math display">\[
 Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilon \sim N(0,\sigma^2)
@@ -28489,8 +28498,8 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJcbiMg
 <li><label><input type="checkbox">Continue</label></li>
 </ul>
 </section>
-<section id="partial-regression-coefficients-beta_i" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="partial-regression-coefficients-beta_i"><span class="header-section-number">4.3</span> Partial Regression Coefficients, <span class="math inline">\(\beta_i\)</span></h2>
+<section id="partial-regression-coefficients-beta_i" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="partial-regression-coefficients-beta_i"><span class="header-section-number">3.3</span> Partial Regression Coefficients, <span class="math inline">\(\beta_i\)</span></h2>
 <p>Even though our model is no longer just a straight line, the <em>slope</em> interpretation from SLR is still relevant in MLR. Now however, <span class="math inline">\(\beta_i\)</span> describes the expected change in the mean response for a one-unit increase in <span class="math inline">\(x_i\)</span>, <strong>holding all other predictors constant</strong>.</p>
 <div id="interpreting-a-partial-coefficient-beta_i" class="Example" title="Interpreting a partial coefficient, \beta_i">
 <details class="Example fbx-simplebox fbx-default" open=""><summary><strong>Example 2: </strong>Interpreting a partial coefficient, <span class="math inline">\(\beta_i\)</span></summary><div>
@@ -28534,8 +28543,8 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIn0=
 </div>
 </div></details>
 </div>
-<section id="fitting-mlr-models-in-r" class="level3">
-<h3 class="anchored" data-anchor-id="fitting-mlr-models-in-r">Fitting MLR Models in R</h3>
+<section id="fitting-mlr-models-in-r" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="fitting-mlr-models-in-r"><span class="header-section-number">3.3.1</span> Fitting MLR Models in R</h3>
 <p>Fitting a multiple linear regression uses the exact same conceptual process from <span class="quarto-unresolved-ref">?sec-leastsquares</span>: residuals are still defined <span class="math inline">\(e = Y- \hat{Y}\)</span>, and minimising the sum of squared residuals provides optimal and unique <em>least squares estimates</em> for the model parameters <span class="math inline">\(\hat{\beta}_0, \ldots, \hat{\beta}_k\)</span>.</p>
 <p>In <code>R</code> we use the same <code>lm()</code> function as SLR (these are both ‘linear models’, after all). Now however, the model <code>formula</code> includes both predictors on the RHS, separated by a <code>+</code>:</p>
 <div class="cell">
@@ -28609,8 +28618,8 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZ2dwbG90KGFkcykrXG4gIGFl
 </div></details>
 </div>
 </section>
-<section id="broomtidy" class="level3">
-<h3 class="anchored" data-anchor-id="broomtidy"><code>broom::tidy()</code></h3>
+<section id="broomtidy" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="broomtidy"><span class="header-section-number">3.3.2</span> <code>broom::tidy()</code></h3>
 <p>We can also use the <code>tidy()</code> function from the <code>broom</code> package for a nice summary of the relevant inferential statistics for each parameter:</p>
 <div class="cell" data-edit="false">
 <div>
@@ -28650,8 +28659,8 @@ t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
 </div>
 </section>
 </section>
-<section id="the-f-test-for-model-model-usefulness.-and-measures-of-model-fit" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="the-f-test-for-model-model-usefulness.-and-measures-of-model-fit"><span class="header-section-number">4.4</span> The F-Test for model model usefulness. : and measures of model fit</h2>
+<section id="the-f-test-for-model-model-usefulness.-and-measures-of-model-fit" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="the-f-test-for-model-model-usefulness.-and-measures-of-model-fit"><span class="header-section-number">3.4</span> The F-Test for model model usefulness. : and measures of model fit</h2>
 <p>Having multiple predictor variables expands the scope of the kind of questions we can ask about our linear model. Rather than looking at each coefficient separately, we can ask whether our model <em>as a whole</em> is effective in explaining the outcome <span class="math inline">\(Y\)</span> In other words, is the combined contribution of the predictors enough to conclude that a linear relationship exists?</p>
 <p>Formally, the global hypothesis test is:</p>
 <ul>
@@ -28683,8 +28692,8 @@ If the model truly explains some structure in the data, MSR will be noticeably l
 <p></p><details class="Exercise fbx-simplebox fbx-default" open=""><summary><strong>Exercise 3</strong></summary><div>Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.<p></p>
 </div></details>
 </div>
-<section id="global-statistics-with-anova" class="level4">
-<h4 class="anchored" data-anchor-id="global-statistics-with-anova">global statistics with <code>anova()</code></h4>
+<section id="global-statistics-with-anova" class="level4" data-number="3.4.0.1">
+<h4 data-number="3.4.0.1" class="anchored" data-anchor-id="global-statistics-with-anova"><span class="header-section-number">3.4.0.1</span> global statistics with <code>anova()</code></h4>
 <p>We can obtain the model F-statistic using the <code>anova()</code> function, which reinforces the connection between regression and the ANOVA framework introduced earlier.</p>
 <div class="cell">
 <div>
@@ -28698,8 +28707,8 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiYW5vdmEobW9kKSJ9
 </div>
 <p>The final row of the ANOVA table reports the global F-test for the model.</p>
 </section>
-<section id="global-statistics-with-glance" class="level4">
-<h4 class="anchored" data-anchor-id="global-statistics-with-glance">global statistics with <code>glance()</code></h4>
+<section id="global-statistics-with-glance" class="level4" data-number="3.4.0.2">
+<h4 data-number="3.4.0.2" class="anchored" data-anchor-id="global-statistics-with-glance"><span class="header-section-number">3.4.0.2</span> global statistics with <code>glance()</code></h4>
 <p>The <code>glance()</code> function from the <code>broom</code> package also reports the model F-statistic while providing several additional summary measures in one place.</p>
 <div class="cell">
 <div>
@@ -28713,12 +28722,12 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZ2xhbmNlKG1vZCkifQ==
 </div>
 <p>This output includes several global model features besides the global test statistic and p-value.</p>
 </section>
-<section id="adjusted-r2" class="level3">
-<h3 class="anchored" data-anchor-id="adjusted-r2">Adjusted <span class="math inline">\(R^2\)</span></h3>
+<section id="adjusted-r2" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="adjusted-r2"><span class="header-section-number">3.4.1</span> Adjusted <span class="math inline">\(R^2\)</span></h3>
 <p>Once we have established that the model is useful overall, we can quantify <em>how much</em> of the variation in <span class="math inline">\(Y\)</span> it explains. The measure <span class="math inline">\(R^2\)</span> was introduced in SLR and extends naturally to MLR In multiple regression, <span class="math inline">\(R^2\)</span> plays the same descriptive role, but its interpretation changes subtly because the model now includes several predictors.</p>
 </section>
-<section id="r2-in-multiple-regression" class="level3">
-<h3 class="anchored" data-anchor-id="r2-in-multiple-regression"><span class="math inline">\(R^2\)</span> in Multiple Regression</h3>
+<section id="r2-in-multiple-regression" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="r2-in-multiple-regression"><span class="header-section-number">3.4.2</span> <span class="math inline">\(R^2\)</span> in Multiple Regression</h3>
 <p>We define <span class="math display">\[
 R^2 = 1 - \frac{\text{SSE}}{\text{SST}},
 \]</span> exactly as before. The difference lies in what <span class="math inline">\(R^2\)</span> represents:</p>
@@ -28728,8 +28737,8 @@ R^2 = 1 - \frac{\text{SSE}}{\text{SST}},
 </ul>
 <p>Because adding a new predictor can never increase SSE, it follows that <strong><span class="math inline">\(R^2\)</span> can never decrease when more predictors are added</strong>, even if the new predictor has little or no real relationship with the response. For this reason, <span class="math inline">\(R^2\)</span> is not reliable for comparing models with different numbers of predictors.</p>
 </section>
-<section id="adjusted-r2-1" class="level3">
-<h3 class="anchored" data-anchor-id="adjusted-r2-1">Adjusted <span class="math inline">\(R^2\)</span></h3>
+<section id="adjusted-r2-1" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="adjusted-r2-1"><span class="header-section-number">3.4.3</span> Adjusted <span class="math inline">\(R^2\)</span></h3>
 <p>To address the fact that <span class="math inline">\(R^2\)</span> is overly optimistic in larger models, we use the <em>adjusted coefficient of determination</em>: <span class="math display">\[
 R^2_{\text{adj}} = 1 -\frac{\text{SSE}/(n - k - 1)}{\text{SST}/(n - 1)}.
 \]</span></p>
@@ -28746,8 +28755,8 @@ R^2_{\text{adj}} = 1 -\frac{\text{SSE}/(n - k - 1)}{\text{SST}/(n - 1)}.
 </ul>
 <p>This completes our introduction to multiple linear regression: we now have a model with several predictors, an interpretation for its coefficients, and tools to judge whether the model is useful and how well it fits the data.</p>
 </section>
-<section id="other-model-fit-statistics-loglikelihood-aic-and-bic" class="level3">
-<h3 class="anchored" data-anchor-id="other-model-fit-statistics-loglikelihood-aic-and-bic">Other model fit statistics: logLikelihood, AIC, and BIC</h3>
+<section id="other-model-fit-statistics-loglikelihood-aic-and-bic" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="other-model-fit-statistics-loglikelihood-aic-and-bic"><span class="header-section-number">3.4.4</span> Other model fit statistics: logLikelihood, AIC, and BIC</h3>
 <p>The <code>glance()</code> output also includes two additional quantities: <strong>AIC</strong> (Akaike Information Criterion) and <strong>BIC</strong> (Bayesian Information Criterion).<br>
 Although they appear alongside the F-statistic and <span class="math inline">\(R^2\)</span>, they serve a different purpose.</p>
 <p>AIC and BIC are <strong>not</strong> measures of how well a single model fits the data in an absolute sense.<br>

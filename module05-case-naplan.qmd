@@ -1,9 +1,9 @@
 ---
-title: "Case Study: NAPLAN Reading Scores"
 format:
   live-html:
     toc: true
 ---
+# Regression Case Study: NAPLAN Reading Scores
 
 ## Defining the research question
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Regression Pitfalls and Diagnostics – Linear Regression and Model Selection with R</title>
+<title>5&nbsp; Regression Pitfalls and Diagnostics – Linear Regression and Model Selection with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -151,7 +151,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module04-regression-pitfalls-diagnostics.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./module04-regression-pitfalls-diagnostics.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -179,43 +179,43 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Course Overview</span></span></a>
+ <span class="menu-text">Course Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module00-lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module01-slr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module02-mlr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -229,15 +229,27 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="3">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#common-pitfalls-to-avoid" id="toc-common-pitfalls-to-avoid" class="nav-link active" data-scroll-target="#common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</a></li>
+  <li><a href="#residual-plots-vs-predictors-and-fitted-values" id="toc-residual-plots-vs-predictors-and-fitted-values" class="nav-link" data-scroll-target="#residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</a></li>
+  <li><a href="#diagnosing-nonconstant-variance-and-nonlinearity" id="toc-diagnosing-nonconstant-variance-and-nonlinearity" class="nav-link" data-scroll-target="#diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</a></li>
+  <li><a href="#assessing-normality-of-residuals" id="toc-assessing-normality-of-residuals" class="nav-link" data-scroll-target="#assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</a></li>
+  <li><a href="#standardised-residuals-leverage-cooks-distance" id="toc-standardised-residuals-leverage-cooks-distance" class="nav-link" data-scroll-target="#standardised-residuals-leverage-cooks-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</a></li>
+  <li><a href="#transformations-including-boxcox" id="toc-transformations-including-boxcox" class="nav-link" data-scroll-target="#transformations-including-boxcox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</a></li>
+  <li><a href="#handling-outliers-and-influential-observations" id="toc-handling-outliers-and-influential-observations" class="nav-link" data-scroll-target="#handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling outliers and influential observations</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></h1>
 </div>
 
 
@@ -254,8 +266,8 @@ window.Quarto = {
 </header>
 
 
-<section id="common-pitfalls-to-avoid" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">6.1</span> Common pitfalls to avoid</h2>
+<section id="common-pitfalls-to-avoid" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</h2>
 <ul>
 <li>Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.</li>
 <li>Extrapolating far beyond observed predictor ranges can explode predictions.</li>
@@ -263,8 +275,8 @@ window.Quarto = {
 <li>Unchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.</li>
 </ul>
 </section>
-<section id="residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">6.2</span> Residual plots vs predictors and fitted values</h2>
+<section id="residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</h2>
 <ul>
 <li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#gloss-residual">residual</a>).</li>
 </ul>
@@ -283,14 +295,14 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="diagnosing-nonconstant-variance-and-nonlinearity" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">6.3</span> Diagnosing nonconstant variance and nonlinearity</h2>
+<section id="diagnosing-nonconstant-variance-and-nonlinearity" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</h2>
 <ul>
 <li>Funnel shapes or curved trends in residual plots suggest heteroskedasticity or missing curvature; consider transformations or adding interactions/polynomials.</li>
 </ul>
 </section>
-<section id="assessing-normality-of-residuals" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="assessing-normality-of-residuals"><span class="header-section-number">6.4</span> Assessing normality of residuals</h2>
+<section id="assessing-normality-of-residuals" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</h2>
 <ul>
 <li>Use Q-Q plots and compare <span class="math inline">\(t\)</span>- and <span class="math inline">\(p\)</span>-values to Normal reference.</li>
 </ul>
@@ -305,8 +317,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="standardised-residuals-leverage-cooks-distance" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="standardised-residuals-leverage-cooks-distance"><span class="header-section-number">6.5</span> Standardised residuals, leverage, Cook’s distance</h2>
+<section id="standardised-residuals-leverage-cooks-distance" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="standardised-residuals-leverage-cooks-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</h2>
 <ul>
 <li>Standardised (or studentised) residuals scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).</li>
 <li>Leverage (<code>hatvalues()</code>) flags unusual predictor combinations (<a href="glossary.html#gloss-leverage">leverage</a>).</li>
@@ -326,8 +338,8 @@ Hornet Sportabout  0.4688483 0.07867173 0.004827051</code></pre>
 </div>
 </div>
 </section>
-<section id="transformations-including-boxcox" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="transformations-including-boxcox"><span class="header-section-number">6.6</span> Transformations including Box–Cox</h2>
+<section id="transformations-including-boxcox" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="transformations-including-boxcox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</h2>
 <ul>
 <li>Transformations can stabilise variance or linearise relationships; for strictly positive <span class="math inline">\(Y\)</span>, consider <a href="glossary.html#gloss-box-cox">Box–Cox transformations</a> to guide power choices.</li>
 </ul>
@@ -342,8 +354,8 @@ Hornet Sportabout  0.4688483 0.07867173 0.004827051</code></pre>
 </div>
 </div>
 </section>
-<section id="handling-outliers-and-influential-observations" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="handling-outliers-and-influential-observations"><span class="header-section-number">6.7</span> Handling outliers and influential observations</h2>
+<section id="handling-outliers-and-influential-observations" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling outliers and influential observations</h2>
 <ul>
 <li>Investigate data quality first (entry errors, unusual units).</li>
 <li>If influential points are real, fit with and without them to assess robustness; report how conclusions change.</li>

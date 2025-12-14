@@ -3,7 +3,7 @@ format: live-html
 ---
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-# Course Overview
+# Course Overview {.unnumbered}
 
 
 ## What you will learn

@@ -19,10 +19,10 @@ format:
   live-html:
     toc: true
     number-sections: true
-    toc-depth: 1
-    toc-expand: 2
+    toc-depth: 2
+    toc-expand: 3
     toc-title: Contents
-    number-depth: 2
+    number-depth: 4
 
 css: 
  - include/webex.css
