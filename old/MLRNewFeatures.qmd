@@ -1,0 +1,126 @@
+---
+format: 
+  live-html:
+    toc: true
+
+engine: knitr
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
+embed-resources: true
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+# Adding new variables
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(plotly)
+library(dplyr)
+
+# Example data (replace with your own)
+set.seed(1)
+n  <- 50
+dat <- data.frame(
+  x1 = runif(n, 0, 10),
+  x2 = runif(n, 0, 10)
+)
+dat$y <- 3 + 2*dat$x1 - 1.5*dat$x2 + rnorm(n, 0, 3)
+
+# Fit least squares plane
+fit <- lm(y ~ x1 + x2, data = dat)
+
+# Create grid for the plane
+x1_seq <- seq(min(dat$x1), max(dat$x1), length.out = 30)
+x2_seq <- seq(min(dat$x2), max(dat$x2), length.out = 30)
+grid   <- expand.grid(x1 = x1_seq, x2 = x2_seq)
+grid$yhat <- predict(fit, newdata = grid)
+
+z_mat <- matrix(grid$yhat, nrow = length(x1_seq), ncol = length(x2_seq))
+
+# Plotly 3D scatter + plane
+fig <- plot_ly() |>
+  add_markers(
+    data = dat,
+    x = ~x1, y = ~x2, z = ~y,
+    type = "scatter3d",
+    mode = "markers",
+    name = "Data"
+  ) |>
+  add_surface(
+    x = x1_seq,
+    y = x2_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "x1"),
+      yaxis = list(title = "x2"),
+      zaxis = list(title = "y")
+    )
+  )
+
+fig
+```
+## Quantitative predictors
+
+### Key topics to emphasise
+
+- Clarify the meaning of partial regression coefficients as “holding other variables constant.”
+- Discuss the role of centred and standardised predictors for interpretability and numerical stability.
+
+
+### Potential examples
+
+- Fit a model predicting fuel efficiency (e.g., `mtcars` data) from engine size, weight, and horsepower to show competing effects.
+- Contrast models with raw vs. centred predictors to illustrate interpretational differences.
+
+### Potential exercises
+
+- interpret the coefficient of weight before and after centring.
+- build a scatterplot matrix to hypothesise relationships among continuous predictors before modelling.
+
+### Multi-collinearity
+
+#### Key topics to emphasise
+
+- Define variance inflation factors (VIFs) and tolerance as diagnostic tools.
+- Explain why multicollinearity inflates standard errors and complicates inference.
+- Highlight remedial strategies: collecting more data, combining variables, or using regularisation methods.
+
+#### Potential examples
+
+- Demonstrate high correlation between horsepower and displacement in the `mtcars` dataset and show the impact on coefficient estimates.
+- Compare model outputs before and after removing a redundant predictor.
+
+#### Potential exercises
+
+- Provide correlation matrices and ask learners to flag problematic pairs of predictors.
+- Have learners compute VIFs for a fitted model and interpret which predictors require attention.
+
+## Qualitative predictors
+
+### Key topics to emphasise
+
+- Review dummy (indicator) coding and how the choice of reference category affects interpretation.
+- Explain how to include categorical predictors with more than two levels using treatment or sum coding.
+- Introduce the concept of adjusted means when controlling for other predictors.
+
+### Potential examples
+
+- Model exam scores using study hours (continuous) and teaching method (categorical) to illustrate contrasts.
+- Show how to interpret coefficients when switching the reference category.
+
+### Potential exercises
+
+- encode a three-level categorical variable manually and verify with software output.
+- Provide regression results and have learners translate coefficients into comparisons between categories.

@@ -1,0 +1,329 @@
+WELLID	UNION	VILLAGE	LATITUDE	LONGITUDE	DEPTH-FT	YEAR	KIT-COLOR	ARSENIC
+10	Araihazar	Krishnapura	23.7887	90.6522	60	1992	Red	331
+14	Araihazar	Krishnapura	23.7886	90.6523	45	1998	Red	302
+30	Araihazar	Krishnapura	23.7880	90.6517	45	1995	Red	193
+59	Araihazar	Krishnapura	23.7893	90.6525	125	1973	Red	232
+85	Duptara	Hatkholapara	23.7920	90.6140	150	1997	Green	19
+196	Brahmandi	Narindi	23.7817	90.6250	60	1993	Green	33
+197	Brahmandi	Narindi	23.7816	90.6250	55	1998	Green	2
+199	Brahmandi	Narindi	23.7819	90.6248	46	1984	Green	1
+201	Brahmandi	Narindi	23.7822	90.6246	60	1996	Green	23
+220	Brahmandi	Narindi	23.7816	90.6246	60	1998	Red	111
+346	Brahmandi	Sulpandi	23.7797	90.6180	30	1987	Red	92
+351	Brahmandi	Sulpandi	23.7795	90.6179	45	1993	Red	114
+352	Brahmandi	Sulpandi	23.7796	90.6175	40	1998	Red	74
+429	Brahmandi	Silmandi	23.7651	90.6176	130	1980	Red	276
+441	Brahmandi	Silmandi	23.7654	90.6168	45	1995	Green	35
+442	Brahmandi	Silmandi	23.7655	90.6164	65	1995	Red	65
+457	Brahmandi	Silmandi	23.7654	90.6156	40	1993	Green	15
+546	Duptara	Nagarpara	23.7925	90.6099	120	1997	Green	27
+552	Duptara	Nagarpara	23.7939	90.6099	120	1995	Green	25
+555	Duptara	Nagarpara	23.7932	90.6102	60	1992	Green	12
+561	Duptara	Nagarpara	23.7945	90.6096	110	1999	Green	21
+576	Duptara	Kumarpara	23.7970	90.6107	80	1997	Green	1
+577	Duptara	Kumarpara	23.7967	90.6108	110	1995	Green	1
+578	Duptara	Kumarpara	23.7965	90.6109	120	1994	Green	1
+580	Duptara	Kumarpara	23.7963	90.6111	150	1996	Green	1
+581	Duptara	Kumarpara	23.7961	90.6110	120	1992	Green	1
+607	Duptara	Girda	23.7970	90.6081	65	1991	Red	122
+608	Duptara	Girda	23.7973	90.6081	75	1988	Red	135
+621	Duptara	Girda	23.7966	90.6087	80	1985	Red	112
+625	Duptara	Girda	23.7958	90.6081	95	1999	Green	2
+630	Duptara	Nagarpara	23.7942	90.6088	95	1992	Green	1
+750	Duptara	Tingaon	23.7878	90.6009	120	1990	Green	1
+751	Duptara	Tingaon	23.7881	90.6011	120	1986	Green	1
+752	Duptara	Tingaon	23.7881	90.6008	120	1987	Green	1
+769	Duptara	Kumarpara	23.7982	90.6107	150	1986	Green	3
+771	Duptara	Kumarpara	23.7989	90.6099	35	1995	Green	6
+784	Duptara	Kumarpara	23.8000	90.6100	165	1993	Green	1
+794	Duptara	Kumarpara	23.8002	90.6109	170	1994	Green	2
+802	Araihazar	Jhaugara	23.7882	90.6451	35	1992	Red	75
+811	Araihazar	Jhaugara	23.7873	90.6453	100	1976	Red	176
+818	Araihazar	Jhaugara	23.7857	90.6450	70	1970	Red	131
+820	Araihazar	Jhaugara	23.7856	90.6455	45	1991	Red	111
+821	Araihazar	Jhaugara	23.7855	90.6451	35	1990	Red	160
+839	Araihazar	Lakhupura	23.7826	90.6367	50	1995	Red	194
+849	Araihazar	Lakhupura	23.7824	90.6365	70	1997	Red	178
+948	Brahmandi	Baylarkandi	23.7804	90.6384	46	1989	Red	333
+949	Brahmandi	Baylarkandi	23.7805	90.6383	45	1994	Red	207
+954	Brahmandi	Baylarkandi	23.7801	90.6381	75	1987	Red	134
+955	Brahmandi	Baylarkandi	23.7801	90.6379	46	1997	Red	302
+957	Brahmandi	Baylarkandi	23.7800	90.6376	45	1992	Red	379
+1008	Brahmandi	Bara Manohardi	23.7848	90.6148	45	1998	Green	45
+1015	Brahmandi	Bara Manohardi	23.7850	90.6158	45	1994	Green	45
+1018	Brahmandi	Bara Manohardi	23.7850	90.6158	45	1997	Red	50
+1020	Brahmandi	Bara Manohardi	23.7847	90.6158	45	1999	Green	35
+1022	Brahmandi	Bara Manohardi	23.7845	90.6157	45	1991	Green	35
+1054	Brahmandi	Choto Manohardi	23.7809	90.6164	45	1998	Green	1
+1055	Brahmandi	Choto Manohardi	23.7804	90.6163	60	1999	Red	121
+1077	Brahmandi	Choto Manohardi	23.7806	90.6168	45	1997	Red	78
+1082	Brahmandi	Laskardi	23.7768	90.6163	25	2001	Red	58
+1083	Brahmandi	Laskardi	23.7768	90.6164	120	1995	Red	109
+1097	Brahmandi	Laskardi	23.7774	90.6178	32	1998	Green	51
+1111	Brahmandi	Laskardi	23.7780	90.6186	32	1995	Green	54
+1122	Brahmandi	Laskardi	23.7773	90.6158	45	1990	Green	1
+1123	Brahmandi	Laskardi	23.7773	90.6156	40	1993	Green	2
+1124	Brahmandi	Laskardi	23.7773	90.6154	40	1991	Green	1
+1125	Brahmandi	Laskardi	23.7772	90.6153	60	1990	Green	2
+1126	Brahmandi	Laskardi	23.7772	90.6153	70	1993	Green	1
+1201	Brahmandi	Laskardi	23.7763	90.6164	36	1990	Green	44
+1208	Brahmandi	Laskardi	23.7753	90.6128	55	1991	Red	58
+1222	Brahmandi	Laskardi	23.7753	90.6128	35	1998	Green	30
+1242	Brahmandi	Laskardi	23.7761	90.6125	55	1999	Green	6
+1243	Brahmandi	Laskardi	23.7759	90.6124	35	1995	Green	3
+1249	Brahmandi	Laskardi	23.7762	90.6124	120	1996	Green	18
+1336	Brahmandi	Laskardi	23.7736	90.6044	40	1996	Green	12
+1348	Brahmandi	Laskardi	23.7732	90.6033	45	1999	Green	29
+1355	Brahmandi	Laskardi	23.7720	90.6031	45	1994	Green	6
+1360	Brahmandi	Laskardi	23.7722	90.6043	65	1999	Red	67
+1370	Brahmandi	Laskardi	23.7719	90.6029	45	*	Green	10
+1376	Brahmandi	Laskardi	23.7718	90.6027	40	1997	Green	1
+1378	Brahmandi	Laskardi	23.7715	90.6032	45	1994	Green	25
+1381	Brahmandi	Laskardi	23.7713	90.6026	55	1994	Green	44
+1393	Brahmandi	Laskardi	23.7697	90.6022	45	1999	Green	4
+1430	Brahmandi	Pajardia	23.7669	90.6036	36	1999	Red	89
+1494	Duptara	Monohar	23.7999	90.6218	60	1993	Green	44
+1496	Duptara	Monohar	23.8002	90.6219	60	1999	Green	46
+1505	Duptara	Monohar	23.7996	90.6234	75	1992	Green	27
+1506	Duptara	Monohar	23.7995	90.6234	75	1992	Green	24
+1507	Duptara	Monohar	23.7994	90.6234	75	1995	Green	24
+1584	Araihazar	Lakhupura	23.7823	90.6367	70	1990	Red	114
+1604	Brahmandi	Choto Binarchar	23.7894	90.6324	45	1999	Red	201
+1621	Brahmandi	Chota Binarchar	23.7886	90.6356	60	1998	Red	265
+1645	Brahmandi	Chota Binarchar	23.7892	90.6366	45	1990	Red	287
+1646	Brahmandi	Chota Binarchar	23.7891	90.6371	70	1995	Red	229
+1652	Brahmandi	Chota Binarchar	23.7889	90.6372	60	1996	Red	195
+1712	Brahmandi	Digaldi	23.7838	90.6292	75	1995	Green	28
+1716	Brahmandi	Digaldi	23.7833	90.6295	37	1987	Green	15
+1717	Brahmandi	Digaldi	23.7831	90.6295	45	1996	Green	25
+1718	Brahmandi	Digaldi	23.7833	90.6298	52	1990	Red	144
+1719	Brahmandi	Digaldi	23.7837	90.6297	50	1991	Green	14
+1802	Brahmandi	Dhar Maruadi	23.7780	90.6312	36	1998	Green	27
+1836	Brahmandi	Dhar Maruadi	23.7761	90.6326	40	1994	Red	229
+1843	Brahmandi	Dhar Maruadi	23.7799	90.6307	35	1999	Green	61
+1847	Brahmandi	Brahmandi	23.7754	90.6354	45	1999	Red	269
+1848	Brahmandi	Brahmandi	23.7753	90.6357	60	1995	Red	241
+1861	Brahmandi	Brahmandi	23.7749	90.6360	90	1998	Red	544
+1863	Brahmandi	Dhar Maruadi	23.7757	90.6298	45	1999	Green	36
+1916	Brahmandi	Maruadi	23.7720	90.6296	40	2001	Green	18
+1917	Brahmandi	Maruadi	23.7716	90.6297	60	1999	Green	5
+1918	Brahmandi	Maruadi	23.7717	90.6296	45	1992	Green	25
+1919	Brahmandi	Maruadi	23.7716	90.6296	55	1973	Red	109
+1920	Brahmandi	Maruadi	23.7714	90.6295	45	1999	Green	28
+2047	Brahmandi	Fausa	23.7693	90.6247	50	1996	Green	17
+2048	Brahmandi	Fausa	23.7694	90.6246	46	2000	Green	51
+2078	Brahmandi	Fausa	23.7689	90.6217	45	1978	Red	65
+2129	Brahmandi	Silmandi	23.7641	90.6195	45	1994	Green	39
+2219	Brahmandi	Edbardi	23.7547	90.6121	200	1997	Green	1
+2220	Brahmandi	Edbardi	23.7549	90.6121	160	1995	Red	231
+2223	Brahmandi	Edbardi	23.7547	90.6120	60	1990	Red	225
+2224	Brahmandi	Edbardi	23.7550	90.6123	50	1999	Green	36
+2225	Brahmandi	Edbardi	23.7552	90.6121	80	1988	Red	89
+2228	Brahmandi	Edbardi	23.7556	90.6114	50	*	Red	99
+2229	Brahmandi	Edbardi	23.7559	90.6115	35	1993	Red	126
+2230	Brahmandi	Edbardi	23.7559	90.6112	50	1973	Red	154
+2232	Brahmandi	Edbardi	23.7556	90.6109	60	1992	Red	128
+2290	Brahmandi	Edbardi	23.7559	90.6106	45	1995	Red	129
+2505	Brahmandi	Ujan Gobindi	23.7880	90.6188	45	1983	Green	153
+2506	Brahmandi	Ujan Gobindi	23.7881	90.6188	45	1998	Red	142
+2509	Brahmandi	Ujan Gobindi	23.7878	90.6191	50	1997	Green	201
+2510	Brahmandi	Ujan Gobindi	23.7878	90.6190	60	1973	Green	156
+2642	Brahmandi	Ujan  Gobindi	23.7897	90.6264	50	1997	Red	202
+2646	Brahmandi	Ujan  Gobindi	23.7901	90.6260	50	1993	Green	92
+2647	Brahmandi	Ujan  Gobindi	23.7901	90.6259	50	1995	Green	81
+2659	Brahmandi	Ujan  Gobindi	23.7907	90.6259	50	1995	Green	42
+2670	Brahmandi	Ujan  Gobindi	23.7908	90.6265	55	1993	Red	114
+2671	Brahmandi	Ujan  Gobindi	23.7907	90.6268	60	1993	Red	216
+2673	Brahmandi	Ujan  Gobindi	23.7904	90.6268	50	1993	Red	150
+2693	Brahmandi	Digaldi	23.7799	90.6276	45	1996	Red	140
+2694	Brahmandi	Digaldi	23.7797	90.6274	75	1975	Red	129
+2695	Brahmandi	Digaldi	23.7797	90.6272	45	1998	Red	73
+2696	Brahmandi	Digaldi	23.7798	90.6270	45	1987	Green	1
+2697	Brahmandi	Digaldi	23.7797	90.6269	45	1994	Green	48
+2808	Brahmandi	Bara Binairchar	23.7927	90.6226	45	1998	Red	55
+2809	Brahmandi	Bara Binairchar	23.7927	90.6233	110	1993	Green	98
+2811	Brahmandi	Bara Binairchar	23.7926	90.6233	72	1997	Red	43
+2812	Brahmandi	Bara Binairchar	23.7926	90.6236	52	1997	Green	20
+2857	Brahmandi	Langardi	23.7590	90.6164	25	1998	Green	28
+2859	Brahmandi	Langardi	23.7588	90.6159	25	2000	Red	75
+2865	Brahmandi	Langardi	23.7595	90.6158	45	1998	Red	59
+2866	Brahmandi	Langardi	23.7597	90.6162	70	1999	Green	34
+2873	Brahmandi	Langardi	23.7597	90.6155	80	1987	Green	77
+2894	Brahmandi	Kumerbak	23.7619	90.6160	45	1992	Green	21
+2905	Brahmandi	Kumerbak	23.7621	90.6152	45	1995	Green	3
+2906	Brahmandi	Kumerbak	23.7624	90.6153	45	1996	Green	38
+2908	Brahmandi	Kumerbak	23.7622	90.6155	55	1998	Green	125
+2910	Brahmandi	Kumerbak	23.7619	90.6164	60	1997	Red	125
+2928	Duptara	Bajbi	23.7908	90.6057	120	2000	Green	1
+2929	Duptara	Bajbi	23.7908	90.6056	120	1998	Green	1
+2930	Duptara	Bajbi	23.7909	90.6057	140	1994	Green	1
+2931	Duptara	Bajbi	23.7910	90.6058	125	1995	Green	1
+2935	Duptara	Bajbi	23.7907	90.6061	120	1995	Green	1
+2988	Duptara	Kathalipara	23.7917	90.6068	155	1984	Green	1
+2991	Duptara	Kathalipara	23.7919	90.6068	140	1990	Green	1
+2993	Duptara	Kathalipara	23.7917	90.6064	175	1998	Green	1
+3003	Duptara	Kathalipara	23.7922	90.6070	140	1997	Green	1
+3004	Duptara	Kathalipara	23.7920	90.6071	140	1998	Green	1
+3105	Duptara	Girda	23.8008	90.6063	115	1999	Green	1
+3106	Duptara	Girda	23.8006	90.6058	105	1998	Green	2
+3107	Duptara	Girda	23.8008	90.6060	105	2001	Green	1
+3108	Duptara	Girda	23.8003	90.6059	105	1999	Green	1
+3109	Duptara	Girda	23.8003	90.6061	105	1998	Green	1
+3143	Duptara	Girda	23.7976	90.6082	80	1985	Red	110
+3223	Duptara	Bhuyanpara	23.7880	90.6105	30	1994	Green	1
+3239	Duptara	Bhuyanpara	23.7892	90.6099	30	1990	Green	1
+3267	Duptara	Bhuyanpara	23.7874	90.6098	25	1995	Green	1
+3276	Duptara	Bhuyanpara	23.7885	90.6106	25	1990	Green	1
+3289	Duptara	Satyabhadi	23.7877	90.6114	30	1990	Green	1
+3291	Duptara	Satyabhadi	23.7879	90.6114	30	1998	Green	1
+3292	Duptara	Satyabhadi	23.7884	90.6116	35	1991	Green	1
+3293	Duptara	Satyabhadi	23.7884	90.6115	30	1993	Green	3
+3294	Duptara	Satyabhadi	23.7882	90.6114	30	1989	Green	1
+3381	Duptara	Mollapara	23.7892	90.6150	35	1996	Green	7
+3386	Duptara	Hatkholapara	23.7899	90.6156	25	1996	Green	50
+3387	Duptara	Hatkholapara	23.7900	90.6157	25	1991	Green	37
+3403	Duptara	Hatkholapara	23.7912	90.6144	170	1998	Green	3
+3405	Duptara	Hatkholapara	23.7924	90.6145	35	1992	Green	7
+3406	Duptara	Hatkholapara	23.7919	90.6149	148	1997	Green	1
+3407	Duptara	Hatkholapara	23.7920	90.6150	145	1993	Green	9
+3409	Duptara	Hatkholapara	23.7922	90.6149	192	1994	Green	9
+3482	Brahmandi	Bara Manohardi	23.7822	90.6118	45	1993	Red	416
+3510	Brahmandi	Chota Monohardi	23.7782	90.6007	195	1986	Green	32
+3511	Brahmandi	Chota Monohardi	23.7788	90.6005	145	1996	Green	1
+3520	Brahmandi	Chota Monohardi	23.7781	90.6000	130	1995	Green	1
+3542	Brahmandi	Bhati Gobindi	23.7777	90.5990	165	1998	Green	1
+3543	Brahmandi	Bhati Gobindi	23.7778	90.5989	60	1996	Red	295
+3544	Brahmandi	Bhati Gobindi	23.7774	90.5987	120	1997	Green	1
+3545	Brahmandi	Bhati Gobindi	23.7780	90.5988	130	1999	Green	1
+3546	Brahmandi	Bhati Gobindi	23.7780	90.5988	60	1991	Red	306
+3602	Brahmandi	Baliapara	23.7744	90.5939	70	1992	Red	161
+3608	Brahmandi	Baliapara	23.7743	90.5929	*	1998	Red	479
+3641	Brahmandi	Baliapara	23.7719	90.5917	45	1993	Red	241
+3688	Brahmandi	Baliapara	23.7705	90.5908	65	1978	Red	151
+3710	Brahmandi	Baliapara	23.7711	90.5880	225	1998	Green	32
+3712	Brahmandi	Baliapara	23.7709	90.5886	35	1995	Red	90
+3733	Brahmandi	Kadamdi	23.7688	90.5945	65	1992	Red	90
+3737	Brahmandi	Kadamdi	23.7688	90.5948	55	1997	Red	77
+3743	Brahmandi	Kadamdi	23.7692	90.5947	60	1993	Red	92
+3795	Brahmandi	Utrapur	23.7646	90.6009	120	1990	Red	74
+3798	Brahmandi	Utrapur	23.7646	90.6012	45	1995	Red	74
+3799	Brahmandi	Utrapur	23.7647	90.6013	65	1990	Red	82
+3801	Brahmandi	Utrapur	23.7641	90.6017	72	1993	Red	268
+3879	Araihazar	Choto BinairChar	23.7904	90.6365	45	1995	Red	282
+3880	Araihazar	Choto BinairChar	23.7903	90.6362	60	1995	Red	247
+3881	Araihazar	Choto BinairChar	23.7901	90.6363	50	1999	Red	111
+3882	Araihazar	Choto BinairChar	23.7904	90.6366	45	1970	Red	261
+3887	Araihazar	Choto BinairChar	23.7897	90.6366	60	1995	Red	447
+3910	Duptara	Tingaon	23.7878	90.6007	130	1992	Green	1
+3911	Duptara	Tingaon	23.7878	90.6008	130	1993	Green	1
+3928	Duptara	Panchgaon (DewanPara)	23.8016	90.6307	180	2000	Green	9
+3932	Duptara	Panchgaon (Karmaker para)	23.8021	90.6309	160	1998	Green	2
+3939	Duptara	Panchgaon (Karmaker para)	23.8020	90.6313	45	2000	Green	6
+3941	Duptara	Panchgaon (Karmaker para)	23.8028	90.6322	45	1997	Green	8
+3943	Duptara	Panchgaon (Karmaker para)	23.8032	90.6326	50	1997	Green	9
+4043	Duptara	Dari Satyabhandi	23.7847	90.6015	135	1997	Green	1
+4046	Duptara	Dari Satyabhandi	23.7852	90.6016	135	1995	Green	1
+4051	Duptara	Dari Satyabhandi	23.7852	90.6013	120	1997	Green	1
+4052	Duptara	Dari Satyabhandi	23.7853	90.6017	135	1986	Green	1
+4180	Duptara	Noyapara	23.7882	90.6078	150	1997	Green	1
+4182	Duptara	Noyapara	23.7883	90.6079	125	1999	Green	1
+4188	Duptara	Noyapara	23.7888	90.6081	45	1996	Green	40
+4190	Duptara	Noyapara	23.7891	90.6084	160	1998	Green	4
+4346	Brahmandi	Rishir Char	23.7780	90.6039	145	1970	Green	15
+4347	Brahmandi	Rishir Char	23.7784	90.6039	135	1998	Green	15
+4348	Brahmandi	Rishir Char	23.7779	90.6037	130	2000	Green	17
+4352	Brahmandi	Rishir Char	23.7781	90.6031	175	1998	Green	15
+4353	Brahmandi	Rishir Char	23.7780	90.6031	75	1987	Red	498
+4384	Brahmandi	Baliapara	23.7749	90.5933	60	1992	Red	105
+4395	Brahmandi	Baliapara	23.7745	90.5927	60	1998	Red	294
+4418	Brahmandi	Baliapara	23.7704	90.5870	120	1998	Red	54
+4430	Brahmandi	Baliapara	23.7693	90.5870	125	1993	Red	71
+4449	Brahmandi	Baliapara	23.7677	90.5855	45	1999	Red	283
+4566	Brahmandi	Bhati Baliapara	23.7654	90.5924	45	1995	Red	142
+4571	Brahmandi	Bhati Baliapara	23.7647	90.5925	45	1999	Red	174
+4574	Brahmandi	Bhati Baliapara	23.7646	90.5925	45	1996	Red	301
+4619	Brahmandi	Choto Binarchar	23.7902	90.6316	45	*	Red	226
+4685	Brahmandi	Bara Binairchar	23.7933	90.6229	50	1986	Green	1
+4877	Brahmandi	Chota Fausa	23.7651	90.6294	80	1970	Red	163
+4880	Brahmandi	Maruadi	23.7665	90.6293	25	1999	Red	131
+4950	Duptara	Kumarpara	23.8012	90.6105	195	1999	Green	1
+4960	Brahmandi	Maruadi	23.7662	90.6310	70	1993	Green	50
+4961	Brahmandi	Maruadi	23.7662	90.6312	70	1995	Green	49
+7082	Araihazar	Jhaugara	23.7900	90.6459	45	1993	Green	34
+7085	Araihazar	Jhaugara	23.7898	90.6462	90	1999	Green	86
+7086	Araihazar	Jhaugara	23.7898	90.6462	50	1980	Red	38
+7090	Araihazar	Jhaugara	23.7902	90.6466	60	1997	Red	68
+7195	Araihazar	Kamrangir Char	23.7981	90.6468	45	1996	Red	212
+7356	Araihazar	Mukandi	23.7952	90.6517	40	2000	Green	52
+7389	Araihazar	Mukandi Gazipura	23.7988	90.6489	50	1999	Green	60
+7390	Araihazar	Mukandi Gazipura	23.7990	90.6487	30	1981	Green	42
+7463	Araihazar	Chota Bara Para	23.7930	90.6599	35	1994	Green	78
+7464	Araihazar	Araihazar	23.7926	90.6611	70	1993	Red	140
+7466	Araihazar	Araihazar	23.7927	90.6612	40	1998	Green	12
+7467	Araihazar	Araihazar	23.7931	90.6614	40	1990	Red	134
+7469	Araihazar	Araihazar	23.7924	90.6600	85	1999	Red	178
+7475	Araihazar	Araihazar	23.7932	90.6613	45	1999	Red	116
+7476	Araihazar	Chota Bara Para	23.7964	90.6606	40	1982	Green	96
+7477	Araihazar	Chota Bara Para	23.7937	90.6607	40	1990	Green	127
+7508	Araihazar	Chota Bara Para	23.7944	90.6575	55	1999	Red	113
+7522	Araihazar	Chota Bara Para	23.7940	90.6588	60	1990	Red	173
+7535	Araihazar	Mirka Baganagar	23.7954	90.6598	35	2002	Red	80
+7536	Araihazar	Mirka Baganagar	23.7953	90.6595	40	1998	Red	90
+7540	Araihazar	Mirka Baganagar	23.7967	90.6612	45	1985	Green	51
+7548	Araihazar	Mirka Baganagar	23.7966	90.6617	45	1998	Red	69
+7645	Araihazar	Noa Para	23.7827	90.6487	75	1997	Red	49
+7647	Araihazar	Noa Para	23.7831	90.6488	75	1982	Red	256
+7648	Araihazar	Noa Para	23.7832	90.6489	85	2000	Red	341
+7649	Araihazar	Noa Para	23.7831	90.6487	60	2000	Green	47
+7651	Araihazar	Noa Para	23.7817	90.6471	60	2000	Red	46
+7787	Araihazar	Mukandi Gazipura	23.7992	90.6494	50	1999	Red	155
+7788	Araihazar	Mukandi Gazipura	23.7994	90.6492	50	1992	Green	54
+7789	Araihazar	Mukandi Gazipura	23.7993	90.6498	50	1992	Red	89
+7801	Brahmandi	Brahmandi	23.7741	90.6377	75	1990	Red	255
+7838	Brahmandi	Brahmandi	23.7720	90.6355	45	1999	Green	18
+7839	Brahmandi	Brahmandi	23.7719	90.6357	45	1991	Green	26
+7840	Brahmandi	Brahmandi	23.7719	90.6358	35	1996	Green	38
+7841	Brahmandi	Brahmandi	23.7718	90.6355	40	1996	Green	78
+7846	Brahmandi	Brahmandi	23.7719	90.6354	35	1998	Green	32
+7895	Brahmandi	Brahmandi	23.7739	90.6389	45	1994	Red	108
+7895	Brahmandi	Maruadi	23.7658	90.6317	45	2000	Red	108
+7912	Brahmandi	Noadda	23.7676	90.6350	60	2000	Red	307
+7918	Brahmandi	Noadda	23.7673	90.6360	150	1999	Green	1
+7921	Brahmandi	Noadda	23.7678	90.6376	90	2000	Red	105
+7925	Brahmandi	Noadda	23.7663	90.6376	65	1996	Red	78
+7935	Brahmandi	Noadda	23.7699	90.6350	35	1997	Red	372
+7954	Brahmandi	Chota Fausa	23.7635	90.6304	170	1995	Green	2
+7962	Brahmandi	Chota Fausa	23.7637	90.6326	42	1989	Red	110
+7991	Araihazar	Kamrangir Char	23.7982	90.6475	46	1990	Red	126
+7998	Araihazar	Kamrangir Char	23.7980	90.6471	45	1999	Red	95
+8000	Araihazar	Kamrangir Char	23.7981	90.6475	45	1989	Red	120
+18	Araihazar	Krishnapura	23.7888	90.6522	50	1996	Red	232
+347	Brahmandi	Sulpandi	23.7797	90.6180	30	1996	Red	71
+350	Brahmandi	Sulpandi	23.7795	90.6177	55	1995	Red	116
+797	Araihazar	Kamrangir Char	23.7978	90.6472	60	1999	Red	100
+840	Araihazar	Lakhupura	23.7827	90.6367	40	1990	Red	109
+843	Araihazar	Lakhupura	23.7829	90.6367	45	1998	Green	74
+1056	Brahmandi	Choto Manohardi	23.7806	90.6166	60	1997	Green	31
+1060	Brahmandi	Choto Manohardi	23.7809	90.6169	35	1999	Green	23
+1296	Brahmandi	Chota Monohardi	23.7800	90.6071	70	1999	Red	469
+1643	Brahmandi	Chota Binarchar	23.7890	90.6362	60	1995	Red	159
+1697	Brahmandi	Dhar Maruadi	23.7795	90.6319	72	1999	Red	93
+2049	Brahmandi	Fausa	23.7699	90.6244	60	1996	Red	522
+2050	Brahmandi	Fausa	23.7700	90.6242	50	1998	Red	172
+2654	Brahmandi	Ujan  Gobindi	23.7900	90.6261	40	1990	Red	399
+2664	Brahmandi	Ujan  Gobindi	23.7910	90.6264	50	2003	Green	95
+2665	Brahmandi	Ujan  Gobindi	23.7908	90.6265	40	2002	Green	189
+3384	Duptara	Hatkholapara	23.7900	90.6151	45	1990	Red	149
+3493	Brahmandi	Bara Manohardi	23.7818	90.6110	40	1999	Red	148
+3498	Brahmandi	Bara Manohardi	23.7823	90.6111	35	1988	Green	97
+3507	Duptara	Bhuyanpara	23.7891	90.6116	25	1999	Green	1
+3794	Brahmandi	Utrapur	23.7649	90.6007	50	2000	Red	149
+4419	Brahmandi	Baliapara	23.7705	90.5866	60	1988	Red	109
+4457	Brahmandi	Baliapara	23.7678	90.5855	60	1995	Red	245
+4567	Brahmandi	Bhati Baliapara	23.7654	90.5927	45	1996	Red	516
+7088	Araihazar	Jhaugara	23.7901	90.6460	45	2001	Red	93
+7353	Araihazar	Mukandi	23.7949	90.6515	40	1970	Red	48
+7357	Araihazar	Mukandi	23.7955	90.6515	30	2001	Green	172
+7890	Brahmandi	Maruadi	23.7658	90.6312	60	1990	Red	175
+7893	Brahmandi	Maruadi	23.7656	90.6315	45	1992	Green	624
+7970	Brahmandi	Chota Fausa	23.7644	90.6303	30	1999	Red	254

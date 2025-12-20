@@ -1,0 +1,62 @@
+---
+format:
+  live-html:
+    toc: true
+---
+# Regression Case Study: NAPLAN Reading Scores
+
+## Defining the research question
+
+- Investigate how student and school-level predictors relate to NAPLAN
+  Reading scores. Clarify outcome, units, and any grouping structure.
+
+## Importing data
+
+```{r}
+#| message: false
+# Replace path with the appropriate CSV or RDS from the Resources/naplan reading folder
+# naplan <- read.csv("Resources/naplan reading/naplan_reading.csv")
+```
+
+## Exploratory plot
+
+- Start with scatterplots and boxplots for key predictors (e.g., study
+  time, SES, gender) against Reading scores.
+
+```{r}
+# Example placeholder using mtcars structure; swap to naplan data
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  labs(x = "Predictor", y = "Reading score")
+```
+
+## Fitting the least-squares model
+
+- Begin with a first-order additive model; consider interactions or
+  polynomials if exploratory plots suggest curvature.
+
+```{r}
+# model <- lm(Reading ~ predictor1 + predictor2, data = naplan)
+# summary(model)
+```
+
+## Model refinement and interpretation
+
+- Check residual diagnostics (see Module 6). Address nonlinearity,
+  heteroskedasticity, or influential points.
+- Interpret coefficients, including categorical contrasts and any
+  interaction terms.
+
+```{r}
+# plot(model, which = 1:2)
+# coef(summary(model))
+```
+
+## Reporting the results
+
+- Present fitted effects with confidence intervals, and provide a
+  prediction interval for a meaningful scenario (e.g., a student profile
+  of interest).
+- Summarise key findings in plain language and note any limitations
+  (e.g., omitted variables, sample size).

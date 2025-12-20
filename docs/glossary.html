@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Glossary – Introduction to Linear Regression in R</title>
+<title>Glossary – Linear Regression and Model Selection with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,17 +32,17 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-1d1a952aac6ea7db278b5381414eacac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e92ef7ca8f646017bdb218b79b4f62fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/glossary/glossary.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
 <script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/style.css">
@@ -87,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glossary.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Glossary</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glossary.html">Glossary</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -102,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Introduction to Linear Regression in R</a> 
+      <a href="./">Linear Regression and Model Selection with R</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -115,89 +144,49 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text">Course Overview</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./SimpleLinearRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Simple linear regression</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./LinearModels.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear statistical models</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./SLRFitting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fitting models to data</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./SLRDiagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Fit diagnostics and assumption checks</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./SLRInference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference about population parameters</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./SLRCase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Case Study: Naplan Reading scores</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./MultipleRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Multiple Linear Regression</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./MLRNewFeatures.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Expanding data by adding predictor variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./MLRDerivedFeatures.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building models by constructing terms</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./VariableScreening.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Variable Screening</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./RegressionCaseStudy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression case study</span></span></a>
+  <a href="./module00-lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./module01-slr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./module02-mlr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./glossary.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+ <span class="menu-text">Glossary</span></a>
   </div>
 </li>
     </ul>
@@ -205,15 +194,33 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="3">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#gloss-slr" id="toc-gloss-slr" class="nav-link active" data-scroll-target="#gloss-slr">Simple linear regression</a></li>
+  <li><a href="#gloss-mlr" id="toc-gloss-mlr" class="nav-link" data-scroll-target="#gloss-mlr">Multiple linear regression</a></li>
+  <li><a href="#gloss-residual" id="toc-gloss-residual" class="nav-link" data-scroll-target="#gloss-residual">Residual</a></li>
+  <li><a href="#gloss-rse" id="toc-gloss-rse" class="nav-link" data-scroll-target="#gloss-rse">Residual standard error</a></li>
+  <li><a href="#gloss-adjusted-r-squared" id="toc-gloss-adjusted-r-squared" class="nav-link" data-scroll-target="#gloss-adjusted-r-squared">Adjusted R-squared</a></li>
+  <li><a href="#gloss-aic" id="toc-gloss-aic" class="nav-link" data-scroll-target="#gloss-aic">Akaike Information Criterion (AIC)</a></li>
+  <li><a href="#gloss-multicollinearity" id="toc-gloss-multicollinearity" class="nav-link" data-scroll-target="#gloss-multicollinearity">Multicollinearity</a></li>
+  <li><a href="#gloss-interaction" id="toc-gloss-interaction" class="nav-link" data-scroll-target="#gloss-interaction">Interaction</a></li>
+  <li><a href="#gloss-dummy" id="toc-gloss-dummy" class="nav-link" data-scroll-target="#gloss-dummy">Dummy variable</a></li>
+  <li><a href="#gloss-leverage" id="toc-gloss-leverage" class="nav-link" data-scroll-target="#gloss-leverage">Leverage</a></li>
+  <li><a href="#gloss-cooks-distance" id="toc-gloss-cooks-distance" class="nav-link" data-scroll-target="#gloss-cooks-distance">Cook’s distance</a></li>
+  <li><a href="#gloss-box-cox" id="toc-gloss-box-cox" class="nav-link" data-scroll-target="#gloss-box-cox">Box–Cox transformation</a></li>
+  <li><a href="#gloss-parsimony" id="toc-gloss-parsimony" class="nav-link" data-scroll-target="#gloss-parsimony">Parsimony</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Glossary</span></h1>
+<h1 class="title">Glossary</h1>
 </div>
 
 
@@ -230,9 +237,57 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<table class="glossary_table">
-<tbody><tr><th> Term </th><th> Definition </th></tr>
-</tbody></table>
+<section id="gloss-slr" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-slr">Simple linear regression</h2>
+<p>A linear model with one predictor: <span class="math inline">\(E[Y] = \beta_0 + \beta_1 X\)</span> with independent, mean-zero errors.</p>
+</section>
+<section id="gloss-mlr" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-mlr">Multiple linear regression</h2>
+<p>A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.</p>
+</section>
+<section id="gloss-residual" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-residual">Residual</h2>
+<p>An observed value minus its fitted value from the model: <span class="math inline">\(e_i = y_i - \hat y_i\)</span>.</p>
+</section>
+<section id="gloss-rse" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-rse">Residual standard error</h2>
+<p>The estimated standard deviation of the residuals (square root of the residual variance).</p>
+</section>
+<section id="gloss-adjusted-r-squared" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-adjusted-r-squared">Adjusted R-squared</h2>
+<p><span class="math inline">\(R^2\)</span> penalised for the number of predictors to discourage unnecessary terms.</p>
+</section>
+<section id="gloss-aic" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-aic">Akaike Information Criterion (AIC)</h2>
+<p>Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.</p>
+</section>
+<section id="gloss-multicollinearity" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-multicollinearity">Multicollinearity</h2>
+<p>Strong correlation among predictors that inflates standard errors and destabilises estimates.</p>
+</section>
+<section id="gloss-interaction" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-interaction">Interaction</h2>
+<p>A term that allows the effect of one predictor to depend on the level of another (e.g., <span class="math inline">\(X_1 X_2\)</span>).</p>
+</section>
+<section id="gloss-dummy" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-dummy">Dummy variable</h2>
+<p>An indicator (0/1) used to code categories in regression relative to a baseline.</p>
+</section>
+<section id="gloss-leverage" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-leverage">Leverage</h2>
+<p>A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.</p>
+</section>
+<section id="gloss-cooks-distance" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-cooks-distance">Cook’s distance</h2>
+<p>Influence measure combining residual size and leverage to flag points that change fitted values when omitted.</p>
+</section>
+<section id="gloss-box-cox" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-box-cox">Box–Cox transformation</h2>
+<p>A family of power transformations used to stabilise variance or improve linearity for positive responses.</p>
+</section>
+<section id="gloss-parsimony" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="gloss-parsimony">Parsimony</h2>
+<p>Choosing the simplest adequate model that answers the scientific question.</p>
 
 
 <script type="ojs-module-contents">
@@ -249,6 +304,7 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
+</section>
 
 </main> <!-- /main -->
 <script>
@@ -1024,13 +1080,14 @@ window._ojs.runtime.interpretFromScriptTags();
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

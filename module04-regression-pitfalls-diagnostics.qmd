@@ -1,0 +1,98 @@
+---
+format:
+  live-html:
+    toc: true
+---
+# Regression Pitfalls and Diagnostics
+
+In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see @sec-simple_linear_model and @sec-multiple_linear_regression for a reminder of how and why we made these assumptions). Therefore, it is important to routinely check the validity of these assumptions when fitting regression models. The most common assumptions to check are:
+- Linearity: the relationship between predictors and response is linear.
+- Homoscedasticity: the variance of the errors is constant across all levels of the predictors.
+- Normality: the errors are normally distributed.
+- Independence: the errors are independent of each other.
+
+Moreover, there aare other issues not as directly related to these assumptions that can also affect regression analysis, such as:
+- Influential points: individual data points that have a disproportionate impact on the model fit.
+- Multicollinearity: high correlation between predictor variables that can destabilise estimates.
+- Extrapolation: making predictions outside the range of the observed data.
+- blind model selection: using automated procedures without considering scientific context.
+- overfitting: fitting to noise rather than signal in the data.
+In this section, we will discuss how to diagnose these issues using residual plots and other diagnostic tools, as well as strategies for addressing them when they arise.
+
+
+## Residuals as diagnostic tools
+How can we check whether the assumptions of a linear regression model are met? One of the most common approaches is to examine the residuals of the model. As a reminder, the residuals are the differences between the observed values and the predicted values from the model:
+
+::: Key-term
+### Residual {#gloss-residual}
+The residual for observation $i$ in a regression model is defined as
+$$e_i = y_i - \hat{y}_i$$
+where $e_i$ is the residual for observation $i$, $y_i$ is the observed value, and $\hat{y}_i$ is the predicted value from the model.
+:::
+
+We used residuals in @sec-least_squares_estimation to estimate the parameters of the linear model, but they can also be used to diagnose potential issues with the model fit. Since residuals encode the information about what the model has *not* captured about the data, examining them can reveal patterns that reveal how our model fails to capture important aspects of the data (e.g. nonlinearities). Moreover, we use residuals as estimates of the unobserved errors in the model, which allows us to assess assumptions about the error distribution.
+
+### Common diagnostic plots
+Analysing residuals is such a key part of regression analysis that the base R `plot()` function for linear models automatically produces a set of diagnostic plots. Lets have a look 
+
+
+## Residual plots vs predictors and fitted values
+
+- Plot residuals against fitted values to check linearity and constant
+  variance; add predictor-specific plots to spot functional-form issues
+  ([residual](#gloss-residual)).
+
+```{r}
+diag_mod <- lm(mpg ~ wt + hp + am, data = mtcars)
+par(mfrow = c(1, 2))
+plot(diag_mod, which = 1)      # residuals vs fitted
+plot(mtcars$wt, resid(diag_mod), xlab = "wt", ylab = "Residuals")
+par(mfrow = c(1, 1))
+```
+
+## Diagnosing nonconstant variance and nonlinearity
+
+- Funnel shapes or curved trends in residual plots suggest
+  heteroskedasticity or missing curvature; consider transformations or
+  adding interactions/polynomials.
+
+## Assessing normality of residuals
+
+- Use Q-Q plots and compare $t$- and $p$-values to Normal reference.
+
+```{r}
+qqnorm(resid(diag_mod)); qqline(resid(diag_mod))
+```
+
+## Standardised residuals, leverage, Cook's distance
+
+- Standardised (or studentised) residuals scale by estimated variance
+  and flag unusual outcomes (|r| > 2 as a heuristic).
+- Leverage (`hatvalues()`) flags unusual predictor combinations
+  ([leverage](#gloss-leverage)).
+- Cook's distance combines leverage and residual size to assess
+  influence ([Cook's distance](#gloss-cooks-distance)).
+
+```{r}
+cbind(rstudent(diag_mod),
+      hatvalues(diag_mod),
+      cooks.distance(diag_mod))[1:5, ]
+```
+
+## Transformations including Box–Cox
+
+- Transformations can stabilise variance or linearise relationships; for
+  strictly positive $Y$, consider [Box–Cox transformations](#gloss-box-cox)
+  to guide power choices.
+
+```{r}
+MASS::boxcox(diag_mod, plotit = TRUE)
+```
+
+## Handling outliers and influential observations
+
+- Investigate data quality first (entry errors, unusual units).
+- If influential points are real, fit with and without them to assess
+  robustness; report how conclusions change.
+- Prefer model adjustments (functional form, variance stabilisation)
+  over automatic deletion; document any exclusions explicitly.

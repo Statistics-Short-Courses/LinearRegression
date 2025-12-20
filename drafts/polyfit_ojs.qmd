@@ -1,0 +1,54 @@
+
+```{r}
+#| echo: false
+#| define:
+#|  - linearData
+set.seed(123)
+n <- 10
+x <- runif(n,0,4)
+y <- sin(2.3*x) + rnorm(n,0, 0.8)
+
+nonlinearData <- data.frame(x,y)
+ojs_define(nonlinearData)
+```
+
+```{ojs}
+//| echo: false
+
+reg= require("d3-regression")
+polyData=transpose(nonlinearData)
+viewof degree = Inputs.range([1, 10], {step: 1, label: "polynomial degree", value: 1})
+
+function fittedCurve(order) {
+  const regression = reg.regressionPoly()
+    .x((d) => d.x)
+    .y((d) => d.y)
+    .order(degree)
+    .domain(d3.extent(polyData, (d) => d.x));
+  const curve = regression(polyData);
+  return curve.map(([x, y]) => ({x, y}));
+}
+
+Plot.plot({
+  marginLeft: 50,
+  height: 320,
+  x: {label: "Predictor (x)"},
+  y: {label: "Outcome (y)"},
+  marks: [
+    Plot.dot(polyData, {
+      x: "x",
+      y: "y",
+      r: 4,
+      fill: "#1f77b4",
+      opacity: 0.8,
+      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
+    }),
+    Plot.line(fittedCurve(degree), {
+      x: "x",
+      y: "y",
+      stroke: "#d62728",
+      strokeWidth: 2,
+    }),
+  ],
+});
+```

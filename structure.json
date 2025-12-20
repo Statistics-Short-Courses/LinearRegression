@@ -1,0 +1,104 @@
+{
+  "course_title": "Short Course: Linear Regression and Model Selection",
+  "course_description": "A concise graduate-level introduction to linear regression, covering model formulation, interpretation, model building, variable screening, and diagnostic assessment. Designed for researchers and professionals needing a rigorous refresher.",
+  "learning_outcomes": [
+    "Formulate simple and multiple linear regression models and articulate their assumptions.",
+    "Interpret regression coefficients, including partial, interaction, and categorical effects.",
+    "Evaluate model utility using hypothesis tests, R-squared metrics, and prediction accuracy.",
+    "Identify when additive models fail and implement interaction or polynomial terms.",
+    "Incorporate qualitative predictors using indicator (dummy) variables.",
+    "Apply principles of parsimony and evidence-based model building.",
+    "Use AIC, multicollinearity diagnostics, and stepwise procedures for model selection.",
+    "Perform residual analysis, identify influential observations, and apply transformations."
+  ],
+  "modules": [
+    {
+      "module_number": 0,
+      "title": "Linear statistical models",
+      "topics": [
+        "Purpose of statistical modelling and framing predictors/outcomes",
+        "Linear prediction as E[Y]=alpha+beta X with slope/intercept interpretation",
+        "Role of random error: mean-zero, constant-variance, and normality ideas",
+        "Specification of the simple linear model and visualising simulated data"
+      ]
+    },
+    {
+      "module_number": 1,
+      "title": "Simple Linear Regression (SLR)",
+      "topics": [
+        "Deciding when SLR is appropriate",
+        "Fitting models to data via least squares and residuals",
+        "Estimating coefficients with lm() and visual checks",
+        "Variance estimation, residual standard error, correlation, and R-squared",
+        "Inference for the slope: t-tests, confidence intervals, and p-values",
+        "Prediction for Y: confidence intervals and prediction intervals"
+      ]
+    },
+    {
+      "module_number": 2,
+      "title": "Multiple Linear Regression (MLR)",
+      "topics": [
+        "When to extend SLR to multiple predictors",
+        "MLR model structure with continuous predictors and partial coefficients",
+        "Least-squares estimation and inference in higher dimensions",
+        "Global F-test for overall usefulness",
+        "Multicollinearity considerations",
+        "Adjusted R-squared, model fit, and interpreting summary(lm) output"
+      ]
+    },
+    {
+      "module_number": 3,
+      "title": "Model Building and Variable Screening",
+      "topics": [
+        "Exploratory analysis and theory-driven model formulation",
+        "Systematic vs random variation, adequacy, and parsimony",
+        "Choosing first- vs second-order functional forms; interactions and curvature",
+        "Qualitative predictors: dummy coding, baselines, ANOVA-style tests, and mixed predictors",
+        "Variable screening: multicollinearity checks, AIC, and stepwise strategies",
+        "Balancing prediction and explanation while guarding against overfitting/extrapolation"
+      ]
+    },
+    {
+      "module_number": 4,
+      "title": "Regression Pitfalls and Diagnostics",
+      "topics": [
+        "Common pitfalls: misspecification, extrapolation, overfitting, and leverage outliers",
+        "Residual plots versus fitted values and predictors",
+        "Diagnosing nonconstant variance and nonlinearity",
+        "Assessing normality of residuals",
+        "Standardised residuals, leverage, Cook's distance",
+        "Transformations including Box-Cox",
+        "Handling outliers and influential observations"
+      ]
+    },
+    {
+      "module_number": 5,
+      "title": "Case Study: NAPLAN",
+      "topics": [
+        "Defining the research question",
+        "Importing data",
+        "Exploratory plot",
+        "Fitting the least-squares model",
+        "Model refinement and interpretation",
+        "Reporting the results"
+      ]
+    }
+  ],
+  "assessment_options": {
+    "exercises": "Short practical or theoretical exercises linked to each module.",
+    "capstone_project": {
+      "description": "A modelling project requiring exploratory analysis, model formulation, model selection, diagnostics, and interpretation.",
+      "components": [
+        "Exploratory data analysis",
+        "Justified model specification",
+        "Model selection using AIC and diagnostic checks",
+        "Residual analysis and influence assessment",
+        "Written or presented interpretation of results"
+      ]
+    }
+  },
+  "references": [
+    "Mendenhall & Sincich, A Second Course in Statistics: Regression Analysis",
+    "STAT210/410 lecture materials on MLR, Model Building, Variable Screening, and Residual Analysis"
+  ]
+}
