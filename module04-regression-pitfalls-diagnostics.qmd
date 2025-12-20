@@ -4,16 +4,37 @@ format:
     toc: true
 ---
 # Regression Pitfalls and Diagnostics
-## Common pitfalls to avoid
 
-- Ignoring model misspecification: linear fits to nonlinear patterns
-  inflate residual structure.
-- Extrapolating far beyond observed predictor ranges can explode
-  predictions.
-- Blind stepwise selection can drop theory-driven terms; keep scientific
-  context in view.
-- Unchecked multicollinearity or leverage points can destabilise
-  inference; diagnose before concluding.
+In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see @sec-simple_linear_model and @sec-multiple_linear_regression for a reminder of how and why we made these assumptions). Therefore, it is important to routinely check the validity of these assumptions when fitting regression models. The most common assumptions to check are:
+- Linearity: the relationship between predictors and response is linear.
+- Homoscedasticity: the variance of the errors is constant across all levels of the predictors.
+- Normality: the errors are normally distributed.
+- Independence: the errors are independent of each other.
+
+Moreover, there aare other issues not as directly related to these assumptions that can also affect regression analysis, such as:
+- Influential points: individual data points that have a disproportionate impact on the model fit.
+- Multicollinearity: high correlation between predictor variables that can destabilise estimates.
+- Extrapolation: making predictions outside the range of the observed data.
+- blind model selection: using automated procedures without considering scientific context.
+- overfitting: fitting to noise rather than signal in the data.
+In this section, we will discuss how to diagnose these issues using residual plots and other diagnostic tools, as well as strategies for addressing them when they arise.
+
+
+## Residuals as diagnostic tools
+How can we check whether the assumptions of a linear regression model are met? One of the most common approaches is to examine the residuals of the model. As a reminder, the residuals are the differences between the observed values and the predicted values from the model:
+
+::: Key-term
+### Residual {#gloss-residual}
+The residual for observation $i$ in a regression model is defined as
+$$e_i = y_i - \hat{y}_i$$
+where $e_i$ is the residual for observation $i$, $y_i$ is the observed value, and $\hat{y}_i$ is the predicted value from the model.
+:::
+
+We used residuals in @sec-least_squares_estimation to estimate the parameters of the linear model, but they can also be used to diagnose potential issues with the model fit. Since residuals encode the information about what the model has *not* captured about the data, examining them can reveal patterns that reveal how our model fails to capture important aspects of the data (e.g. nonlinearities). Moreover, we use residuals as estimates of the unobserved errors in the model, which allows us to assess assumptions about the error distribution.
+
+### Common diagnostic plots
+Analysing residuals is such a key part of regression analysis that the base R `plot()` function for linear models automatically produces a set of diagnostic plots. Lets have a look 
+
 
 ## Residual plots vs predictors and fitted values
 

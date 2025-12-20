@@ -215,7 +215,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -266,10 +266,14 @@ window.Quarto = {
 </header>
 
 
+<p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <span class="quarto-unresolved-ref">?sec-multiple_linear_regression</span> for a reminder of how and why we made these assumptions).</p>
 <section id="common-pitfalls-to-avoid" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</h2>
 <ul>
 <li>Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.</li>
+<li>Overlooking heteroskedasticity: nonconstant variance skews standard errors and tests.</li>
+<li>Neglecting influential points: outliers can disproportionately sway estimates.</li>
+<li>Failing to check normality of residuals: non-normal errors can invalidate inference.</li>
 <li>Extrapolating far beyond observed predictor ranges can explode predictions.</li>
 <li>Blind stepwise selection can drop theory-driven terms; keep scientific context in view.</li>
 <li>Unchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.</li>

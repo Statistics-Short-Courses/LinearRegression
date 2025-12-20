@@ -845,8 +845,8 @@ Stepwise procedures should be treated as **screening tools**, not definitive mod
 
 
 ::: Example
-#### Samara: comparing slopes across trees
-Maple samara fall like tiny helicopters. A forest scientist measured their fall speed (`Velocity`) against their 'disk loading' (a quantity based on their size and weight; encoded as`Load`) on three trees (`Tree`). The goal: check whether the rate of change in velocity differs between trees.
+#### Samara: comparing seeds across trees
+Maple samara (seeds) fall like tiny helicopters. A forest scientist measured their fall speed (`Velocity`) against their 'disk loading' (a quantity based on their size and weight; encoded as`Load`) on three trees (`Tree`). The goal: check whether the rate of change in velocity differs between trees.
 ```{r}
 #| echo: true
 samara <- read_csv("Data/samara.csv", show_col_types = FALSE) |>
@@ -862,8 +862,8 @@ ggplot(samara, aes(Load, Velocity, colour = Tree)) +
 The slopes look similar but not identical. Perhaps tree identity matters, and perhaps the slopes differ slightly by tree. We can compare three candidate models:
 
 **Candidate models**
-```{r}
-#| echo: true
+```{r} 
+#| echo: true 
 sam_mods <- list(
   same_slope   = lm(Velocity ~ Load, data = samara),
   add_tree     = lm(Velocity ~ Load + Tree, data = samara),
