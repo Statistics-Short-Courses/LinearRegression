@@ -234,7 +234,7 @@ window.Quarto = {
     <h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-  <li><a href="#common-pitfalls-to-avoid" id="toc-common-pitfalls-to-avoid" class="nav-link active" data-scroll-target="#common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</a></li>
+  <li><a href="#residuals-as-diagnostic-tools" id="toc-residuals-as-diagnostic-tools" class="nav-link active" data-scroll-target="#residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</a></li>
   <li><a href="#residual-plots-vs-predictors-and-fitted-values" id="toc-residual-plots-vs-predictors-and-fitted-values" class="nav-link" data-scroll-target="#residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</a></li>
   <li><a href="#diagnosing-nonconstant-variance-and-nonlinearity" id="toc-diagnosing-nonconstant-variance-and-nonlinearity" class="nav-link" data-scroll-target="#diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</a></li>
   <li><a href="#assessing-normality-of-residuals" id="toc-assessing-normality-of-residuals" class="nav-link" data-scroll-target="#assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</a></li>
@@ -266,23 +266,25 @@ window.Quarto = {
 </header>
 
 
-<p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <span class="quarto-unresolved-ref">?sec-multiple_linear_regression</span> for a reminder of how and why we made these assumptions).</p>
-<section id="common-pitfalls-to-avoid" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</h2>
-<ul>
-<li>Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.</li>
-<li>Overlooking heteroskedasticity: nonconstant variance skews standard errors and tests.</li>
-<li>Neglecting influential points: outliers can disproportionately sway estimates.</li>
-<li>Failing to check normality of residuals: non-normal errors can invalidate inference.</li>
-<li>Extrapolating far beyond observed predictor ranges can explode predictions.</li>
-<li>Blind stepwise selection can drop theory-driven terms; keep scientific context in view.</li>
-<li>Unchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.</li>
-</ul>
+<p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <span class="quarto-unresolved-ref">?sec-multiple_linear_regression</span> for a reminder of how and why we made these assumptions). Therefore, it is important to routinely check the validity of these assumptions when fitting regression models. The most common assumptions to check are: - Linearity: the relationship between predictors and response is linear. - Homoscedasticity: the variance of the errors is constant across all levels of the predictors. - Normality: the errors are normally distributed. - Independence: the errors are independent of each other.</p>
+<p>Moreover, there aare other issues not as directly related to these assumptions that can also affect regression analysis, such as: - Influential points: individual data points that have a disproportionate impact on the model fit. - Multicollinearity: high correlation between predictor variables that can destabilise estimates. - Extrapolation: making predictions outside the range of the observed data. - blind model selection: using automated procedures without considering scientific context. - overfitting: fitting to noise rather than signal in the data. In this section, we will discuss how to diagnose these issues using residual plots and other diagnostic tools, as well as strategies for addressing them when they arise.</p>
+<section id="residuals-as-diagnostic-tools" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</h2>
+<p>How can we check whether the assumptions of a linear regression model are met? One of the most common approaches is to examine the residuals of the model. As a reminder, the residuals are the differences between the observed values and the predicted values from the model:</p>
+<section id="gloss-residual" class="level3 Key-term" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="gloss-residual"><span class="header-section-number">5.1.1</span> Residual</h3>
+<p>The residual for observation <span class="math inline">\(i\)</span> in a regression model is defined as <span class="math display">\[e_i = y_i - \hat{y}_i\]</span> where <span class="math inline">\(e_i\)</span> is the residual for observation <span class="math inline">\(i\)</span>, <span class="math inline">\(y_i\)</span> is the observed value, and <span class="math inline">\(\hat{y}_i\)</span> is the predicted value from the model.</p>
+</section>
+<p>We used residuals in <span class="quarto-unresolved-ref">?sec-least_squares_estimation</span> to estimate the parameters of the linear model, but they can also be used to diagnose potential issues with the model fit. Since residuals encode the information about what the model has <em>not</em> captured about the data, examining them can reveal patterns that reveal how our model fails to capture important aspects of the data (e.g.&nbsp;nonlinearities). Moreover, we use residuals as estimates of the unobserved errors in the model, which allows us to assess assumptions about the error distribution.</p>
+<section id="common-diagnostic-plots" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="common-diagnostic-plots"><span class="header-section-number">5.1.2</span> Common diagnostic plots</h3>
+<p>Analysing residuals is such a key part of regression analysis that the base R <code>plot()</code> function for linear models automatically produces a set of diagnostic plots. Lets have a look</p>
+</section>
 </section>
 <section id="residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</h2>
 <ul>
-<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#gloss-residual">residual</a>).</li>
+<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="#gloss-residual">residual</a>).</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>diag_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span>
