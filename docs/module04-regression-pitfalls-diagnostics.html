@@ -234,7 +234,7 @@ window.Quarto = {
     <h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-  <li><a href="#common-pitfalls-to-avoid" id="toc-common-pitfalls-to-avoid" class="nav-link active" data-scroll-target="#common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</a></li>
+  <li><a href="#residuals-as-diagnostic-tools" id="toc-residuals-as-diagnostic-tools" class="nav-link active" data-scroll-target="#residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</a></li>
   <li><a href="#residual-plots-vs-predictors-and-fitted-values" id="toc-residual-plots-vs-predictors-and-fitted-values" class="nav-link" data-scroll-target="#residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</a></li>
   <li><a href="#diagnosing-nonconstant-variance-and-nonlinearity" id="toc-diagnosing-nonconstant-variance-and-nonlinearity" class="nav-link" data-scroll-target="#diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</a></li>
   <li><a href="#assessing-normality-of-residuals" id="toc-assessing-normality-of-residuals" class="nav-link" data-scroll-target="#assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</a></li>
@@ -266,43 +266,232 @@ window.Quarto = {
 </header>
 
 
-<p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <span class="quarto-unresolved-ref">?sec-multiple_linear_regression</span> for a reminder of how and why we made these assumptions).</p>
-<section id="common-pitfalls-to-avoid" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</h2>
-<ul>
-<li>Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.</li>
-<li>Overlooking heteroskedasticity: nonconstant variance skews standard errors and tests.</li>
-<li>Neglecting influential points: outliers can disproportionately sway estimates.</li>
-<li>Failing to check normality of residuals: non-normal errors can invalidate inference.</li>
-<li>Extrapolating far beyond observed predictor ranges can explode predictions.</li>
-<li>Blind stepwise selection can drop theory-driven terms; keep scientific context in view.</li>
-<li>Unchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.</li>
-</ul>
+<p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <a href="module02-mlr.html#sec-multiple_linear_regression" class="quarto-xref"><span>Section 3.2</span></a> for a reminder of how and why we made these assumptions). Therefore, it is important to routinely check the validity of these assumptions when fitting regression models. The most common assumptions to check are: - Linearity: the relationship between predictors and response is linear. - <a href="glossary.html#glossary-homoscedasticity" class="glossary" title="Constant error variance across predictor values: Var()=^2.">Homoscedasticity</a>: the variance of the errors is constant across all levels of the predictors. - Normality: the errors are normally distributed. - <a href="glossary.html#glossary-independence" class="glossary" title="Errors from different observations are independent of one another.">Independence</a>: the errors are independent of each other.</p>
+<p>Moreover, there aare other issues not as directly related to these assumptions that can also affect regression analysis, such as: - <a href="glossary.html#glossary-influential-point" class="glossary" data-term="Influential point" title="An observation that substantially changes fitted coefficients or predictions when removed.">Influential points</a>: individual data points that have a disproportionate impact on the model fit. - <a href="glossary.html#glossary-multicollinearity" class="glossary" title="Strong correlation among predictors that inflates standard errors and destabilises estimates.">Multicollinearity</a>: high correlation between predictor variables that can destabilise estimates. - <a href="glossary.html#glossary-extrapolation" class="glossary" title="Making predictions outside the observed predictor range, where model assumptions may fail.">Extrapolation</a>: making predictions outside the range of the observed data. - blind model selection: using automated procedures without considering scientific context. - <a href="glossary.html#glossary-overfitting" class="glossary" data-term="Overfitting" title="When a model captures noise in the training data and generalises poorly to new data.">overfitting</a>: fitting to noise rather than signal in the data. In this section, we will discuss how to diagnose these issues using residual plots and other diagnostic tools, as well as strategies for addressing them when they arise.</p>
+<section id="the-importance-of-checking-residuals-anscombes-quartet" class="level3 Example" data-number="5.0.1">
+<h3 data-number="5.0.1" class="anchored" data-anchor-id="the-importance-of-checking-residuals-anscombes-quartet"><span class="header-section-number">5.0.1</span> The importance of checking residuals: Anscombe’s quartet</h3>
+<p>Anscombe’s quartet is a classic reminder that identical regression summaries can mask radically different data patterns. Each dataset below has the same <span class="math inline">\(n\)</span>, mean <span class="math inline">\(x\)</span>, mean <span class="math inline">\(y\)</span>, correlation, and the same fitted regression line, yet the residual plots tell very different stories.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>anscombe_long <span class="ot">&lt;-</span> anscombe <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">everything</span>(),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"set"</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"([xy])(</span><span class="sc">\\</span><span class="st">d)"</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">set =</span> <span class="fu">paste0</span>(<span class="st">"Set "</span>, set))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>anscombe_aug <span class="ot">&lt;-</span> anscombe_long <span class="sc">|&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> <span class="fu">c</span>(x, y)) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">map</span>(data, <span class="sc">~</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> .x)),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">aug =</span> <span class="fu">map2</span>(model, data, broom<span class="sc">::</span>augment)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(aug)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(anscombe_aug, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> set, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Same fitted line, very different datasets"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-the-importance-of-checking-residuals-anscombe-s-setup-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here we can see from the initial scatter plots, the four datasets have very different structures. In more complicated datasets, these differences may not be as obvious. Residual plots can help us see these differences more clearly:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(anscombe_aug, <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray40"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> set, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted value"</span>, <span class="at">y =</span> <span class="st">"Residual"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-the-importance-of-checking-residuals-anscombe-s-residual-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="residuals-as-diagnostic-tools" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</h2>
+<p>How can we check whether the assumptions of a linear regression model are met? One of the most common approaches is to examine the residuals of the model. As a reminder, the residuals are the differences between the observed values and the predicted values from the model:</p>
+<section id="residual" class="level3 Key-term" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="residual"><span class="header-section-number">5.1.1</span> Residual</h3>
+<p>The residual for observation <span class="math inline">\(i\)</span> in a regression model is defined as <span class="math display">\[e_i = y_i - \hat{y}_i\]</span> where <span class="math inline">\(e_i\)</span> is the residual for observation <span class="math inline">\(i\)</span>, <span class="math inline">\(y_i\)</span> is the observed value, and <span class="math inline">\(\hat{y}_i\)</span> is the predicted value from the model.</p>
+</section>
+<p>We used residuals in <a href="module01-slr.html#sec-leastsquares" class="quarto-xref"><span>Section 2.2.5</span></a> to estimate the parameters of the linear model, but they can also be used to diagnose potential issues with the model fit. Since residuals encode the information about what the model has <em>not</em> captured about the data (i.e the information that remains - is ‘residual’ - after fitting the model), examining them can reveal patterns that reveal how our model fails to capture important aspects of the data (e.g.&nbsp;nonlinearities, nonconstant variance, outliers, etc.).</p>
+<section id="residuals-in-the-olympic-cholesterol-data" class="level3 Example" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="residuals-in-the-olympic-cholesterol-data"><span class="header-section-number">5.1.2</span> Residuals in the Olympic cholesterol data</h3>
+<p>The OLYMPIC dataset records fat intake (mg) and cholesterol (mg/L) for 20 athletes. A simple linear model leaves a curved pattern in the residuals.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>olympic <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="st">"Data/OLYMPIC.txt"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>olympic_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(CHOLESTEROL <span class="sc">~</span> FAT, <span class="at">data =</span> olympic)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>olympic<span class="sc">$</span>resid <span class="ot">&lt;-</span> <span class="fu">resid</span>(olympic_lm)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(olympic, <span class="fu">aes</span>(<span class="at">x =</span> FAT, <span class="at">y =</span> CHOLESTEROL)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-residuals-in-the-olympic-cholesterol-data-setup-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(olympic, <span class="fu">aes</span>(<span class="at">x =</span> FAT, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray40"</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Residual"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-residuals-in-the-olympic-cholesterol-data-residual-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The systematic curve in the residuals indicates that a straight-line model is missing structure in the data.</p>
+</section>
+<section id="extracting-residuals-and-broomaugment" class="level3" data-number="5.1.3">
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="extracting-residuals-and-broomaugment"><span class="header-section-number">5.1.3</span> Extracting residuals and <code>broom::augment()</code></h3>
+<p>We saw in <a href="module01-slr.html#sec-residuals" class="quarto-xref"><span>Section 2.2.3</span></a> how to extract residuals using the <code>resid()</code> function, or by indexing our linear model object with lm$residuals. Another useful way to extract residuals, along with fitted values and other useful information, is to use the <code>broom::augment()</code> function. This function takes a model object as input and returns a data frame that includes the original data along with additional columns for fitted values, residuals, and other diagnostics.</p>
+</section>
+<section id="olympic-residuals-with-broomaugment" class="level3 Example" data-number="5.1.4">
+<h3 data-number="5.1.4" class="anchored" data-anchor-id="olympic-residuals-with-broomaugment"><span class="header-section-number">5.1.4</span> Olympic residuals with <code>broom::augment()</code></h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>olympic <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="st">"Data/OLYMPIC.txt"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>olympic_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(CHOLESTEROL <span class="sc">~</span> FAT, <span class="at">data =</span> olympic)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>olympic_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(olympic_lm)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>olympic_aug[<span class="fu">c</span>(<span class="st">"FAT"</span>, <span class="st">"CHOLESTEROL"</span>, <span class="st">".fitted"</span>, <span class="st">".resid"</span>)][<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+    FAT CHOLESTEROL .fitted .resid
+  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1  1290        1182   1250.  -68.0
+2  1350        1172   1284. -112. 
+3  1470        1264   1352.  -88.4
+4  1600        1493   1426.   66.6
+5  1710        1571   1489.   82.0
+6  1840        1711   1563.  148. </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(olympic_aug, <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray40"</span>) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted value"</span>, <span class="at">y =</span> <span class="st">"Residual"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-olympic-residuals-with-broom-augment-residual-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Base R provides a standard diagnostic panel via <code>plot()</code>, while <code>ggresidpanel</code> offers ggplot-based versions of similar plots.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(olympic_lm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-olympic-residuals-with-broom-augment-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-olympic-residuals-with-broom-augment-plot-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-olympic-residuals-with-broom-augment-plot-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-olympic-residuals-with-broom-augment-plot-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggresidpanel::resid_panel(olympic_lm)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="common-diagnostic-plots" class="level3" data-number="5.1.5">
+<h3 data-number="5.1.5" class="anchored" data-anchor-id="common-diagnostic-plots"><span class="header-section-number">5.1.5</span> Common diagnostic plots</h3>
+<p>Analysing residuals is such a key part of regression analysis that the base R <code>plot()</code> function for linear models automatically produces a set of diagnostic plots. Let’s have a look.</p>
+</section>
 </section>
 <section id="residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</h2>
 <ul>
-<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#gloss-residual">residual</a>).</li>
+<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#glossary-residual" class="glossary" title="An observed value minus its fitted value from the model: e_i = y_i - _i.">residual</a>).</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>diag_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(diag_mod, <span class="at">which =</span> <span class="dv">1</span>)      <span class="co"># residuals vs fitted</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>wt, <span class="fu">resid</span>(diag_mod), <span class="at">xlab =</span> <span class="st">"wt"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>diag_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(diag_mod, <span class="at">which =</span> <span class="dv">1</span>)      <span class="co"># residuals vs fitted</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>wt, <span class="fu">resid</span>(diag_mod), <span class="at">xlab =</span> <span class="st">"wt"</span>, <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-residual-plots-vs-predictors-and-fitted-values-fit-lm-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="diagnosing-nonconstant-variance-and-nonlinearity" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</h2>
 <ul>
-<li>Funnel shapes or curved trends in residual plots suggest heteroskedasticity or missing curvature; consider transformations or adding interactions/polynomials.</li>
+<li>Funnel shapes or curved trends in residual plots suggest <a href="glossary.html#glossary-heteroskedasticity" class="glossary" title="Nonconstant error variance across predictor values (the opposite of homoscedasticity).">heteroskedasticity</a> or missing curvature; consider transformations or adding interactions/polynomials.</li>
 </ul>
 </section>
 <section id="assessing-normality-of-residuals" class="level2" data-number="5.4">
@@ -311,11 +500,11 @@ window.Quarto = {
 <li>Use Q-Q plots and compare <span class="math inline">\(t\)</span>- and <span class="math inline">\(p\)</span>-values to Normal reference.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(diag_mod)); <span class="fu">qqline</span>(<span class="fu">resid</span>(diag_mod))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(diag_mod)); <span class="fu">qqline</span>(<span class="fu">resid</span>(diag_mod))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-assessing-normality-of-residuals-qqplot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -324,14 +513,14 @@ window.Quarto = {
 <section id="standardised-residuals-leverage-cooks-distance" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="standardised-residuals-leverage-cooks-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</h2>
 <ul>
-<li>Standardised (or studentised) residuals scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).</li>
-<li>Leverage (<code>hatvalues()</code>) flags unusual predictor combinations (<a href="glossary.html#gloss-leverage">leverage</a>).</li>
-<li>Cook’s distance combines leverage and residual size to assess influence (<a href="glossary.html#gloss-cooks-distance">Cook’s distance</a>).</li>
+<li><a href="glossary.html#glossary-standardized-residual" class="glossary" data-term="Standardized residual" title="A residual scaled by its estimated standard deviation to highlight unusually large deviations.">Standardized residuals</a> (or studentised residuals) scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).</li>
+<li>Leverage (<code>hatvalues()</code>) flags unusual predictor combinations (<a href="glossary.html#glossary-leverage" class="glossary" title="A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.">leverage</a>).</li>
+<li>Cook’s distance combines leverage and residual size to assess influence (<a href="glossary.html#glossary-cooks-distance" class="glossary" title="Influence measure combining residual size and leverage to flag points that change fitted values when omitted.">Cook’s distance</a>).</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">rstudent</span>(diag_mod),</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">hatvalues</span>(diag_mod),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cooks.distance</span>(diag_mod))[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">rstudent</span>(diag_mod),</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">hatvalues</span>(diag_mod),</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cooks.distance</span>(diag_mod))[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                        [,1]       [,2]        [,3]
 Mazda RX4         -1.4433354 0.09320650 0.051538041
@@ -345,24 +534,24 @@ Hornet Sportabout  0.4688483 0.07867173 0.004827051</code></pre>
 <section id="transformations-including-boxcox" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="transformations-including-boxcox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</h2>
 <ul>
-<li>Transformations can stabilise variance or linearise relationships; for strictly positive <span class="math inline">\(Y\)</span>, consider <a href="glossary.html#gloss-box-cox">Box–Cox transformations</a> to guide power choices.</li>
+<li>Transformations can stabilise variance or linearise relationships; for strictly positive <span class="math inline">\(Y\)</span>, consider <a href="glossary.html#glossary-box-cox-transformation" class="glossary" data-term="Box-Cox transformation" title="A family of power transformations used to stabilise variance or improve linearity for positive responses.">Box-Cox transformations</a> to guide power choices.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>MASS<span class="sc">::</span><span class="fu">boxcox</span>(diag_mod, <span class="at">plotit =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>MASS<span class="sc">::</span><span class="fu">boxcox</span>(diag_mod, <span class="at">plotit =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-transformations-including-box-cox-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
 <section id="handling-outliers-and-influential-observations" class="level2" data-number="5.7">
-<h2 data-number="5.7" class="anchored" data-anchor-id="handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling outliers and influential observations</h2>
+<h2 data-number="5.7" class="anchored" data-anchor-id="handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling <a href="glossary.html#glossary-outlier" class="glossary" data-term="Outlier" title="An observation with an unusually large residual relative to the fitted model.">outliers</a> and influential observations</h2>
 <ul>
 <li>Investigate data quality first (entry errors, unusual units).</li>
-<li>If influential points are real, fit with and without them to assess robustness; report how conclusions change.</li>
+<li>If <a href="glossary.html#glossary-influential-point" class="glossary" data-term="Influential point" title="An observation that substantially changes fitted coefficients or predictions when removed.">influential points</a> are real, fit with and without them to assess robustness; report how conclusions change.</li>
 <li>Prefer model adjustments (functional form, variance stabilisation) over automatic deletion; document any exclusions explicitly.</li>
 </ul>
 

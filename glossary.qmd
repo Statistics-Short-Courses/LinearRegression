@@ -1,40 +1,159 @@
+---
+glossary-include: auto
+glossary-sort: yaml
+glossary:
+  - term: Statistical model
+    definition: |
+      A probabilistic description of how a response relates to predictors, combining a systematic component with random error.
+  - term: Response (outcome) variable
+    definition: |
+      The variable $Y$ we aim to explain or predict.
+  - term: Predictor (explanatory) variable
+    definition: |
+      A variable $x$ used to explain or predict changes in the response.
+  - term: Linear predictor
+    definition: |
+      The deterministic part of a linear model, e.g. $E[Y|X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k$.
+  - term: Intercept
+    definition: |
+      The expected response when all predictors are zero; a baseline level.
+  - term: Slope
+    definition: |
+      The expected change in the response per one-unit increase in a predictor, holding other predictors constant.
+  - term: Random error term
+    definition: |
+      The stochastic component $\varepsilon$ that captures unexplained variation around the linear predictor.
+  - term: Mean-zero errors
+    definition: |
+      The assumption $E[\varepsilon] = 0$, so predictions are correct on average.
+  - term: Homoscedasticity
+    definition: |
+      Constant error variance across predictor values: $Var(\varepsilon)=\sigma^2$.
+  - term: Normal errors
+    definition: |
+      The assumption $\varepsilon \sim N(0,\sigma^2)$, supporting t- and F-based inference.
+  - term: Independence
+    definition: |
+      Errors from different observations are independent of one another.
+  - term: Ordinary least squares
+    definition: |
+      Estimation method that chooses coefficients to minimise the sum of squared residuals.
+    aliases:
+      - OLS
+  - term: Sum of squared residuals
+    definition: |
+      $\sum_{i=1}^n e_i^2$, the total squared discrepancy between observed and fitted values.
+    aliases:
+      - SSR
+      - RSS
+  - term: Mean squared error
+    definition: |
+      The sum of squared residuals divided by its degrees of freedom; an estimator of $\sigma^2$.
+    aliases:
+      - MSE
+  - term: Degrees of freedom
+    definition: |
+      The number of independent pieces of information after estimating parameters (e.g., $n-2$ in SLR).
+  - term: Standard error
+    definition: |
+      The estimated standard deviation of a coefficient estimate; quantifies uncertainty.
+  - term: t-test
+    definition: |
+      Tests whether a coefficient differs from zero using a t statistic and the assumed error distribution.
+  - term: p-value
+    definition: |
+      The probability, under the null, of observing a test statistic at least as extreme as the one observed.
+  - term: Confidence interval
+    definition: |
+      A range of plausible parameter values at a chosen confidence level (e.g., 95%).
+  - term: Prediction interval
+    definition: |
+      An interval for a future observation at given predictors; wider than a confidence interval.
+  - term: F-test (overall model test)
+    definition: |
+      Tests whether at least one predictor has a nonzero coefficient compared with an intercept-only model.
+  - term: Partial regression coefficient
+    definition: |
+      The effect of $x_i$ on $E[Y]$ holding all other predictors constant.
+  - term: Polynomial term
+    definition: |
+      A predictor raised to a power (e.g., $x^2$, $x^3$) to model curvature while staying linear in parameters.
+  - term: Overfitting
+    definition: |
+      When a model captures noise in the training data and generalises poorly to new data.
+  - term: Stepwise regression
+    definition: |
+      An automated selection approach that adds/removes predictors based on a criterion (e.g., AIC or adjusted $R^2$).
+  - term: Heteroskedasticity
+    definition: |
+      Nonconstant error variance across predictor values (the opposite of homoscedasticity).
+  - term: Standardized residual
+    definition: |
+      A residual scaled by its estimated standard deviation to highlight unusually large deviations.
+  - term: Outlier
+    definition: |
+      An observation with an unusually large residual relative to the fitted model.
+  - term: Influential point
+    definition: |
+      An observation that substantially changes fitted coefficients or predictions when removed.
+  - term: Extrapolation
+    definition: |
+      Making predictions outside the observed predictor range, where model assumptions may fail.
+  - term: Simple linear regression
+    definition: |
+      A linear model with one predictor: $E[Y] = \beta_0 + \beta_1 X$ with independent, mean-zero errors.
+  - term: Multiple linear regression
+    definition: |
+      A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.
+  - term: Residual
+    definition: |
+      An observed value minus its fitted value from the model: $e_i = y_i - \hat{y}_i$.
+  - term: Residual standard error
+    definition: |
+      The estimated standard deviation of the residuals (square root of the residual variance).
+  - term: Pearson correlation
+    definition: |
+      Measures linear association between two variables, ranging from -1 to 1.
+  - term: R-squared
+    definition: |
+      The proportion of variance in $Y$ explained by the model: $R^2 = 1 - \frac{\text{RSS}}{\text{TSS}}$.
+  - term: Adjusted R-squared
+    definition: |
+      $R^2$ penalised for the number of predictors to discourage unnecessary terms.
+  - term: Akaike Information Criterion
+    definition: |
+      Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.
+    aliases:
+      - AIC
+  - term: Bayesian Information Criterion
+    definition: |
+      Model comparison metric that penalises complexity more than AIC; lower values indicate a preferred model among those compared.
+    aliases:
+      - BIC
+  - term: Multicollinearity
+    definition: |
+      Strong correlation among predictors that inflates standard errors and destabilises estimates.
+  - term: Interaction
+    definition: |
+      A term that allows the effect of one predictor to depend on the level of another (e.g., $X_1 X_2$).
+  - term: Dummy variable
+    definition: |
+      An indicator (0/1) used to code categories in regression relative to a baseline.
+  - term: Leverage
+    definition: |
+      A measure of how far a case's predictor values are from the predictor means; high leverage can increase influence.
+  - term: Cook's distance
+    definition: |
+      Influence measure combining residual size and leverage to flag points that change fitted values when omitted.
+  - term: Box-Cox transformation
+    definition: |
+      A family of power transformations used to stabilise variance or improve linearity for positive responses.
+  - term: Parsimony
+    definition: |
+      Choosing the simplest adequate model that answers the scientific question.
+---
+
 # Glossary {.unnumbered}
 
-## Simple linear regression {#gloss-slr .unnumbered}
-A linear model with one predictor: $E[Y] = \beta_0 + \beta_1 X$ with independent, mean-zero errors.
-
-## Multiple linear regression {#gloss-mlr .unnumbered}
-A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.
-
-## Residual {#gloss-residual .unnumbered}
-An observed value minus its fitted value from the model: $e_i = y_i - \hat y_i$.
-
-## Residual standard error {#gloss-rse .unnumbered}
-The estimated standard deviation of the residuals (square root of the residual variance).
-
-## Adjusted R-squared {#gloss-adjusted-r-squared .unnumbered}
-$R^2$ penalised for the number of predictors to discourage unnecessary terms.
-
-## Akaike Information Criterion (AIC) {#gloss-aic .unnumbered}
-Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.
-
-## Multicollinearity {#gloss-multicollinearity .unnumbered}
-Strong correlation among predictors that inflates standard errors and destabilises estimates.
-
-## Interaction {#gloss-interaction .unnumbered}
-A term that allows the effect of one predictor to depend on the level of another (e.g., $X_1 X_2$).
-
-## Dummy variable {#gloss-dummy .unnumbered}
-An indicator (0/1) used to code categories in regression relative to a baseline.
-
-## Leverage {#gloss-leverage .unnumbered}
-A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.
-
-## Cook’s distance {#gloss-cooks-distance .unnumbered}
-Influence measure combining residual size and leverage to flag points that change fitted values when omitted.
-
-## Box–Cox transformation {#gloss-box-cox .unnumbered}
-A family of power transformations used to stabilise variance or improve linearity for positive responses.
-
-## Parsimony {#gloss-parsimony .unnumbered}
-Choosing the simplest adequate model that answers the scientific question.
+::: {#glossary}
+:::

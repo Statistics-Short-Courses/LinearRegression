@@ -180,7 +180,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Case Study: NAPLAN Reading Scores</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -194,26 +194,8 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="3">
-    <h2 id="toc-title">Contents</h2>
-   
-  <ul class="collapse">
-  <li><a href="#gloss-slr" id="toc-gloss-slr" class="nav-link active" data-scroll-target="#gloss-slr">Simple linear regression</a></li>
-  <li><a href="#gloss-mlr" id="toc-gloss-mlr" class="nav-link" data-scroll-target="#gloss-mlr">Multiple linear regression</a></li>
-  <li><a href="#gloss-residual" id="toc-gloss-residual" class="nav-link" data-scroll-target="#gloss-residual">Residual</a></li>
-  <li><a href="#gloss-rse" id="toc-gloss-rse" class="nav-link" data-scroll-target="#gloss-rse">Residual standard error</a></li>
-  <li><a href="#gloss-adjusted-r-squared" id="toc-gloss-adjusted-r-squared" class="nav-link" data-scroll-target="#gloss-adjusted-r-squared">Adjusted R-squared</a></li>
-  <li><a href="#gloss-aic" id="toc-gloss-aic" class="nav-link" data-scroll-target="#gloss-aic">Akaike Information Criterion (AIC)</a></li>
-  <li><a href="#gloss-multicollinearity" id="toc-gloss-multicollinearity" class="nav-link" data-scroll-target="#gloss-multicollinearity">Multicollinearity</a></li>
-  <li><a href="#gloss-interaction" id="toc-gloss-interaction" class="nav-link" data-scroll-target="#gloss-interaction">Interaction</a></li>
-  <li><a href="#gloss-dummy" id="toc-gloss-dummy" class="nav-link" data-scroll-target="#gloss-dummy">Dummy variable</a></li>
-  <li><a href="#gloss-leverage" id="toc-gloss-leverage" class="nav-link" data-scroll-target="#gloss-leverage">Leverage</a></li>
-  <li><a href="#gloss-cooks-distance" id="toc-gloss-cooks-distance" class="nav-link" data-scroll-target="#gloss-cooks-distance">Cook’s distance</a></li>
-  <li><a href="#gloss-box-cox" id="toc-gloss-box-cox" class="nav-link" data-scroll-target="#gloss-box-cox">Box–Cox transformation</a></li>
-  <li><a href="#gloss-parsimony" id="toc-gloss-parsimony" class="nav-link" data-scroll-target="#gloss-parsimony">Parsimony</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -237,57 +219,192 @@ window.Quarto = {
 </header>
 
 
-<section id="gloss-slr" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-slr">Simple linear regression</h2>
-<p>A linear model with one predictor: <span class="math inline">\(E[Y] = \beta_0 + \beta_1 X\)</span> with independent, mean-zero errors.</p>
-</section>
-<section id="gloss-mlr" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-mlr">Multiple linear regression</h2>
+<div id="glossary">
+<div id="glossary-statistical-model" class="glossary-entry">
+<p><strong>Statistical model</strong></p>
+<p>A probabilistic description of how a response relates to predictors, combining a systematic component with random error.</p>
+</div>
+<div id="glossary-response-outcome-variable" class="glossary-entry">
+<p><strong>Response (outcome) variable</strong></p>
+<p>The variable Y we aim to explain or predict.</p>
+</div>
+<div id="glossary-predictor-explanatory-variable" class="glossary-entry">
+<p><strong>Predictor (explanatory) variable</strong></p>
+<p>A variable x used to explain or predict changes in the response.</p>
+</div>
+<div id="glossary-linear-predictor" class="glossary-entry">
+<p><strong>Linear predictor</strong></p>
+<p>The deterministic part of a linear model, e.g.&nbsp;E[Y|X] = _0 + _1 X_1 + + _k X_k.</p>
+</div>
+<div id="glossary-intercept" class="glossary-entry">
+<p><strong>Intercept</strong></p>
+<p>The expected response when all predictors are zero; a baseline level.</p>
+</div>
+<div id="glossary-slope" class="glossary-entry">
+<p><strong>Slope</strong></p>
+<p>The expected change in the response per one-unit increase in a predictor, holding other predictors constant.</p>
+</div>
+<div id="glossary-random-error-term" class="glossary-entry">
+<p><strong>Random error term</strong></p>
+<p>The stochastic component that captures unexplained variation around the linear predictor.</p>
+</div>
+<div id="glossary-mean-zero-errors" class="glossary-entry">
+<p><strong>Mean-zero errors</strong></p>
+<p>The assumption E[] = 0, so predictions are correct on average.</p>
+</div>
+<div id="glossary-homoscedasticity" class="glossary-entry">
+<p><strong>Homoscedasticity</strong></p>
+<p>Constant error variance across predictor values: Var()=^2.</p>
+</div>
+<div id="glossary-normal-errors" class="glossary-entry">
+<p><strong>Normal errors</strong></p>
+<p>The assumption N(0,^2), supporting t- and F-based inference.</p>
+</div>
+<div id="glossary-independence" class="glossary-entry">
+<p><strong>Independence</strong></p>
+<p>Errors from different observations are independent of one another.</p>
+</div>
+<div id="glossary-ordinary-least-squares" class="glossary-entry">
+<p><strong>Ordinary least squares</strong></p>
+<p>Estimation method that chooses coefficients to minimise the sum of squared residuals.</p>
+</div>
+<div id="glossary-sum-of-squared-residuals" class="glossary-entry">
+<p><strong>Sum of squared residuals</strong></p>
+<p>_{i=1}^n e_i^2, the total squared discrepancy between observed and fitted values.</p>
+</div>
+<div id="glossary-mean-squared-error" class="glossary-entry">
+<p><strong>Mean squared error</strong></p>
+<p>The sum of squared residuals divided by its degrees of freedom; an estimator of ^2.</p>
+</div>
+<div id="glossary-degrees-of-freedom" class="glossary-entry">
+<p><strong>Degrees of freedom</strong></p>
+<p>The number of independent pieces of information after estimating parameters (e.g., n-2 in SLR).</p>
+</div>
+<div id="glossary-standard-error" class="glossary-entry">
+<p><strong>Standard error</strong></p>
+<p>The estimated standard deviation of a coefficient estimate; quantifies uncertainty.</p>
+</div>
+<div id="glossary-t-test" class="glossary-entry">
+<p><strong>t-test</strong></p>
+<p>Tests whether a coefficient differs from zero using a t statistic and the assumed error distribution.</p>
+</div>
+<div id="glossary-p-value" class="glossary-entry">
+<p><strong>p-value</strong></p>
+<p>The probability, under the null, of observing a test statistic at least as extreme as the one observed.</p>
+</div>
+<div id="glossary-confidence-interval" class="glossary-entry">
+<p><strong>Confidence interval</strong></p>
+<p>A range of plausible parameter values at a chosen confidence level (e.g., 95%).</p>
+</div>
+<div id="glossary-prediction-interval" class="glossary-entry">
+<p><strong>Prediction interval</strong></p>
+<p>An interval for a future observation at given predictors; wider than a confidence interval.</p>
+</div>
+<div id="glossary-f-test-overall-model-test" class="glossary-entry">
+<p><strong>F-test (overall model test)</strong></p>
+<p>Tests whether at least one predictor has a nonzero coefficient compared with an intercept-only model.</p>
+</div>
+<div id="glossary-partial-regression-coefficient" class="glossary-entry">
+<p><strong>Partial regression coefficient</strong></p>
+<p>The effect of x_i on E[Y] holding all other predictors constant.</p>
+</div>
+<div id="glossary-polynomial-term" class="glossary-entry">
+<p><strong>Polynomial term</strong></p>
+<p>A predictor raised to a power (e.g., x^2, x^3) to model curvature while staying linear in parameters.</p>
+</div>
+<div id="glossary-overfitting" class="glossary-entry">
+<p><strong>Overfitting</strong></p>
+<p>When a model captures noise in the training data and generalises poorly to new data.</p>
+</div>
+<div id="glossary-stepwise-regression" class="glossary-entry">
+<p><strong>Stepwise regression</strong></p>
+<p>An automated selection approach that adds/removes predictors based on a criterion (e.g., AIC or adjusted R^2).</p>
+</div>
+<div id="glossary-heteroskedasticity" class="glossary-entry">
+<p><strong>Heteroskedasticity</strong></p>
+<p>Nonconstant error variance across predictor values (the opposite of homoscedasticity).</p>
+</div>
+<div id="glossary-standardized-residual" class="glossary-entry">
+<p><strong>Standardized residual</strong></p>
+<p>A residual scaled by its estimated standard deviation to highlight unusually large deviations.</p>
+</div>
+<div id="glossary-outlier" class="glossary-entry">
+<p><strong>Outlier</strong></p>
+<p>An observation with an unusually large residual relative to the fitted model.</p>
+</div>
+<div id="glossary-influential-point" class="glossary-entry">
+<p><strong>Influential point</strong></p>
+<p>An observation that substantially changes fitted coefficients or predictions when removed.</p>
+</div>
+<div id="glossary-extrapolation" class="glossary-entry">
+<p><strong>Extrapolation</strong></p>
+<p>Making predictions outside the observed predictor range, where model assumptions may fail.</p>
+</div>
+<div id="glossary-simple-linear-regression" class="glossary-entry">
+<p><strong>Simple linear regression</strong></p>
+<p>A linear model with one predictor: E[Y] = _0 + _1 X with independent, mean-zero errors.</p>
+</div>
+<div id="glossary-multiple-linear-regression" class="glossary-entry">
+<p><strong>Multiple linear regression</strong></p>
 <p>A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.</p>
-</section>
-<section id="gloss-residual" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-residual">Residual</h2>
-<p>An observed value minus its fitted value from the model: <span class="math inline">\(e_i = y_i - \hat y_i\)</span>.</p>
-</section>
-<section id="gloss-rse" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-rse">Residual standard error</h2>
+</div>
+<div id="glossary-residual" class="glossary-entry">
+<p><strong>Residual</strong></p>
+<p>An observed value minus its fitted value from the model: e_i = y_i - _i.</p>
+</div>
+<div id="glossary-residual-standard-error" class="glossary-entry">
+<p><strong>Residual standard error</strong></p>
 <p>The estimated standard deviation of the residuals (square root of the residual variance).</p>
-</section>
-<section id="gloss-adjusted-r-squared" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-adjusted-r-squared">Adjusted R-squared</h2>
-<p><span class="math inline">\(R^2\)</span> penalised for the number of predictors to discourage unnecessary terms.</p>
-</section>
-<section id="gloss-aic" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-aic">Akaike Information Criterion (AIC)</h2>
+</div>
+<div id="glossary-pearson-correlation" class="glossary-entry">
+<p><strong>Pearson correlation</strong></p>
+<p>Measures linear association between two variables, ranging from -1 to 1.</p>
+</div>
+<div id="glossary-r-squared" class="glossary-entry">
+<p><strong>R-squared</strong></p>
+<p>The proportion of variance in Y explained by the model: R^2 = 1 - .</p>
+</div>
+<div id="glossary-adjusted-r-squared" class="glossary-entry">
+<p><strong>Adjusted R-squared</strong></p>
+<p>R^2 penalised for the number of predictors to discourage unnecessary terms.</p>
+</div>
+<div id="glossary-akaike-information-criterion" class="glossary-entry">
+<p><strong>Akaike Information Criterion</strong></p>
 <p>Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.</p>
-</section>
-<section id="gloss-multicollinearity" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-multicollinearity">Multicollinearity</h2>
+</div>
+<div id="glossary-bayesian-information-criterion" class="glossary-entry">
+<p><strong>Bayesian Information Criterion</strong></p>
+<p>Model comparison metric that penalises complexity more than AIC; lower values indicate a preferred model among those compared.</p>
+</div>
+<div id="glossary-multicollinearity" class="glossary-entry">
+<p><strong>Multicollinearity</strong></p>
 <p>Strong correlation among predictors that inflates standard errors and destabilises estimates.</p>
-</section>
-<section id="gloss-interaction" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-interaction">Interaction</h2>
-<p>A term that allows the effect of one predictor to depend on the level of another (e.g., <span class="math inline">\(X_1 X_2\)</span>).</p>
-</section>
-<section id="gloss-dummy" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-dummy">Dummy variable</h2>
+</div>
+<div id="glossary-interaction" class="glossary-entry">
+<p><strong>Interaction</strong></p>
+<p>A term that allows the effect of one predictor to depend on the level of another (e.g., X_1 X_2).</p>
+</div>
+<div id="glossary-dummy-variable" class="glossary-entry">
+<p><strong>Dummy variable</strong></p>
 <p>An indicator (0/1) used to code categories in regression relative to a baseline.</p>
-</section>
-<section id="gloss-leverage" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-leverage">Leverage</h2>
+</div>
+<div id="glossary-leverage" class="glossary-entry">
+<p><strong>Leverage</strong></p>
 <p>A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.</p>
-</section>
-<section id="gloss-cooks-distance" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-cooks-distance">Cook’s distance</h2>
+</div>
+<div id="glossary-cooks-distance" class="glossary-entry">
+<p><strong>Cook’s distance</strong></p>
 <p>Influence measure combining residual size and leverage to flag points that change fitted values when omitted.</p>
-</section>
-<section id="gloss-box-cox" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-box-cox">Box–Cox transformation</h2>
+</div>
+<div id="glossary-box-cox-transformation" class="glossary-entry">
+<p><strong>Box-Cox transformation</strong></p>
 <p>A family of power transformations used to stabilise variance or improve linearity for positive responses.</p>
-</section>
-<section id="gloss-parsimony" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="gloss-parsimony">Parsimony</h2>
+</div>
+<div id="glossary-parsimony" class="glossary-entry">
+<p><strong>Parsimony</strong></p>
 <p>Choosing the simplest adequate model that answers the scientific question.</p>
+</div>
+</div>
 
 
 <script type="ojs-module-contents">
@@ -304,7 +421,6 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
-</section>
 
 </main> <!-- /main -->
 <script>

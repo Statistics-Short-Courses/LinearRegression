@@ -37,19 +37,19 @@ webr:
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
-```{webr}
+```{webr module01-slr-setup}
 #| include: false
 library(tidyverse)
 theme_set(theme_bw())
 ```
 
-```{r}
+```{r module01-slr-setup-2}
 #| include: false
 library(tidyverse)
 theme_set(theme_bw())
 ```
 
-```{r}
+```{r module01-slr-setup-simulate}
 #| echo: false
 #| define:
 #|  - linearData
@@ -60,7 +60,7 @@ y <- 0.5 * x - 3 + rnorm(n,0, 2)
 linearData <- data.frame(x,y)
 ojs_define(linearData)
 ```
-# Simple Linear Regression (SLR)
+# Simple Linear Regression (SLR) {#sec-slr}
 
 ## When to use SLR
 
@@ -71,7 +71,7 @@ Indeed, at the end of the last session we generated data from a linear model. In
 
 ::: {.panel-tabset}
 ### Plot
-```{r}
+```{r module01-slr-fitting-models-to-data-plot}
 #| echo: false
 #| input:
 #|   - linearData
@@ -81,7 +81,7 @@ ggplot(linearData)+
 ```
 
 ### Data
-```{r}
+```{r module01-slr-fitting-models-to-data}
 #| echo: false
 #| input:
 #|   - linearData
@@ -112,7 +112,7 @@ $$
 $$
 Looking at some data, we try to find the values of our parameters that best 'fit' its distribution. Adjust the sliders below to find a line that you think fits the data:
 
-```{ojs}
+```{ojs module01-slr-estimating-parameters-view}
 //| panel: sidebar
 //| echo: false
 viewof b0adj_1 = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept (asjust)`})
@@ -123,7 +123,7 @@ b0_1 = (-3 - 0.5*b1_1) + b0adj_1
 tex.block`\hat{Y} = ${b0_1.toFixed(2)} + ${b1_1.toFixed(2)}x`
 ```
 
-```{ojs}
+```{ojs module01-slr-estimating-parameters-ojs}
 //| panel: fill
 //| echo: false
 
@@ -145,7 +145,7 @@ Plot.plot({
 ::: Exercise
 What is your best estimate for the values of $\alpha$ and $\beta$ that best fit the given data?
 
-```{webr}
+```{webr module01-slr-estimating-parameters}
 #| exercise: ex_2.1
 #| envir: Ex2
 #| define:
@@ -155,12 +155,12 @@ my_a <- ______
 my_b <- ______
 ```
 :::: {.solution exercise="ex_1"}
-```{webr}
+```{webr module01-slr-estimating-parameters-2}
 #| exercise: ex_2.1
 #| solution: true
 ```
 ::::
-```{webr}
+```{webr module01-slr-estimating-parameters-3}
 #| exercise: ex_2.1
 #| envir: Ex2
 #| check: true
@@ -175,7 +175,7 @@ grade_this({
 ###
 
 Ok great, so we have an estimate for our line-of-best-fit:
-```{ojs}
+```{ojs module01-slr-estimating-parameters-ojs-2}
 //| echo: false
 tex.block`\hat{Y} = ${my_a} + ${my_b}\cdot x`
 ```
@@ -183,9 +183,9 @@ but what do we mean by 'best' fit here? How do we evaluate this estimate and may
 
 -   [ ] Continue
 
-### Residuals
+### Residuals {#sec-residuals}
 
-Residuals are the difference between observed values of $Y$, and the value predicted by our estimated linear predictor $\hat{Y}$. We denote residuals with the letter $e$:
+[Residuals]{.glossary term="Residual"} are the difference between observed values of $Y$, and the value predicted by our estimated linear predictor $\hat{Y}$. We denote residuals with the letter $e$:
 $$
 e=Y-\hat{Y} = Y - (a + bx). 
 $$
@@ -200,7 +200,7 @@ Indeed - calculating residuals gives us a way to assess how well our estimated m
 
 #### Optimising model fit by minimising (squared) residuals
 Below, the plot now also displays residuals for each data point.
-Underneath the model equation is the *Sum of Squared Residuals* (SSR), which gives a measure of the absolute difference between our linear predictor and the observed outcomes. 
+Underneath the model equation is the *[Sum of squared residuals]{.glossary}* (SSR), which gives a measure of the absolute difference between our linear predictor and the observed outcomes. 
 
 $$
 SSR=\sum_{i=1}^{n} e_i^2
@@ -209,7 +209,7 @@ $$
 where $e_i = Y_i - \hat{Y}_i$.  This gives us a numerical measure of how well the line fits the data - see how low you can get the SSR by adjusting slope and intercept.
 
 
-```{ojs}
+```{ojs module01-slr-optimising-model-fit-by-minimising-squared-resid-view}
 //| panel: sidebar
 //| echo: false
 viewof b0adj = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})
@@ -236,7 +236,7 @@ tex.block`\hat{Y} = ${b0} + ${b1}x`
 tex.block`\sum_{i} e_i^{2} = ${SSRes.toFixed(2)}`
 ```
 
-```{ojs}
+```{ojs module01-slr-optimising-model-fit-by-minimising-squared-resid-ojs}
 //| panel: fill
 //| echo: false
 lineData = xRange.map(x => ({x, y: b1 * x + b0}))
@@ -261,7 +261,7 @@ Plot.plot({
 
 ::: Exercise
 Based on this visualisation, what do you think is the minimum possible $SSR$ achievable?
-```{webr}
+```{webr module01-slr-optimising-model-fit-by-minimising-squared-resid}
 #| exercise: Ex_2.2
 #| envir: Ex2
 #| define:
@@ -269,12 +269,12 @@ Based on this visualisation, what do you think is the minimum possible $SSR$ ach
 SSR <- ________
 ```
 :::: {.solution exercise="Ex_2.2"}
-```{webr}
+```{webr module01-slr-optimising-model-fit-by-minimising-squared-resid-2}
 #| exercise: Ex_2.2
 #| solution: true
 ```
 ::::
-```{webr}
+```{webr module01-slr-optimising-model-fit-by-minimising-squared-resid-3}
 #| exercise: Ex_2.2
 #| check: true
 #| class: wait
@@ -286,7 +286,7 @@ grade_this({
 ```
 If you want you can update your $a$ and $b$ estimates too (otherwise just proceed):
 
-```{webr}
+```{webr module01-slr-optimising-model-fit-by-minimising-squared-resid-4}
 #| exercise: ex_2.3
 #| envir: Ex2
 my_a <- ______
@@ -296,28 +296,28 @@ my_b <- ______
 
 :::
 
-### The least-squares estimate
+### The least-squares estimate {#sec-leastsquares}
 
-We call the estimates $a$ and $b$ which minimise the sum of squares the *least squares estimates*. Some nice mathematics tells us that the least squares esimates for a simple linear model are *unique* - that is, there is one set of values for $a$ and $b$ which satisfy this property. Moreover, we don't have to manually adjust our parameters to keep lowering SSR - there is a convenient closed form expression which allows us to compute $a$ and $b$ very efficiently. As a statistical programming language, this is something R does very easily..
+We call the estimates $a$ and $b$ which minimise the sum of squares the *[least squares estimates]{.glossary term="Ordinary least squares"}*. Some nice mathematics tells us that the least squares esimates for a simple linear model are *unique* - that is, there is one set of values for $a$ and $b$ which satisfy this property. Moreover, we don't have to manually adjust our parameters to keep lowering SSR - there is a convenient closed form expression which allows us to compute $a$ and $b$ very efficiently. As a statistical programming language, this is something R does very easily..
 
 
 ### Fitting a model with the `lm()` function
 
 In R the `lm()` function computes the least squares estimates $a$ and $b$ for our simple linear model (among other things) in a single command: 
 
-```{webr}
+```{webr module01-slr-fitting-a-model-with-the-lm-function-fit-lm}
 #| input:
 #|   - linearData
 lm_1 <- lm(y~x,linearData)
 ```
 We can  extract the coefficients from the `lm` by indexing:
 
-```{webr}
+```{webr module01-slr-fitting-a-model-with-the-lm-function}
 lm_1$coefficients
 ```
 or by the `coef()` function:
 
-```{webr}
+```{webr module01-slr-fitting-a-model-with-the-lm-function-2}
 coef(lm_1)
 ```
 -  [ ] How do these estimates compare with yours? 
@@ -326,7 +326,7 @@ Lets compare the estimated linear fits graphically:
 
 ::: {.panel-tabset}
 #### Plot
-```{webr}
+```{webr module01-slr-fitting-a-model-with-the-lm-function-plot}
 #| exercise: comparePlot
 #| envir: Ex2
 #| echo: false
@@ -345,7 +345,7 @@ ggplot(linearData)+
   scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'))
 ```
 #### Code
-```{webr}
+```{webr module01-slr-fitting-a-model-with-the-lm-function-code}
 #| eval: false
 ggplot(linearData)+
   aes(x=x,y=y)+
@@ -370,7 +370,7 @@ Once the line has been fitted (i.e. $\alpha$ and $\beta$ have been estimated as 
 
 We can extract the individual residual values from the fitted `lm` object by indexing (e.g. `my_lm$residuals`) or with the `residuals()` function.
 
-```{webr}
+```{webr module01-slr-estimating-variance}
 residuals(lm_1)
 ```
 
@@ -380,14 +380,14 @@ The resulting `R` object is a vector of the residual for each observation. i.e. 
 #### Extracting residuals from an `lm` object
 Extract the residuals from  your least squares fitted model `lm_1`*by indexing* and assign them to the variable `e`
 
-```{webr}
+```{webr module01-slr-extracting-residuals-from-an-lm-object}
 #| exercise: ex_2.2.1
 #| envir: ex_2.2
 e <- ______
 ```
 :::: {.solution exercise="ex_2.2.1"}
 #### Solution 
-```{webr}
+```{webr module01-slr-extracting-residuals-from-an-lm-object-solution}
 #| exercise: ex_2.2.1
 #| solution: true
 #| envir: ex_2.2
@@ -395,7 +395,7 @@ e <- lm_1$residuals
 ```
 ::::
 
-```{webr}
+```{webr module01-slr-extracting-residuals-from-an-lm-object-solution-2}
 #| exercise: ex_2.2.1
 #| envir: ex_2.2
 #| check: true
@@ -407,24 +407,25 @@ grade_this_code()
 ### Residual Standard Error
 
 
-Dividing the residual sum of squares by $n-2$ (one degree of freedom lost per fitted coefficient) gives the mean squared error, and taking the square root yields the residual standard deviation (aka. the {{< glossary Residual-Standard-Error >}})
+Dividing the residual sum of squares by $n-2$ (one [degree of freedom]{.glossary term="Degrees of freedom"} lost per fitted coefficient) gives the [mean squared error]{.glossary}, and taking the square root yields the residual standard deviation (aka. the [Residual standard error]{.glossary})
 $$
 s^2 = \frac{1}{n-2}\sum_{i=1}^{n} e_i^2= \frac{SSE}{n-2}, \quad s=\sqrt{s^2}.
 $$
 Interpreting $\hat \sigma$ is often easier on the original $y$ scale: a typical observation falls about $\hat \sigma$ units away from the fitted line.
 
 $s^2$ and $s$ are our estimators for $\sigma^2$ and $\sigma$, respectively. 
+
 ::: Exercise
 #### Calculate the Residual Standard Error
 using your `e` object defined in the previous exercise, calculate the residual standard error of the least squares model (hint - there are 20 observations in the linearData dataset)
-```{webr}
+```{webr module01-slr-calculate-the-residual-standard-error}
 #| exercise: ex_2.2.3
 #| envir: ex_2.2
 rse <- ______
 ```
 :::: {.solution exercise="ex_2.2.1"}
 #### Solution 
-```{webr}
+```{webr module01-slr-calculate-the-residual-standard-error-solution}
 #| exercise: ex_2.2.3
 #| solution: true
 #| envir: ex_2.2
@@ -432,7 +433,7 @@ rse <- sqrt(sum(e^2)/(nrow(linearData)-2))
 ```
 ::::
 
-```{webr}
+```{webr module01-slr-calculate-the-residual-standard-error-solution-2}
 #| exercise: ex_2.2.1
 #| envir: ex_2.2.1
 #| check: true
@@ -443,9 +444,9 @@ grade_this_code()
 
 ### Correlation and $R^2$
 
-The {{< glossary Pearson-Correlation >}} coefficient, $r$, measures how strongly $x$ and $Y$ move together along a straight line, taking values between $-1$ (perfect negative linear relationship) and $1$ (perfect positive linear relationship). 
+The [Pearson correlation]{.glossary} coefficient, $r$, measures how strongly $x$ and $Y$ move together along a straight line, taking values between $-1$ (perfect negative linear relationship) and $1$ (perfect positive linear relationship). 
 
-In simple linear regression with an intercept, the {{< glossary R-Squared >}} value can be written as
+In simple linear regression with an intercept, the [R-squared]{.glossary} value can be written as
 $$
 R^2 = 1 - \frac{\text{RSS}}{\text{TSS}} = r^2,
 $$
@@ -454,7 +455,7 @@ so $R^2$ captures the proportion of the total variation in $Y$ that is explained
 ::: Exercise
 #### Correlation and $R^2$ in our example
 Calculate the correlation between `x` and `y`, then compute $R^2$ using the residuals from `lm_1`.
-```{webr}
+```{webr module01-slr-correlation-and-r-2-in-our-example}
 #| exercise: ex_2.2.4
 #| envir: ex_2.2
 r <- ______
@@ -462,7 +463,7 @@ r_squared <- ______
 ```
 :::: {.solution exercise="ex_2.2.4"}
 #### Solution 
-```{webr}
+```{webr module01-slr-correlation-and-r-2-in-our-example-2}
 #| exercise: ex_2.2.4
 #| solution: true
 #| envir: ex_2.2
@@ -471,7 +472,7 @@ r_squared <- 1 - sum(e^2) / sum((linearData$y - mean(linearData$y))^2)
 ```
 ::::
 
-```{webr}
+```{webr module01-slr-correlation-and-r-2-in-our-example-solution}
 #| exercise: ex_2.2.4
 #| envir: ex_2.2
 #| check: true
@@ -479,7 +480,7 @@ r_squared <- 1 - sum(e^2) / sum((linearData$y - mean(linearData$y))^2)
 grade_this_code()
 ```
 
-```{webr}
+```{webr module01-slr-correlation-and-r-2-in-our-example-summary}
 #| echo: false
 #| envir: ex_2.2
 c(computed_r = r, computed_r_squared = r_squared, lm_summary_r_squared = summary(lm_1)$r.squared)
@@ -503,7 +504,7 @@ Importantly, the inferential procedures we use rest on the **assumptions of the 
 * They are independent.
 * **They are Normally distributed.**
 
-The Normality assumption is what allows us to derive the sampling distributions of $a$ and $b$, leading directly to the **t-tests** and **confidence intervals** used for inference. Without these assumptions—especially Normality—the exact forms of these inferential tools would not hold.
+The Normality assumption is what allows us to derive the sampling distributions of $a$ and $b$, leading directly to the **[t-tests]{.glossary term="t-test"}** and **[confidence intervals]{.glossary term="Confidence interval"}** used for inference. Without these assumptions—especially Normality—the exact forms of these inferential tools would not hold.
 
 ::: Note
 For a broader introduction to statistical inference, see the *Inferential Statistics with R* short course. If concepts such as the Normal distribution or t-tests feel unfamiliar, please review that material before continuing.
@@ -511,7 +512,7 @@ For a broader introduction to statistical inference, see the *Inferential Statis
 
 ---
 
-### Inference About the Slope, $\beta$
+### Inference About the Slope, $\beta$ {#sec-beta_inference}
 
 In simple linear regression, the population relationship is modelled as
 
@@ -534,7 +535,7 @@ Because the Normality assumption implies that the estimator $b$ has a Normal sam
 
 ::: Exercise
 
-#### Hypothesis testing revision (p-values)
+#### Hypothesis testing revision ([p-values]{.glossary term="p-value"})
 
 :::
 
@@ -546,7 +547,7 @@ $$
 t = \frac{b}{\text{SE}(b)},
 $$
 
-which follows a $t$-distribution with $n - 2$ degrees of freedom.
+which follows a $t$-distribution with $n - 2$ [degrees of freedom]{.glossary term="Degrees of freedom"}.
 
 Interpretation:
 
@@ -603,7 +604,7 @@ Once we have fitted a regression model, we often want to make statements about t
 
 These involve different uncertainties, and therefore require different intervals.
 
-#### Confidence Interval for the Mean Response
+#### [Confidence interval]{.glossary term="Confidence interval"} for the Mean Response
 
 Let $\hat{y}_0 = a + b x_0$ be the fitted value at $x_0$.
 A confidence interval for the mean response is:
@@ -624,7 +625,7 @@ This interval quantifies uncertainty in the *average* value of $Y$ for units wit
 predict(fit, newdata = new_point, interval = "confidence")
 ```
 
-#### Prediction Interval for a New Observation
+#### [Prediction interval]{.glossary term="Prediction interval"} for a New Observation
 
 To predict an individual outcome at $x_0$, we must include the additional uncertainty from the random error $\varepsilon$:
 

@@ -35,13 +35,13 @@ custom-numbered-blocks:
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
-```{r}
+```{r module00-lm-setup}
 #| include: false
 library(ggplot2)
 theme_set(theme_bw())
 ```
 
-```{webr}
+```{webr module00-lm-setup-2}
 #| include: false
 library(ggplot2)
 theme_set(theme_bw())
@@ -52,7 +52,7 @@ theme_set(theme_bw())
 
 A central aim of statistical modelling is to understand how one *variable* changes in relation to others. In your own work, these variables will have concrete meaning - perhaps plant growth, reaction time, exam score, or income - but for now we will simply call them $x$ and $Y$.
 
-In regression, we choose one variable $Y$ to treat as the **outcome** we want to explain or predict, and $x$ as one or more **predictors**. Our goal is to describe how changes in $x$ are associated with changes in $Y$.
+In regression, we choose one variable $Y$ to treat as the **[outcome]{.glossary term="Response (outcome) variable"}** we want to explain or predict, and $x$ as one or more **[predictors]{.glossary term="Predictor (explanatory) variable"}**. Our goal is to describe how changes in $x$ are associated with changes in $Y$.
 
 A simple way to express this idea is
 
@@ -60,7 +60,7 @@ $$Y = f(x)$$
 
 meaning that the value of $Y$ can be described by some function of $x$. If we knew this function exactly, and if the world behaved perfectly, then knowing $x$ would tell us everything about $Y$. Many physical laws look like this—for example, $E = mc^2$—but real data rarely follow a perfectly deterministic relationship.
 
-In practice, even when $x$ is held constant, repeated observations of $Y$ will vary. People respond differently, instruments fluctuate, biological systems are noisy, and experimental conditions change. To recognise this, statistical models include a **random error term**:
+In practice, even when $x$ is held constant, repeated observations of $Y$ will vary. People respond differently, instruments fluctuate, biological systems are noisy, and experimental conditions change. To recognise this, [statistical models]{.glossary term="Statistical model"} include a **[random error term]{.glossary}**:
 
 $$Y = f(x) + \varepsilon$$.
 
@@ -77,18 +77,18 @@ This allows us to describe the **expected value** of $Y$ as
 $$ E[Y] = \alpha + \beta x $$
 
 This is the familiar straight-line relationship:  
-- $\alpha$ is the point where the line meets the vertical axis, and  
-- $\beta$ is the slope, describing how we expect $Y$ to change when $x$ increases by one unit.
+- $\alpha$ is the [intercept]{.glossary}, the point where the line meets the vertical axis, and  
+- $\beta$ is the [slope]{.glossary}, describing how we expect $Y$ to change when $x$ increases by one unit.
 
 
-```{ojs}
+```{ojs module00-lm-linear-prediction-view}
 //| panel: sidebar
 //| echo: false
 viewof b1 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β)"})
 viewof b0 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
 ```
 
-```{ojs}
+```{ojs module00-lm-linear-prediction-ojs}
 //| panel: fill
 //| echo: false
 xRange = [-10,10]
@@ -114,7 +114,7 @@ Y and x have a linear relationship
 
 Suppose you have received a job offer from *Company A*, and you want to predict your salary after working there for 10 years. You are told that the **average starting salary** at this company is $50,000, and that salaries **increase by $5,000 per year** of employment.
 
-We can represent this relationship using a simple linear predictor. For an employee with $x$ years at the company, the expected salary is
+We can represent this relationship using a simple [linear predictor]{.glossary}. For an employee with $x$ years at the company, the expected salary is
 
 $$
 E[Y] = 50{,}000 + 5{,}000 \cdot x.
@@ -124,7 +124,7 @@ $$
 
 ## Plot
 
-```{r}
+```{r module00-lm-salary-growth-over-time-plot}
 #| echo: false
 #| fig-cap: "Expected salary at Company A as a function of years employed."
 ggplot() +
@@ -135,7 +135,7 @@ ggplot() +
 
 ## Code
 
-```{r}
+```{r module00-lm-salary-growth-over-time-code}
 #| eval: false
 ggplot() +
   geom_abline(intercept = 5e4, slope = 5e3, colour = '#2196F3') +
@@ -175,7 +175,7 @@ $$
 
 Assign these values in R:
 
-```{webr}
+```{webr module00-lm-choosing-parameters}
 #| exercise: ex_1.1.1
 #| envir: Ex1
 alpha <- _______
@@ -186,7 +186,7 @@ beta <- _______
 
 ##### Solution
 
-```{webr}
+```{webr module00-lm-choosing-parameters-solution}
 #| exercise: ex_1.1.1
 #| solution: true
 #| envir: Ex1
@@ -196,7 +196,7 @@ beta <- 3000
 
 :::::
 
-```{webr}
+```{webr module00-lm-choosing-parameters-solution-2}
 #| exercise: ex_1.1.1
 #| check: true
 #| class: wait
@@ -224,7 +224,7 @@ Below is a plot comparing salary trends for both companies:
 
 ## Plot
 
-```{r}
+```{r module00-lm-linear-prediction-plot}
 #| echo: false
 #| fig-cap: "Linear salary trends for two companies."
 ggplot() +
@@ -241,7 +241,7 @@ ggplot() +
 
 ## Code
 
-```{r}
+```{r module00-lm-linear-prediction-code}
 #| eval: false
 ggplot() +
   geom_abline(aes(intercept = 7e4, slope = 3e3, colour = "Company B")) +
@@ -259,7 +259,7 @@ ggplot() +
 
 Now compute the expected salary after 10 years:
 
-```{webr}
+```{webr module00-lm-linear-prediction-code-2}
 #| exercise: ex_1.1.2
 #| envir: Ex1
 E_Y <- _____ + (_____ * _____)
@@ -267,7 +267,7 @@ E_Y <- _____ + (_____ * _____)
 
 ::::: {.solution exercise="ex_1.1.2"}
 
-```{webr}
+```{webr module00-lm-linear-prediction-code-3}
 #| exercise: ex_1.1.2
 #| solution: true
 #| envir: Ex1
@@ -276,7 +276,7 @@ E_Y <- alpha + (beta * 10)
 
 :::::
 
-```{webr}
+```{webr module00-lm-linear-prediction-code-4}
 #| exercise: ex_1.1.2
 #| check: true
 #| class: wait
@@ -294,7 +294,7 @@ gradethis::grade_this_code()
 
 Evaluating the expression in R:
 
-```{webr}
+```{webr module00-lm-using-r-functions}
 #| exercise: ex_1.1.2.2
 #| envir: Ex1
 #| edit: false
@@ -309,7 +309,7 @@ $$
 
 Now we can turn this into a reusable function:
 
-```{webr}
+```{webr module00-lm-using-r-functions-2}
 #| edit: false
 simple_linear_prediction <- function(X, alpha = 7e4, beta = 4e3) {
   alpha + (beta * X)
@@ -318,12 +318,12 @@ simple_linear_prediction <- function(X, alpha = 7e4, beta = 4e3) {
 
 Predict salaries for these employment durations:
 
-```{webr}
+```{webr module00-lm-using-r-functions-3}
 #| edit: false
 X <- c(9, 4, 5, 2, 6)
 ```
 
-```{webr}
+```{webr module00-lm-using-r-functions-4}
 #| exercise: ex_1.1.3
 #| envir: Ex1
 
@@ -331,7 +331,7 @@ X <- c(9, 4, 5, 2, 6)
 
 ::::: {.solution exercise="ex_1.1.3"}
 
-```{webr}
+```{webr module00-lm-using-r-functions-5}
 #| exercise: ex_1.1.3
 #| solution: true
 simple_linear_prediction(X)
@@ -339,7 +339,7 @@ simple_linear_prediction(X)
 
 :::::
 
-```{webr}
+```{webr module00-lm-using-r-functions-6}
 #| exercise: ex_1.1.3
 #| check: true
 #| class: wait
@@ -367,12 +367,12 @@ $$
 
 ### Mean Zero
 
--   The error term represents the \*difference between the actual value of $Y$ and the value predicted by the linear predictor, $E[Y]$.
+-   The error term represents the \*difference between the actual value of $Y$ and the value predicted by the [linear predictor]{.glossary}, $E[Y]$.
 -   On average, we expect these error terms to balance out:
 
 ::: Assumption
 
-The mean of the error term is zero:
+The mean of the error term is zero ([mean-zero errors]{.glossary}):
 
 $$
 E[\varepsilon]=\mu=0
@@ -381,14 +381,14 @@ $$
 i.e. The linear predictor gives the correct value of $Y$ on average
 :::
 
-### Constant variance
+### Constant variance {#sec-varAssumption}
 
 -   While correct on average, we expect there to be some *spread* of data around the line (this is why we have the error term). The amount of spread is measured by the *variance* of the errors.
 
 -   We assume that this variance is *constant* - like $mu=0$, it is the same for all values of $x$ however we dont specify which particular value it takes:
 
 ::: Assumption 
-The variance of the error term is constant for all values of x: $$Var(\varepsilon)=\sigma^2$$
+The variance of the error term is constant for all values of x ([homoscedasticity]{.glossary}): $$Var(\varepsilon)=\sigma^2$$
 :::
 
 ### Normal distribution
@@ -396,10 +396,10 @@ The variance of the error term is constant for all values of x: $$Var(\varepsilo
 While the assumptions of mean 0 and constant variance describe the center and spread of the errors, they don’t fully specify the shape of their distribution. To model this more completely, we often assume that the errors follow a Normal distribution.
 
 ::: Assumption
-The error is normally distributed (with mean $\mu=0$ and variance $\sigma^2$ . $$\varepsilon \sim \mathcal{N}(0, \sigma^2)$$
+The error is normally distributed ([normal errors]{.glossary}) with mean $\mu=0$ and variance $\sigma^2$. $$\varepsilon \sim \mathcal{N}(0, \sigma^2)$$
 :::
 
-```{ojs}
+```{ojs module00-lm-normal-distribution-view}
 //| echo: false
 //| panel: sidebar
 viewof mu = Inputs.range([-5, 5], {
@@ -427,7 +427,7 @@ densityGrid_1 = d3.range((-4 * sigma)+mu, mu+(4 * sigma), sigma / 50).map(x => (
 tex.block`\varepsilon \sim \text{Normal}(${mu}, ${sigma}^2)`
 ```
 
-```{ojs}
+```{ojs module00-lm-normal-distribution-ojs}
 //| echo: false
 //| panel: fill
 //| fig-cap: "Normal distribution with adjustable mean and standard deviation."
@@ -485,7 +485,7 @@ For example, we want to know if employed at *company A*, what is the probabity a
 
 First lets calculate the average salary after 10 years
 
-```{r}
+```{r module00-lm-variation-in-salary}
 50000+(5000*10)
 ```
 
@@ -493,13 +493,13 @@ First lets calculate the average salary after 10 years
 
 Now
 
-```{r}
+```{r module00-lm-variation-in-salary-2}
 pnorm(11e4,1e5, 4e3, lower.tail = FALSE)
 ```
 
 The following diagram tells us roughly the probability of observing a $Y$ value in the given range:
 
-```{ojs}
+```{ojs module00-lm-variation-in-salary-view}
 //| echo: false
 //| panel: sidebar
 
@@ -538,7 +538,7 @@ shaded = densityGrid_salary.filter(d => d.y >= a && d.y <= b)
 tex.block`P(${Math.round(a).toLocaleString()} \le Y \le ${Math.round(b).toLocaleString()}) = ${prob.toFixed(3)} \;\;(\approx ${(prob*100).toFixed(1)}\%)`
 ```
 
-```{ojs}
+```{ojs module00-lm-variation-in-salary-ojs}
 //| echo: false
 //| panel: fill
 //| fig-cap: "Probability of salary falling within a chosen interval."
@@ -577,7 +577,7 @@ $$
 
 This 'simple linear model' is the starting place for conducting linear regression - in which we 'fit' (i.e. estimate the values of $\alpha$, $\beta$, and $\sigma^2$) from data.
 
-```{ojs}
+```{ojs module00-lm-the-simple-linear-model-view}
 //| panel: sidebar
 //| echo: false
 
@@ -590,7 +590,7 @@ viewof n_cs = Inputs.range([10, 50], {step: 1, value: 50, label: "Number of cros
 tex.block`Y = ${b0_2} + ${b1_2}x + \varepsilon, \quad \varepsilon \sim \text{Normal}(0, ${sigma_2}^2)`
 ```
 
-```{ojs}
+```{ojs module00-lm-the-simple-linear-model-ojs}
 //| panel: fill
 //| echo: false
 //| width: 700
@@ -647,7 +647,7 @@ Plot.plot({
 
 1.  to begin, we start with a collection of x values (we might imagine we measure these values in the wild)
 
-```{r}
+```{r module00-lm-a-simple-linear-model-in-r-simulate}
 n <- 100
 X <- runif(n=100, min=0, max= 50)
 head(X)
@@ -659,7 +659,7 @@ head(X)
 
 Next, we construct our simple linear model
 
-```{r}
+```{r module00-lm-a-simple-linear-model-in-r-simulate-2}
 alpha <- 4
 beta <- 1.2
 sigma <- 4
@@ -674,7 +674,7 @@ simple_linear_model <- function(X, alpha, beta, sigma) {
 
 -   Now we can simulate observations of $Y$ given our list of $x$ values and out linear model:
 
-```{r}
+```{r module00-lm-a-simple-linear-model-in-r}
 Y <- simple_linear_model(X, alpha, beta, sigma)
 head(Y)
 ```
@@ -683,7 +683,7 @@ lets look at the joint distribution of x and Y:
 
 ::: {.panel-tabset}
 ## Plot
-```{r}
+```{r module00-lm-a-simple-linear-model-in-r-setup}
 #| echo: false
 #| label: fig-plot
 #| fig-cap: "Data generated from the simple linear model $Y=4+1.2\\times x + \\varepsilon$, with $\\varepsilon\\sim N(0,16)$. Dashed line shows E[Y|x] = α + βx"
@@ -700,7 +700,7 @@ ggplot(df, aes(X, Y)) +
 ```
 ## Code
 
-```{r}
+```{r module00-lm-a-simple-linear-model-in-r-code}
 #| eval: false
 library(ggplot2)
 
@@ -716,7 +716,7 @@ ggplot(df, aes(X, Y)) +
 
 Heres the same code running in webR - try adjusting some of the parameters (e.g. the number of samples) and running to plot a different random sample!
 
-```{webr}
+```{webr module00-lm-a-simple-linear-model-in-r-code-2}
 #| code-fold: true
 #| code-summary: "show code"
 n <- 100
