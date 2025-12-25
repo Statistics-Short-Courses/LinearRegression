@@ -62,7 +62,7 @@ ojs_define(linearData)
 ```
 # Simple Linear Regression (SLR) {#sec-slr}
 
-## When to use SLR
+## When to use SLR {#sec-when-to-use-slr}
 
 ## Fitting models to data {#sec-LinearFit}
 in the previous section, you were given a linear model - we knew the values of $\alpha$, $\beta$ and even $\sigma$. However, in most contexts we don't know the true relationship between $x$ and $Y$ in advance. Instead, we are given *data* and try to *infer* the values of $\alpha$, $\beta$, and $\sigma$ by analysing the data.
@@ -70,7 +70,7 @@ in the previous section, you were given a linear model - we knew the values of $
 Indeed, at the end of the last session we generated data from a linear model. In preparation for this chapter, we've generated data from a similar such linear model. Here it is:
 
 ::: {.panel-tabset}
-### Plot
+### Plot {#sec-fitting-models-to-data-plot}
 ```{r module01-slr-fitting-models-to-data-plot}
 #| echo: false
 #| input:
@@ -80,7 +80,7 @@ ggplot(linearData)+
   geom_point()
 ```
 
-### Data
+### Data {#sec-fitting-models-to-data-data}
 ```{r module01-slr-fitting-models-to-data}
 #| echo: false
 #| input:
@@ -93,7 +93,7 @@ linearData
 
 - [ ] Continue
 
-### Estimating parameters
+### Estimating parameters {#sec-estimating-parameters}
 
 We call the process of trying to guess the parameters in the data generating model (i.e. $\alpha$, $\beta$ and $\sigma$), *estimation*, and our guesses are *estimates*. To avoid confusion, we'll denote the estimated intercept by $a$ and the estimated slope by $b$. So, we have
 
@@ -196,9 +196,9 @@ Indeed - calculating residuals gives us a way to assess how well our estimated m
 
 - [ ] Continue 
 
-### Estimating coefficients 
+### Estimating coefficients {#sec-estimating-coefficients}
 
-#### Optimising model fit by minimising (squared) residuals
+#### Optimising model fit by minimising (squared) residuals {#sec-optimising-model-fit-by-minimising-squared-residuals}
 Below, the plot now also displays residuals for each data point.
 Underneath the model equation is the *[Sum of squared residuals]{.glossary}* (SSR), which gives a measure of the absolute difference between our linear predictor and the observed outcomes. 
 
@@ -301,7 +301,7 @@ my_b <- ______
 We call the estimates $a$ and $b$ which minimise the sum of squares the *[least squares estimates]{.glossary term="Ordinary least squares"}*. Some nice mathematics tells us that the least squares esimates for a simple linear model are *unique* - that is, there is one set of values for $a$ and $b$ which satisfy this property. Moreover, we don't have to manually adjust our parameters to keep lowering SSR - there is a convenient closed form expression which allows us to compute $a$ and $b$ very efficiently. As a statistical programming language, this is something R does very easily..
 
 
-### Fitting a model with the `lm()` function
+### Fitting a model with the `lm()` function {#sec-fitting-a-model-with-the-lm-function}
 
 In R the `lm()` function computes the least squares estimates $a$ and $b$ for our simple linear model (among other things) in a single command: 
 
@@ -325,7 +325,7 @@ coef(lm_1)
 Lets compare the estimated linear fits graphically:
 
 ::: {.panel-tabset}
-#### Plot
+#### Plot {#sec-fitting-a-model-with-the-lm-function-plot}
 ```{webr module01-slr-fitting-a-model-with-the-lm-function-plot}
 #| exercise: comparePlot
 #| envir: Ex2
@@ -344,7 +344,7 @@ ggplot(linearData)+
     colour = "Your guess"))+
   scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'))
 ```
-#### Code
+#### Code {#sec-fitting-a-model-with-the-lm-function-code}
 ```{webr module01-slr-fitting-a-model-with-the-lm-function-code}
 #| eval: false
 ggplot(linearData)+
@@ -364,7 +364,7 @@ ggplot(linearData)+
 -   [ ] Continue
 
 
-### Estimating variance
+### Estimating variance {#sec-estimating-variance}
 
 Once the line has been fitted (i.e. $\alpha$ and $\beta$ have been estimated as $a$ and $b$), we also have to estimate the distribution of error terms (remember, as per @sec-varAssumption, the error distribution has a constant variance defined by $\sigma^2$). As you might expect, we again utilise the residuals from our least squares linear predictor to estimate $\sigma$.  The spread of the error terms will be estimated by the spread of the residuals around our line of best fit.
 
@@ -377,7 +377,7 @@ residuals(lm_1)
 The resulting `R` object is a vector of the residual for each observation. i.e. residuals(lm_1)[[3]] $= e_3$
 
 ::: Exercise
-#### Extracting residuals from an `lm` object
+#### Extracting residuals from an `lm` object {#sec-extracting-residuals-from-an-lm-object}
 Extract the residuals from  your least squares fitted model `lm_1`*by indexing* and assign them to the variable `e`
 
 ```{webr module01-slr-extracting-residuals-from-an-lm-object}
@@ -386,7 +386,7 @@ Extract the residuals from  your least squares fitted model `lm_1`*by indexing* 
 e <- ______
 ```
 :::: {.solution exercise="ex_2.2.1"}
-#### Solution 
+#### Solution {#sec-extracting-residuals-from-an-lm-object-solution}
 ```{webr module01-slr-extracting-residuals-from-an-lm-object-solution}
 #| exercise: ex_2.2.1
 #| solution: true
@@ -404,7 +404,7 @@ grade_this_code()
 ```
 :::
 
-### Residual Standard Error
+### Residual Standard Error {#sec-residual-standard-error}
 
 
 Dividing the residual sum of squares by $n-2$ (one [degree of freedom]{.glossary term="Degrees of freedom"} lost per fitted coefficient) gives the [mean squared error]{.glossary}, and taking the square root yields the residual standard deviation (aka. the [Residual standard error]{.glossary})
@@ -416,7 +416,7 @@ Interpreting $\hat \sigma$ is often easier on the original $y$ scale: a typical 
 $s^2$ and $s$ are our estimators for $\sigma^2$ and $\sigma$, respectively. 
 
 ::: Exercise
-#### Calculate the Residual Standard Error
+#### Calculate the Residual Standard Error {#sec-calculate-the-residual-standard-error}
 using your `e` object defined in the previous exercise, calculate the residual standard error of the least squares model (hint - there are 20 observations in the linearData dataset)
 ```{webr module01-slr-calculate-the-residual-standard-error}
 #| exercise: ex_2.2.3
@@ -424,7 +424,7 @@ using your `e` object defined in the previous exercise, calculate the residual s
 rse <- ______
 ```
 :::: {.solution exercise="ex_2.2.1"}
-#### Solution 
+#### Solution {#sec-calculate-the-residual-standard-error-solution}
 ```{webr module01-slr-calculate-the-residual-standard-error-solution}
 #| exercise: ex_2.2.3
 #| solution: true
@@ -442,7 +442,7 @@ grade_this_code()
 ```
 :::
 
-### Correlation and $R^2$
+### Correlation and $R^2$ {#sec-correlation-and-r-2}
 
 The [Pearson correlation]{.glossary} coefficient, $r$, measures how strongly $x$ and $Y$ move together along a straight line, taking values between $-1$ (perfect negative linear relationship) and $1$ (perfect positive linear relationship). 
 
@@ -453,7 +453,7 @@ $$
 so $R^2$ captures the proportion of the total variation in $Y$ that is explained by the fitted line.
 
 ::: Exercise
-#### Correlation and $R^2$ in our example
+#### Correlation and $R^2$ in our example {#sec-correlation-and-r-2-in-our-example}
 Calculate the correlation between `x` and `y`, then compute $R^2$ using the residuals from `lm_1`.
 ```{webr module01-slr-correlation-and-r-2-in-our-example}
 #| exercise: ex_2.2.4
@@ -462,7 +462,7 @@ r <- ______
 r_squared <- ______
 ```
 :::: {.solution exercise="ex_2.2.4"}
-#### Solution 
+#### Solution {#sec-correlation-and-r-2-in-our-example-solution}
 ```{webr module01-slr-correlation-and-r-2-in-our-example-2}
 #| exercise: ex_2.2.4
 #| solution: true
@@ -486,7 +486,7 @@ grade_this_code()
 c(computed_r = r, computed_r_squared = r_squared, lm_summary_r_squared = summary(lm_1)$r.squared)
 ```
 :::
-## Inference for SLR
+## Inference for SLR {#sec-inference-for-slr}
 
 
 Up to this point, we have fitted a straight-line model to a *sample* of data, obtaining estimates $a$ and $b$ for the intercept and slope. These estimates describe the pattern visible in the sample, but they do not tell us how closely they reflect the **true population parameters** $\alpha$ and $\beta$. Because sampling introduces randomness, different samples would produce different fitted lines.
@@ -535,11 +535,11 @@ Because the Normality assumption implies that the estimator $b$ has a Normal sam
 
 ::: Exercise
 
-#### Hypothesis testing revision ([p-values]{.glossary term="p-value"})
+#### Hypothesis testing revision ([p-values]{.glossary term="p-value"}) {#sec-hypothesis-testing-revision-p-values}
 
 :::
 
-#### The t-Test for the Slope
+#### The t-Test for the Slope {#sec-the-t-test-for-the-slope}
 
 The hypothesis test is carried out using the statistic
 
@@ -562,17 +562,17 @@ While the assumption of Normality is what theoretically grounds the use of the t
 
 ::: Example
 
-##### t-test for slope
+##### t-test for slope {#sec-t-test-for-slope}
 
 :::
 
 ::: Exercise
 
-##### t-test for slope
+##### t-test for slope {#sec-t-test-for-slope-2}
 
 :::
 
-#### Confidence Interval for the Slope
+#### Confidence Interval for the Slope {#sec-confidence-interval-for-the-slope}
 
 A $(1-\alpha)100%$ confidence interval for $\beta$ is
 
@@ -588,7 +588,7 @@ Interpretation:
 Confidence intervals complement hypothesis tests by communicating both the direction and plausible magnitude of the effect.
 
 
-### Inference About the Response, $Y$
+### Inference About the Response, $Y$ {#sec-inference-about-the-response-y}
 
 Once we have fitted a regression model, we often want to make statements about the **value of the response** at a given predictor value $x_0$. There are two distinct quantities of interest:
 
@@ -604,7 +604,7 @@ Once we have fitted a regression model, we often want to make statements about t
 
 These involve different uncertainties, and therefore require different intervals.
 
-#### [Confidence interval]{.glossary term="Confidence interval"} for the Mean Response
+#### [Confidence interval]{.glossary term="Confidence interval"} for the Mean Response {#sec-confidence-interval-for-the-mean-response}
 
 Let $\hat{y}_0 = a + b x_0$ be the fitted value at $x_0$.
 A confidence interval for the mean response is:
@@ -625,7 +625,7 @@ This interval quantifies uncertainty in the *average* value of $Y$ for units wit
 predict(fit, newdata = new_point, interval = "confidence")
 ```
 
-#### [Prediction interval]{.glossary term="Prediction interval"} for a New Observation
+#### [Prediction interval]{.glossary term="Prediction interval"} for a New Observation {#sec-prediction-interval-for-a-new-observation}
 
 To predict an individual outcome at $x_0$, we must include the additional uncertainty from the random error $\varepsilon$:
 
@@ -646,7 +646,7 @@ Because of the extra "1" term, prediction intervals are **always wider** than co
 predict(fit, newdata = new_point, interval = "prediction")
 ```
 
-#### Summary
+#### Summary {#sec-prediction-interval-for-a-new-observation-summary}
 
 * Confidence interval → uncertainty in the **expected** value at $x_0$
 * Prediction interval → uncertainty in a **new outcome** at $x_0$

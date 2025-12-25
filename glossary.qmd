@@ -139,6 +139,17 @@ glossary:
   - term: Dummy variable
     definition: |
       An indicator (0/1) used to code categories in regression relative to a baseline.
+    aliases:
+      - Indicator variable
+  - term: Factor
+    definition: |
+      A categorical predictor with discrete levels; R stores these as factors.
+  - term: Reference level
+    definition: |
+      The baseline category used to interpret coefficients for a factor.
+  - term: Contrast
+    definition: |
+      A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).
   - term: Leverage
     definition: |
       A measure of how far a case's predictor values are from the predictor means; high leverage can increase influence.
@@ -153,7 +164,7 @@ glossary:
       Choosing the simplest adequate model that answers the scientific question.
 ---
 
-# Glossary {.unnumbered}
+# Glossary {#sec-glossary .unnumbered}
 
 ::: {#glossary}
 :::

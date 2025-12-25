@@ -3,10 +3,10 @@ format: live-html
 ---
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-# Course Overview {.unnumbered}
+# Course Overview {#sec-course-overview .unnumbered}
 
 
-## What you will learn
+## What you will learn {#sec-what-you-will-learn}
 
 - Formulate simple and multiple linear regression models and articulate
   their assumptions.
@@ -23,7 +23,7 @@ format: live-html
 - Perform residual analysis, identify influential observations, and
   apply transformations.
 
-## How to use this book
+## How to use this book {#sec-how-to-use-this-book}
 
 - Each chapter corresponds to a module in the syllabus and ends with
   short practice prompts.

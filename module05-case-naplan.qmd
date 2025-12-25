@@ -3,14 +3,14 @@ format:
   live-html:
     toc: true
 ---
-# Regression Case Study: NAPLAN Reading Scores
+# Regression Case Study: NAPLAN Reading Scores {#sec-regression-case-study-naplan-reading-scores}
 
-## Defining the research question
+## Defining the research question {#sec-defining-the-research-question}
 
 - Investigate how student and school-level [predictors]{.glossary term="Predictor (explanatory) variable"} relate to NAPLAN
   Reading scores. Clarify [outcome]{.glossary term="Response (outcome) variable"}, units, and any grouping structure.
 
-## Importing data
+## Importing data {#sec-importing-data}
 
 ```{r module05-case-naplan-importing-data-load-data}
 #| message: false
@@ -18,7 +18,7 @@ format:
 # naplan <- read.csv("Resources/naplan reading/naplan_reading.csv")
 ```
 
-## Exploratory plot
+## Exploratory plot {#sec-exploratory-plot}
 
 - Start with scatterplots and boxplots for key predictors (e.g., study
   time, SES, gender) against Reading scores.
@@ -31,7 +31,7 @@ ggplot(mtcars, aes(wt, mpg)) +
   labs(x = "Predictor", y = "Reading score")
 ```
 
-## Fitting the [least-squares]{.glossary term="Ordinary least squares"} model
+## Fitting the [least-squares]{.glossary term="Ordinary least squares"} model {#sec-fitting-the-least-squares-model}
 
 - Begin with a first-order additive model; consider [interactions]{.glossary term="Interaction"} or
   [polynomial terms]{.glossary term="Polynomial term"} if exploratory plots suggest curvature.
@@ -41,7 +41,7 @@ ggplot(mtcars, aes(wt, mpg)) +
 # summary(model)
 ```
 
-## Model refinement and interpretation
+## Model refinement and interpretation {#sec-model-refinement-and-interpretation}
 
 - Check residual diagnostics (see Module 6). Address nonlinearity,
   [heteroskedasticity]{.glossary}, or [influential points]{.glossary term="Influential point"}.
@@ -53,7 +53,7 @@ ggplot(mtcars, aes(wt, mpg)) +
 # coef(summary(model))
 ```
 
-## Reporting the results
+## Reporting the results {#sec-reporting-the-results}
 
 - Present fitted effects with [confidence intervals]{.glossary term="Confidence interval"}, and provide a
   [prediction interval]{.glossary term="Prediction interval"} for a meaningful scenario (e.g., a student profile

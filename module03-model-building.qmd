@@ -68,21 +68,21 @@ theme_set(theme_bw())
 ```
 
 
-# Model Building and Selection
+# Model Building and Selection {#sec-model-building-and-selection}
 
 In this module, we explore strategies for building effective regression models. We cover:
 - Increasing model complexity to capture non-linear relationships and interactions,
 - Assessing model fit while balancing complexity,
 - Techniques for selecting [parsimonious]{.glossary term="Parsimony"} models.
 
-## Increasing model complexity to model complex relationships
+## Increasing model complexity to model complex relationships {#sec-increasing-model-complexity-to-model-complex-relationships}
 
-### Why increase model complexity?
+### Why increase model complexity? {#sec-why-increase-model-complexity}
 
 We began this course with the simple linear regression model: a single continuous predictor with a straight-line effect. We then expanded to multiple predictors, where each predictor still had a straight-line effect. For reasons that will become clear, these are examples of so-called **first-order models**:
 
 ::: Key-term
-#### First-order model
+#### First-order model {#sec-first-order-model}
 A linear regression where each predictor appears only once and to the first power (no squared terms or interactions). For one predictor:
 $$
 E[Y] = \beta_0 + \beta_1 X.
@@ -94,7 +94,7 @@ $$E[Y] = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_i X_i$$
 This first-order structure is the simplest linear model we can make with $X$. It is often a reasonable starting point, and can go a long way to modeling real-world phenomena (especially in the multiple regression case), but real data are often more complex. Real relationships between predictors and outcomes are often non-linear, or involve [interactions]{.glossary term="Interaction"} between predictors. To capture these more complex relationships, we can increase model complexity by adding 'higher-order' and 'interaction' terms.
 
 ::: Example
-#### Non-linear relationships in data
+#### Non-linear relationships in data {#sec-non-linear-relationships-in-data}
 For example, fitting a straight line to the following data is not ideal, as the relationship between $X$ and $Y$ is curved (U-shaped), so there is always part of the relationship the line cannot capture: 
 ```{r module03-model-building-non-linear-relationships-in-data-simulate}
 #| echo: false
@@ -167,11 +167,11 @@ Plot.plot({
 We enrich the basic linear model by adding **powers of a predictor**, allowing the fitted relationship to bend. In the above case, the "U" shape suggests a quadratic (squared) term may be appropriate.
 
 ::: Key-term
-#### Second-order (Quadratic) univariate model
+#### Second-order (Quadratic) univariate model {#sec-second-order-quadratic-univariate-model}
   $$E[Y] = \beta_0 + \beta_1X + \beta_2X^2$$
 :::
 ::: Example
-#### Seeing how $\beta_2$ bends the curve
+#### Seeing how $\beta_2$ bends the curve {#sec-seeing-how-beta2-bends-the-curve}
 Adjust the slider for the squared term to see how changing $\beta_2$ adds curvature to the fitted relationship . Try to find a good fit - can you guess what model generated this data?.
 
 ```{ojs module03-model-building-seeing-how-beta-2-bends-the-curve-view}
@@ -232,7 +232,7 @@ Plot.plot({
 ```
 :::
 
-#### Third-order (cubic) univariate model
+#### Third-order (cubic) univariate model {#sec-third-order-cubic-univariate-model}
 $$
 E[Y] = \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3
 $$
@@ -253,7 +253,7 @@ ojs_define(cubicData)
 ```
 
 ::: Example
-#### Seeing how $\beta_3$ twists the curve
+#### Seeing how $\beta_3$ twists the curve {#sec-seeing-how-beta3-twists-the-curve}
 Adjust the slider for the cubic term to see how changing $\beta_3$ adds an inflection point to the fitted relationship. Can you tune the parameters to recover the curve that generated this data?
 
 ```{ojs module03-model-building-seeing-how-beta-3-twists-the-curve-view}
@@ -328,7 +328,7 @@ $$
 Note that each term gets its own parameter ($\beta_i$). If we have $n$ data points, a (n-1)^th-order model will have a parameter for each point, meaning it will fit the data perfectly!
 
 ::: Example
-#### Fitting higher-order [polynomial terms]{.glossary term="Polynomial term"}
+#### Fitting higher-order [polynomial terms] {#sec-fitting-higher-order-polynomial-terms .glossary term="Polynomial term"}
 ```{r module03-model-building-fitting-higher-order-polynomial-terms-simulate}
 #| echo: false
 #| define:
@@ -424,11 +424,11 @@ Plot.plot({
 Higher-order terms increase the model's flexibility, but also increase the risk of fitting random noise rather than meaningful structure. We will return to this important issue later in the module. 
 
 ::: Note
-#### The meaning of "linear" in linear models
+#### The meaning of "linear" in linear models {#sec-the-meaning-of-linear-in-linear-models}
 Even though higher-order models can model nonlinear relationships between the outcome and predictors, they are still **linear models** because each *parameter* enters additively. “Linearity” here refers to the parameters, *not* the shape of the fitted curve.
 :::
 
-#### Fitting higher-order univariate models in R
+#### Fitting higher-order univariate models in R {#sec-fitting-higher-order-univariate-models-in-r}
 In R, higher-order polynomial terms can be included using the `I()` function to indicate 'as is' operations. For example, to fit a quadratic model:
 ```{r module03-model-building-fitting-higher-order-univariate-models-in-r-fit-lm}
 #| echo: true
@@ -443,7 +443,7 @@ lm(y ~ poly(x, 2), data = nonlinearData)
 
 - [ ] Continue
 
-### Interaction Models with Continuous Predictors
+### Interaction Models with Continuous Predictors {#sec-interaction-models-with-continuous-predictors}
 
 In @sec-slr we saw a multiple regression model with two continuous predictors: 
 
@@ -459,7 +459,7 @@ $$
 Now however, we can also consider a different form of higher order term: what happens when we multiply predictors together? This gives us an **[interaction term]{.glossary term="Interaction"}** - a term that combines two (or more) predictors.
 
 ::: Key-term
-#### Interaction term
+#### Interaction term {#sec-interaction-term}
 An interaction is a product of predictors that allows the effect of one predictor to depend on the level of another. For two continuous predictors, the second-order interaction model is:
 $$
 E[Y] = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_1X_2.
@@ -468,7 +468,7 @@ If $\beta_3 = 0$ (i.e. as in the first-order model), predictors act independentl
 :::
 
 ::: Example
-#### Fitting an interaction model to the `advertising` dataset.
+#### Fitting an interaction model to the `advertising` dataset. {#sec-fitting-an-interaction-model-to-the-advertising-dataset}
 If we recall our plot of the `advertising` dataset from @sec-multiple_linear_regression, our fist-order linear model did not fit the data in particular ways:
 
 The first-order model is
@@ -621,7 +621,7 @@ E[Y] = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3 + \beta_4X_1X_2 + \beta_5X
 $$
 
 
-#### Higher-order interaction models
+#### Higher-order interaction models {#sec-higher-order-interaction-models}
 We can also consider higher-order interactions - those that include combinations of three or more predictors. For example, a third-order interaction model with three predictors would include the 'three-way' interaction term:
 $$
 E[Y] = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3 + \beta_4X_1X_2 + \beta_5X_1X_3 + \beta_6X_2X_3 + \beta_7X_1X_2X_3.
@@ -637,7 +637,7 @@ However, as before, increasing model complexity in this way raises the risk of [
 - [ ] Continue
 
 
-#### Fitting interaction models in R
+#### Fitting interaction models in R {#sec-fitting-interaction-models-in-r}
 In R, interaction terms can be included using the `*` operator in the formula. For example, to fit a second-order interaction model with two predictors:
 ```{r module03-model-building-fitting-interaction-models-in-r-fit-lm}
 #| echo: true
@@ -655,9 +655,9 @@ lm(Y ~ X1+X2+X3+X1:X2, data = mydata)
 
 - [ ] Continue
 
-### Interaction Models with Categorical Predictors {#sec-mlr_cat}
+### Interaction Models with Categorical Predictors {#sec-mlr-cat-interactions}
 
-A categorical variable with $k$ levels is represented by $k-1$ dummy variables:
+As in @sec-mlr_cat, a categorical predictor with $k$ levels is represented by $k-1$ dummy variables:
 $$
 E[Y] = \beta_0 + \beta_1X + \gamma_1D_1 + \dots + \gamma_{k-1}D_{k-1}.
 $$
@@ -665,21 +665,66 @@ $$
 * Each $\gamma_j$ measures the difference between level $j$ and the baseline.
 * Changing the baseline changes interpretations but not fitted values.
 
-Categorical predictors may also interact with continuous predictors:
+```{webr module03-model-building-cat-interaction-setup}
+#| include: false
+mtcars_cat <- mtcars %>%
+  mutate(
+    am_f = factor(am, labels = c("auto", "manual")),
+    cyl_f = factor(cyl)
+  )
+```
+
+#### Continuous $\times$ categorical interactions {#sec-continuous-by-categorical-interactions}
+When a continuous predictor interacts with a factor, each group can have its own slope:
 $$
-E[Y] = \beta_0 + \beta_1X + \gamma_1D_1 + \delta_1(XD_1),
+E[Y] = \beta_0 + \beta_1X + \gamma D + \delta (XD),
 $$
-allowing each group to have its own slope.
+where $D$ indicates the non-reference group. The baseline group has slope $\beta_1$, and the other group has slope $\beta_1 + \delta$.
+
+```{webr module03-model-building-continuous-by-categorical-fit-lm}
+#| echo: true
+mod_am_wt <- lm(mpg ~ wt * am_f, data = mtcars_cat)
+summary(mod_am_wt)$coefficients
+```
+
+```{webr module03-model-building-continuous-by-categorical-plot}
+#| echo: false
+ggplot(mtcars_cat, aes(x = wt, y = mpg, color = am_f)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(color = "Transmission")
+```
+
+The interaction term tells us whether the relationship between weight and fuel economy differs between automatic and manual cars (an ANCOVA-style comparison).
+
+#### Categorical $\times$ categorical interactions {#sec-categorical-by-categorical-interactions}
+With two factors, an interaction means the difference between levels of one factor depends on the level of the other. This is the two-way ANOVA setting with an interaction term.
+
+```{webr module03-model-building-categorical-by-categorical-fit-lm}
+#| echo: true
+mod_cyl_am <- lm(mpg ~ cyl_f * am_f, data = mtcars_cat)
+anova(mod_cyl_am)
+```
+
+If the interaction term is significant, the transmission effect is not consistent across cylinder groups.
 
 ::: Note
 We saw in @sec-mlr_cat that first order models with categorical predictors are equivalent to the familiar t-tests and ANOVA models from earlier statistics courses. Interaction models with both continuous and categorical predictors are similarly analogous to "ANCOVA" models. 
 :::
 
+::: Exercise
+#### Interpreting a continuous-by-categorical interaction {#sec-exercise-continuous-by-categorical-interaction}
+Fit `mpg ~ wt * am_f` on `mtcars_cat`.
+
+1. Which group has the steeper slope for weight?
+2. What does the interaction term represent in words?
+:::
+
 - [ ] Continue
 
-## Assessing model fit and model complexity
+## Assessing model fit and model complexity {#sec-assessing-model-fit-and-model-complexity}
 
-### Why not increase model complexity?
+### Why not increase model complexity? {#sec-why-not-increase-model-complexity}
 
 In the previous section we saw how adding higher-order terms and interactions can help us capture complex relationships in data. However, increasing model complexity is not always beneficial. While more complex models can fit the *training data* (i.e. the data we use to fit our model) better, they may not generalise well to new data. This is because complex models can start to fit random noise in the training data, rather than the underlying signal. This phenomenon is known as **[overfitting]{.glossary}**.
 
@@ -688,7 +733,7 @@ In addition, more complex models can be harder to interpret, making it difficult
 A good model is **no more complex than necessary** to describe the main structure of the data. Therefore, when building regression models, we need to balance the trade-off between model fit and model complexity. In this section, we discuss some common issues that arise with complex models, and metrics for assessing model fit while accounting for complexity.
 
 ::: Key-point
-#### Balancing fit and complexity
+#### Balancing fit and complexity {#sec-balancing-fit-and-complexity}
 A good regression model balances:
 * Adequate fit to the data,
 * Simplicity and interpretability,
@@ -697,12 +742,12 @@ A good regression model balances:
 
 - [ ] Continue
 
-### Fit Metrics
+### Fit Metrics {#sec-fit-metrics}
 
 Fit metrics quantify how well a model captures patterns in the data. We have already seen one such metric: the coefficient of determination, $R^2$. 
 
 ::: Key-term
-#### Coefficient of Determination ($R^2$)
+#### Coefficient of Determination ($R^2$) {#sec-coefficient-of-determination-r-2}
 $$
 R^2 = 1 - \frac{SS_{res}}{SS_{tot}}
 $$
@@ -711,11 +756,11 @@ where $SS_{res}$ is the residual sum of squares and $SS_{tot}$ is the total sum 
 
 $R^2$ was introduced in @sec-slr as a measure of fit for simple linear regression models based soely on the proportion of variance in $Y$ explained by $X$. We can also calculate $R^2$ for multiple regression models, where it measures the proportion of variance in $Y$ explained by all predictors jointly. However, $R^2$ has a key limitation: it always increases (or at least does not decrease) when additional predictors are added to the model, even if those predictors do not meaningfully improve the model's explanatory power. This can lead to overfitting, where a model appears to fit the training data well but performs poorly on new data - for example, the (n-1)th order polynomial model discussed in @sec-ho_univariate has A SSres of zero and thus an $R^2$ of 1, but is unlikely to generalise well.
 
-#### [Adjusted $R^2$]{.glossary term="Adjusted R-squared"}
+#### [Adjusted $R^2$] {#sec-adjusted-r-2-overview .glossary term="Adjusted R-squared"}
 To address this limitation, we can *adjust* $R^2$ to penalise the addition of unnecessary predictors. The *adjusted $R^2$* introduces a penalty term based on the number of predictors and the sample size, providing a more balanced measure of model fit that accounts for complexity.
 
 ::: Key-term
-#### [Adjusted $R^2$]{.glossary term="Adjusted R-squared"}
+#### [Adjusted $R^2$] {#sec-adjusted-r-2-definition .glossary term="Adjusted R-squared"}
 $$
 \text{Adjusted } R^2 = 1 - \left(1 - R^2\right) \frac{n - 1}{n - k - 1}
 $$
@@ -725,12 +770,12 @@ Can be computed in R using `summary(lm_model)$adj.r.squared`.
 
 Adjusted $R^2$ is particulary useful because of it's standardised scale (0 to 1), and the interpretation of $R^2$ as the proportion of variance explained still holds - now with the added benefit of penalising unnecessary complexity. However, it is important to note that adjusted $R^2$ is just one of many metrics available for assessing model fit while accounting for complexity. 
 
-#### Information Criteria: AIC, BIC
+#### Information Criteria: AIC, BIC {#sec-information-criteria-aic-bic}
 
 Another common approach to balancing model fit and complexity is to use information criteria, such as the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC). These criteria provide a quantitative way to *compare* models, penalising those with more parameters.
 
 ::: Key-term
-#### [Akaike Information Criterion (AIC)]{.glossary term="Akaike Information Criterion"}
+#### [Akaike Information Criterion (AIC)] {#sec-akaike-information-criterion-aic .glossary term="Akaike Information Criterion"}
 $$
 \text{AIC} = 2k - 2\ln(L)
 $$
@@ -739,7 +784,7 @@ Can be computed in R using `AIC()` function.
 :::
 
 ::: Key-term
-#### [Bayesian Information Criterion (BIC)]{.glossary term="Bayesian Information Criterion"}
+#### [Bayesian Information Criterion (BIC)] {#sec-bayesian-information-criterion-bic .glossary term="Bayesian Information Criterion"}
 $$
 \text{BIC} = \ln(n)k - 2\ln(L)
 $$
@@ -750,11 +795,11 @@ Can be computed in R using `BIC()` function.
 Both AIC and BIC penalise model complexity, but BIC generally imposes a larger penalty for additional parameters, especially in larger samples. The choice between AIC and BIC often depends on the context and goals of the analysis. AIC is generally preferred for predictive accuracy, while BIC is more conservative and favours simpler models. 
 
 ::: Key-point
-#### Interpreting AIC and BIC
+#### Interpreting AIC and BIC {#sec-interpreting-aic-and-bic}
 Unlike adjusted $R^2$, AIC and BIC do not have a fixed scale, so their absolute values are not interpretable on their own. Instead, they are used to *compare* models fitted to the same dataset - the model with the lowest AIC or BIC is considered the best among the candidates.
 :::
 
-#### Calculating fit metrics with `broom::glance()`
+#### Calculating fit metrics with `broom::glance()` {#sec-calculating-fit-metrics-with-broom-glance}
 In R, we can calculate adjusted $R^2$, AIC, and BIC using the `broom` package's `glance()` function, which provides a tidy summary of model fit statistics. For example, using our fitted 2nd-order interaction model of the advertising dataset:
 ```{r module03-model-building-calculating-fit-metrics-with-broom-glance-setup}
 #| echo: true
@@ -763,7 +808,7 @@ glance(ads_mod_int)
 ```
 Note that `glance()` returns a data frame with the mentioned fit metrics, along with other useful statistics such as the number of observations (`nobs`), residual standard error (`sigma`) and the global F-statistic (`statistic`). Alongside `tidy()`, `glance()` is a powerful tool for summarising and comparing regression models in R.
 
-#### Comparing model fit
+#### Comparing model fit {#sec-comparing-model-fit}
 
 When comparing multiple models fitted to the same dataset, we can use adjusted $R^2$, AIC, and BIC to assess which model provides the best balance between fit and complexity: the key points to remember are:
 
@@ -771,13 +816,13 @@ When comparing multiple models fitted to the same dataset, we can use adjusted $
 - Lower AIC and BIC values indicate better fit.
 
 ::: Example
-#### Comparing first-order and interaction models
+#### Comparing first-order and interaction models {#sec-comparing-first-order-and-interaction-models}
 Lets continue our investigation of the `advertising` dataset from @sec-multiple_linear_regression by comparing our first-order model of Sales (`ads_mod`) to our second-order interaction model (`ads_mod_int`).
 
 Lets combine the fit metrics from both models into a single table for easy comparison:
 
 ::: {.panel-tabset}
-##### Table of fit metrics
+##### Table of fit metrics {#sec-table-of-fit-metrics}
 ```{r module03-model-building-table-of-fit-metrics}
 ads_fit_glance <- rbind(
   glance(ads_mod) |> `rownames<-`("First-order model"),
@@ -786,7 +831,7 @@ ads_fit_glance <- rbind(
 ads_fit_glance
 ```
 
-##### Code
+##### Code {#sec-table-of-fit-metrics-code}
 ```{r module03-model-building-table-of-fit-metrics-code}
 #| echo: true
 #| eval: false
@@ -813,15 +858,15 @@ The ANOVA table shows a significant p-value for the comparison, indicating that 
 
 - [ ] Continue
 
-## A model building workflow
+## A model building workflow {#sec-a-model-building-workflow}
 
 So far in this chapter we have discussed how to build more complex regression models using higher-order terms and interactions, as well as how to assess model fit while accounting for complexity. These are important tools for building effective regression models, and we now turn to strategies for applying these tools in practice.
 
-### Exploratory data analysis and theory-driven model development
+### Exploratory data analysis and theory-driven model development {#sec-exploratory-data-analysis-and-theory-driven-model-development}
 
 Before fitting any models, it is crucial to conduct exploratory data analysis (EDA) to understand the relationships between variables and identify potential patterns or anomalies. Visualisation and summary statistics can help identify non-linear relationships, interactions, and outliers that may inform model development. They can also highlight potential issues such as multicollinearity or heteroscedasticity that may need to be addressed (we will cover these potential pitfalls in the next chapter).
 
-#### Pairs plots and correlation matrices
+#### Pairs plots and correlation matrices {#sec-pairs-plots-and-correlation-matrices}
 
 Pairs plots and correlation matrices are useful tools for visualising relationships between multiple variables simultaneously. They can help identify potential predictors for inclusion in the model, as well as potential interactions or non-linear relationships. For example, a pairs plot can show scatterplots of each pair of variables, along with histograms of each variable on the diagonal. A correlation matrix can show the strength and direction of linear relationships between variables. We will use the ``ggpairs()` function from the `GGally` package (an extension to `ggplot2`) to create pairs plots in R
 ```{r module03-model-building-pairs-plots-and-correlation-matrices-setup}
@@ -830,17 +875,17 @@ Pairs plots and correlation matrices are useful tools for visualising relationsh
 library(GGally)
 ggpairs(ads)
 ```
-### Automated model selection methods
+### Automated model selection methods {#sec-automated-model-selection-methods}
 
-### [Stepwise regression]{.glossary}
+### [Stepwise regression] {#sec-stepwise-regression .glossary}
 
 Stepwise methods provide automated ways to search for simpler models.
 
-#### Forward Selection
+#### Forward Selection {#sec-forward-selection}
 
 Begin with a minimal model (often the intercept). Add predictors one at a time when they improve AIC or adjusted $R^2$.
 
-#### Backward Selection
+#### Backward Selection {#sec-backward-selection}
 
 Begin with a saturated model containing all candidate predictors. Remove predictors that do not meaningfully contribute.
 
@@ -850,7 +895,7 @@ Stepwise procedures should be treated as **screening tools**, not definitive mod
 
 
 ::: Example
-#### Samara: comparing seeds across trees
+#### Samara: comparing seeds across trees {#sec-samara-comparing-seeds-across-trees}
 Maple samara (seeds) fall like tiny helicopters. A forest scientist measured their fall speed (`Velocity`) against their 'disk loading' (a quantity based on their size and weight; encoded as`Load`) on three trees (`Tree`). The goal: check whether the rate of change in velocity differs between trees.
 ```{r module03-model-building-samara-comparing-seeds-across-trees-load-data}
 #| echo: true

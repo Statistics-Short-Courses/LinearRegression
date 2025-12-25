@@ -205,12 +205,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-  <li><a href="#defining-the-research-question" id="toc-defining-the-research-question" class="nav-link active" data-scroll-target="#defining-the-research-question"><span class="header-section-number">6.1</span> Defining the research question</a></li>
-  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data"><span class="header-section-number">6.2</span> Importing data</a></li>
-  <li><a href="#exploratory-plot" id="toc-exploratory-plot" class="nav-link" data-scroll-target="#exploratory-plot"><span class="header-section-number">6.3</span> Exploratory plot</a></li>
-  <li><a href="#fitting-the-least-squares-model" id="toc-fitting-the-least-squares-model" class="nav-link" data-scroll-target="#fitting-the-least-squares-model"><span class="header-section-number">6.4</span> Fitting the least-squares model</a></li>
-  <li><a href="#model-refinement-and-interpretation" id="toc-model-refinement-and-interpretation" class="nav-link" data-scroll-target="#model-refinement-and-interpretation"><span class="header-section-number">6.5</span> Model refinement and interpretation</a></li>
-  <li><a href="#reporting-the-results" id="toc-reporting-the-results" class="nav-link" data-scroll-target="#reporting-the-results"><span class="header-section-number">6.6</span> Reporting the results</a></li>
+  <li><a href="#sec-defining-the-research-question" id="toc-sec-defining-the-research-question" class="nav-link active" data-scroll-target="#sec-defining-the-research-question"><span class="header-section-number">6.1</span> Defining the research question</a></li>
+  <li><a href="#sec-importing-data" id="toc-sec-importing-data" class="nav-link" data-scroll-target="#sec-importing-data"><span class="header-section-number">6.2</span> Importing data</a></li>
+  <li><a href="#sec-exploratory-plot" id="toc-sec-exploratory-plot" class="nav-link" data-scroll-target="#sec-exploratory-plot"><span class="header-section-number">6.3</span> Exploratory plot</a></li>
+  <li><a href="#sec-fitting-the-least-squares-model" id="toc-sec-fitting-the-least-squares-model" class="nav-link" data-scroll-target="#sec-fitting-the-least-squares-model"><span class="header-section-number">6.4</span> Fitting the least-squares model</a></li>
+  <li><a href="#sec-model-refinement-and-interpretation" id="toc-sec-model-refinement-and-interpretation" class="nav-link" data-scroll-target="#sec-model-refinement-and-interpretation"><span class="header-section-number">6.5</span> Model refinement and interpretation</a></li>
+  <li><a href="#sec-reporting-the-results" id="toc-sec-reporting-the-results" class="nav-link" data-scroll-target="#sec-reporting-the-results"><span class="header-section-number">6.6</span> Reporting the results</a></li>
   </ul>
 </nav>
     </div>
@@ -219,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></h1>
+<h1 class="title"><span id="sec-regression-case-study-naplan-reading-scores" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></span></h1>
 </div>
 
 
@@ -236,21 +236,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="defining-the-research-question" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="defining-the-research-question"><span class="header-section-number">6.1</span> Defining the research question</h2>
+<section id="sec-defining-the-research-question" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="sec-defining-the-research-question"><span class="header-section-number">6.1</span> Defining the research question</h2>
 <ul>
 <li>Investigate how student and school-level <a href="glossary.html#glossary-predictor-explanatory-variable" class="glossary" data-term="Predictor (explanatory) variable" title="A variable x used to explain or predict changes in the response.">predictors</a> relate to NAPLAN Reading scores. Clarify <a href="glossary.html#glossary-response-outcome-variable" class="glossary" data-term="Response (outcome) variable" title="The variable Y we aim to explain or predict.">outcome</a>, units, and any grouping structure.</li>
 </ul>
 </section>
-<section id="importing-data" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="importing-data"><span class="header-section-number">6.2</span> Importing data</h2>
+<section id="sec-importing-data" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="sec-importing-data"><span class="header-section-number">6.2</span> Importing data</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace path with the appropriate CSV or RDS from the Resources/naplan reading folder</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># naplan &lt;- read.csv("Resources/naplan reading/naplan_reading.csv")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="exploratory-plot" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="exploratory-plot"><span class="header-section-number">6.3</span> Exploratory plot</h2>
+<section id="sec-exploratory-plot" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="sec-exploratory-plot"><span class="header-section-number">6.3</span> Exploratory plot</h2>
 <ul>
 <li>Start with scatterplots and boxplots for key predictors (e.g., study time, SES, gender) against Reading scores.</li>
 </ul>
@@ -269,8 +269,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="fitting-the-least-squares-model" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="fitting-the-least-squares-model"><span class="header-section-number">6.4</span> Fitting the <a href="glossary.html#glossary-ordinary-least-squares" class="glossary" data-term="Ordinary least squares" title="Estimation method that chooses coefficients to minimise the sum of squared residuals.">least-squares</a> model</h2>
+<section id="sec-fitting-the-least-squares-model" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="sec-fitting-the-least-squares-model"><span class="header-section-number">6.4</span> Fitting the <a href="glossary.html#glossary-ordinary-least-squares" class="glossary" data-term="Ordinary least squares" title="Estimation method that chooses coefficients to minimise the sum of squared residuals.">least-squares</a> model</h2>
 <ul>
 <li>Begin with a first-order additive model; consider <a href="glossary.html#glossary-interaction" class="glossary" data-term="Interaction" title="A term that allows the effect of one predictor to depend on the level of another (e.g., X_1 X_2).">interactions</a> or <a href="glossary.html#glossary-polynomial-term" class="glossary" data-term="Polynomial term" title="A predictor raised to a power (e.g., x^2, x^3) to model curvature while staying linear in parameters.">polynomial terms</a> if exploratory plots suggest curvature.</li>
 </ul>
@@ -279,8 +279,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="model-refinement-and-interpretation" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="model-refinement-and-interpretation"><span class="header-section-number">6.5</span> Model refinement and interpretation</h2>
+<section id="sec-model-refinement-and-interpretation" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="sec-model-refinement-and-interpretation"><span class="header-section-number">6.5</span> Model refinement and interpretation</h2>
 <ul>
 <li>Check residual diagnostics (see Module 6). Address nonlinearity, <a href="glossary.html#glossary-heteroskedasticity" class="glossary" title="Nonconstant error variance across predictor values (the opposite of homoscedasticity).">heteroskedasticity</a>, or <a href="glossary.html#glossary-influential-point" class="glossary" data-term="Influential point" title="An observation that substantially changes fitted coefficients or predictions when removed.">influential points</a>.</li>
 <li>Interpret coefficients, including categorical contrasts and any interaction terms.</li>
@@ -290,8 +290,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># coef(summary(model))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="reporting-the-results" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="reporting-the-results"><span class="header-section-number">6.6</span> Reporting the results</h2>
+<section id="sec-reporting-the-results" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="sec-reporting-the-results"><span class="header-section-number">6.6</span> Reporting the results</h2>
 <ul>
 <li>Present fitted effects with <a href="glossary.html#glossary-confidence-interval" class="glossary" data-term="Confidence interval" title="A range of plausible parameter values at a chosen confidence level (e.g., 95%).">confidence intervals</a>, and provide a <a href="glossary.html#glossary-prediction-interval" class="glossary" data-term="Prediction interval" title="An interval for a future observation at given predictors; wider than a confidence interval.">prediction interval</a> for a meaningful scenario (e.g., a student profile of interest).</li>
 <li>Summarise key findings in plain language and note any limitations (e.g., omitted variables, sample size).</li>

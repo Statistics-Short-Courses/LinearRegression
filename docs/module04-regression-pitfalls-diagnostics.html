@@ -234,13 +234,13 @@ window.Quarto = {
     <h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-  <li><a href="#residuals-as-diagnostic-tools" id="toc-residuals-as-diagnostic-tools" class="nav-link active" data-scroll-target="#residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</a></li>
-  <li><a href="#residual-plots-vs-predictors-and-fitted-values" id="toc-residual-plots-vs-predictors-and-fitted-values" class="nav-link" data-scroll-target="#residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</a></li>
-  <li><a href="#diagnosing-nonconstant-variance-and-nonlinearity" id="toc-diagnosing-nonconstant-variance-and-nonlinearity" class="nav-link" data-scroll-target="#diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</a></li>
-  <li><a href="#assessing-normality-of-residuals" id="toc-assessing-normality-of-residuals" class="nav-link" data-scroll-target="#assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</a></li>
-  <li><a href="#standardised-residuals-leverage-cooks-distance" id="toc-standardised-residuals-leverage-cooks-distance" class="nav-link" data-scroll-target="#standardised-residuals-leverage-cooks-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</a></li>
-  <li><a href="#transformations-including-boxcox" id="toc-transformations-including-boxcox" class="nav-link" data-scroll-target="#transformations-including-boxcox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</a></li>
-  <li><a href="#handling-outliers-and-influential-observations" id="toc-handling-outliers-and-influential-observations" class="nav-link" data-scroll-target="#handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling outliers and influential observations</a></li>
+  <li><a href="#sec-residuals-as-diagnostic-tools" id="toc-sec-residuals-as-diagnostic-tools" class="nav-link active" data-scroll-target="#sec-residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</a></li>
+  <li><a href="#sec-residual-plots-vs-predictors-and-fitted-values" id="toc-sec-residual-plots-vs-predictors-and-fitted-values" class="nav-link" data-scroll-target="#sec-residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</a></li>
+  <li><a href="#sec-diagnosing-nonconstant-variance-and-nonlinearity" id="toc-sec-diagnosing-nonconstant-variance-and-nonlinearity" class="nav-link" data-scroll-target="#sec-diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</a></li>
+  <li><a href="#sec-assessing-normality-of-residuals" id="toc-sec-assessing-normality-of-residuals" class="nav-link" data-scroll-target="#sec-assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</a></li>
+  <li><a href="#sec-standardised-residuals-leverage-cook-s-distance" id="toc-sec-standardised-residuals-leverage-cook-s-distance" class="nav-link" data-scroll-target="#sec-standardised-residuals-leverage-cook-s-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</a></li>
+  <li><a href="#sec-transformations-including-box-cox" id="toc-sec-transformations-including-box-cox" class="nav-link" data-scroll-target="#sec-transformations-including-box-cox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</a></li>
+  <li><a href="#sec-handling-outliers-and-influential-observations" id="toc-sec-handling-outliers-and-influential-observations" class="nav-link" data-scroll-target="#sec-handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling outliers and influential observations</a></li>
   </ul>
 </nav>
     </div>
@@ -249,7 +249,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></h1>
+<h1 class="title"><span id="sec-regression-pitfalls-and-diagnostics" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></h1>
 </div>
 
 
@@ -268,8 +268,8 @@ window.Quarto = {
 
 <p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <a href="module02-mlr.html#sec-multiple_linear_regression" class="quarto-xref"><span>Section 3.2</span></a> for a reminder of how and why we made these assumptions). Therefore, it is important to routinely check the validity of these assumptions when fitting regression models. The most common assumptions to check are: - Linearity: the relationship between predictors and response is linear. - <a href="glossary.html#glossary-homoscedasticity" class="glossary" title="Constant error variance across predictor values: Var()=^2.">Homoscedasticity</a>: the variance of the errors is constant across all levels of the predictors. - Normality: the errors are normally distributed. - <a href="glossary.html#glossary-independence" class="glossary" title="Errors from different observations are independent of one another.">Independence</a>: the errors are independent of each other.</p>
 <p>Moreover, there aare other issues not as directly related to these assumptions that can also affect regression analysis, such as: - <a href="glossary.html#glossary-influential-point" class="glossary" data-term="Influential point" title="An observation that substantially changes fitted coefficients or predictions when removed.">Influential points</a>: individual data points that have a disproportionate impact on the model fit. - <a href="glossary.html#glossary-multicollinearity" class="glossary" title="Strong correlation among predictors that inflates standard errors and destabilises estimates.">Multicollinearity</a>: high correlation between predictor variables that can destabilise estimates. - <a href="glossary.html#glossary-extrapolation" class="glossary" title="Making predictions outside the observed predictor range, where model assumptions may fail.">Extrapolation</a>: making predictions outside the range of the observed data. - blind model selection: using automated procedures without considering scientific context. - <a href="glossary.html#glossary-overfitting" class="glossary" data-term="Overfitting" title="When a model captures noise in the training data and generalises poorly to new data.">overfitting</a>: fitting to noise rather than signal in the data. In this section, we will discuss how to diagnose these issues using residual plots and other diagnostic tools, as well as strategies for addressing them when they arise.</p>
-<section id="the-importance-of-checking-residuals-anscombes-quartet" class="level3 Example" data-number="5.0.1">
-<h3 data-number="5.0.1" class="anchored" data-anchor-id="the-importance-of-checking-residuals-anscombes-quartet"><span class="header-section-number">5.0.1</span> The importance of checking residuals: Anscombe’s quartet</h3>
+<section id="sec-the-importance-of-checking-residuals-anscombe-s-quartet" class="level3 Example" data-number="5.0.1">
+<h3 data-number="5.0.1" class="anchored" data-anchor-id="sec-the-importance-of-checking-residuals-anscombe-s-quartet"><span class="header-section-number">5.0.1</span> The importance of checking residuals: Anscombe’s quartet</h3>
 <p>Anscombe’s quartet is a classic reminder that identical regression summaries can mask radically different data patterns. Each dataset below has the same <span class="math inline">\(n\)</span>, mean <span class="math inline">\(x\)</span>, mean <span class="math inline">\(y\)</span>, correlation, and the same fitted regression line, yet the residual plots tell very different stories.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -340,16 +340,16 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 </section>
-<section id="residuals-as-diagnostic-tools" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</h2>
+<section id="sec-residuals-as-diagnostic-tools" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="sec-residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</h2>
 <p>How can we check whether the assumptions of a linear regression model are met? One of the most common approaches is to examine the residuals of the model. As a reminder, the residuals are the differences between the observed values and the predicted values from the model:</p>
-<section id="residual" class="level3 Key-term" data-number="5.1.1">
-<h3 data-number="5.1.1" class="anchored" data-anchor-id="residual"><span class="header-section-number">5.1.1</span> Residual</h3>
+<section id="sec-residual" class="level3 Key-term" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="sec-residual"><span class="header-section-number">5.1.1</span> Residual</h3>
 <p>The residual for observation <span class="math inline">\(i\)</span> in a regression model is defined as <span class="math display">\[e_i = y_i - \hat{y}_i\]</span> where <span class="math inline">\(e_i\)</span> is the residual for observation <span class="math inline">\(i\)</span>, <span class="math inline">\(y_i\)</span> is the observed value, and <span class="math inline">\(\hat{y}_i\)</span> is the predicted value from the model.</p>
 </section>
 <p>We used residuals in <a href="module01-slr.html#sec-leastsquares" class="quarto-xref"><span>Section 2.2.5</span></a> to estimate the parameters of the linear model, but they can also be used to diagnose potential issues with the model fit. Since residuals encode the information about what the model has <em>not</em> captured about the data (i.e the information that remains - is ‘residual’ - after fitting the model), examining them can reveal patterns that reveal how our model fails to capture important aspects of the data (e.g.&nbsp;nonlinearities, nonconstant variance, outliers, etc.).</p>
-<section id="residuals-in-the-olympic-cholesterol-data" class="level3 Example" data-number="5.1.2">
-<h3 data-number="5.1.2" class="anchored" data-anchor-id="residuals-in-the-olympic-cholesterol-data"><span class="header-section-number">5.1.2</span> Residuals in the Olympic cholesterol data</h3>
+<section id="sec-residuals-in-the-olympic-cholesterol-data" class="level3 Example" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="sec-residuals-in-the-olympic-cholesterol-data"><span class="header-section-number">5.1.2</span> Residuals in the Olympic cholesterol data</h3>
 <p>The OLYMPIC dataset records fat intake (mg) and cholesterol (mg/L) for 20 athletes. A simple linear model leaves a curved pattern in the residuals.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -387,12 +387,12 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <p>The systematic curve in the residuals indicates that a straight-line model is missing structure in the data.</p>
 </section>
-<section id="extracting-residuals-and-broomaugment" class="level3" data-number="5.1.3">
-<h3 data-number="5.1.3" class="anchored" data-anchor-id="extracting-residuals-and-broomaugment"><span class="header-section-number">5.1.3</span> Extracting residuals and <code>broom::augment()</code></h3>
+<section id="sec-extracting-residuals-and-broom-augment" class="level3" data-number="5.1.3">
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="sec-extracting-residuals-and-broom-augment"><span class="header-section-number">5.1.3</span> Extracting residuals and <code>broom::augment()</code></h3>
 <p>We saw in <a href="module01-slr.html#sec-residuals" class="quarto-xref"><span>Section 2.2.3</span></a> how to extract residuals using the <code>resid()</code> function, or by indexing our linear model object with lm$residuals. Another useful way to extract residuals, along with fitted values and other useful information, is to use the <code>broom::augment()</code> function. This function takes a model object as input and returns a data frame that includes the original data along with additional columns for fitted values, residuals, and other diagnostics.</p>
 </section>
-<section id="olympic-residuals-with-broomaugment" class="level3 Example" data-number="5.1.4">
-<h3 data-number="5.1.4" class="anchored" data-anchor-id="olympic-residuals-with-broomaugment"><span class="header-section-number">5.1.4</span> Olympic residuals with <code>broom::augment()</code></h3>
+<section id="sec-olympic-residuals-with-broom-augment" class="level3 Example" data-number="5.1.4">
+<h3 data-number="5.1.4" class="anchored" data-anchor-id="sec-olympic-residuals-with-broom-augment"><span class="header-section-number">5.1.4</span> Olympic residuals with <code>broom::augment()</code></h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -463,13 +463,13 @@ Attaching package: 'dplyr'</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggresidpanel::resid_panel(olympic_lm)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="common-diagnostic-plots" class="level3" data-number="5.1.5">
-<h3 data-number="5.1.5" class="anchored" data-anchor-id="common-diagnostic-plots"><span class="header-section-number">5.1.5</span> Common diagnostic plots</h3>
+<section id="sec-common-diagnostic-plots" class="level3" data-number="5.1.5">
+<h3 data-number="5.1.5" class="anchored" data-anchor-id="sec-common-diagnostic-plots"><span class="header-section-number">5.1.5</span> Common diagnostic plots</h3>
 <p>Analysing residuals is such a key part of regression analysis that the base R <code>plot()</code> function for linear models automatically produces a set of diagnostic plots. Let’s have a look.</p>
 </section>
 </section>
-<section id="residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</h2>
+<section id="sec-residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="sec-residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</h2>
 <ul>
 <li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#glossary-residual" class="glossary" title="An observed value minus its fitted value from the model: e_i = y_i - _i.">residual</a>).</li>
 </ul>
@@ -488,14 +488,14 @@ Attaching package: 'dplyr'</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="diagnosing-nonconstant-variance-and-nonlinearity" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</h2>
+<section id="sec-diagnosing-nonconstant-variance-and-nonlinearity" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="sec-diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</h2>
 <ul>
 <li>Funnel shapes or curved trends in residual plots suggest <a href="glossary.html#glossary-heteroskedasticity" class="glossary" title="Nonconstant error variance across predictor values (the opposite of homoscedasticity).">heteroskedasticity</a> or missing curvature; consider transformations or adding interactions/polynomials.</li>
 </ul>
 </section>
-<section id="assessing-normality-of-residuals" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</h2>
+<section id="sec-assessing-normality-of-residuals" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="sec-assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</h2>
 <ul>
 <li>Use Q-Q plots and compare <span class="math inline">\(t\)</span>- and <span class="math inline">\(p\)</span>-values to Normal reference.</li>
 </ul>
@@ -510,8 +510,8 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 </section>
-<section id="standardised-residuals-leverage-cooks-distance" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="standardised-residuals-leverage-cooks-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</h2>
+<section id="sec-standardised-residuals-leverage-cook-s-distance" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="sec-standardised-residuals-leverage-cook-s-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</h2>
 <ul>
 <li><a href="glossary.html#glossary-standardized-residual" class="glossary" data-term="Standardized residual" title="A residual scaled by its estimated standard deviation to highlight unusually large deviations.">Standardized residuals</a> (or studentised residuals) scale by estimated variance and flag unusual outcomes (|r| &gt; 2 as a heuristic).</li>
 <li>Leverage (<code>hatvalues()</code>) flags unusual predictor combinations (<a href="glossary.html#glossary-leverage" class="glossary" title="A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.">leverage</a>).</li>
@@ -531,8 +531,8 @@ Hornet Sportabout  0.4688483 0.07867173 0.004827051</code></pre>
 </div>
 </div>
 </section>
-<section id="transformations-including-boxcox" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="transformations-including-boxcox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</h2>
+<section id="sec-transformations-including-box-cox" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="sec-transformations-including-box-cox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</h2>
 <ul>
 <li>Transformations can stabilise variance or linearise relationships; for strictly positive <span class="math inline">\(Y\)</span>, consider <a href="glossary.html#glossary-box-cox-transformation" class="glossary" data-term="Box-Cox transformation" title="A family of power transformations used to stabilise variance or improve linearity for positive responses.">Box-Cox transformations</a> to guide power choices.</li>
 </ul>
@@ -547,8 +547,8 @@ Hornet Sportabout  0.4688483 0.07867173 0.004827051</code></pre>
 </div>
 </div>
 </section>
-<section id="handling-outliers-and-influential-observations" class="level2" data-number="5.7">
-<h2 data-number="5.7" class="anchored" data-anchor-id="handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling <a href="glossary.html#glossary-outlier" class="glossary" data-term="Outlier" title="An observation with an unusually large residual relative to the fitted model.">outliers</a> and influential observations</h2>
+<section id="sec-handling-outliers-and-influential-observations" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="sec-handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling <a href="glossary.html#glossary-outlier" class="glossary" data-term="Outlier" title="An observation with an unusually large residual relative to the fitted model.">outliers</a> and influential observations</h2>
 <ul>
 <li>Investigate data quality first (entry errors, unusual units).</li>
 <li>If <a href="glossary.html#glossary-influential-point" class="glossary" data-term="Influential point" title="An observation that substantially changes fitted coefficients or predictions when removed.">influential points</a> are real, fit with and without them to assess robustness; report how conclusions change.</li>

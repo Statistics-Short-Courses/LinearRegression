@@ -46,9 +46,9 @@ theme_set(theme_bw())
 library(ggplot2)
 theme_set(theme_bw())
 ```
-# Introduction to linear models
+# Introduction to linear models {#sec-introduction-to-linear-models}
 
-## Statistical models
+## Statistical models {#sec-statistical-models}
 
 A central aim of statistical modelling is to understand how one *variable* changes in relation to others. In your own work, these variables will have concrete meaning - perhaps plant growth, reaction time, exam score, or income - but for now we will simply call them $x$ and $Y$.
 
@@ -66,7 +66,7 @@ $$Y = f(x) + \varepsilon$$.
 
 Here, $\varepsilon$ represents natural variability: the part of $Y$ that our model does not or cannot explain. 
 
-## Linear prediction
+## Linear prediction {#sec-linear-prediction}
 
 To make our model concrete, we need to choose a form for the function $f(x)$. A natural starting point—because it is simple, interpretable, and surprisingly powerful—is a **linear function**:
 
@@ -110,7 +110,7 @@ Y and x have a linear relationship
 
 ::: Example
 
-### Salary growth over time
+### Salary growth over time {#sec-salary-growth-over-time}
 
 Suppose you have received a job offer from *Company A*, and you want to predict your salary after working there for 10 years. You are told that the **average starting salary** at this company is $50,000, and that salaries **increase by $5,000 per year** of employment.
 
@@ -122,7 +122,7 @@ $$
 
 ::: {.panel-tabset}
 
-## Plot
+## Plot {#sec-salary-growth-over-time-plot}
 
 ```{r module00-lm-salary-growth-over-time-plot}
 #| echo: false
@@ -133,7 +133,7 @@ ggplot() +
   labs(x = "Years Employed", y = "Expected Salary ($)")
 ```
 
-## Code
+## Code {#sec-salary-growth-over-time-code}
 
 ```{r module00-lm-salary-growth-over-time-code}
 #| eval: false
@@ -156,7 +156,7 @@ $$
 
 ::: Exercise
 
-### A competing offer
+### A competing offer {#sec-a-competing-offer}
 
 A second company also offers you a position. Their **starting salary** is higher—$70,000 on average—but their yearly pay increases are smaller. Employees who have been at the company for 6 years earn, on average, **$18,000 more** than when they started.
 
@@ -168,7 +168,7 @@ $$
 
 ::::{}
 
-#### Choosing parameters
+#### Choosing parameters {#sec-choosing-parameters}
 
 * The starting salary gives $\alpha = 70{,}000$.
 * The 6-year increase gives $6\beta = 18{,}000$, so $\beta = 3{,}000$.
@@ -184,7 +184,7 @@ beta <- _______
 
 ::::: {.solution exercise="ex_1.1.1"}
 
-##### Solution
+##### Solution {#sec-choosing-parameters-solution}
 
 ```{webr module00-lm-choosing-parameters-solution}
 #| exercise: ex_1.1.1
@@ -210,7 +210,7 @@ gradethis::grade_this_code()
 
 ::::{}
 
-#### Linear prediction
+#### Linear prediction {#sec-linear-prediction-2}
 
 Thus the linear predictor for Company B is
 
@@ -222,7 +222,7 @@ Below is a plot comparing salary trends for both companies:
 
 ::: {.panel-tabset}
 
-## Plot
+## Plot {#sec-linear-prediction-plot}
 
 ```{r module00-lm-linear-prediction-plot}
 #| echo: false
@@ -239,7 +239,7 @@ ggplot() +
   scale_color_manual(values = c("Company B" = "#4CAF50", "Company A" = "#2196F3"))
 ```
 
-## Code
+## Code {#sec-linear-prediction-code}
 
 ```{r module00-lm-linear-prediction-code}
 #| eval: false
@@ -290,7 +290,7 @@ gradethis::grade_this_code()
 
 ::::{}
 
-#### Using R functions
+#### Using R functions {#sec-using-r-functions}
 
 Evaluating the expression in R:
 
@@ -348,14 +348,14 @@ gradethis::grade_this_code()
 
 ::::
 
-### Good work! {.unnumbered}
+### Good work! {#sec-good-work .unnumbered}
 
 Next we will extend our linear predictor to form a full linear *statistical* model.
 :::
 
 -  [ ] Continue
 
-## Random Errors
+## Random Errors {#sec-random-errors}
 
 -   In practice, data rarely fall perfectly on a straight line. Even if the underlying relationship between $x$ and $Y$ is approximately linear, individual observations tend to vary around that line.
 
@@ -365,7 +365,7 @@ $$
 Y=\alpha + \beta x + \varepsilon
 $$
 
-### Mean Zero
+### Mean Zero {#sec-mean-zero}
 
 -   The error term represents the \*difference between the actual value of $Y$ and the value predicted by the [linear predictor]{.glossary}, $E[Y]$.
 -   On average, we expect these error terms to balance out:
@@ -391,7 +391,7 @@ i.e. The linear predictor gives the correct value of $Y$ on average
 The variance of the error term is constant for all values of x ([homoscedasticity]{.glossary}): $$Var(\varepsilon)=\sigma^2$$
 :::
 
-### Normal distribution
+### Normal distribution {#sec-normal-distribution}
 
 While the assumptions of mean 0 and constant variance describe the center and spread of the errors, they don’t fully specify the shape of their distribution. To model this more completely, we often assume that the errors follow a Normal distribution.
 
@@ -450,7 +450,7 @@ Plot.plot({
 })
 ```
 ::: Example
-### Variation in salary
+### Variation in salary {#sec-variation-in-salary}
 
 Lets return to our simple linear model of salary at ~company A~,
 
@@ -639,7 +639,7 @@ Plot.plot({
 });
 ```
 
-## A simple Linear model in R
+## A simple Linear model in R {#sec-a-simple-linear-model-in-r}
 
 -   finish this section and lead into the next on fitting models to data.
 
@@ -682,7 +682,7 @@ head(Y)
 lets look at the joint distribution of x and Y:
 
 ::: {.panel-tabset}
-## Plot
+## Plot {#sec-a-simple-linear-model-in-r-plot}
 ```{r module00-lm-a-simple-linear-model-in-r-setup}
 #| echo: false
 #| label: fig-plot
@@ -698,7 +698,7 @@ ggplot(df, aes(X, Y)) +
   labs(x = "x", y = "Y") +
   theme_minimal()
 ```
-## Code
+## Code {#sec-a-simple-linear-model-in-r-code}
 
 ```{r module00-lm-a-simple-linear-model-in-r-code}
 #| eval: false
