@@ -234,13 +234,13 @@ window.Quarto = {
     <h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-residuals-as-diagnostic-tools" id="toc-sec-residuals-as-diagnostic-tools" class="nav-link active" data-scroll-target="#sec-residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</a></li>
-  <li><a href="#sec-residual-plots-vs-predictors-and-fitted-values" id="toc-sec-residual-plots-vs-predictors-and-fitted-values" class="nav-link" data-scroll-target="#sec-residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</a></li>
-  <li><a href="#sec-diagnosing-nonconstant-variance-and-nonlinearity" id="toc-sec-diagnosing-nonconstant-variance-and-nonlinearity" class="nav-link" data-scroll-target="#sec-diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</a></li>
-  <li><a href="#sec-assessing-normality-of-residuals" id="toc-sec-assessing-normality-of-residuals" class="nav-link" data-scroll-target="#sec-assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</a></li>
-  <li><a href="#sec-standardised-residuals-leverage-cook-s-distance" id="toc-sec-standardised-residuals-leverage-cook-s-distance" class="nav-link" data-scroll-target="#sec-standardised-residuals-leverage-cook-s-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</a></li>
-  <li><a href="#sec-transformations-including-box-cox" id="toc-sec-transformations-including-box-cox" class="nav-link" data-scroll-target="#sec-transformations-including-box-cox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</a></li>
-  <li><a href="#sec-handling-outliers-and-influential-observations" id="toc-sec-handling-outliers-and-influential-observations" class="nav-link" data-scroll-target="#sec-handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling outliers and influential observations</a></li>
+  <li><a href="#common-pitfalls-to-avoid" id="toc-common-pitfalls-to-avoid" class="nav-link active" data-scroll-target="#common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</a></li>
+  <li><a href="#residual-plots-vs-predictors-and-fitted-values" id="toc-residual-plots-vs-predictors-and-fitted-values" class="nav-link" data-scroll-target="#residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</a></li>
+  <li><a href="#diagnosing-nonconstant-variance-and-nonlinearity" id="toc-diagnosing-nonconstant-variance-and-nonlinearity" class="nav-link" data-scroll-target="#diagnosing-nonconstant-variance-and-nonlinearity"><span class="header-section-number">5.3</span> Diagnosing nonconstant variance and nonlinearity</a></li>
+  <li><a href="#assessing-normality-of-residuals" id="toc-assessing-normality-of-residuals" class="nav-link" data-scroll-target="#assessing-normality-of-residuals"><span class="header-section-number">5.4</span> Assessing normality of residuals</a></li>
+  <li><a href="#standardised-residuals-leverage-cooks-distance" id="toc-standardised-residuals-leverage-cooks-distance" class="nav-link" data-scroll-target="#standardised-residuals-leverage-cooks-distance"><span class="header-section-number">5.5</span> Standardised residuals, leverage, Cook’s distance</a></li>
+  <li><a href="#transformations-including-boxcox" id="toc-transformations-including-boxcox" class="nav-link" data-scroll-target="#transformations-including-boxcox"><span class="header-section-number">5.6</span> Transformations including Box–Cox</a></li>
+  <li><a href="#handling-outliers-and-influential-observations" id="toc-handling-outliers-and-influential-observations" class="nav-link" data-scroll-target="#handling-outliers-and-influential-observations"><span class="header-section-number">5.7</span> Handling outliers and influential observations</a></li>
   </ul>
 </nav>
     </div>
@@ -266,79 +266,18 @@ window.Quarto = {
 </header>
 
 
-<p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <a href="module02-mlr.html#sec-multiple_linear_regression" class="quarto-xref"><span>Section 3.2</span></a> for a reminder of how and why we made these assumptions). Therefore, it is important to routinely check the validity of these assumptions when fitting regression models. The most common assumptions to check are: - Linearity: the relationship between predictors and response is linear. - <a href="glossary.html#glossary-homoscedasticity" class="glossary" title="Constant error variance across predictor values: Var()=^2.">Homoscedasticity</a>: the variance of the errors is constant across all levels of the predictors. - Normality: the errors are normally distributed. - <a href="glossary.html#glossary-independence" class="glossary" title="Errors from different observations are independent of one another.">Independence</a>: the errors are independent of each other.</p>
-<p>Moreover, there aare other issues not as directly related to these assumptions that can also affect regression analysis, such as: - <a href="glossary.html#glossary-influential-point" class="glossary" data-term="Influential point" title="An observation that substantially changes fitted coefficients or predictions when removed.">Influential points</a>: individual data points that have a disproportionate impact on the model fit. - <a href="glossary.html#glossary-multicollinearity" class="glossary" title="Strong correlation among predictors that inflates standard errors and destabilises estimates.">Multicollinearity</a>: high correlation between predictor variables that can destabilise estimates. - <a href="glossary.html#glossary-extrapolation" class="glossary" title="Making predictions outside the observed predictor range, where model assumptions may fail.">Extrapolation</a>: making predictions outside the range of the observed data. - blind model selection: using automated procedures without considering scientific context. - <a href="glossary.html#glossary-overfitting" class="glossary" data-term="Overfitting" title="When a model captures noise in the training data and generalises poorly to new data.">overfitting</a>: fitting to noise rather than signal in the data. In this section, we will discuss how to diagnose these issues using residual plots and other diagnostic tools, as well as strategies for addressing them when they arise.</p>
-<section id="sec-the-importance-of-checking-residuals-anscombe-s-quartet" class="level3 Example" data-number="5.0.1">
-<h3 data-number="5.0.1" class="anchored" data-anchor-id="sec-the-importance-of-checking-residuals-anscombe-s-quartet"><span class="header-section-number">5.0.1</span> The importance of checking residuals: Anscombe’s quartet</h3>
-<p>Anscombe’s quartet is a classic reminder that identical regression summaries can mask radically different data patterns. Each dataset below has the same <span class="math inline">\(n\)</span>, mean <span class="math inline">\(x\)</span>, mean <span class="math inline">\(y\)</span>, correlation, and the same fitted regression line, yet the residual plots tell very different stories.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'dplyr'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:stats':
-
-    filter, lag</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>anscombe_long <span class="ot">&lt;-</span> anscombe <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">everything</span>(),</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"set"</span>),</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"([xy])(</span><span class="sc">\\</span><span class="st">d)"</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">set =</span> <span class="fu">paste0</span>(<span class="st">"Set "</span>, set))</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>anscombe_aug <span class="ot">&lt;-</span> anscombe_long <span class="sc">|&gt;</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> <span class="fu">c</span>(x, y)) <span class="sc">|&gt;</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">map</span>(data, <span class="sc">~</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> .x)),</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">aug =</span> <span class="fu">map2</span>(model, data, broom<span class="sc">::</span>augment)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(aug)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(anscombe_aug, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> set, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Same fitted line, very different datasets"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-the-importance-of-checking-residuals-anscombe-s-setup-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here we can see from the initial scatter plots, the four datasets have very different structures. In more complicated datasets, these differences may not be as obvious. Residual plots can help us see these differences more clearly:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(anscombe_aug, <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray40"</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> set, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted value"</span>, <span class="at">y =</span> <span class="st">"Residual"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="module04-regression-pitfalls-diagnostics_files/figure-html/module04-regression-pitfalls-diagnostics-the-importance-of-checking-residuals-anscombe-s-residual-plot-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>In the last section we discused cases where regression models can go wrong due to overfitting - fitting to noise rather than signal in the data. However, there are many other pitfalls that can arise in regression analysis. Many of these pitfalls arise from violations of the assumptions underlying the linear model framework (see <a href="module00-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 1.4</span></a> and <span class="quarto-unresolved-ref">?sec-multiple_linear_regression</span> for a reminder of how and why we made these assumptions).</p>
+<section id="common-pitfalls-to-avoid" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="common-pitfalls-to-avoid"><span class="header-section-number">5.1</span> Common pitfalls to avoid</h2>
+<ul>
+<li>Ignoring model misspecification: linear fits to nonlinear patterns inflate residual structure.</li>
+<li>Overlooking heteroskedasticity: nonconstant variance skews standard errors and tests.</li>
+<li>Neglecting influential points: outliers can disproportionately sway estimates.</li>
+<li>Failing to check normality of residuals: non-normal errors can invalidate inference.</li>
+<li>Extrapolating far beyond observed predictor ranges can explode predictions.</li>
+<li>Blind stepwise selection can drop theory-driven terms; keep scientific context in view.</li>
+<li>Unchecked multicollinearity or leverage points can destabilise inference; diagnose before concluding.</li>
+</ul>
 </section>
 <section id="sec-residuals-as-diagnostic-tools" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="sec-residuals-as-diagnostic-tools"><span class="header-section-number">5.1</span> Residuals as diagnostic tools</h2>
@@ -471,7 +410,7 @@ Attaching package: 'dplyr'</code></pre>
 <section id="sec-residual-plots-vs-predictors-and-fitted-values" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="sec-residual-plots-vs-predictors-and-fitted-values"><span class="header-section-number">5.2</span> Residual plots vs predictors and fitted values</h2>
 <ul>
-<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#glossary-residual" class="glossary" title="An observed value minus its fitted value from the model: e_i = y_i - _i.">residual</a>).</li>
+<li>Plot residuals against fitted values to check linearity and constant variance; add predictor-specific plots to spot functional-form issues (<a href="glossary.html#gloss-residual">residual</a>).</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>diag_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span>
