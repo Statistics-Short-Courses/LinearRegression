@@ -58,4 +58,6 @@ MLR
 - finish key point on interpreting t-tests
 - formatting on 3.3.3 heading [multicollinearity] 
 - icons for call-outs?
-- can’t continue past 3.3.3
+- remove ‘glance’ section, add ‘summary()’ section (that includes short r^2 discussion). I.e. 3.5 pulling it together with `summary()1st
+- change example from advertising to dataset with categorical predictors (save switching mid chapter) e.g. mtcars the whole way?
+- 
