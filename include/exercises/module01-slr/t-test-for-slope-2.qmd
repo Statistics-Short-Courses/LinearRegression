@@ -1,0 +1,5 @@
+::: Exercise
+
+##### t-test for slope {#sec-t-test-for-slope-2}
+
+:::

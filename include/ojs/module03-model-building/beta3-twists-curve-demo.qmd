@@ -1,0 +1,63 @@
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+cubicPoints = transpose(cubicData)
+cubicXDomain = d3.extent(cubicData.x)
+
+viewof b0_cub = Inputs.range([0, 4], {step: 1, value: 2, label: html`${tex`\beta_0`}: Intercept`})
+viewof b1_cub = Inputs.range([-2, 2], {step: 1, value: -1, label:  html`${tex`\beta_1`}: Linear term`})
+viewof b2_cub = Inputs.range([-1, 1], {step: 0.1, value: 0.5, label: html`${tex`\beta_2`}: Squared term`})
+viewof b3_cub = Inputs.range([-0.6, 0.6], {step: 0.1, value: 0.0, label: html`${tex`\beta_3`}: Cubic term`})
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+tex.block`\hat{Y} = ${b0_cub.toFixed(1)} + ${b1_cub.toFixed(2)}x + ${b2_cub.toFixed(2)}x^2 + ${b3_cub.toFixed(2)}x^3`
+
+cubicCurve = d3.range(cubicXDomain[0], cubicXDomain[1] + 0.05, 0.05).map((x) => ({
+  x,
+  y: b0_cub + b1_cub * x + b2_cub * x * x + b3_cub * x * x * x
+}))
+
+cubicResiduals = cubicPoints.map((d) => {
+  const fit = b0_cub + b1_cub * d.x + b2_cub * d.x * d.x + b3_cub * d.x * d.x * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+cubicMaxAbsResid = d3.max(cubicResiduals, (d) => Math.abs(d.resid)) || 1;
+cubicYDomain = d3.extent(cubicData.y)
+
+Plot.plot({
+  height: 320,
+  marginLeft: 50,
+  x: {label: "Predictor (x)", domain: cubicXDomain},
+  y: {label: "Outcome (y)", domain: cubicYDomain},
+  marks: [
+    Plot.link(cubicResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / cubicMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(cubicPoints, {
+      x: "x",
+      y: "y",
+      r: 3,
+      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
+    }),
+    Plot.line(cubicCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2
+    })
+  ]
+})
+```
+
+

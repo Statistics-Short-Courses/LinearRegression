@@ -1,0 +1,7 @@
+::: Exercise
+#### Interpreting a continuous-by-categorical interaction {#sec-exercise-continuous-by-categorical-interaction}
+Fit `mpg ~ wt * am_f` on `mtcars_cat`.
+
+1. Which group has the steeper slope for weight?
+2. What does the interaction term represent in words?
+:::

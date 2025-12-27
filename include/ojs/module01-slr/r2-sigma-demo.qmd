@@ -1,0 +1,88 @@
+```{ojs}
+//| echo: false
+//| panel: sidebar
+
+// Use linearData
+data_r2 = transpose(linearData)
+
+// True model parameters that generated the data
+alpha_true_r2 = -3
+beta_true_r2 = 0.5
+
+// Compute true fitted values and errors (difference from true model)
+trueModelData_r2 = data_r2.map(d => ({
+  ...d,
+  yTrue: alpha_true_r2 + beta_true_r2 * d.x,
+  error: d.y - (alpha_true_r2 + beta_true_r2 * d.x)
+}))
+
+// Observed error SD (used to create unit errors)
+errorSD_observed = Math.sqrt(d3.sum(trueModelData_r2, d => d.error ** 2) / data_r2.length)
+
+// Unit errors: error / errorSD (so they have approx unit variance)
+unitError_r2 = trueModelData_r2.map(d => d.error / errorSD_observed)
+
+viewof varScale_r2 = Inputs.range([0, 4], {
+  value: 1,
+  step: 0.05,
+  label: "Variance scale"
+})
+```
+
+```{ojs}
+//| echo: false
+//| panel: fill
+
+// Current sigma based on scale
+sigma_current = varScale_r2 * errorSD_observed
+
+// Compute displayed y = true model + scaled error
+pointData_r2 = trueModelData_r2.map((d, i) => ({
+  x: d.x,
+  y: d.yTrue + sigma_current * unitError_r2[i]
+}))
+
+// Compute LS fit for the current points
+xMean_r2 = d3.mean(pointData_r2, d => d.x)
+yMean_r2 = d3.mean(pointData_r2, d => d.y)
+sxy_r2 = d3.sum(pointData_r2, d => (d.x - xMean_r2) * (d.y - yMean_r2))
+sxx_r2 = d3.sum(pointData_r2, d => (d.x - xMean_r2) ** 2)
+beta_ls_r2 = sxy_r2 / sxx_r2
+alpha_ls_r2 = yMean_r2 - beta_ls_r2 * xMean_r2
+
+// Add LS fitted values to points
+pointDataWithFit_r2 = pointData_r2.map(d => ({
+  ...d,
+  yFitted: alpha_ls_r2 + beta_ls_r2 * d.x
+}))
+
+// Compute RSS, TSS, R² using LS fit
+RSS_r2 = d3.sum(pointDataWithFit_r2, d => (d.y - d.yFitted) ** 2)
+TSS_r2 = d3.sum(pointDataWithFit_r2, d => (d.y - yMean_r2) ** 2)
+R2_demo = TSS_r2 > 0 ? Math.max(0, 1 - RSS_r2 / TSS_r2) : 1
+
+tex.block`R^2 = ${R2_demo.toFixed(3)}`
+
+// Fixed axis domains based on max variance scale (3)
+xDomain_r2 = d3.extent(data_r2, d => d.x)
+xPad_r2 = (xDomain_r2[1] - xDomain_r2[0]) * 0.1
+
+// Fixed y domain: use range that accommodates max variance scale (3)
+maxSigma_r2 = 3 * errorSD_observed
+yMin_r2_fixed = d3.min(trueModelData_r2, (d, i) => d.yTrue + maxSigma_r2 * unitError_r2[i])
+yMax_r2_fixed = d3.max(trueModelData_r2, (d, i) => d.yTrue + maxSigma_r2 * unitError_r2[i])
+yPad_r2 = (yMax_r2_fixed - yMin_r2_fixed) * 0.1
+
+Plot.plot({
+  height: 300,
+  x: { domain: [xDomain_r2[0] - xPad_r2, xDomain_r2[1] + xPad_r2], label: "x", grid: true },
+  y: { domain: [yMin_r2_fixed - yPad_r2, yMax_r2_fixed + yPad_r2], label: "Y", grid: true },
+  marks: [
+    Plot.line(pointDataWithFit_r2, {x: "x", y: "yFitted", stroke: "steelblue", strokeWidth: 2}),
+    Plot.dot(pointData_r2, {x: "x", y: "y", r: 4, fillOpacity: 0.7})
+  ]
+})
+```
+
+
+

@@ -1,0 +1,45 @@
+::: {.panel-tabset}
+#### Plot {#sec-fitting-a-model-with-the-lm-function-plot}
+
+::: {.cell exercise='comparePlot' envir='Ex2' edit='false'}
+```{webr}
+#| exercise: comparePlot
+#| envir: Ex2
+#| echo: false
+#| edit: false
+ggplot(linearData)+
+  aes(x=x,y=y)+
+  geom_point()+
+  geom_abline( # the least squares estimate
+    aes(intercept = lm_1$coefficients[1],
+    slope = lm_1$coefficients[2],
+    colour = "Least squares fit")) +
+  geom_abline( # Your guess
+    aes(intercept = my_a,
+    slope = my_b,
+    colour = "Your guess"))+
+  scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'), name = NULL)
+```
+:::
+
+#### Code {#sec-fitting-a-model-with-the-lm-function-code}
+
+::: {.cell}
+```{webr}
+#| eval: false
+ggplot(linearData)+
+  aes(x=x,y=y)+
+  geom_point()+
+  geom_abline( # the least squares estimate
+    aes(intercept = lm_1$coefficients[1],
+    slope = lm_1$coefficients[2],
+    colour = "Least squares fit")) +
+  geom_abline( # Your guess
+    aes(intercept = my_a,
+    slope = my_b,
+    colour = "Your guess"))+
+  scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'), name = NULL)
+```
+:::
+
+:::

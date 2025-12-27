@@ -1,0 +1,84 @@
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b0adj_2 = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})
+viewof b1_2 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
+
+b0_2 = -3 + b0adj_2
+
+residualData = transpose(linearData).map(d => {
+  const yhat = b1_2 * d.x + b0_2;
+  const res  = d.y - yhat;
+  return {
+    ...d,
+    yhat,
+    residual: res,
+    sign: res >= 0 ? "positive" : "negative",
+    absRes: Math.abs(res)
+  };
+})
+
+squareData = residualData.map(d => {
+  const y1 = Math.min(d.y, d.yhat);
+  const y2 = Math.max(d.y, d.yhat);
+  const alignLeft = (d.residual < 0 && b1_2 >= 0) || (d.residual >= 0 && b1_2 < 0);
+  const x1 = alignLeft ? d.x : d.x - d.absRes;
+  const x2 = alignLeft ? d.x + d.absRes : d.x;
+  return {
+    ...d,
+    x1,
+    x2,
+    y1,
+    y2
+  };
+})
+  
+SSRes = d3.sum(residualData, d => d.residual ** 2)
+
+html`<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-top: 10px;">
+  <div style="font-weight: 500; margin-bottom: 8px;">Sum of Squared Residuals (SSR):</div>
+  ${tex`\displaystyle\sum_{i=1}^{n} e_i^{2} = ${SSRes.toFixed(2)}`}
+</div>`
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+xMin_2 = d3.min(squareData, d => Math.min(d.x1, d.x2))
+xMax_2 = d3.max(squareData, d => Math.max(d.x1, d.x2))
+xPad_2 = (xMax_2 - xMin_2) * 0.05
+xDomain_2 = [xMin_2 - xPad_2, xMax_2 + xPad_2]
+
+yMin_2 = d3.min(squareData, d => Math.min(d.y1, d.y2))
+yMax_2 = d3.max(squareData, d => Math.max(d.y1, d.y2))
+yPad_2 = (yMax_2 - yMin_2) * 0.1
+yDomain_2 = [yMin_2 - yPad_2, yMax_2 + yPad_2]
+
+lineData_2 = xDomain_2.map(x => ({x, y: b1_2 * x + b0_2}))
+
+tex.block`\hat{Y} = ${b0_2} + ${b1_2}x`
+
+Plot.plot({
+  marks: [
+    Plot.rect(squareData, {
+      x1: "x1",
+      x2: "x2",
+      y1: "y1",
+      y2: "y2",
+      fill: "#4CAF50",
+      fillOpacity: 0.25,
+      stroke: "#4CAF50",
+      strokeOpacity: 0.75
+    }),
+
+    Plot.line(lineData_2, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xDomain_2 },
+  y: { domain: yDomain_2, label: "y" },
+})
+```
+
+
+

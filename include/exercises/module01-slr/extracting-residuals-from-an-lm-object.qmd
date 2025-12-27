@@ -1,0 +1,39 @@
+::: Exercise
+#### Extracting residuals from an `lm` object {#sec-extracting-residuals-from-an-lm-object}
+Extract the residuals from  your least squares fitted model `lm_1`*by indexing* and assign them to the variable `e`
+
+
+::: {.cell exercise='ex_2.2.1' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.1
+#| envir: ex_2.2
+e <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.1"}
+#### Solution {#sec-extracting-residuals-from-an-lm-object-solution}
+
+::: {.cell exercise='ex_2.2.1' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.1
+#| solution: true
+#| envir: ex_2.2
+e <- lm_1$residuals
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.1' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.1
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+:::

@@ -1,0 +1,58 @@
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+viewof b0_quad = Inputs.range([-4, 4], {step: 1, value: 0, label: html`${tex`\beta_0`}: Intercept`})
+viewof b1_quad = Inputs.range([-3, 3], {step: 1, value: 0, label: html`${tex`\beta_1`}: Linear term`})
+viewof b2_quad = Inputs.range([-1, 3], {step: 0.05, value: 0, label: html`${tex`\beta_2`}: Squared term`})
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+tex.block`\hat{Y} = ${b0_quad.toFixed(0)} + ${b1_quad.toFixed(0)}x + ${b2_quad.toFixed(2)}x^2`
+
+quadCurve = d3.range(quadXDomain[0], quadXDomain[1] + 0.05, 0.05).map((x) => ({
+  x,
+  y: b0_quad + b1_quad * x + b2_quad * x * x
+}))
+
+quadResiduals = quadPoints.map((d) => {
+  const fit = b0_quad + b1_quad * d.x + b2_quad * d.x * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+quadMaxAbsResid = d3.max(quadResiduals, (d) => Math.abs(d.resid)) || 1;
+
+Plot.plot({
+  height: 320,
+  marginLeft: 50,
+  x: {label: "Predictor (x)", domain: xRange},
+  y: {label: "Outcome (y)", domain: yRange},
+  marks: [
+    Plot.link(quadResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / quadMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(quadPoints, {
+      x: "x",
+      y: "y",
+      r: 3,
+      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
+    }),
+    Plot.line(quadCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2
+    })
+  ]
+})
+```
+
+

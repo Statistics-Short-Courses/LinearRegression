@@ -1,0 +1,3 @@
+::: Exercise
+Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.
+:::

@@ -1,0 +1,8 @@
+::: Exercise
+### Factor with three levels {#sec-exercise-factor-with-three-levels}
+Fit `mpg ~ cyl_f` and identify the reference level.
+
+1. Which cylinder group is the baseline?
+2. How would you change the baseline to 8 cylinders?
+3. Which test in the ANOVA table tells you whether *any* cylinder group differs?
+:::

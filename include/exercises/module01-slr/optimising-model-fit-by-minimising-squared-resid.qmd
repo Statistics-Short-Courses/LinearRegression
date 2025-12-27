@@ -1,0 +1,52 @@
+::: Exercise
+Based on this visualisation, what do you think is the minimum possible $SSR$ achievable?
+
+::: {.cell exercise='Ex_2.2' envir='Ex2' define='SSR'}
+```{webr}
+#| exercise: Ex_2.2
+#| envir: Ex2
+#| define:
+#|   - SSR
+SSR <- ________
+```
+:::
+
+:::: {.solution exercise="Ex_2.2"}
+
+::: {.cell exercise='Ex_2.2' solution='true'}
+```{webr}
+#| exercise: Ex_2.2
+#| solution: true
+```
+:::
+
+::::
+
+::: {.cell exercise='Ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: Ex_2.2
+#| check: true
+#| class: wait
+grade_this({
+  if (is.numeric(get("SSR", envir = .envir_result))){
+    pass("Good guess!")}
+  fail("SSR should be a number!")
+})
+```
+:::
+
+If you want you can update your $a$ and $b$ estimates too (otherwise just proceed):
+
+
+::: {.cell exercise='ex_2.3' envir='Ex2'}
+```{webr}
+#| exercise: ex_2.3
+#| envir: Ex2
+my_a <- ______
+
+my_b <- ______
+```
+:::
+
+
+:::

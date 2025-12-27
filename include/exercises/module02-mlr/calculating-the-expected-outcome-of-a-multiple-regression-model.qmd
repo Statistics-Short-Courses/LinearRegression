@@ -1,0 +1,17 @@
+::: Exercise
+### Calculating the expected outcome of a multiple regression model {#sec-calculating-the-expected-outcome-of-a-multiple-regression-model}
+Given this model of sales by TV and Radio advertising, 
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
+$$
+
+$12k has been spent on TV advertising due to a persisting contract. How much should the company invest in Radio advertising so that the expected sales matches their inventory of 8k units?
+
+
+::: {.cell}
+```{webr}
+
+```
+:::
+
+:::
