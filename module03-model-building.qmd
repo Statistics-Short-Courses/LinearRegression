@@ -109,7 +109,58 @@ quadData <- data.frame(x,y)
 ojs_define(quadData)
 ```
 
-{{< include include/ojs/module03-model-building/non-linear-relationships-demo.qmd >}}
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+quadPoints = transpose(quadData)
+quadXDomain = d3.extent(quadData.x)
+
+xRange = d3.extent(quadData.x)
+yRange = d3.extent(quadData.y)
+
+viewof b0adj_1 = Inputs.range([-1,16], {step: 1, label: html`${tex`\beta_0`}: Intercept `})
+viewof b1_1 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`\beta_1`}: Slope`})
+
+b0_1 = b0adj_1
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+tex.block`\hat{Y} = ${b0_1.toFixed(0)} + ${b1_1.toFixed(2)}x`
+
+lineData = xRange.map(x => ({x, y: b1_1 * x + b0_1}))
+lineResiduals = quadPoints.map((d) => {
+  const fit = b0_1 + b1_1 * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+lineMaxAbsResid = d3.max(lineResiduals, (d) => Math.abs(d.resid)) || 1;
+Plot.plot({
+  marks: [
+    Plot.link(lineResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / lineMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.line(lineData, { x: "x", y: "y" }),
+
+    Plot.dot(quadPoints, { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange },
+  y: { domain: yRange, label: "y" },
+})
+```
+
+
+
 :::
 
 - [ ] Continue
@@ -126,7 +177,65 @@ We enrich the basic linear model by adding **powers of a predictor**, allowing t
 #### Seeing how $\beta_2$ bends the curve {#sec-seeing-how-beta2-bends-the-curve}
 Adjust the slider for the squared term to see how changing $\beta_2$ adds curvature to the fitted relationship . Try to find a good fit - can you guess what model generated this data?.
 
-{{< include include/ojs/module03-model-building/beta2-bends-curve-demo.qmd >}}
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+viewof b0_quad = Inputs.range([-4, 4], {step: 1, value: 0, label: html`${tex`\beta_0`}: Intercept`})
+viewof b1_quad = Inputs.range([-3, 3], {step: 1, value: 0, label: html`${tex`\beta_1`}: Linear term`})
+viewof b2_quad = Inputs.range([-1, 3], {step: 0.05, value: 0, label: html`${tex`\beta_2`}: Squared term`})
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+tex.block`\hat{Y} = ${b0_quad.toFixed(0)} + ${b1_quad.toFixed(0)}x + ${b2_quad.toFixed(2)}x^2`
+
+quadCurve = d3.range(quadXDomain[0], quadXDomain[1] + 0.05, 0.05).map((x) => ({
+  x,
+  y: b0_quad + b1_quad * x + b2_quad * x * x
+}))
+
+quadResiduals = quadPoints.map((d) => {
+  const fit = b0_quad + b1_quad * d.x + b2_quad * d.x * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+quadMaxAbsResid = d3.max(quadResiduals, (d) => Math.abs(d.resid)) || 1;
+
+Plot.plot({
+  height: 320,
+  marginLeft: 50,
+  x: {label: "Predictor (x)", domain: xRange},
+  y: {label: "Outcome (y)", domain: yRange},
+  marks: [
+    Plot.link(quadResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / quadMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(quadPoints, {
+      x: "x",
+      y: "y",
+      r: 3,
+      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
+    }),
+    Plot.line(quadCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2
+    })
+  ]
+})
+```
+
+
+
 :::
 
 #### Third-order (cubic) univariate model {#sec-third-order-cubic-univariate-model}
@@ -153,7 +262,70 @@ ojs_define(cubicData)
 #### Seeing how $\beta_3$ twists the curve {#sec-seeing-how-beta3-twists-the-curve}
 Adjust the slider for the cubic term to see how changing $\beta_3$ adds an inflection point to the fitted relationship. Can you tune the parameters to recover the curve that generated this data?
 
-{{< include include/ojs/module03-model-building/beta3-twists-curve-demo.qmd >}}
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+cubicPoints = transpose(cubicData)
+cubicXDomain = d3.extent(cubicData.x)
+
+viewof b0_cub = Inputs.range([0, 4], {step: 1, value: 2, label: html`${tex`\beta_0`}: Intercept`})
+viewof b1_cub = Inputs.range([-2, 2], {step: 1, value: -1, label:  html`${tex`\beta_1`}: Linear term`})
+viewof b2_cub = Inputs.range([-1, 1], {step: 0.1, value: 0.5, label: html`${tex`\beta_2`}: Squared term`})
+viewof b3_cub = Inputs.range([-0.6, 0.6], {step: 0.1, value: 0.0, label: html`${tex`\beta_3`}: Cubic term`})
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+tex.block`\hat{Y} = ${b0_cub.toFixed(1)} + ${b1_cub.toFixed(2)}x + ${b2_cub.toFixed(2)}x^2 + ${b3_cub.toFixed(2)}x^3`
+
+cubicCurve = d3.range(cubicXDomain[0], cubicXDomain[1] + 0.05, 0.05).map((x) => ({
+  x,
+  y: b0_cub + b1_cub * x + b2_cub * x * x + b3_cub * x * x * x
+}))
+
+cubicResiduals = cubicPoints.map((d) => {
+  const fit = b0_cub + b1_cub * d.x + b2_cub * d.x * d.x + b3_cub * d.x * d.x * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+cubicMaxAbsResid = d3.max(cubicResiduals, (d) => Math.abs(d.resid)) || 1;
+cubicYDomain = d3.extent(cubicData.y)
+
+Plot.plot({
+  height: 320,
+  marginLeft: 50,
+  x: {label: "Predictor (x)", domain: cubicXDomain},
+  y: {label: "Outcome (y)", domain: cubicYDomain},
+  marks: [
+    Plot.link(cubicResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / cubicMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(cubicPoints, {
+      x: "x",
+      y: "y",
+      r: 3,
+      title: (d) => `x = ${d.x.toFixed(2)}\ny = ${d.y.toFixed(2)}`,
+    }),
+    Plot.line(cubicCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2
+    })
+  ]
+})
+```
+
+
+
 :::
 
 #### N-th order univariate model {#sec-ho_univariate}
@@ -179,7 +351,86 @@ nonlinearData <- data.frame(x,y)
 ojs_define(nonlinearData)
 ```
 
-{{< include include/ojs/module03-model-building/higher-order-polynomial-terms-demo.qmd >}}
+```{ojs}
+//| echo: false
+
+reg= require("d3-regression")
+polyData=transpose(nonlinearData)
+viewof degree = Inputs.range([1, 9], {step: 1, label: "Model Order", value: 1})
+
+polyRegression = reg.regressionPoly()
+  .x((d) => d.x)
+  .y((d) => d.y)
+  .order(degree)
+  .domain(d3.extent(polyData, (d) => d.x));
+
+polyCurveRaw = polyRegression(polyData)
+polyCurve = polyCurveRaw.map(([x, y]) => ({ x, y }))
+polyPredict = (x) => {
+  if (typeof polyRegression.predict === "function") return polyRegression.predict(x);
+  if (polyCurveRaw.coefficients) {
+    return polyCurveRaw.coefficients.reduce((acc, coeff, i) => acc + coeff * x ** i, 0);
+  }
+  return NaN;
+}
+polyResiduals = polyData.map((d) => {
+  const fit = polyPredict(d.x);
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+polyMaxAbsResid = d3.max(polyResiduals, (d) => Math.abs(d.resid)) || 1;
+```
+
+```{ojs}
+//| echo: false
+
+polyTerms = Array.from({length: degree + 1}, (_, k) => {
+  if (k === 0) return `\\beta_{0}`;
+  if (k === 1) return `\\beta_{1} x`;
+  return `\\beta_{${k}} x^{${k}}`;
+}).join(" + ");
+
+html`<div style="text-align:center; margin: 0.5rem 0;">${tex`E[Y] = ${polyTerms}`}</div>`
+```
+
+```{ojs}
+polyYDomain = d3.extent([
+  ...polyData.map((d) => d.y),
+  ...polyCurve.map((d) => d.y),
+  ...polyResiduals.map((d) => d.fit)
+])
+
+Plot.plot({
+  marginLeft: 50,
+  height: 320,
+  x: {label: "Predictor (x)"},
+  y: {label: "Outcome (y)", domain: polyYDomain},
+  marks: [
+    Plot.link(polyResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / polyMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(polyData, {
+      x: "x",
+      y: "y",
+      r: 4,
+    }), 
+    Plot.line(polyCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2,
+    }),
+  ],
+});
+```
+
+
+
 :::
 
 Higher-order terms increase the model's flexibility, but also increase the risk of fitting random noise rather than meaningful structure. We will return to this important issue later in the module. 
@@ -473,7 +724,14 @@ If the interaction term is significant, the transmission effect is not consisten
 We saw in @sec-mlr_cat that first order models with categorical predictors are equivalent to the familiar t-tests and ANOVA models from earlier statistics courses. Interaction models with both continuous and categorical predictors are similarly analogous to "ANCOVA" models. 
 :::
 
-{{< include include/exercises/module03-model-building/exercise-continuous-by-categorical-interaction.qmd >}}
+::: Exercise
+#### Interpreting a continuous-by-categorical interaction {#sec-exercise-continuous-by-categorical-interaction}
+Fit `mpg ~ wt * am_f` on `mtcars_cat`.
+
+1. Which group has the steeper slope for weight?
+2. What does the interaction term represent in words?
+:::
+
 
 - [ ] Continue
 
