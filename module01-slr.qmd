@@ -175,13 +175,97 @@ ___
 
 Looking at data (i.e. pairs of $(x, Y)$ values), we try to find the estimates of our parameters that best 'fit' its distribution. Adjust the parameter estimates with the sliders below to find a line that you think fits the data:
 
-{{< include include/ojs/module01-slr/fitting-line-sliders.qmd >}}
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b1_1 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
+viewof b0adj_1 = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept (adjust)`})
 
-{{< include include/exercises/module01-slr/estimating-parameters.qmd >}}
+b0_1 = (-3 - 0.5*b1_1) + b0adj_1
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+xRange = d3.extent(linearData.x)
+
+lineData_1 = xRange.map(x => ({x, y: b1_1 * x + b0_1}))
+yRange = d3.extent(linearData.y)
+yPad = (yRange[1] - yRange[0]) * 0.1
+yDomain = [yRange[0] - yPad, yRange[1] + yPad]
+tex.block`\hat{Y} = ${b0_1.toFixed(2)} + ${b1_1.toFixed(2)}x`
+
+Plot.plot({
+  marks: [
+    Plot.line(lineData_1, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange },
+  y: { domain: yDomain, label: "y" },
+})
+```
+
+
+
+
+
+::: Exercise
+What is your best [estimate]{.glossary term="Estimate"} for the values of $\alpha$ and $\beta$ that best fit the given data?
+
+
+::: {.cell exercise='ex_2.1' envir='Ex2' define='["my_a","my_b"]'}
+```{webr}
+#| exercise: ex_2.1
+#| envir: Ex2
+#| define:
+#|   - my_a
+#|   - my_b
+my_a <- ______
+my_b <- ______
+```
+:::
+
+
+:::: {.solution exercise="ex_1"}
+
+::: {.cell exercise='ex_2.1' solution='true'}
+```{webr}
+#| exercise: ex_2.1
+#| solution: true
+```
+:::
+
+::::
+
+::: {.cell exercise='ex_2.1' envir='Ex2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.1
+#| envir: Ex2
+#| check: true
+#| class: wait
+grade_this({
+  if (is.numeric(get("my_a", envir = .envir_result)) && is.numeric(get("my_b", envir = .envir_result))){pass("Good guess!")}
+  fail("both $a$ and $b$ should be numbers")
+})
+```
+:::
+
+:::
+
 
 Ok great, so we have an estimate for our line-of-best-fit:
 
-{{< include include/ojs/module01-slr/fitting-line-user-equation.qmd >}}
+```{ojs}
+//| echo: false
+tex.block`\hat{Y} = ${my_a} + ${my_b}\cdot x`
+```
+
+
+
+
 
 But how good is our estimate really? What do we mean by 'best' fit here? And how can we objectively evaluate it and maybe compare it to other estimates?
 
@@ -203,7 +287,61 @@ Residuals, $e$, are similar to the errors, $\varepsilon$, that we encountered in
 
 Indeed - calculating residuals gives us a way to assess how well our estimated model fits the data.  We can think of the residuals as being the 'mismatch' between our estimated linear predictor and each data point. By *minimizing* the size of residuals (minimising the mismatch of our model to the data), we can get a better fit of our line to data.
 
-{{< include include/ojs/module01-slr/residuals-demo.qmd >}}
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b0adj_resid = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})
+viewof b1_resid = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
+
+b0_resid = -3 + b0adj_resid
+
+residualData_resid = transpose(linearData).map(d => {
+  const yhat = b1_resid * d.x + b0_resid;
+  const res  = d.y - yhat;
+  return {
+    ...d,
+    yhat,
+    residual: res,
+    sign: res >= 0 ? "positive" : "negative",
+    absRes: Math.abs(res)
+  };
+})
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+xRange_resid = d3.extent(linearData.x)
+
+lineData_resid = xRange_resid.map(x => ({x, y: b1_resid * x + b0_resid}))
+yRange_resid = d3.extent(linearData.y)
+yPad_resid = (yRange_resid[1] - yRange_resid[0]) * 0.1
+yDomain_resid = [yRange_resid[0] - yPad_resid, yRange_resid[1] + yPad_resid]
+tex.block`\hat{Y} = ${b0_resid} + ${b1_resid}x`
+
+Plot.plot({
+  marks: [
+    Plot.ruleX(residualData_resid, {x: "x",
+      y1: "y",
+      y2: "yhat",
+      stroke: "sign",
+      strokeOpacity: 0.75,
+      strokeWidth: d => 1 + d.absRes}),
+
+    Plot.line(lineData_resid, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange_resid },
+  y: { domain: yDomain_resid, label: "y" },
+  color: { domain: ["positive", "negative"]}
+})
+```
+
+
+
+
 
 - [ ] Continue 
 
@@ -225,9 +363,145 @@ where $e_i = Y_i - \hat{Y}_i$.
 
 The SSR gives us a numerical measure of how well the line fits the data - see how small you can get the SSR by adjusting slope and intercept.
 
-{{< include include/ojs/module01-slr/ssr-squared-residuals-demo.qmd >}}
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b0adj_2 = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})
+viewof b1_2 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
 
-{{< include include/exercises/module01-slr/optimising-model-fit-by-minimising-squared-resid.qmd >}}
+b0_2 = -3 + b0adj_2
+
+residualData = transpose(linearData).map(d => {
+  const yhat = b1_2 * d.x + b0_2;
+  const res  = d.y - yhat;
+  return {
+    ...d,
+    yhat,
+    residual: res,
+    sign: res >= 0 ? "positive" : "negative",
+    absRes: Math.abs(res)
+  };
+})
+
+squareData = residualData.map(d => {
+  const y1 = Math.min(d.y, d.yhat);
+  const y2 = Math.max(d.y, d.yhat);
+  const alignLeft = (d.residual < 0 && b1_2 >= 0) || (d.residual >= 0 && b1_2 < 0);
+  const x1 = alignLeft ? d.x : d.x - d.absRes;
+  const x2 = alignLeft ? d.x + d.absRes : d.x;
+  return {
+    ...d,
+    x1,
+    x2,
+    y1,
+    y2
+  };
+})
+  
+SSRes = d3.sum(residualData, d => d.residual ** 2)
+
+html`<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-top: 10px;">
+  <div style="font-weight: 500; margin-bottom: 8px;">Sum of Squared Residuals (SSR):</div>
+  ${tex`\displaystyle\sum_{i=1}^{n} e_i^{2} = ${SSRes.toFixed(2)}`}
+</div>`
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+xMin_2 = d3.min(squareData, d => Math.min(d.x1, d.x2))
+xMax_2 = d3.max(squareData, d => Math.max(d.x1, d.x2))
+xPad_2 = (xMax_2 - xMin_2) * 0.05
+xDomain_2 = [xMin_2 - xPad_2, xMax_2 + xPad_2]
+
+yMin_2 = d3.min(squareData, d => Math.min(d.y1, d.y2))
+yMax_2 = d3.max(squareData, d => Math.max(d.y1, d.y2))
+yPad_2 = (yMax_2 - yMin_2) * 0.1
+yDomain_2 = [yMin_2 - yPad_2, yMax_2 + yPad_2]
+
+lineData_2 = xDomain_2.map(x => ({x, y: b1_2 * x + b0_2}))
+
+tex.block`\hat{Y} = ${b0_2} + ${b1_2}x`
+
+Plot.plot({
+  marks: [
+    Plot.rect(squareData, {
+      x1: "x1",
+      x2: "x2",
+      y1: "y1",
+      y2: "y2",
+      fill: "#4CAF50",
+      fillOpacity: 0.25,
+      stroke: "#4CAF50",
+      strokeOpacity: 0.75
+    }),
+
+    Plot.line(lineData_2, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xDomain_2 },
+  y: { domain: yDomain_2, label: "y" },
+})
+```
+
+
+
+
+
+::: Exercise
+Based on this visualisation, what do you think is the minimum possible $SSR$ achievable?
+
+::: {.cell exercise='Ex_2.2' envir='Ex2' define='SSR'}
+```{webr}
+#| exercise: Ex_2.2
+#| envir: Ex2
+#| define:
+#|   - SSR
+SSR <- ________
+```
+:::
+
+:::: {.solution exercise="Ex_2.2"}
+
+::: {.cell exercise='Ex_2.2' solution='true'}
+```{webr}
+#| exercise: Ex_2.2
+#| solution: true
+```
+:::
+
+::::
+
+::: {.cell exercise='Ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: Ex_2.2
+#| check: true
+#| class: wait
+grade_this({
+  if (is.numeric(get("SSR", envir = .envir_result))){
+    pass("Good guess!")}
+  fail("SSR should be a number!")
+})
+```
+:::
+
+If you want you can update your $a$ and $b$ estimates too (otherwise just proceed):
+
+
+::: {.cell exercise='ex_2.3' envir='Ex2'}
+```{webr}
+#| exercise: ex_2.3
+#| envir: Ex2
+my_a <- ______
+
+my_b <- ______
+```
+:::
+
+
+:::
+
 
 ### The least-squares estimate {#sec-leastsquares}
 
@@ -257,7 +531,52 @@ coef(lm_1)
 
 Lets compare the estimated linear fits graphically:
 
-{{< include include/exercises/module01-slr/compare-plot.qmd >}}
+::: {.panel-tabset}
+#### Plot {#sec-fitting-a-model-with-the-lm-function-plot}
+
+::: {.cell exercise='comparePlot' envir='Ex2' edit='false'}
+```{webr}
+#| exercise: comparePlot
+#| envir: Ex2
+#| echo: false
+#| edit: false
+ggplot(linearData)+
+  aes(x=x,y=y)+
+  geom_point()+
+  geom_abline( # the least squares estimate
+    aes(intercept = lm_1$coefficients[1],
+    slope = lm_1$coefficients[2],
+    colour = "Least squares fit")) +
+  geom_abline( # Your guess
+    aes(intercept = my_a,
+    slope = my_b,
+    colour = "Your guess"))+
+  scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'), name = NULL)
+```
+:::
+
+#### Code {#sec-fitting-a-model-with-the-lm-function-code}
+
+::: {.cell}
+```{webr}
+#| eval: false
+ggplot(linearData)+
+  aes(x=x,y=y)+
+  geom_point()+
+  geom_abline( # the least squares estimate
+    aes(intercept = lm_1$coefficients[1],
+    slope = lm_1$coefficients[2],
+    colour = "Least squares fit")) +
+  geom_abline( # Your guess
+    aes(intercept = my_a,
+    slope = my_b,
+    colour = "Your guess"))+
+  scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'), name = NULL)
+```
+:::
+
+:::
+
 -   [ ] Continue
 
 
@@ -274,7 +593,46 @@ residuals(lm_1)
 
 The resulting `R` object is a vector of the residual for each observation. i.e. residuals(lm_1)[[3]] $= e_3$
 
-{{< include include/exercises/module01-slr/extracting-residuals-from-an-lm-object.qmd >}}
+::: Exercise
+#### Extracting residuals from an `lm` object {#sec-extracting-residuals-from-an-lm-object}
+Extract the residuals from  your least squares fitted model `lm_1`*by indexing* and assign them to the variable `e`
+
+
+::: {.cell exercise='ex_2.2.1' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.1
+#| envir: ex_2.2
+e <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.1"}
+#### Solution {#sec-extracting-residuals-from-an-lm-object-solution}
+
+::: {.cell exercise='ex_2.2.1' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.1
+#| solution: true
+#| envir: ex_2.2
+e <- lm_1$residuals
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.1' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.1
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+:::
+
 
 ### Residual Standard Error {#sec-residual-standard-error}
 The residuals from our least squares fit can be used to estimate the variance of the error terms in our linear model. 
@@ -289,7 +647,45 @@ $$
 where $e_i = Y_i - \hat{Y}_i$ are the residuals from our estimated linear predictor.
 :::
 
-{{< include include/exercises/module01-slr/calculate-the-residual-sum-of-squares.qmd >}}
+::: Exercise
+#### Calculate the Residual Sum of Squares {#sec-calculate-the-residual-sum-of-squares}
+using your `e` object defined in the previous exercise, calculate the residual sum of squares of the least squares model.
+
+::: {.cell exercise='ex_2.2.2' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.2
+#| envir: ex_2.2
+rss <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.2"}
+#### Solution {#sec-calculate-the-residual-sum-of-squares-solution}
+We simply square each residual using `r^2` and then sum them together using the `sum()` function:
+
+::: {.cell exercise='ex_2.2.2' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.2
+#| solution: true
+#| envir: ex_2.2
+rss <- sum(e^2)
+```
+:::
+
+::::
+
+::: {.cell exercise='ex_2.2.2' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.2
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+:::
+
 However, the RSS itself is not a very useful measure of the spread of the residuals, since it depends on the number of observations - more observations will tend to lead to a larger RSS, even if the spread of the residuals is the same. We need a measure of the *average* size of the residual (per observation).
 To standardise the RSS, we might consider the average squared residual, which we can obtain by dividing the RSS by the number of observations, $n$. However, this would tend to *underestimate* the true variance of the error terms, $\sigma^2$, because the residuals are calculated from the estimated line, which has already 'used up' some of the information (see [degrees of freedom]) in the data.
 
@@ -316,7 +712,55 @@ $$
 
 $s^2$ and $s$ are our estimators for $\sigma^2$ and $\sigma$, respectively. 
 
-{{< include include/exercises/module01-slr/calculate-the-residual-standard-error.qmd >}}
+::: Exercise
+#### Calculate the Residual Standard Error {#sec-calculate-the-residual-standard-error}
+Using your `rss` object defined in the previous exercise, calculate the residual standard error of the least squares model.
+
+::: {.cell exercise='ex_2.2.3' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3
+#| envir: ex_2.2
+rse <- ______
+```
+:::
+
+
+::: {.hint exercise="ex_2.2.3"}
+The RSE is $s = \sqrt{\frac{RSS}{n-2}}$. You can get $n$ using `nrow(linearData)`.
+:::
+:::: {.solution exercise="ex_2.2.3"}
+#### Solution {#sec-calculate-the-residual-standard-error-solution}
+
+::: {.cell exercise='ex_2.2.3' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3
+#| solution: true
+#| envir: ex_2.2
+rse <- sqrt(sum(e^2)/(nrow(linearData)-2))
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.3' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.3
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this({
+  expected <- sqrt(sum(e^2) / (nrow(linearData) - 2))
+  if (isTRUE(all.equal(.result, expected, tolerance = 1e-6))) {
+    pass("Correct!")
+  }
+  fail("Check your calculation of the residual standard error.")
+})
+```
+:::
+
+:::
+
 
 - [ ] Continue
 
@@ -334,7 +778,53 @@ $$
 $$
 :::
 
-{{< include include/exercises/module01-slr/calculate-tss.qmd >}}
+::: Exercise
+#### Calculate TSS {#sec-calculate-tss}
+Using `linearData`, calculate the total sum of squares (TSS).
+
+
+::: {.cell exercise='ex_2.2.3b' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| envir: ex_2.2
+TSS <- ______
+```
+:::
+
+
+::: { .hint exercise="ex_2.2.3b" }
+TSS is `sum((linearData$y - mean(linearData$y))^2)`.
+:::
+
+
+::: {.cell exercise='ex_2.2.3b' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| solution: true
+#| envir: ex_2.2
+TSS <- sum((linearData$y - mean(linearData$y))^2)
+TSS
+```
+:::
+
+
+
+::: {.cell exercise='ex_2.2.3b' check='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| check: true
+#| envir: ex_2.2
+grade_this({
+  if (isTRUE(all.equal(.result, 265.3973, tolerance = 0.01))) {
+    pass("Correct! TSS = 265.40")
+  }
+  fail("Check your calculation. TSS is the sum of squared deviations from the mean of y.")
+})
+```
+:::
+
+:::
+
 
 By comparing the residual sum of squares (RSS) to the total sum of squares (TSS), we can quantify the proportion of variance *explained* by our model. This ratio is called **[R-squared]{.glossary}**:
 
@@ -353,11 +843,148 @@ i.e. the proportion of the total variance in $Y$ (the total sum of squares, TSS)
 
 As a visual demonstration of how $R^2$ changes with increasing error variance, consider the following interactive plot:
 
-{{< include include/ojs/module01-slr/r2-sigma-demo.qmd >}}
+```{ojs}
+//| echo: false
+//| panel: sidebar
+
+// Use linearData
+data_r2 = transpose(linearData)
+
+// True model parameters that generated the data
+alpha_true_r2 = -3
+beta_true_r2 = 0.5
+
+// Compute true fitted values and errors (difference from true model)
+trueModelData_r2 = data_r2.map(d => ({
+  ...d,
+  yTrue: alpha_true_r2 + beta_true_r2 * d.x,
+  error: d.y - (alpha_true_r2 + beta_true_r2 * d.x)
+}))
+
+// Observed error SD (used to create unit errors)
+errorSD_observed = Math.sqrt(d3.sum(trueModelData_r2, d => d.error ** 2) / data_r2.length)
+
+// Unit errors: error / errorSD (so they have approx unit variance)
+unitError_r2 = trueModelData_r2.map(d => d.error / errorSD_observed)
+
+viewof varScale_r2 = Inputs.range([0, 4], {
+  value: 1,
+  step: 0.05,
+  label: "Variance scale"
+})
+```
+
+```{ojs}
+//| echo: false
+//| panel: fill
+
+// Current sigma based on scale
+sigma_current = varScale_r2 * errorSD_observed
+
+// Compute displayed y = true model + scaled error
+pointData_r2 = trueModelData_r2.map((d, i) => ({
+  x: d.x,
+  y: d.yTrue + sigma_current * unitError_r2[i]
+}))
+
+// Compute LS fit for the current points
+xMean_r2 = d3.mean(pointData_r2, d => d.x)
+yMean_r2 = d3.mean(pointData_r2, d => d.y)
+sxy_r2 = d3.sum(pointData_r2, d => (d.x - xMean_r2) * (d.y - yMean_r2))
+sxx_r2 = d3.sum(pointData_r2, d => (d.x - xMean_r2) ** 2)
+beta_ls_r2 = sxy_r2 / sxx_r2
+alpha_ls_r2 = yMean_r2 - beta_ls_r2 * xMean_r2
+
+// Add LS fitted values to points
+pointDataWithFit_r2 = pointData_r2.map(d => ({
+  ...d,
+  yFitted: alpha_ls_r2 + beta_ls_r2 * d.x
+}))
+
+// Compute RSS, TSS, R² using LS fit
+RSS_r2 = d3.sum(pointDataWithFit_r2, d => (d.y - d.yFitted) ** 2)
+TSS_r2 = d3.sum(pointDataWithFit_r2, d => (d.y - yMean_r2) ** 2)
+R2_demo = TSS_r2 > 0 ? Math.max(0, 1 - RSS_r2 / TSS_r2) : 1
+
+tex.block`R^2 = ${R2_demo.toFixed(3)}`
+
+// Fixed axis domains based on max variance scale (3)
+xDomain_r2 = d3.extent(data_r2, d => d.x)
+xPad_r2 = (xDomain_r2[1] - xDomain_r2[0]) * 0.1
+
+// Fixed y domain: use range that accommodates max variance scale (3)
+maxSigma_r2 = 3 * errorSD_observed
+yMin_r2_fixed = d3.min(trueModelData_r2, (d, i) => d.yTrue + maxSigma_r2 * unitError_r2[i])
+yMax_r2_fixed = d3.max(trueModelData_r2, (d, i) => d.yTrue + maxSigma_r2 * unitError_r2[i])
+yPad_r2 = (yMax_r2_fixed - yMin_r2_fixed) * 0.1
+
+Plot.plot({
+  height: 300,
+  x: { domain: [xDomain_r2[0] - xPad_r2, xDomain_r2[1] + xPad_r2], label: "x", grid: true },
+  y: { domain: [yMin_r2_fixed - yPad_r2, yMax_r2_fixed + yPad_r2], label: "Y", grid: true },
+  marks: [
+    Plot.line(pointDataWithFit_r2, {x: "x", y: "yFitted", stroke: "steelblue", strokeWidth: 2}),
+    Plot.dot(pointData_r2, {x: "x", y: "y", r: 4, fillOpacity: 0.7})
+  ]
+})
+```
+
+
+
+
 
 We can see that as $\sigma$ increases, $R^2$ decreases, indicating that the model explains less of the variance in $Y$. Fitting a line to data with high noise results in a poor fit, as reflected by a low $R^2$ value.
 
-{{< include include/exercises/module01-slr/correlation-and-r-2-in-our-example.qmd >}}
+::: Exercise
+#### Correlation and $R^2$ in our example {#sec-correlation-and-r-2-in-our-example}
+compute $R^2$ using the residuals from `lm_1`.
+
+::: {.cell exercise='ex_2.2.4' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.4
+#| envir: ex_2.2
+r_squared <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.4"}
+#### Solution {#sec-correlation-and-r-2-in-our-example-solution}
+
+::: {.cell exercise='ex_2.2.4' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.4
+#| solution: true
+#| envir: ex_2.2
+r <- cor(linearData$x, linearData$y)
+r_squared <- 1 - sum(e^2) / sum((linearData$y - mean(linearData$y))^2)
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.4' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.4
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+
+
+::: {.cell envir='ex_2.2'}
+```{webr}
+#| echo: false
+#| envir: ex_2.2
+c(computed_r = r, computed_r_squared = r_squared, lm_summary_r_squared = summary(lm_1)$r.squared)
+```
+:::
+
+:::
+
 
 
 - [ ] Continue
@@ -409,7 +1036,12 @@ $$
 
 Because the Normality assumption implies that the estimator $b$ has a Normal sampling distribution (and hence a $t$ distribution once $\sigma$ is estimated), we are able to quantify how unusual our observed slope would be if $H_0$ were correct.
 
-{{< include include/exercises/module01-slr/hypothesis-testing-revision-p-values.qmd >}}
+::: Exercise
+
+#### Hypothesis testing revision ([p-values]{.glossary term="p-value"}) {#sec-hypothesis-testing-revision-p-values}
+
+:::
+
 
 #### The t-Test for the Slope {#sec-the-t-test-for-the-slope}
 
@@ -481,7 +1113,12 @@ ggplot(plot_df, aes(se, ci_half)) +
 
 :::
 
-{{< include include/exercises/module01-slr/t-test-for-slope-2.qmd >}}
+::: Exercise
+
+##### t-test for slope {#sec-t-test-for-slope-2}
+
+:::
+
 
 #### Confidence Interval for the Slope {#sec-confidence-interval-for-the-slope}
 
