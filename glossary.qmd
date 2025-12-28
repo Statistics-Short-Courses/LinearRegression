@@ -4,164 +4,704 @@ glossary-sort: yaml
 glossary:
   - term: Statistical model
     definition: |
-      A probabilistic description of how a response relates to predictors, combining a systematic component with random error.
-  - term: Response (outcome) variable
+      A probabilistic description of how a response relates to predictors, combining a systematic component with random variation.
+    details: |
+      **Common form**
+
+      $$Y = f(X) + \varepsilon.$$
+
+      **In R**
+
+      - Fit models with `lm()` (linear regression) and `glm()` (generalised linear models).
+      - Use `summary()`, `coef()`, and `predict()` to inspect fitted models.
+  - term: Random variable
     definition: |
-      The variable $Y$ we aim to explain or predict.
-  - term: Predictor (explanatory) variable
+      A quantity whose value varies across observations, described by a probability distribution.
+    details: |
+      **In R**
+
+      - Simulate random variables with functions like `rnorm()`, `runif()`, and `rbinom()`.
+  - term: Distribution
     definition: |
-      A variable $x$ used to explain or predict changes in the response.
+      A description of how the values of a random variable are spread across possible outcomes.
+    details: |
+      **In R**
+
+      - Many distributions use the `d/p/q/r` pattern, e.g. `dnorm()`, `pnorm()`, `qnorm()`, `rnorm()`.
+  - term: Normal distribution
+    definition: |
+      A symmetric, bell-shaped distribution often used to model random variation.
+    details: |
+      **Formula**
+
+      $$X \sim N(\mu, \sigma^2).$$
+
+      **In R**
+
+      - Density/CDF/quantiles/simulation: `dnorm()`, `pnorm()`, `qnorm()`, `rnorm()`.
+  - term: Variance
+    definition: |
+      A measure of spread; larger variance means values tend to be further from their mean.
+    details: |
+      **Formula**
+
+      $$\mathrm{Var}(X) = E[(X - E[X])^2].$$
+
+      **In R**
+
+      - Sample variance: `var(x)`.
+  - term: Assumption
+    definition: |
+      A condition we adopt to justify a model or an inference procedure.
+    details: |
+      **In this course**
+
+      - For linear regression, key assumptions are about the error term (mean zero, constant variance, normality, independence).
+  - term: Response variable
+    definition: |
+      The variable you aim to explain or predict (sometimes called the outcome or dependent variable).
+    details: |
+      **In R**
+
+      - In a formula like `y ~ x1 + x2`, the response is on the left-hand side.
+    aliases:
+      - Outcome variable
+      - Response (outcome) variable
+  - term: Predictor variable
+    definition: |
+      A variable used to explain, adjust for, or predict changes in the response (sometimes called a covariate).
+    details: |
+      **In R**
+
+      - In a formula like `y ~ x1 + x2`, predictors are on the right-hand side.
+    aliases:
+      - Covariate
+      - Explanatory variable
+      - Predictor (explanatory) variable
+  - term: Continuous variable
+    definition: |
+      A numeric variable that can (in principle) take any value on an interval.
+    details: |
+      **In R**
+
+      - Stored as numeric (`dbl`/`int`).
+      - Helpful checks: `is.numeric(x)`, `summary(x)`.
+  - term: Linear function
+    definition: |
+      A straight-line relationship between a variable and an outcome.
+    details: |
+      **Formula**
+
+      $$f(x) = \alpha + \beta x.$$
+
+      **In R**
+
+      - Fit a straight-line mean function with `lm(y ~ x)`.
   - term: Linear predictor
     definition: |
-      The deterministic part of a linear model, e.g. $E[Y|X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k$.
+      The systematic (non-random) part of a regression model that combines predictors and coefficients.
+    details: |
+      **Formula**
+
+      $$E[Y\mid X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k.$$
+
+      **In R**
+
+      - Fitted values: `fitted(model)` or `predict(model)`.
   - term: Intercept
     definition: |
-      The expected response when all predictors are zero; a baseline level.
+      The baseline level of the response when predictors are at their reference values (often zero).
+    details: |
+      **In R**
+
+      - Included by default in `lm()`; remove with `y ~ x - 1`.
   - term: Slope
     definition: |
-      The expected change in the response per one-unit increase in a predictor, holding other predictors constant.
+      The expected change in the response for a one-unit increase in a predictor, holding other predictors constant.
+    details: |
+      **In R**
+
+      - Extract coefficients with `coef(model)` or `summary(model)$coefficients`.
   - term: Random error term
     definition: |
-      The stochastic component $\varepsilon$ that captures unexplained variation around the linear predictor.
+      The part of the response not explained by the predictors (random variation around the systematic part).
+    details: |
+      **In a model**
+
+      - Often written as $\varepsilon$ in $Y = f(X) + \varepsilon$.
   - term: Mean-zero errors
     definition: |
-      The assumption $E[\varepsilon] = 0$, so predictions are correct on average.
+      The assumption that errors average to zero, so the model is unbiased on average.
+    details: |
+      **Formula**
+
+      $$E[\varepsilon \mid X] = 0.$$
   - term: Homoscedasticity
     definition: |
-      Constant error variance across predictor values: $Var(\varepsilon)=\sigma^2$.
-  - term: Normal errors
-    definition: |
-      The assumption $\varepsilon \sim N(0,\sigma^2)$, supporting t- and F-based inference.
-  - term: Independence
-    definition: |
-      Errors from different observations are independent of one another.
-  - term: Ordinary least squares
-    definition: |
-      Estimation method that chooses coefficients to minimise the sum of squared residuals.
-    aliases:
-      - OLS
-  - term: Sum of squared residuals
-    definition: |
-      $\sum_{i=1}^n e_i^2$, the total squared discrepancy between observed and fitted values.
-    aliases:
-      - SSR
-      - RSS
-  - term: Mean squared error
-    definition: |
-      The sum of squared residuals divided by its degrees of freedom; an estimator of $\sigma^2$.
-    aliases:
-      - MSE
-  - term: Degrees of freedom
-    definition: |
-      The number of independent pieces of information after estimating parameters (e.g., $n-2$ in SLR).
-  - term: Standard error
-    definition: |
-      The estimated standard deviation of a coefficient estimate; quantifies uncertainty.
-  - term: t-test
-    definition: |
-      Tests whether a coefficient differs from zero using a t statistic and the assumed error distribution.
-  - term: p-value
-    definition: |
-      The probability, under the null, of observing a test statistic at least as extreme as the one observed.
-  - term: Confidence interval
-    definition: |
-      A range of plausible parameter values at a chosen confidence level (e.g., 95%).
-  - term: Prediction interval
-    definition: |
-      An interval for a future observation at given predictors; wider than a confidence interval.
-  - term: F-test (overall model test)
-    definition: |
-      Tests whether at least one predictor has a nonzero coefficient compared with an intercept-only model.
-  - term: Partial regression coefficient
-    definition: |
-      The effect of $x_i$ on $E[Y]$ holding all other predictors constant.
-  - term: Polynomial term
-    definition: |
-      A predictor raised to a power (e.g., $x^2$, $x^3$) to model curvature while staying linear in parameters.
-  - term: Overfitting
-    definition: |
-      When a model captures noise in the training data and generalises poorly to new data.
-  - term: Stepwise regression
-    definition: |
-      An automated selection approach that adds/removes predictors based on a criterion (e.g., AIC or adjusted $R^2$).
+      The assumption that the variability of the errors is roughly constant across the predictor range.
+    details: |
+      **Formula**
+
+      $$\mathrm{Var}(\varepsilon \mid X) = \sigma^2.$$
+
+      **In R**
+
+      - Check residuals vs fitted: `plot(model, which = 1)` (or with `broom::augment()`).
+      - Scale–location plot: `plot(model, which = 3)`.
+
+      **Remedies (when violated)**
+
+      - Transform the response (e.g., log / square-root), or model the mean-variance relationship.
+      - Use heteroskedasticity-robust standard errors for inference (where appropriate).
   - term: Heteroskedasticity
     definition: |
       Nonconstant error variance across predictor values (the opposite of homoscedasticity).
-  - term: Standardized residual
+    details: |
+      **Idea**
+
+      - $\mathrm{Var}(\varepsilon \mid X)$ changes with $X$ (often increasing with the mean).
+
+      **In R**
+
+      - Look for a funnel pattern in residuals vs fitted: `plot(model, which = 1)`.
+      - Scale–location plot: `plot(model, which = 3)`.
+      - Optional formal test (if available): `lmtest::bptest(model)` (Breusch–Pagan).
+
+      **Remedies**
+
+      - Transform the response (log / square-root), especially for positive outcomes.
+      - Consider weighted least squares if you can model the changing variance.
+      - For inference, consider robust standard errors (e.g., `sandwich` + `lmtest`), but still inspect the fit.
+    aliases:
+      - heteroscedasticity
+  - term: Normal errors
     definition: |
-      A residual scaled by its estimated standard deviation to highlight unusually large deviations.
-  - term: Outlier
+      The assumption that errors are approximately normally distributed (mainly important for small-sample inference).
+    details: |
+      **Formula**
+
+      $$\varepsilon \sim N(0, \sigma^2).$$
+
+      **In R**
+
+      - Check with Q–Q plots: `plot(model, which = 2)` or `qqnorm(resid(model)); qqline(resid(model))`.
+  - term: Independence
     definition: |
-      An observation with an unusually large residual relative to the fitted model.
-  - term: Influential point
+      The assumption that errors from different observations are not correlated.
+    details: |
+      **In R**
+
+      - For time-ordered data, inspect autocorrelation with `acf(resid(model))`.
+      - Optional test (if available): `lmtest::dwtest(model)` (Durbin–Watson).
+  - term: Estimation
     definition: |
-      An observation that substantially changes fitted coefficients or predictions when removed.
-  - term: Extrapolation
+      The process of using data to infer unknown model parameters (like regression coefficients and error variability).
+    details: |
+      **In R**
+
+      - Fit a linear regression with `lm()`.
+      - Extract estimates with `coef(model)`.
+  - term: Estimate
     definition: |
-      Making predictions outside the observed predictor range, where model assumptions may fail.
-  - term: Simple linear regression
+      A value computed from data that approximates an unknown population quantity (a parameter).
+    details: |
+      **Notation**
+
+      - Parameters are often written with Greek letters (e.g., $\beta$), and estimates with hats (e.g., $\hat{\beta}$).
+
+      **In R**
+
+      - Coefficient estimates: `coef(model)`.
+    aliases:
+      - estimate
+  - term: Ordinary least squares
     definition: |
-      A linear model with one predictor: $E[Y] = \beta_0 + \beta_1 X$ with independent, mean-zero errors.
-  - term: Multiple linear regression
+      Estimation method that chooses coefficients to minimise the sum of squared residuals.
+    details: |
+      **Criterion**
+
+      $$\text{RSS} = \sum_{i=1}^n (y_i - \hat{y}_i)^2.$$
+
+      **In R**
+
+      - Standard linear regression uses OLS via `lm()`.
+    aliases:
+      - OLS
+  - term: Residual sum of squares
     definition: |
-      A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.
-  - term: Residual
+      The total squared discrepancy between observed values and fitted values.
+    details: |
+      **Formula**
+
+      $$\text{RSS} = \sum_{i=1}^n e_i^2.$$
+
+      **In R**
+
+      - `deviance(model)` (for `lm`) equals RSS.
+      - Or compute directly: `sum(resid(model)^2)`.
+
+      **Notes**
+
+      - Notation varies: many texts use `SSE` for this quantity; `SSR` is sometimes reserved for the *regression* sum of squares.
+    aliases:
+      - RSS
+      - SSR
+      - Sum of squared residuals
+      - residual sum of squares
+  - term: Total sum of squares
     definition: |
-      An observed value minus its fitted value from the model: $e_i = y_i - \hat{y}_i$.
+      The total variability in the response around its mean (a baseline benchmark for model fit).
+    details: |
+      **Formula**
+
+      $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2.$$
+
+      **In R**
+
+      - `sum((y - mean(y))^2)`.
+  - term: Mean squared error
+    definition: |
+      An estimate of error variance based on residual size (often RSS divided by residual degrees of freedom).
+    details: |
+      **Formula**
+
+      $$\text{MSE} = \frac{\text{RSS}}{n - p},$$
+
+      where $p$ is the number of estimated parameters (including the intercept).
+
+      **In R**
+
+      - Residual variance: `sigma(model)^2`.
+    aliases:
+      - MSE
   - term: Residual standard error
     definition: |
-      The estimated standard deviation of the residuals (square root of the residual variance).
+      An estimate of the typical size of residuals (the estimated error standard deviation).
+    details: |
+      **Formula**
+
+      $$\text{RSE} = \sqrt{\frac{\text{RSS}}{n - p}} = \sqrt{\text{MSE}},$$
+
+      where $p$ is the number of fitted parameters (including the intercept).
+
+      **In R**
+
+      - For `lm`, use `sigma(model)`.
+  - term: Degrees of freedom
+    definition: |
+      The amount of independent information remaining after estimating model parameters.
+    details: |
+      **Examples**
+
+      - In simple linear regression (intercept + slope): residual df is $n - 2$.
+      - More generally (linear regression): residual df is $n - p$.
+
+      **In R**
+
+      - Residual df: `df.residual(model)`.
+  - term: Standard error
+    definition: |
+      An estimate of how much a statistic (like a coefficient) would vary across repeated samples.
+    details: |
+      **Formula (linear regression)**
+
+      $$\mathrm{SE}(\hat{\beta}_j) = \sqrt{\hat{\sigma}^2\,(X^\top X)^{-1}_{jj}}.$$
+
+      **In R**
+
+      - Coefficient SEs are in `summary(model)$coefficients[, "Std. Error"]`.
+      - The covariance matrix is `vcov(model)`.
+  - term: t-test
+    definition: |
+      Tests whether a coefficient differs from zero using a t statistic and an assumed reference distribution.
+    details: |
+      **Test statistic**
+
+      $$t = \frac{\hat{\beta}_j - 0}{\mathrm{SE}(\hat{\beta}_j)}.$$
+
+      **In R**
+
+      - See `t value` and `Pr(>|t|)` in `summary(model)`.
+  - term: F-test
+    id: f-test-overall-model-test
+    definition: |
+      Tests whether predictors jointly improve model fit compared with a simpler model (often intercept-only).
+    details: |
+      **Common form (overall regression test)**
+
+      $$F = \frac{(\text{TSS} - \text{RSS})/(p - 1)}{\text{RSS}/(n - p)},$$
+
+      where $p$ is the number of fitted parameters (including the intercept).
+
+      **In R**
+
+      - Reported in `summary(model)` for `lm`.
+      - Compare nested models with `anova(model_small, model_big)`.
+    aliases:
+      - F-test (overall model test)
+      - Overall F-test
+  - term: p-value
+    definition: |
+      The probability, under the null hypothesis, of observing a result at least as extreme as the one observed.
+    details: |
+      **In R**
+
+      - Reported in `summary(model)` for standard `lm` coefficient tests.
+  - term: Confidence interval
+    definition: |
+      A range of plausible parameter values at a chosen confidence level (e.g., 95%).
+    details: |
+      **Common form**
+
+      $$\hat{\theta} \pm t^* \cdot \mathrm{SE}(\hat{\theta}).$$
+
+      **In R**
+
+      - Use `confint(model)` for coefficient confidence intervals.
+  - term: Prediction interval
+    definition: |
+      An interval for a future observation at given predictors; wider than a confidence interval.
+    details: |
+      **In R**
+
+      - `predict(model, newdata = df, interval = "prediction")`.
+  - term: Fitted value
+    definition: |
+      The model’s predicted mean response for an observation (given its predictor values).
+    details: |
+      **Notation**
+
+      - Often written as $\hat{y}_i$.
+
+      **In R**
+
+      - `fitted(model)` or `predict(model)` for fitted values.
+      - For new cases: `predict(model, newdata = ...)`.
+    aliases:
+      - Predicted value
+  - term: Residual
+    definition: |
+      The difference between an observed value and the value predicted by the fitted model.
+    details: |
+      **Formula**
+
+      $$e_i = y_i - \hat{y}_i.$$
+
+      **In R**
+
+      - `resid(model)`; with `broom`, `augment(model)` includes `.resid` and `.fitted`.
+  - term: Simple linear model
+    definition: |
+      A model that relates a response to a single predictor using a straight-line mean function plus random error.
+    details: |
+      **Formula**
+
+      $$Y = \alpha + \beta x + \varepsilon.$$
+
+      **In R**
+
+      - Fit with `lm(y ~ x, data = df)`.
+    aliases:
+      - simple linear model
+  - term: Simple linear regression
+    definition: |
+      Linear regression with exactly one predictor (a straight-line relationship on average).
+    details: |
+      **Formula**
+
+      $$E[Y\mid X] = \beta_0 + \beta_1 X.$$
+
+      **In R**
+
+      - Fit with `lm(y ~ x)`.
+  - term: Multiple linear regression
+    definition: |
+      Linear regression with two or more predictors, allowing adjustment for multiple variables at once.
+    details: |
+      **Formula**
+
+      $$E[Y\mid X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k.$$
+
+      **In R**
+
+      - Fit with `lm(y ~ x1 + x2 + x3)`.
+  - term: Partial regression coefficient
+    definition: |
+      The effect of a predictor on the response after holding the other predictors constant.
+    details: |
+      **Idea**
+
+      - Interprets the change in $E[Y\mid X]$ for a one-unit increase in $X_j$, with the other predictors held fixed.
+
+      **In R**
+
+      - In multiple regression, each coefficient in `summary(model)$coefficients` is a partial effect.
   - term: Pearson correlation
     definition: |
       Measures linear association between two variables, ranging from -1 to 1.
+    details: |
+      **Formula**
+
+      $$r = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^n (x_i - \bar{x})^2\;\sum_{i=1}^n (y_i - \bar{y})^2}}.$$
+
+      **In R**
+
+      - `cor(x, y)` for Pearson’s correlation (default).
+      - `cor.test(x, y)` for a test and confidence interval.
   - term: R-squared
     definition: |
-      The proportion of variance in $Y$ explained by the model: $R^2 = 1 - \frac{\text{RSS}}{\text{TSS}}$.
+      The proportion of response variability explained by the fitted model (on the training data).
+    details: |
+      **Formula**
+
+      $$R^2 = 1 - \frac{\text{RSS}}{\text{TSS}}.$$
+
+      **In R**
+
+      - `summary(model)$r.squared`.
   - term: Adjusted R-squared
     definition: |
-      $R^2$ penalised for the number of predictors to discourage unnecessary terms.
+      R-squared penalised for the number of predictors to discourage unnecessary terms.
+    details: |
+      **Formula**
+
+      $$\bar{R}^2 = 1 - (1 - R^2)\frac{n - 1}{n - p},$$
+
+      where $p$ is the number of fitted parameters (including the intercept).
+
+      **In R**
+
+      - `summary(model)$adj.r.squared`.
+  - term: Polynomial term
+    definition: |
+      A transformed predictor (like x²) used to capture curvature while keeping the model linear in coefficients.
+    details: |
+      **In R**
+
+      - Use `I(x^2)` for a squared term, or `poly(x, degree)` for orthogonal polynomials.
+  - term: Interaction
+    definition: |
+      A model term that allows the effect of one predictor to depend on another predictor.
+    details: |
+      **In R**
+
+      - `x1:x2` for an interaction only; `x1 * x2` for main effects plus interaction.
+  - term: Overfitting
+    definition: |
+      When a model captures noise in the training data and generalises poorly to new data.
+    details: |
+      **In practice**
+
+      - Symptoms include overly optimistic fit on training data and poor performance on new data.
+      - Prefer validation (train/test split or cross-validation) over “fit on everything and hope”.
+  - term: Stepwise regression
+    definition: |
+      An automated selection approach that adds/removes predictors based on a criterion (often AIC).
+    details: |
+      **Pitfalls**
+
+      - Can be unstable: small data changes may lead to different selected models.
+      - Post-selection $p$-values and confidence intervals can be misleading.
+
+      **In R**
+
+      - Use `step(model)` (AIC-based by default).
+      - Always re-check diagnostics after selection, and validate performance on new/held-out data.
   - term: Akaike Information Criterion
     definition: |
       Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.
+    details: |
+      **Formula**
+
+      $$\mathrm{AIC} = -2\log(L) + 2k,$$
+
+      where $k$ is the number of fitted parameters and $L$ is the maximised likelihood.
+
+      **In R**
+
+      - `AIC(model)`; compare multiple models with `AIC(m1, m2, m3)`.
     aliases:
       - AIC
   - term: Bayesian Information Criterion
     definition: |
       Model comparison metric that penalises complexity more than AIC; lower values indicate a preferred model among those compared.
+    details: |
+      **Formula**
+
+      $$\mathrm{BIC} = -2\log(L) + k\log(n).$$
+
+      **In R**
+
+      - `BIC(model)`; compare multiple models with `BIC(m1, m2, m3)`.
     aliases:
       - BIC
-  - term: Multicollinearity
-    definition: |
-      Strong correlation among predictors that inflates standard errors and destabilises estimates.
-  - term: Interaction
-    definition: |
-      A term that allows the effect of one predictor to depend on the level of another (e.g., $X_1 X_2$).
-  - term: Dummy variable
-    definition: |
-      An indicator (0/1) used to code categories in regression relative to a baseline.
-    aliases:
-      - Indicator variable
-  - term: Factor
-    definition: |
-      A categorical predictor with discrete levels; R stores these as factors.
-  - term: Reference level
-    definition: |
-      The baseline category used to interpret coefficients for a factor.
-  - term: Contrast
-    definition: |
-      A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).
-  - term: Leverage
-    definition: |
-      A measure of how far a case's predictor values are from the predictor means; high leverage can increase influence.
-  - term: Cook's distance
-    definition: |
-      Influence measure combining residual size and leverage to flag points that change fitted values when omitted.
-  - term: Box-Cox transformation
-    definition: |
-      A family of power transformations used to stabilise variance or improve linearity for positive responses.
   - term: Parsimony
     definition: |
       Choosing the simplest adequate model that answers the scientific question.
+    details: |
+      **In practice**
+
+      - Prefer simpler models unless extra complexity meaningfully improves interpretation or prediction.
+  - term: Outlier
+    definition: |
+      An observation with an unusually large residual relative to the fitted model.
+    details: |
+      **Diagnostics**
+
+      - Large standardised/studentised residuals suggest an outlying response value *given the predictors*.
+      - Rules of thumb (context dependent): $|r_i| > 2$ (flag), $|r_i| > 3$ (strong flag).
+
+      **In R**
+
+      - `rstandard(model)` (standardised residuals) and `rstudent(model)` (studentised residuals).
+      - An outlier is not always influential: check leverage and Cook’s distance as well.
+  - term: Standardised residual
+    definition: |
+      A residual scaled by its estimated standard deviation to highlight unusually large deviations.
+    details: |
+      **Formula**
+
+      $$r_i = \frac{e_i}{\hat{\sigma}\sqrt{1 - h_{ii}}}.$$
+
+      **In R**
+
+      - `rstandard(model)` and `rstudent(model)` (studentised residuals).
+    aliases:
+      - Standardized residual
+  - term: Influential point
+    definition: |
+      An observation that substantially changes fitted coefficients or predictions when removed.
+    details: |
+      **In R**
+
+      - Use `cooks.distance(model)` and `influence.measures(model)`.
+      - For coefficient impact: `dfbetas(model)` and `dffits(model)`.
+  - term: Leverage
+    definition: |
+      A measure of how unusual a case’s predictor values are; high leverage can increase influence.
+    details: |
+      **Formula**
+
+      $$h_{ii} = x_i^\top (X^\top X)^{-1} x_i.$$
+
+      **In R**
+
+      - `hatvalues(model)` returns leverages ($h_{ii}$).
+
+      **Rule of thumb**
+
+      - High leverage often flagged by $h_{ii} > 2p/n$ (or $3p/n$), where $p$ is the number of parameters.
+  - term: Cook's distance
+    definition: |
+      An influence measure combining residual size and leverage to flag points that strongly affect the fit.
+    details: |
+      **Formula**
+
+      $$D_i = \frac{e_i^2}{p\,\hat{\sigma}^2}\frac{h_{ii}}{(1 - h_{ii})^2}.$$
+
+      **In R**
+
+      - `cooks.distance(model)`.
+
+      **Rule of thumb**
+
+      - Values above about $4/n$ are often flagged for inspection (not an automatic deletion rule).
+  - term: Extrapolation
+    definition: |
+      Making predictions outside the observed predictor range, where the fitted relationship may not hold.
+    details: |
+      **In R**
+
+      - Compare new predictor values to `range(df$x)` (and analogous for other predictors).
+
+      **Practical note**
+
+      - Uncertainty grows quickly as you move away from the data cloud (often reflected in higher leverage).
+  - term: Multicollinearity
+    definition: |
+      Strong correlation among predictors that inflates standard errors and destabilises coefficient estimates.
+    details: |
+      **Diagnostics**
+
+      - Large standard errors and unstable coefficient signs/magnitudes.
+      - High correlations among predictors; large VIFs.
+      - Exact multicollinearity shows up as non-estimable coefficients.
+
+      **In R**
+
+      - Correlations: `cor(df[, numeric_cols])`.
+      - Exact aliasing (perfect collinearity): `alias(model)`.
+      - Condition number (rough diagnostic): `kappa(model.matrix(model))`.
+
+      **Remedies**
+
+      - Remove or combine redundant predictors (guided by your scientific question).
+      - Centering can help when you include interactions/polynomials (reduces *induced* collinearity), but does not “fix” collinearity in general.
+      - If prediction is the goal, consider regularisation (ridge/lasso) or dimension reduction (e.g., principal components).
+  - term: Variance inflation factor
+    definition: |
+      A diagnostic that summarises how collinearity inflates the uncertainty of a coefficient estimate.
+    details: |
+      **Formula**
+
+      $$\text{VIF}_j = \frac{1}{1 - R_j^2},$$
+
+      where $R_j^2$ comes from regressing predictor $X_j$ on the other predictors.
+
+      **In R**
+
+      - The `car::vif()` function is commonly used (if the `car` package is available).
+      - Base R approach: regress each predictor on the others and plug its $R_j^2$ into the VIF formula.
+    aliases:
+      - VIF
+  - term: Box-Cox transformation
+    definition: |
+      A family of power transformations used to stabilise variance or improve linearity for positive responses.
+    details: |
+      **Formula**
+
+      For $\lambda \neq 0$:
+
+      $$g_\lambda(y) = \frac{y^\lambda - 1}{\lambda}.$$
+
+      For $\lambda = 0$:
+
+      $$g_0(y) = \log(y).$$
+
+      **In R**
+
+      - `MASS::boxcox(model)` explores power transformations for positive responses.
+  - term: Factor
+    definition: |
+      A categorical predictor with discrete levels; R stores these as factors.
+    details: |
+      **In R**
+
+      - Create with `factor(x)`; check levels with `levels(x)`.
+  - term: Dummy variable
+    definition: |
+      An indicator (0/1) used to code categories in regression relative to a baseline.
+    details: |
+      **In R**
+
+      - Factors are expanded into dummy variables automatically in `lm()`.
+      - Inspect the design matrix with `model.matrix(model)`.
+    aliases:
+      - Indicator variable
+  - term: Reference level
+    definition: |
+      The baseline category used to interpret coefficients for a factor.
+    details: |
+      **In R**
+
+      - Change with `relevel(f, ref = "baseline")`.
+  - term: Contrast
+    definition: |
+      A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).
+    details: |
+      **In R**
+
+      - View or set with `contrasts(f)` and functions like `contr.treatment()`.
 ---
 
 # Glossary {#sec-glossary .unnumbered}
