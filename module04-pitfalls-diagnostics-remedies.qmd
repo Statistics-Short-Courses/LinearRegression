@@ -87,14 +87,16 @@ where the errors $\epsilon_i$ are independent and identically distributed normal
 By assuming this form we can proceed to estimate the parameters $b_0, b_1, \ldots, b_p$ and $s^2$ using the method of least squares, and then use these estimates to perform inference and prediction. However, the validity of these inferences and predictions relies on the assumptions of the linear model being reasonably satisfied. If these assumptions are violated, our conclusions may be misleading or incorrect.
 
 ## Common assumptions and pitfalls {#sec-common-assumptions-and-pitfalls}
-A regression analysis ometimes a model can violate one assumption but not others, and therefore we break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to state the assumptions of a linear regression model is as follows:
+In a regression analysis, some aspects of may of the 'linear model' assumption above may be violated while others are still reasonably satisfied. For example, a model may have nonconstant variance but still have linear mean structure and approximately normal errors. For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to state present the assumptions of a linear model is via the following four assumptions about the error terms $\epsilon_i$:
+
 
 ::: Assumption
 ### Linearity
-The relationship between the predictors and the response is linear (in the parameters) combined with the assumptioon of the error term having mean zero, this implies that the average response is a linear function of the predictors:
+The relationship between the predictors and the response is linear (in the parameters)
 $$
-E(Y_i) = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_p X_{ip}
+Y_i ~ \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_p X_{ip}
 $$
+Where 
 :::
 
 ::: Assumption
