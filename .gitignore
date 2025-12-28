@@ -8,3 +8,5 @@
 .Datasets
 
 **/*.quarto_ipynb
+
+/.luarc.json

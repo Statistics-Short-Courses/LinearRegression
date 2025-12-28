@@ -150,37 +150,37 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module00-lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
+ <span class="menu-text">Chapter 0: Introduction to linear models</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module01-slr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module02-mlr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
+  <a href="./module04-pitfalls-diagnostics-remedies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Regression Pitfalls, Diagnostics, and Remedies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -222,199 +222,780 @@ window.Quarto = {
 <div id="glossary">
 <div id="glossary-statistical-model" class="glossary-entry">
 <p><strong>Statistical model</strong></p>
-<p>A probabilistic description of how a response relates to predictors, combining a systematic component with random error.</p>
+<p>A probabilistic description of how a response relates to predictors, combining a systematic component with random variation.</p>
+<div class="glossary-details">
+<p><strong>Common form</strong></p>
+<p><span class="math display">\[Y = f(X) + \varepsilon.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Fit models with <code>lm()</code> (linear regression) and <code>glm()</code> (generalised linear models).</li>
+<li>Use <code>summary()</code>, <code>coef()</code>, and <code>predict()</code> to inspect fitted models.</li>
+</ul>
 </div>
-<div id="glossary-response-outcome-variable" class="glossary-entry">
-<p><strong>Response (outcome) variable</strong></p>
-<p>The variable Y we aim to explain or predict.</p>
 </div>
-<div id="glossary-predictor-explanatory-variable" class="glossary-entry">
-<p><strong>Predictor (explanatory) variable</strong></p>
-<p>A variable x used to explain or predict changes in the response.</p>
+<div id="glossary-random-variable" class="glossary-entry">
+<p><strong>Random variable</strong></p>
+<p>A quantity whose value varies across observations, described by a probability distribution.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Simulate random variables with functions like <code>rnorm()</code>, <code>runif()</code>, and <code>rbinom()</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-distribution" class="glossary-entry">
+<p><strong>Distribution</strong></p>
+<p>A description of how the values of a random variable are spread across possible outcomes.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Many distributions use the <code>d/p/q/r</code> pattern, e.g.&nbsp;<code>dnorm()</code>, <code>pnorm()</code>, <code>qnorm()</code>, <code>rnorm()</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-normal-distribution" class="glossary-entry">
+<p><strong>Normal distribution</strong></p>
+<p>A symmetric, bell-shaped distribution often used to model random variation.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[X \sim N(\mu, \sigma^2).\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Density/CDF/quantiles/simulation: <code>dnorm()</code>, <code>pnorm()</code>, <code>qnorm()</code>, <code>rnorm()</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-variance" class="glossary-entry">
+<p><strong>Variance</strong></p>
+<p>A measure of spread; larger variance means values tend to be further from their mean.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\mathrm{Var}(X) = E[(X - E[X])^2].\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Sample variance: <code>var(x)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-assumption" class="glossary-entry">
+<p><strong>Assumption</strong></p>
+<p>A condition we adopt to justify a model or an inference procedure.</p>
+<div class="glossary-details">
+<p><strong>In this course</strong></p>
+<ul>
+<li>For linear regression, key assumptions are about the error term (mean zero, constant variance, normality, independence).</li>
+</ul>
+</div>
+</div>
+<div id="glossary-response-variable" class="glossary-entry">
+<p><strong>Response variable</strong></p>
+<p>The variable you aim to explain or predict (sometimes called the outcome or dependent variable).</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>In a formula like <code>y ~ x1 + x2</code>, the response is on the left-hand side.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-predictor-variable" class="glossary-entry">
+<p><strong>Predictor variable</strong></p>
+<p>A variable used to explain, adjust for, or predict changes in the response (sometimes called a covariate).</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>In a formula like <code>y ~ x1 + x2</code>, predictors are on the right-hand side.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-continuous-variable" class="glossary-entry">
+<p><strong>Continuous variable</strong></p>
+<p>A numeric variable that can (in principle) take any value on an interval.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Stored as numeric (<code>dbl</code>/<code>int</code>).</li>
+<li>Helpful checks: <code>is.numeric(x)</code>, <code>summary(x)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-linear-function" class="glossary-entry">
+<p><strong>Linear function</strong></p>
+<p>A straight-line relationship between a variable and an outcome.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[f(x) = \alpha + \beta x.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Fit a straight-line mean function with <code>lm(y ~ x)</code>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-linear-predictor" class="glossary-entry">
 <p><strong>Linear predictor</strong></p>
-<p>The deterministic part of a linear model, e.g.&nbsp;E[Y|X] = _0 + _1 X_1 + + _k X_k.</p>
+<p>The systematic (non-random) part of a regression model that combines predictors and coefficients.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[E[Y\mid X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Fitted values: <code>fitted(model)</code> or <code>predict(model)</code>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-intercept" class="glossary-entry">
 <p><strong>Intercept</strong></p>
-<p>The expected response when all predictors are zero; a baseline level.</p>
+<p>The baseline level of the response when predictors are at their reference values (often zero).</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Included by default in <code>lm()</code>; remove with <code>y ~ x - 1</code>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-slope" class="glossary-entry">
 <p><strong>Slope</strong></p>
-<p>The expected change in the response per one-unit increase in a predictor, holding other predictors constant.</p>
+<p>The expected change in the response for a one-unit increase in a predictor, holding other predictors constant.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Extract coefficients with <code>coef(model)</code> or <code>summary(model)$coefficients</code>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-random-error-term" class="glossary-entry">
 <p><strong>Random error term</strong></p>
-<p>The stochastic component that captures unexplained variation around the linear predictor.</p>
+<p>The part of the response not explained by the predictors (random variation around the systematic part).</p>
+<div class="glossary-details">
+<p><strong>In a model</strong></p>
+<ul>
+<li>Often written as <span class="math inline">\(\varepsilon\)</span> in <span class="math inline">\(Y = f(X) + \varepsilon\)</span>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-mean-zero-errors" class="glossary-entry">
 <p><strong>Mean-zero errors</strong></p>
-<p>The assumption E[] = 0, so predictions are correct on average.</p>
+<p>The assumption that errors average to zero, so the model is unbiased on average.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[E[\varepsilon \mid X] = 0.\]</span></p>
+</div>
 </div>
 <div id="glossary-homoscedasticity" class="glossary-entry">
 <p><strong>Homoscedasticity</strong></p>
-<p>Constant error variance across predictor values: Var()=^2.</p>
+<p>The assumption that the variability of the errors is roughly constant across the predictor range.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\mathrm{Var}(\varepsilon \mid X) = \sigma^2.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Check residuals vs fitted: <code>plot(model, which = 1)</code> (or with <code>broom::augment()</code>).</li>
+<li>Scale–location plot: <code>plot(model, which = 3)</code>.</li>
+</ul>
+<p><strong>Remedies (when violated)</strong></p>
+<ul>
+<li>Transform the response (e.g., log / square-root), or model the mean-variance relationship.</li>
+<li>Use heteroskedasticity-robust standard errors for inference (where appropriate).</li>
+</ul>
 </div>
-<div id="glossary-normal-errors" class="glossary-entry">
-<p><strong>Normal errors</strong></p>
-<p>The assumption N(0,^2), supporting t- and F-based inference.</p>
-</div>
-<div id="glossary-independence" class="glossary-entry">
-<p><strong>Independence</strong></p>
-<p>Errors from different observations are independent of one another.</p>
-</div>
-<div id="glossary-ordinary-least-squares" class="glossary-entry">
-<p><strong>Ordinary least squares</strong></p>
-<p>Estimation method that chooses coefficients to minimise the sum of squared residuals.</p>
-</div>
-<div id="glossary-sum-of-squared-residuals" class="glossary-entry">
-<p><strong>Sum of squared residuals</strong></p>
-<p>_{i=1}^n e_i^2, the total squared discrepancy between observed and fitted values.</p>
-</div>
-<div id="glossary-mean-squared-error" class="glossary-entry">
-<p><strong>Mean squared error</strong></p>
-<p>The sum of squared residuals divided by its degrees of freedom; an estimator of ^2.</p>
-</div>
-<div id="glossary-degrees-of-freedom" class="glossary-entry">
-<p><strong>Degrees of freedom</strong></p>
-<p>The number of independent pieces of information after estimating parameters (e.g., n-2 in SLR).</p>
-</div>
-<div id="glossary-standard-error" class="glossary-entry">
-<p><strong>Standard error</strong></p>
-<p>The estimated standard deviation of a coefficient estimate; quantifies uncertainty.</p>
-</div>
-<div id="glossary-t-test" class="glossary-entry">
-<p><strong>t-test</strong></p>
-<p>Tests whether a coefficient differs from zero using a t statistic and the assumed error distribution.</p>
-</div>
-<div id="glossary-p-value" class="glossary-entry">
-<p><strong>p-value</strong></p>
-<p>The probability, under the null, of observing a test statistic at least as extreme as the one observed.</p>
-</div>
-<div id="glossary-confidence-interval" class="glossary-entry">
-<p><strong>Confidence interval</strong></p>
-<p>A range of plausible parameter values at a chosen confidence level (e.g., 95%).</p>
-</div>
-<div id="glossary-prediction-interval" class="glossary-entry">
-<p><strong>Prediction interval</strong></p>
-<p>An interval for a future observation at given predictors; wider than a confidence interval.</p>
-</div>
-<div id="glossary-f-test-overall-model-test" class="glossary-entry">
-<p><strong>F-test (overall model test)</strong></p>
-<p>Tests whether at least one predictor has a nonzero coefficient compared with an intercept-only model.</p>
-</div>
-<div id="glossary-partial-regression-coefficient" class="glossary-entry">
-<p><strong>Partial regression coefficient</strong></p>
-<p>The effect of x_i on E[Y] holding all other predictors constant.</p>
-</div>
-<div id="glossary-polynomial-term" class="glossary-entry">
-<p><strong>Polynomial term</strong></p>
-<p>A predictor raised to a power (e.g., x^2, x^3) to model curvature while staying linear in parameters.</p>
-</div>
-<div id="glossary-overfitting" class="glossary-entry">
-<p><strong>Overfitting</strong></p>
-<p>When a model captures noise in the training data and generalises poorly to new data.</p>
-</div>
-<div id="glossary-stepwise-regression" class="glossary-entry">
-<p><strong>Stepwise regression</strong></p>
-<p>An automated selection approach that adds/removes predictors based on a criterion (e.g., AIC or adjusted R^2).</p>
 </div>
 <div id="glossary-heteroskedasticity" class="glossary-entry">
 <p><strong>Heteroskedasticity</strong></p>
 <p>Nonconstant error variance across predictor values (the opposite of homoscedasticity).</p>
+<div class="glossary-details">
+<p><strong>Idea</strong></p>
+<ul>
+<li><span class="math inline">\(\mathrm{Var}(\varepsilon \mid X)\)</span> changes with <span class="math inline">\(X\)</span> (often increasing with the mean).</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li>Look for a funnel pattern in residuals vs fitted: <code>plot(model, which = 1)</code>.</li>
+<li>Scale–location plot: <code>plot(model, which = 3)</code>.</li>
+<li>Optional formal test (if available): <code>lmtest::bptest(model)</code> (Breusch–Pagan).</li>
+</ul>
+<p><strong>Remedies</strong></p>
+<ul>
+<li>Transform the response (log / square-root), especially for positive outcomes.</li>
+<li>Consider weighted least squares if you can model the changing variance.</li>
+<li>For inference, consider robust standard errors (e.g., <code>sandwich</code> + <code>lmtest</code>), but still inspect the fit.</li>
+</ul>
 </div>
-<div id="glossary-standardized-residual" class="glossary-entry">
-<p><strong>Standardized residual</strong></p>
-<p>A residual scaled by its estimated standard deviation to highlight unusually large deviations.</p>
 </div>
-<div id="glossary-outlier" class="glossary-entry">
-<p><strong>Outlier</strong></p>
-<p>An observation with an unusually large residual relative to the fitted model.</p>
+<div id="glossary-normal-errors" class="glossary-entry">
+<p><strong>Normal errors</strong></p>
+<p>The assumption that errors are approximately normally distributed (mainly important for small-sample inference).</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\varepsilon \sim N(0, \sigma^2).\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Check with Q–Q plots: <code>plot(model, which = 2)</code> or <code>qqnorm(resid(model)); qqline(resid(model))</code>.</li>
+</ul>
 </div>
-<div id="glossary-influential-point" class="glossary-entry">
-<p><strong>Influential point</strong></p>
-<p>An observation that substantially changes fitted coefficients or predictions when removed.</p>
 </div>
-<div id="glossary-extrapolation" class="glossary-entry">
-<p><strong>Extrapolation</strong></p>
-<p>Making predictions outside the observed predictor range, where model assumptions may fail.</p>
+<div id="glossary-independence" class="glossary-entry">
+<p><strong>Independence</strong></p>
+<p>The assumption that errors from different observations are not correlated.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>For time-ordered data, inspect autocorrelation with <code>acf(resid(model))</code>.</li>
+<li>Optional test (if available): <code>lmtest::dwtest(model)</code> (Durbin–Watson).</li>
+</ul>
 </div>
-<div id="glossary-simple-linear-regression" class="glossary-entry">
-<p><strong>Simple linear regression</strong></p>
-<p>A linear model with one predictor: E[Y] = _0 + _1 X with independent, mean-zero errors.</p>
 </div>
-<div id="glossary-multiple-linear-regression" class="glossary-entry">
-<p><strong>Multiple linear regression</strong></p>
-<p>A linear model with two or more predictors; each coefficient is a partial effect holding the others fixed.</p>
+<div id="glossary-estimation" class="glossary-entry">
+<p><strong>Estimation</strong></p>
+<p>The process of using data to infer unknown model parameters (like regression coefficients and error variability).</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Fit a linear regression with <code>lm()</code>.</li>
+<li>Extract estimates with <code>coef(model)</code>.</li>
+</ul>
 </div>
-<div id="glossary-residual" class="glossary-entry">
-<p><strong>Residual</strong></p>
-<p>An observed value minus its fitted value from the model: e_i = y_i - _i.</p>
+</div>
+<div id="glossary-estimate" class="glossary-entry">
+<p><strong>Estimate</strong></p>
+<p>A value computed from data that approximates an unknown population quantity (a parameter).</p>
+<div class="glossary-details">
+<p><strong>Notation</strong></p>
+<ul>
+<li>Parameters are often written with Greek letters (e.g., <span class="math inline">\(\beta\)</span>), and estimates with hats (e.g., <span class="math inline">\(\hat{\beta}\)</span>).</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li>Coefficient estimates: <code>coef(model)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-ordinary-least-squares" class="glossary-entry">
+<p><strong>Ordinary least squares</strong></p>
+<p>Estimation method that chooses coefficients to minimise the sum of squared residuals.</p>
+<div class="glossary-details">
+<p><strong>Criterion</strong></p>
+<p><span class="math display">\[\text{RSS} = \sum_{i=1}^n (y_i - \hat{y}_i)^2.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Standard linear regression uses OLS via <code>lm()</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-residual-sum-of-squares" class="glossary-entry">
+<p><strong>Residual sum of squares</strong></p>
+<p>The total squared discrepancy between observed values and fitted values.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\text{RSS} = \sum_{i=1}^n e_i^2.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>deviance(model)</code> (for <code>lm</code>) equals RSS.</li>
+<li>Or compute directly: <code>sum(resid(model)^2)</code>.</li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+<li>Notation varies: many texts use <code>SSE</code> for this quantity; <code>SSR</code> is sometimes reserved for the <em>regression</em> sum of squares.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-total-sum-of-squares" class="glossary-entry">
+<p><strong>Total sum of squares</strong></p>
+<p>The total variability in the response around its mean (a baseline benchmark for model fit).</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>sum((y - mean(y))^2)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-mean-squared-error" class="glossary-entry">
+<p><strong>Mean squared error</strong></p>
+<p>An estimate of error variance based on residual size (often RSS divided by residual degrees of freedom).</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\text{MSE} = \frac{\text{RSS}}{n - p},\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the number of estimated parameters (including the intercept).</p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Residual variance: <code>sigma(model)^2</code>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-residual-standard-error" class="glossary-entry">
 <p><strong>Residual standard error</strong></p>
-<p>The estimated standard deviation of the residuals (square root of the residual variance).</p>
+<p>An estimate of the typical size of residuals (the estimated error standard deviation).</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\text{RSE} = \sqrt{\frac{\text{RSS}}{n - p}} = \sqrt{\text{MSE}},\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the number of fitted parameters (including the intercept).</p>
+<p><strong>In R</strong></p>
+<ul>
+<li>For <code>lm</code>, use <code>sigma(model)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-degrees-of-freedom" class="glossary-entry">
+<p><strong>Degrees of freedom</strong></p>
+<p>The amount of independent information remaining after estimating model parameters.</p>
+<div class="glossary-details">
+<p><strong>Examples</strong></p>
+<ul>
+<li>In simple linear regression (intercept + slope): residual df is <span class="math inline">\(n - 2\)</span>.</li>
+<li>More generally (linear regression): residual df is <span class="math inline">\(n - p\)</span>.</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li>Residual df: <code>df.residual(model)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-standard-error" class="glossary-entry">
+<p><strong>Standard error</strong></p>
+<p>An estimate of how much a statistic (like a coefficient) would vary across repeated samples.</p>
+<div class="glossary-details">
+<p><strong>Formula (linear regression)</strong></p>
+<p><span class="math display">\[\mathrm{SE}(\hat{\beta}_j) = \sqrt{\hat{\sigma}^2\,(X^\top X)^{-1}_{jj}}.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Coefficient SEs are in <code>summary(model)$coefficients[, "Std. Error"]</code>.</li>
+<li>The covariance matrix is <code>vcov(model)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-t-test" class="glossary-entry">
+<p><strong>t-test</strong></p>
+<p>Tests whether a coefficient differs from zero using a t statistic and an assumed reference distribution.</p>
+<div class="glossary-details">
+<p><strong>Test statistic</strong></p>
+<p><span class="math display">\[t = \frac{\hat{\beta}_j - 0}{\mathrm{SE}(\hat{\beta}_j)}.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>See <code>t value</code> and <code>Pr(&gt;|t|)</code> in <code>summary(model)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-f-test-overall-model-test" class="glossary-entry">
+<p><strong>F-test</strong></p>
+<p>Tests whether predictors jointly improve model fit compared with a simpler model (often intercept-only).</p>
+<div class="glossary-details">
+<p><strong>Common form (overall regression test)</strong></p>
+<p><span class="math display">\[F = \frac{(\text{TSS} - \text{RSS})/(p - 1)}{\text{RSS}/(n - p)},\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the number of fitted parameters (including the intercept).</p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Reported in <code>summary(model)</code> for <code>lm</code>.</li>
+<li>Compare nested models with <code>anova(model_small, model_big)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-p-value" class="glossary-entry">
+<p><strong>p-value</strong></p>
+<p>The probability, under the null hypothesis, of observing a result at least as extreme as the one observed.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Reported in <code>summary(model)</code> for standard <code>lm</code> coefficient tests.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-confidence-interval" class="glossary-entry">
+<p><strong>Confidence interval</strong></p>
+<p>A range of plausible parameter values at a chosen confidence level (e.g., 95%).</p>
+<div class="glossary-details">
+<p><strong>Common form</strong></p>
+<p><span class="math display">\[\hat{\theta} \pm t^* \cdot \mathrm{SE}(\hat{\theta}).\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Use <code>confint(model)</code> for coefficient confidence intervals.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-prediction-interval" class="glossary-entry">
+<p><strong>Prediction interval</strong></p>
+<p>An interval for a future observation at given predictors; wider than a confidence interval.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li><code>predict(model, newdata = df, interval = "prediction")</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-fitted-value" class="glossary-entry">
+<p><strong>Fitted value</strong></p>
+<p>The model’s predicted mean response for an observation (given its predictor values).</p>
+<div class="glossary-details">
+<p><strong>Notation</strong></p>
+<ul>
+<li>Often written as <span class="math inline">\(\hat{y}_i\)</span>.</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>fitted(model)</code> or <code>predict(model)</code> for fitted values.</li>
+<li>For new cases: <code>predict(model, newdata = ...)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-residual" class="glossary-entry">
+<p><strong>Residual</strong></p>
+<p>The difference between an observed value and the value predicted by the fitted model.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[e_i = y_i - \hat{y}_i.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>resid(model)</code>; with <code>broom</code>, <code>augment(model)</code> includes <code>.resid</code> and <code>.fitted</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-simple-linear-model" class="glossary-entry">
+<p><strong>Simple linear model</strong></p>
+<p>A model that relates a response to a single predictor using a straight-line mean function plus random error.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[Y = \alpha + \beta x + \varepsilon.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Fit with <code>lm(y ~ x, data = df)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-simple-linear-regression" class="glossary-entry">
+<p><strong>Simple linear regression</strong></p>
+<p>Linear regression with exactly one predictor (a straight-line relationship on average).</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[E[Y\mid X] = \beta_0 + \beta_1 X.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Fit with <code>lm(y ~ x)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-multiple-linear-regression" class="glossary-entry">
+<p><strong>Multiple linear regression</strong></p>
+<p>Linear regression with two or more predictors, allowing adjustment for multiple variables at once.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[E[Y\mid X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li>Fit with <code>lm(y ~ x1 + x2 + x3)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-partial-regression-coefficient" class="glossary-entry">
+<p><strong>Partial regression coefficient</strong></p>
+<p>The effect of a predictor on the response after holding the other predictors constant.</p>
+<div class="glossary-details">
+<p><strong>Idea</strong></p>
+<ul>
+<li>Interprets the change in <span class="math inline">\(E[Y\mid X]\)</span> for a one-unit increase in <span class="math inline">\(X_j\)</span>, with the other predictors held fixed.</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li>In multiple regression, each coefficient in <code>summary(model)$coefficients</code> is a partial effect.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-pearson-correlation" class="glossary-entry">
 <p><strong>Pearson correlation</strong></p>
 <p>Measures linear association between two variables, ranging from -1 to 1.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[r = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^n (x_i - \bar{x})^2\;\sum_{i=1}^n (y_i - \bar{y})^2}}.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>cor(x, y)</code> for Pearson’s correlation (default).</li>
+<li><code>cor.test(x, y)</code> for a test and confidence interval.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-r-squared" class="glossary-entry">
 <p><strong>R-squared</strong></p>
-<p>The proportion of variance in Y explained by the model: R^2 = 1 - .</p>
+<p>The proportion of response variability explained by the fitted model (on the training data).</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[R^2 = 1 - \frac{\text{RSS}}{\text{TSS}}.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>summary(model)$r.squared</code>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-adjusted-r-squared" class="glossary-entry">
 <p><strong>Adjusted R-squared</strong></p>
-<p>R^2 penalised for the number of predictors to discourage unnecessary terms.</p>
+<p>R-squared penalised for the number of predictors to discourage unnecessary terms.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\bar{R}^2 = 1 - (1 - R^2)\frac{n - 1}{n - p},\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the number of fitted parameters (including the intercept).</p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>summary(model)$adj.r.squared</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-polynomial-term" class="glossary-entry">
+<p><strong>Polynomial term</strong></p>
+<p>A transformed predictor (like x²) used to capture curvature while keeping the model linear in coefficients.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Use <code>I(x^2)</code> for a squared term, or <code>poly(x, degree)</code> for orthogonal polynomials.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-interaction" class="glossary-entry">
+<p><strong>Interaction</strong></p>
+<p>A model term that allows the effect of one predictor to depend on another predictor.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li><code>x1:x2</code> for an interaction only; <code>x1 * x2</code> for main effects plus interaction.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-overfitting" class="glossary-entry">
+<p><strong>Overfitting</strong></p>
+<p>When a model captures noise in the training data and generalises poorly to new data.</p>
+<div class="glossary-details">
+<p><strong>In practice</strong></p>
+<ul>
+<li>Symptoms include overly optimistic fit on training data and poor performance on new data.</li>
+<li>Prefer validation (train/test split or cross-validation) over “fit on everything and hope”.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-stepwise-regression" class="glossary-entry">
+<p><strong>Stepwise regression</strong></p>
+<p>An automated selection approach that adds/removes predictors based on a criterion (often AIC).</p>
+<div class="glossary-details">
+<p><strong>Pitfalls</strong></p>
+<ul>
+<li>Can be unstable: small data changes may lead to different selected models.</li>
+<li>Post-selection <span class="math inline">\(p\)</span>-values and confidence intervals can be misleading.</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li>Use <code>step(model)</code> (AIC-based by default).</li>
+<li>Always re-check diagnostics after selection, and validate performance on new/held-out data.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-akaike-information-criterion" class="glossary-entry">
 <p><strong>Akaike Information Criterion</strong></p>
 <p>Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\mathrm{AIC} = -2\log(L) + 2k,\]</span></p>
+<p>where <span class="math inline">\(k\)</span> is the number of fitted parameters and <span class="math inline">\(L\)</span> is the maximised likelihood.</p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>AIC(model)</code>; compare multiple models with <code>AIC(m1, m2, m3)</code>.</li>
+</ul>
+</div>
 </div>
 <div id="glossary-bayesian-information-criterion" class="glossary-entry">
 <p><strong>Bayesian Information Criterion</strong></p>
 <p>Model comparison metric that penalises complexity more than AIC; lower values indicate a preferred model among those compared.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\mathrm{BIC} = -2\log(L) + k\log(n).\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>BIC(model)</code>; compare multiple models with <code>BIC(m1, m2, m3)</code>.</li>
+</ul>
 </div>
-<div id="glossary-multicollinearity" class="glossary-entry">
-<p><strong>Multicollinearity</strong></p>
-<p>Strong correlation among predictors that inflates standard errors and destabilises estimates.</p>
-</div>
-<div id="glossary-interaction" class="glossary-entry">
-<p><strong>Interaction</strong></p>
-<p>A term that allows the effect of one predictor to depend on the level of another (e.g., X_1 X_2).</p>
-</div>
-<div id="glossary-dummy-variable" class="glossary-entry">
-<p><strong>Dummy variable</strong></p>
-<p>An indicator (0/1) used to code categories in regression relative to a baseline.</p>
-</div>
-<div id="glossary-factor" class="glossary-entry">
-<p><strong>Factor</strong></p>
-<p>A categorical predictor with discrete levels; R stores these as factors.</p>
-</div>
-<div id="glossary-reference-level" class="glossary-entry">
-<p><strong>Reference level</strong></p>
-<p>The baseline category used to interpret coefficients for a factor.</p>
-</div>
-<div id="glossary-contrast" class="glossary-entry">
-<p><strong>Contrast</strong></p>
-<p>A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).</p>
-</div>
-<div id="glossary-leverage" class="glossary-entry">
-<p><strong>Leverage</strong></p>
-<p>A measure of how far a case’s predictor values are from the predictor means; high leverage can increase influence.</p>
-</div>
-<div id="glossary-cooks-distance" class="glossary-entry">
-<p><strong>Cook’s distance</strong></p>
-<p>Influence measure combining residual size and leverage to flag points that change fitted values when omitted.</p>
-</div>
-<div id="glossary-box-cox-transformation" class="glossary-entry">
-<p><strong>Box-Cox transformation</strong></p>
-<p>A family of power transformations used to stabilise variance or improve linearity for positive responses.</p>
 </div>
 <div id="glossary-parsimony" class="glossary-entry">
 <p><strong>Parsimony</strong></p>
 <p>Choosing the simplest adequate model that answers the scientific question.</p>
+<div class="glossary-details">
+<p><strong>In practice</strong></p>
+<ul>
+<li>Prefer simpler models unless extra complexity meaningfully improves interpretation or prediction.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-outlier" class="glossary-entry">
+<p><strong>Outlier</strong></p>
+<p>An observation with an unusually large residual relative to the fitted model.</p>
+<div class="glossary-details">
+<p><strong>Diagnostics</strong></p>
+<ul>
+<li>Large standardised/studentised residuals suggest an outlying response value <em>given the predictors</em>.</li>
+<li>Rules of thumb (context dependent): <span class="math inline">\(|r_i| &gt; 2\)</span> (flag), <span class="math inline">\(|r_i| &gt; 3\)</span> (strong flag).</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>rstandard(model)</code> (standardised residuals) and <code>rstudent(model)</code> (studentised residuals).</li>
+<li>An outlier is not always influential: check leverage and Cook’s distance as well.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-standardised-residual" class="glossary-entry">
+<p><strong>Standardised residual</strong></p>
+<p>A residual scaled by its estimated standard deviation to highlight unusually large deviations.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[r_i = \frac{e_i}{\hat{\sigma}\sqrt{1 - h_{ii}}}.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>rstandard(model)</code> and <code>rstudent(model)</code> (studentised residuals).</li>
+</ul>
+</div>
+</div>
+<div id="glossary-influential-point" class="glossary-entry">
+<p><strong>Influential point</strong></p>
+<p>An observation that substantially changes fitted coefficients or predictions when removed.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Use <code>cooks.distance(model)</code> and <code>influence.measures(model)</code>.</li>
+<li>For coefficient impact: <code>dfbetas(model)</code> and <code>dffits(model)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-leverage" class="glossary-entry">
+<p><strong>Leverage</strong></p>
+<p>A measure of how unusual a case’s predictor values are; high leverage can increase influence.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[h_{ii} = x_i^\top (X^\top X)^{-1} x_i.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>hatvalues(model)</code> returns leverages (<span class="math inline">\(h_{ii}\)</span>).</li>
+</ul>
+<p><strong>Rule of thumb</strong></p>
+<ul>
+<li>High leverage often flagged by <span class="math inline">\(h_{ii} &gt; 2p/n\)</span> (or <span class="math inline">\(3p/n\)</span>), where <span class="math inline">\(p\)</span> is the number of parameters.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-cooks-distance" class="glossary-entry">
+<p><strong>Cook’s distance</strong></p>
+<p>An influence measure combining residual size and leverage to flag points that strongly affect the fit.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[D_i = \frac{e_i^2}{p\,\hat{\sigma}^2}\frac{h_{ii}}{(1 - h_{ii})^2}.\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>cooks.distance(model)</code>.</li>
+</ul>
+<p><strong>Rule of thumb</strong></p>
+<ul>
+<li>Values above about <span class="math inline">\(4/n\)</span> are often flagged for inspection (not an automatic deletion rule).</li>
+</ul>
+</div>
+</div>
+<div id="glossary-extrapolation" class="glossary-entry">
+<p><strong>Extrapolation</strong></p>
+<p>Making predictions outside the observed predictor range, where the fitted relationship may not hold.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Compare new predictor values to <code>range(df$x)</code> (and analogous for other predictors).</li>
+</ul>
+<p><strong>Practical note</strong></p>
+<ul>
+<li>Uncertainty grows quickly as you move away from the data cloud (often reflected in higher leverage).</li>
+</ul>
+</div>
+</div>
+<div id="glossary-multicollinearity" class="glossary-entry">
+<p><strong>Multicollinearity</strong></p>
+<p>Strong correlation among predictors that inflates standard errors and destabilises coefficient estimates.</p>
+<div class="glossary-details">
+<p><strong>Diagnostics</strong></p>
+<ul>
+<li>Large standard errors and unstable coefficient signs/magnitudes.</li>
+<li>High correlations among predictors; large VIFs.</li>
+<li>Exact multicollinearity shows up as non-estimable coefficients.</li>
+</ul>
+<p><strong>In R</strong></p>
+<ul>
+<li>Correlations: <code>cor(df[, numeric_cols])</code>.</li>
+<li>Exact aliasing (perfect collinearity): <code>alias(model)</code>.</li>
+<li>Condition number (rough diagnostic): <code>kappa(model.matrix(model))</code>.</li>
+</ul>
+<p><strong>Remedies</strong></p>
+<ul>
+<li>Remove or combine redundant predictors (guided by your scientific question).</li>
+<li>Centering can help when you include interactions/polynomials (reduces <em>induced</em> collinearity), but does not “fix” collinearity in general.</li>
+<li>If prediction is the goal, consider regularisation (ridge/lasso) or dimension reduction (e.g., principal components).</li>
+</ul>
+</div>
+</div>
+<div id="glossary-variance-inflation-factor" class="glossary-entry">
+<p><strong>Variance inflation factor</strong></p>
+<p>A diagnostic that summarises how collinearity inflates the uncertainty of a coefficient estimate.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p><span class="math display">\[\text{VIF}_j = \frac{1}{1 - R_j^2},\]</span></p>
+<p>where <span class="math inline">\(R_j^2\)</span> comes from regressing predictor <span class="math inline">\(X_j\)</span> on the other predictors.</p>
+<p><strong>In R</strong></p>
+<ul>
+<li>The <code>car::vif()</code> function is commonly used (if the <code>car</code> package is available).</li>
+<li>Base R approach: regress each predictor on the others and plug its <span class="math inline">\(R_j^2\)</span> into the VIF formula.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-box-cox-transformation" class="glossary-entry">
+<p><strong>Box-Cox transformation</strong></p>
+<p>A family of power transformations used to stabilise variance or improve linearity for positive responses.</p>
+<div class="glossary-details">
+<p><strong>Formula</strong></p>
+<p>For <span class="math inline">\(\lambda \neq 0\)</span>:</p>
+<p><span class="math display">\[g_\lambda(y) = \frac{y^\lambda - 1}{\lambda}.\]</span></p>
+<p>For <span class="math inline">\(\lambda = 0\)</span>:</p>
+<p><span class="math display">\[g_0(y) = \log(y).\]</span></p>
+<p><strong>In R</strong></p>
+<ul>
+<li><code>MASS::boxcox(model)</code> explores power transformations for positive responses.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-factor" class="glossary-entry">
+<p><strong>Factor</strong></p>
+<p>A categorical predictor with discrete levels; R stores these as factors.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Create with <code>factor(x)</code>; check levels with <code>levels(x)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-dummy-variable" class="glossary-entry">
+<p><strong>Dummy variable</strong></p>
+<p>An indicator (0/1) used to code categories in regression relative to a baseline.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Factors are expanded into dummy variables automatically in <code>lm()</code>.</li>
+<li>Inspect the design matrix with <code>model.matrix(model)</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-reference-level" class="glossary-entry">
+<p><strong>Reference level</strong></p>
+<p>The baseline category used to interpret coefficients for a factor.</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>Change with <code>relevel(f, ref = "baseline")</code>.</li>
+</ul>
+</div>
+</div>
+<div id="glossary-contrast" class="glossary-entry">
+<p><strong>Contrast</strong></p>
+<p>A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).</p>
+<div class="glossary-details">
+<p><strong>In R</strong></p>
+<ul>
+<li>View or set with <code>contrasts(f)</code> and functions like <code>contr.treatment()</code>.</li>
+</ul>
+</div>
 </div>
 </div>
 
