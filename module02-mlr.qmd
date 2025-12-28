@@ -239,7 +239,24 @@ ggplot()+
 :::
 
 
-{{< include include/exercises/module02-mlr/calculating-the-expected-outcome-of-a-multiple-regression-model.qmd >}}
+::: Exercise
+### Calculating the expected outcome of a multiple regression model {#sec-calculating-the-expected-outcome-of-a-multiple-regression-model}
+Given this model of sales by TV and Radio advertising, 
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
+$$
+
+$12k has been spent on TV advertising due to a persisting contract. How much should the company invest in Radio advertising so that the expected sales matches their inventory of 8k units?
+
+
+::: {.cell}
+```{webr}
+
+```
+:::
+
+:::
+
 
 ### Fitting MLR Models in R {#sec-fitting-mlr-models-in-r}
 Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares. Residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique *[least squares estimates]{.glossary term="Ordinary least squares"}* for the model parameters $\hat{\beta}_0, \ldots, \hat{\beta}_k$.
@@ -315,7 +332,22 @@ coef(mod)
 ```
 :::
 
-{{< include include/exercises/module02-mlr/extracting-coefficients-from-an-lm-model.qmd >}}
+::: Exercise
+#### extracting coefficients from an `lm` model {#sec-extracting-coefficients-from-an-lm-model}
+Use the the least-squares coefficients from `abs mod` to complete these partial regression plots
+
+
+::: {.cell}
+```{webr}
+ggplot(ads)+
+  aes(x=TV, y=Sales)+
+  geom_point()+
+  geom_abline(intercept = ads_mod$coefficients[1], ads_slope = ______)
+```
+:::
+
+:::
+
 
 ### `broom::tidy()` {#sec-broom-tidy}
 We can also use the `tidy()` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter:
@@ -399,7 +431,10 @@ F-statistic: 28.2 on 4 and 44 DF,  p-value: 1.19e-11
 The very small p-value indicates strong evidence against $H_0$. We conclude that at least one of the predictors (Population, Health, Internet, BirthRate) is useful for predicting life expectancy, and that the model is useful overall.
 :::
 
-{{< include include/exercises/module02-mlr/f-statistic-hypothesis-test.qmd >}}
+::: Exercise
+Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.
+:::
+
 #### global statistics with `anova()` {#sec-global-statistics-with-anova}
 We can obtain the model F-statistic using the `anova()` function, which reinforces the
 connection between regression and the ANOVA framework introduced earlier.
@@ -553,6 +588,22 @@ summary(lm(mpg ~ am_f, data = mtcars_cat))$coefficients
 
 Notice how the sign of the coefficient flips when the reference group changes.
 
-{{< include include/exercises/module02-mlr/exercise-interpreting-binary-factor.qmd >}}
+::: Exercise
+### Interpreting a binary factor {#sec-exercise-interpreting-binary-factor}
+Fit `mpg ~ am_f` on `mtcars_cat`.
 
-{{< include include/exercises/module02-mlr/exercise-factor-with-three-levels.qmd >}}
+1. What does the intercept represent?
+2. What does the `am_fmanual` coefficient represent?
+3. How does this relate to a two-sample t-test?
+:::
+
+
+::: Exercise
+### Factor with three levels {#sec-exercise-factor-with-three-levels}
+Fit `mpg ~ cyl_f` and identify the reference level.
+
+1. Which cylinder group is the baseline?
+2. How would you change the baseline to 8 cylinders?
+3. Which test in the ANOVA table tells you whether *any* cylinder group differs?
+:::
+
