@@ -13,7 +13,7 @@ book:
     - module01-slr.qmd
     - module02-mlr.qmd
     - module03-model-building.qmd
-    - module04-regression-pitfalls-diagnostics.qmd
+    - module04-pitfalls-diagnostics-remedies.qmd
     - module05-case-naplan.qmd
     - glossary.qmd
   page-navigation: false
