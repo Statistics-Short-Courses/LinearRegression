@@ -209,7 +209,7 @@ window.Quarto = {
   <li><a href="#sec-course-overview" id="toc-sec-course-overview" class="nav-link active" data-scroll-target="#sec-course-overview">Course Overview</a>
   <ul class="collapse">
   <li><a href="#sec-what-you-will-learn" id="toc-sec-what-you-will-learn" class="nav-link" data-scroll-target="#sec-what-you-will-learn">What you will learn</a></li>
-  <li><a href="#sec-course-roadmap" id="toc-sec-course-roadmap" class="nav-link" data-scroll-target="#sec-course-roadmap">Course roadmap</a></li>
+  <li><a href="#sec-course-outline" id="toc-sec-course-outline" class="nav-link" data-scroll-target="#sec-course-outline">Course outline</a></li>
   <li><a href="#sec-how-to-use-this-book" id="toc-sec-how-to-use-this-book" class="nav-link" data-scroll-target="#sec-how-to-use-this-book">How to use this book</a></li>
   </ul></li>
   </ul>
@@ -240,50 +240,48 @@ window.Quarto = {
 <section id="sec-course-overview" class="level1 unnumbered">
 <h1 class="unnumbered">Course Overview</h1>
 <p>Linear regression is one of the most widely used tools in data analysis. It helps us describe and predict an outcome <span class="math inline">\(Y\)</span> using one or more predictors <span class="math inline">\(X\)</span>, while also quantifying how uncertain our conclusions are.</p>
-<p>This short course focuses on <strong>practical regression workflows</strong>:</p>
-<ol type="1">
-<li><strong>Specify</strong> a sensible model for your question,</li>
-<li><strong>Fit and interpret</strong> it in R,</li>
-<li><strong>Diagnose</strong> whether the model is misleading,</li>
-<li><strong>Remedy</strong> common problems (or revise the model), and</li>
-<li><strong>Communicate</strong> what the model does—and does not—support.</li>
-</ol>
-<div id="Key-point*-1" class="Key-point">
-<p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point</strong></summary><div>Regression is not just “fit a line”: it is a cycle of modelling, checking, and improving.<p></p>
-</div></details>
-</div>
+<p>This short course aims to introduce you to the key concepts and practical skills needed to use linear regression effectively. The focus is on understanding what regression models do, how to apply them in R, interpret the results, and check that the resulting models are appropriate for your data and research question.</p>
 <section id="sec-what-you-will-learn" class="level2">
 <h2 class="anchored" data-anchor-id="sec-what-you-will-learn">What you will learn</h2>
 <ul>
-<li>Turn real questions into simple and multiple linear regression models (and state the assumptions clearly).</li>
-<li>Interpret regression output: coefficients, partial effects, interactions, and categorical predictors.</li>
-<li>Quantify uncertainty using standard errors, confidence intervals, prediction intervals, and hypothesis tests.</li>
-<li>Compare and refine models using fit metrics (including <span class="math inline">\(R^2\)</span> / adjusted <span class="math inline">\(R^2\)</span>) and information criteria (AIC/BIC).</li>
-<li>Detect common pitfalls: nonlinearity, heteroskedasticity, non-normal errors, dependence, multicollinearity, outliers, leverage, and influential observations.</li>
+<li>An understanding of <em>linear models</em>: the core idea that underpins regression analysis.</li>
+<li>How to fit linear models to data using R</li>
+<li>Interpret the output of a regression analysis: coefficients, partial effects, interactions, and categorical predictors.</li>
+<li>Quantify uncertainty in your results using standard errors, confidence intervals, prediction intervals, and hypothesis tests.</li>
+<li>Build, Compare, and refine models using fit metrics and information criteria (e.g.&nbsp;<span class="math inline">\(R^2\)</span>, <span class="math inline">\(AIC\)</span>/<span class="math inline">\(BIC\)</span>).</li>
+<li>Detect common regression pitfalls: nonlinearity, heteroskedasticity, non-normal errors, dependence, multicollinearity, high leverage and influential observations.</li>
 <li>Apply practical remedies: transformations, adding appropriate terms, revising variables, and using robust approaches when needed.</li>
+<li>An end-to-end workflow for regression analysis, from research question formulations and exploratory data analysis, to model fitting, diagnostics, and interpretation.</li>
 </ul>
 </section>
-<section id="sec-course-roadmap" class="level2">
-<h2 class="anchored" data-anchor-id="sec-course-roadmap">Course roadmap</h2>
-<p>These chapters are designed to build from foundations → modelling → diagnostics → an end-to-end case study.</p>
+<section id="sec-course-outline" class="level2">
+<h2 class="anchored" data-anchor-id="sec-course-outline">Course outline</h2>
 <ul>
-<li><strong>Chapter 00 — Introduction to linear models:</strong> what a regression model is, why we need an error term, and what assumptions mean in practice.</li>
-<li><strong>Chapter 01 — Simple linear regression (SLR):</strong> least squares, fitted values and residuals, inference, and prediction.</li>
-<li><strong>Chapter 02 — Multiple linear regression (MLR):</strong> partial regression coefficients, adjustment, categorical predictors, and overall model tests.</li>
-<li><strong>Chapter 03 — Model building:</strong> interactions, polynomial terms, parsimony, and model comparison/selection (with caveats).</li>
-<li><strong>Chapter 04 — Regression pitfalls &amp; diagnostics:</strong> how to recognise assumption violations and influence, and what to do about them.</li>
-<li><strong>Chapter 05 — Case study (NAPLAN):</strong> a guided workflow from question → model → diagnostics → interpretation.</li>
+<li><strong>Chapter 0 — Introduction to linear models:</strong> what a regression model is, why we need an error term, and what assumptions mean in practice.</li>
+<li><strong>Chapter 1 — Simple linear regression (SLR):</strong> least squares, fitted values and residuals, inference, and prediction.</li>
+<li><strong>Chapter 2 — Multiple linear regression (MLR):</strong> partial regression coefficients, categorical predictors, and overall model tests.</li>
+<li><strong>Chapter 3 — Model building:</strong> interactions, polynomial terms, parsimony, and model comparison/selection.</li>
+<li><strong>Chapter 4 — Regression pitfalls &amp; diagnostics:</strong> how to recognise assumption violations and influence, and what to do about them.</li>
+<li><strong>Chapter 5 — Case study (NAPLAN Reading scores):</strong> a guided workflow through a real dataset from research question → model → diagnostics → interpretation.</li>
 <li><strong>Glossary:</strong> short definitions plus formulas and useful R functions.</li>
 </ul>
 </section>
 <section id="sec-how-to-use-this-book" class="level2">
 <h2 class="anchored" data-anchor-id="sec-how-to-use-this-book">How to use this book</h2>
+<p>This book is part of a larger series of <em>Statistics Short Courses</em> from the UNE School of Science and Technology. Some content from other courses in this series is assumed knowledge here. In particular, a familarity with</p>
 <ul>
-<li><strong>Read sequentially</strong> if you are new to regression; jump to Chapter 04 if you mainly need a diagnostics “field guide”.</li>
-<li><strong>Run the examples</strong> as you go. Most examples are written to run in-browser using WebR; you can also run them in R/RStudio.</li>
-<li><strong>Hover or click glossary terms</strong>: glossary links include short tooltips and take you to a full entry with formulas and relevant R functions.</li>
-<li><strong>Treat diagnostics as part of the analysis</strong>: when a plot or check suggests a problem, the chapter aims to show a reasonable next step rather than a one-size-fits-all rule.</li>
+<li>Basic <code>R</code> usage (see the <a href="https://turing.une.edu.au/~statshare/index.html">UNE Consolidated R Resources</a> for a refresher),</li>
+<li>Descriptive statistics and data visualisation (see the <a href="">Exploratory Data Analysis/Visualisation Short Course</a>), and</li>
+<li>Basic inferential statistics: estimation and hypothesis testing including t-tests and ANOVA (see the <a href="">inferential Statistics with R Short Course</a>).</li>
 </ul>
+<p>Here are some tips for getting the most out of this book:</p>
+<ul>
+<li><strong>Read sequentially</strong> from start to finish. Each chapter builds on the previous ones, so it’s best to follow along in order. However, if you are already familiar with some topics, feel free to skip ahead.</li>
+<li><strong>Run the examples</strong> as you go. Most examples are written to run in-browser using WebR; you can also run them in R/RStudio.</li>
+<li><strong>Use the Glossary</strong> as you go. Important terms are highlighted in the text and defined in the glossary at the end of the book along with relevant formulas and R functions.</li>
+<li><strong>Pace yourself</strong> — this is a short course, but it covers a lot of material. Each chapter should take around 45-60 minutes to work through, depending on your familiarity with the topics.</li>
+</ul>
+<p>Finally, note that this is only a <em>short</em> course so we won’t be able to cover everything in depth. The goal is to give you a solid foundation in linear regression that you can build on with further study and practice. UNE offers several longer form and more advanced courses in statistics and data analysis if you wish to deepen your knowledge further. Also, there are many excellent textbooks and online resources available for further reading on regression analysis. Some recommended texts include: - “Linear Models with R” by Julian J. Faraway - “R for Data Science” by Hadley Wickham and Garrett Grolemund - “An Introduction to Statistical Learning” by Gareth James, Daniela Witten, Trevor Hastie, and Robert Tibshirani</p>
 
 
 <script type="ojs-module-contents">
