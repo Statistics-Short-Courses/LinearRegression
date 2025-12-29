@@ -1,1 +1,2 @@
-https://statistics-short-courses.github.io/Regression-Short-Course/
+https://statistics-short-courses.github.io/LinearRegression/
+
