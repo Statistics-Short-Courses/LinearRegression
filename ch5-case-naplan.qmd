@@ -2,61 +2,1267 @@
 format:
   live-html:
     toc: true
+execute:
+  echo: false
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Note:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-term:
+      colors: [D1C4E9, 673AB7]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+
+webr:
+  render-df: gt-interactive
+
+resources:
+  - "Data/naplan_reading.csv"
 ---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+
+
+```{r chapter05-case-naplan-setup-r}
+#| include: false
+library(MASS)
+library(tidyverse)
+library(broom)
+theme_set(theme_bw())
+
+naplan <- read.csv("Data/naplan_reading.csv") |>
+  as_tibble() |>
+  mutate(
+    grade = factor(grade, levels = c("Year 3", "Year 5", "Year 7", "Year 9")),
+    parent_education = factor(
+      parent_education,
+      levels = c(
+        "Year 10 or below", "Year 12", "Certificate/Diploma",
+        "Bachelor degree", "Postgraduate"
+      )
+    ),
+    school_type = factor(school_type, levels = c("Government", "Catholic", "Independent")),
+    gender = factor(gender, levels = c("Female", "Male")),
+    birth_months = factor(
+      birth_months,
+      levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    )
+  )
+
+naplan_n <- nrow(naplan)
+```
+
+```{r chapter05-case-naplan-models}
+#| include: false
+#---- First-order “everything we have” (as a screening start)
+mod_full_first_order <- lm(
+  naplan_reading_score ~ grade + ses_index + reading_time_home + n_siblings +
+    parent_education + school_type + gender + birth_months,
+  data = naplan
+)
+
+#---- Candidate refinements guided by EDA + Chapter 03 (and always re-check diagnostics in Chapter 04)
+mod_no_birth <- update(mod_full_first_order, . ~ . - birth_months)
+mod_quad_time <- update(mod_no_birth, . ~ . - reading_time_home + poly(reading_time_home, 2, raw = TRUE))
+mod_quad_time_int_grade <- lm(
+  naplan_reading_score ~ grade * poly(reading_time_home, 2, raw = TRUE) +
+    ses_index + n_siblings + parent_education + school_type + gender,
+  data = naplan
+)
+
+#---- Two ways to represent “SES” in the model (see discussion later)
+mod_ses_index <- lm(
+  naplan_reading_score ~ grade * poly(reading_time_home, 2, raw = TRUE) +
+    school_type + gender + ses_index,
+  data = naplan
+)
+mod_parent_edu <- lm(
+  naplan_reading_score ~ grade * poly(reading_time_home, 2, raw = TRUE) +
+    school_type + gender + parent_education,
+  data = naplan
+)
+mod_parent_edu_plus_ses <- update(mod_parent_edu, . ~ . + ses_index)
+
+#---- Final choice for this chapter: keep parent education as the SES proxy
+final_mod <- mod_parent_edu
+final_glance <- glance(final_mod)
+final_fstat <- summary(final_mod)$fstatistic
+final_p_overall <- pf(final_fstat[1], final_fstat[2], final_fstat[3], lower.tail = FALSE)
+
+fit_tbl <- tibble(
+  model = c(
+    "Full first-order (+ birth month)",
+    "Drop birth month",
+    "Add quadratic reading time",
+    "Add grade × reading time (quadratic)",
+    "Add SES index to parent education",
+    "Final (use parent education; drop SES index)"
+  ),
+  object = list(
+    mod_full_first_order, mod_no_birth, mod_quad_time, mod_quad_time_int_grade,
+    mod_parent_edu_plus_ses, final_mod
+  )
+) |>
+  mutate(
+    formula = map_chr(object, \(m) paste(deparse(formula(m)), collapse = " ")),
+    glance = map(object, glance)
+  ) |>
+  unnest(glance) |>
+  transmute(
+    model,
+    formula,
+    nobs,
+    adj_r2 = adj.r.squared,
+    rse = sigma,
+    AIC,
+    BIC
+  )
+
+final_terms <- tidy(final_mod, conf.int = TRUE)
+```
+
 # Regression Case Study: NAPLAN Reading Scores {#sec-regression-case-study-naplan-reading-scores}
+
+In Chapters 00–04 we built up the pieces of a regression analysis: what a linear model *is* (Chapter 00), how to fit and interpret regression models (Chapters 01–02), how to build and compare candidate models (Chapter 03), and how to diagnose problems (Chapter 04). In this final chapter, we put those pieces together in an end-to-end analysis.
+
+Our workflow follows the model-building approach in @sec-a-model-building-workflow:
+
+1. Define the research question and candidate variables.
+2. Explore the data (plots + summaries).
+3. Fit a reasonable starting model.
+4. Refine using model comparisons (without “blind selection”).
+5. Check diagnostics and interpret results.
+6. Write up the findings in plain language.
+
+This chapter is designed as a **hands-on walkthrough**. The webR chunks are the analysis: run each one as you read. Only use “Skip exercise” if you’ve already completed that step (e.g. in your IDE) and just want to keep moving.
 
 ## Defining the research question {#sec-defining-the-research-question}
 
-- Investigate how student and school-level [predictors]{.glossary term="Predictor (explanatory) variable"} relate to NAPLAN
-  Reading scores. Clarify [outcome]{.glossary term="Response (outcome) variable"}, units, and any grouping structure.
+This case study uses `naplan_reading.csv` (in this project: `Data/naplan_reading.csv`), which contains NAPLAN reading achievement data for **3,000 Australian students** across **Years 3, 5, 7, and 9**, drawn from **60 schools** (`school_id`). Each row is one student.
 
-## Importing data {#sec-importing-data}
+The outcome variable is `naplan_reading_score`. Because scores are on different ranges across grades (roughly **100–600** in Year 3 vs **400–900** in Year 9), we include `grade` as a covariate throughout.
 
-```{r module05-case-naplan-importing-data-load-data}
-#| message: false
-# Replace path with the appropriate CSV or RDS from the Resources/naplan reading folder
-# naplan <- read.csv("Resources/naplan reading/naplan_reading.csv")
+Alongside the outcome, the dataset includes student and family predictors such as weekly reading time at home (in minutes), parent education, school type, gender, a socioeconomic status index, birth month, and number of siblings.
+
+**Research question:** How are students’ socioeconomic circumstances, reading practice at home, and demographic characteristics associated with NAPLAN Reading scores?
+
+In this dataset:
+
+- The [outcome]{.glossary term="Outcome (response) variable"} is `naplan_reading_score`.
+- Candidate [predictors]{.glossary term="Predictor (explanatory) variable"} include:
+  - reading practice: `reading_time_home` (minutes per week),
+  - socioeconomic measures: `ses_index` and `parent_education`,
+  - demographics: `gender`, `birth_months`, `n_siblings`,
+  - schooling context: `school_type`,
+  - schooling level: `grade` (Year 3/5/7/9, included as a covariate).
+
+::: Note
+This is an observational dataset. Regression estimates here describe **associations**, not “effects”. For reminders about modelling assumptions, see @sec-common-assumptions-and-pitfalls.
+:::
+
+Also note that students come from 60 schools (`school_id`), so the independence assumption may be imperfect. Handling clustering rigorously would typically use multilevel modelling, which is beyond the scope of this short course.
+
+## Importing and preparing the data {#sec-importing-data}
+
+We start by importing the dataset and setting factor levels so coefficient interpretations are clear (see @sec-mlr_cat and @sec-reference-levels-and-releveling).
+
+```{webr chapter05-case-naplan-setup}
+#| include: false
+library(tidyverse)
+library(broom)
+theme_set(theme_bw())
+```
+```{webr chapter05-case-naplan-models-webr}
+#| include: false
+#| output: false
+#| edit: false
+naplan <- read_csv("Data/naplan_reading.csv", show_col_types = FALSE) |>
+  mutate(
+    grade = factor(grade, levels = c("Year 3", "Year 5", "Year 7", "Year 9")),
+    parent_education = factor(
+      parent_education,
+      levels = c(
+        "Year 10 or below",
+        "Year 12",
+        "Certificate/Diploma",
+        "Bachelor degree",
+        "Postgraduate"
+      )
+    ),
+    school_type = factor(school_type, levels = c("Government", "Catholic", "Independent")),
+    gender = factor(gender, levels = c("Female", "Male")),
+    birth_months = factor(
+      birth_months,
+      levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    )
+  )
+
+naplan_n <- nrow(naplan)
+
+#---- First-order “everything we have” (as a screening start)
+mod_full_first_order <- lm(
+  naplan_reading_score ~ grade + ses_index + reading_time_home + n_siblings +
+    parent_education + school_type + gender + birth_months,
+  data = naplan
+)
+
+#---- Candidate refinements guided by EDA + Chapter 03 (and always re-check diagnostics in Chapter 04)
+mod_no_birth <- update(mod_full_first_order, . ~ . - birth_months)
+mod_quad_time <- update(mod_no_birth, . ~ . - reading_time_home + poly(reading_time_home, 2, raw = TRUE))
+mod_quad_time_int_grade <- lm(
+  naplan_reading_score ~ grade * poly(reading_time_home, 2, raw = TRUE) +
+    ses_index + n_siblings + parent_education + school_type + gender,
+  data = naplan
+)
+
+#---- Two ways to represent “SES” in the model (see discussion later)
+mod_ses_index <- lm(
+  naplan_reading_score ~ grade * poly(reading_time_home, 2, raw = TRUE) +
+    school_type + gender + ses_index,
+  data = naplan
+)
+mod_parent_edu <- lm(
+  naplan_reading_score ~ grade * poly(reading_time_home, 2, raw = TRUE) +
+    school_type + gender + parent_education,
+  data = naplan
+)
+mod_parent_edu_plus_ses <- update(mod_parent_edu, . ~ . + ses_index)
+
+#---- Final choice for this chapter: keep parent education as the SES proxy
+final_mod <- mod_parent_edu
+final_aug <- augment(final_mod)
+
+fit_tbl <- tibble(
+  model = c(
+    "Full first-order (+ birth month)",
+    "Drop birth month",
+    "Add quadratic reading time",
+    "Add grade × reading time (quadratic)",
+    "Add SES index to parent education",
+    "Final (use parent education; drop SES index)"
+  ),
+  object = list(
+    mod_full_first_order, mod_no_birth, mod_quad_time, mod_quad_time_int_grade,
+    mod_parent_edu_plus_ses, final_mod
+  )
+) |>
+  mutate(
+    formula = map_chr(object, function(m) paste(deparse(formula(m)), collapse = " ")),
+    glance = map(object, glance)
+  ) |>
+  unnest(glance) |>
+  transmute(
+    model,
+    formula,
+    nobs,
+    adj_r2 = adj.r.squared,
+    rse = sigma,
+    AIC,
+    BIC
+  )
+
+final_terms <- tidy(final_mod, conf.int = TRUE)
 ```
 
-## Exploratory plot {#sec-exploratory-plot}
+::: Exercise
+Run the chunk below to import and prepare the data. The `glimpse()` output shows all available variables, and the small dictionary table summarises what each variable represents.
 
-- Start with scatterplots and boxplots for key predictors (e.g., study
-  time, SES, gender) against Reading scores.
+When you’re done, click **Check** to continue. If you’ve already done this step (e.g. in your IDE), click **Skip exercise** instead.
 
-```{r module05-case-naplan-exploratory-plot-setup}
-# Example placeholder using mtcars structure; swap to naplan data
-library(ggplot2)
-ggplot(mtcars, aes(wt, mpg)) +
-  geom_point() +
-  labs(x = "Predictor", y = "Reading score")
+::: {.cell exercise='ex_5.1' envir='Ex5'}
+```{webr}
+#| exercise: ex_5.1
+#| envir: Ex5
+#| autorun: true
+naplan <- read_csv("Data/naplan_reading.csv", show_col_types = FALSE) |>
+  mutate(
+    grade = factor(grade, levels = c("Year 3", "Year 5", "Year 7", "Year 9")),
+    parent_education = factor(
+      parent_education,
+      levels = c(
+        "Year 10 or below",
+        "Year 12",
+        "Certificate/Diploma",
+        "Bachelor degree",
+        "Postgraduate"
+      )
+    ),
+    school_type = factor(school_type, levels = c("Government", "Catholic", "Independent")),
+    gender = factor(gender, levels = c("Female", "Male")),
+    birth_months = factor(
+      birth_months,
+      levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    )
+  )
+
+glimpse(naplan)
+
+naplan_dictionary <- tribble(
+  ~variable, ~description,
+  "student_id", "Student identifier",
+  "school_id", "School identifier (60 schools)",
+  "grade", "Year level (Year 3/5/7/9)",
+  "reading_time_home", "Minutes of reading at home per week",
+  "parent_education", "Parents' highest education level",
+  "school_type", "School sector (Government/Catholic/Independent)",
+  "gender", "Student gender",
+  "birth_months", "Birth month (Jan–Dec)",
+  "n_siblings", "Number of siblings",
+  "ses_index", "Socioeconomic status index (continuous)",
+  "naplan_reading_score", "NAPLAN reading score (outcome)"
+)
+
+naplan_dictionary
+
+naplan |>
+  select(
+    student_id, school_id, grade, naplan_reading_score, ses_index, reading_time_home,
+    parent_education, school_type, gender, birth_months, n_siblings
+  ) |>
+  slice_head(n = 8)
+
+naplan |>
+  summarise(
+    n = n(),
+    min_score = min(naplan_reading_score),
+    max_score = max(naplan_reading_score),
+    mean_score = mean(naplan_reading_score),
+    sd_score = sd(naplan_reading_score),
+    n_schools = n_distinct(school_id)
+  )
+
+naplan |>
+  count(grade) |>
+  arrange(grade)
+```
+:::
+
+:::: {.solution exercise="ex_5.1"}
+::: {.cell exercise='ex_5.1' solution='true'}
+```{webr}
+#| exercise: ex_5.1
+#| solution: true
+naplan <- read_csv("Data/naplan_reading.csv", show_col_types = FALSE) |>
+  mutate(
+    grade = factor(grade, levels = c("Year 3", "Year 5", "Year 7", "Year 9")),
+    parent_education = factor(
+      parent_education,
+      levels = c(
+        "Year 10 or below",
+        "Year 12",
+        "Certificate/Diploma",
+        "Bachelor degree",
+        "Postgraduate"
+      )
+    ),
+    school_type = factor(school_type, levels = c("Government", "Catholic", "Independent")),
+    gender = factor(gender, levels = c("Female", "Male")),
+    birth_months = factor(
+      birth_months,
+      levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    )
+  )
+
+glimpse(naplan)
+
+naplan_dictionary <- tribble(
+  ~variable, ~description,
+  "student_id", "Student identifier",
+  "school_id", "School identifier (60 schools)",
+  "grade", "Year level (Year 3/5/7/9)",
+  "reading_time_home", "Minutes of reading at home per week",
+  "parent_education", "Parents' highest education level",
+  "school_type", "School sector (Government/Catholic/Independent)",
+  "gender", "Student gender",
+  "birth_months", "Birth month (Jan–Dec)",
+  "n_siblings", "Number of siblings",
+  "ses_index", "Socioeconomic status index (continuous)",
+  "naplan_reading_score", "NAPLAN reading score (outcome)"
+)
+
+naplan_dictionary
+
+naplan |>
+  select(
+    student_id, school_id, grade, naplan_reading_score, ses_index, reading_time_home,
+    parent_education, school_type, gender, birth_months, n_siblings
+  ) |>
+  slice_head(n = 8)
+
+naplan |>
+  summarise(
+    n = n(),
+    min_score = min(naplan_reading_score),
+    max_score = max(naplan_reading_score),
+    mean_score = mean(naplan_reading_score),
+    sd_score = sd(naplan_reading_score),
+    n_schools = n_distinct(school_id)
+  )
+
+naplan |>
+  count(grade) |>
+  arrange(grade)
+```
+:::
+::::
+
+::: {.cell exercise='ex_5.1' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_5.1
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("naplan", envir = .envir_result)) {
+    fail("Run the chunk above so an object named `naplan` exists.")
+  }
+  d <- get("naplan", envir = .envir_result)
+  if (!inherits(d, "data.frame")) fail("`naplan` should be a data frame/tibble.")
+  if (nrow(d) != 3000) fail("Expected 3000 rows (one per student).")
+
+  required <- c(
+    "student_id", "school_id", "grade", "reading_time_home",
+    "parent_education", "school_type", "gender", "birth_months",
+    "n_siblings", "ses_index", "naplan_reading_score"
+  )
+  missing <- setdiff(required, names(d))
+  if (length(missing) > 0) {
+    fail(paste0("Missing columns: ", paste(missing, collapse = ", ")))
+  }
+
+  if (!identical(levels(d$grade), c("Year 3", "Year 5", "Year 7", "Year 9"))) {
+    fail("Set `grade` levels to: Year 3, Year 5, Year 7, Year 9.")
+  }
+  if (!identical(
+    levels(d$parent_education),
+    c("Year 10 or below", "Year 12", "Certificate/Diploma", "Bachelor degree", "Postgraduate")
+  )) {
+    fail("Set `parent_education` levels to match the data dictionary (Year 10 or below → Postgraduate).")
+  }
+  if (!identical(levels(d$school_type), c("Government", "Catholic", "Independent"))) {
+    fail("Set `school_type` levels to: Government, Catholic, Independent.")
+  }
+  if (!identical(levels(d$gender), c("Female", "Male"))) {
+    fail("Set `gender` levels to: Female, Male.")
+  }
+  if (!identical(levels(d$birth_months), c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))) {
+    fail("Set `birth_months` levels to Jan–Dec.")
+  }
+
+  pass("Nice — data imported and cleaned. You’re ready for EDA.")
+})
+```
+:::
+:::
+
+::: Exercise
+As a first quick EDA summary, create a table called `score_by_grade` with the mean NAPLAN reading score for each grade, sorted from highest to lowest.
+
+When it looks right, click **Check** to continue (or **Skip exercise** if you did this in your IDE).
+
+::: {.cell exercise='ex_5.2' envir='Ex5' define='["score_by_grade"]'}
+```{webr}
+#| exercise: ex_5.2
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - score_by_grade
+score_by_grade <- naplan |>
+  group_by(grade) |>
+  summarise(mean_score = mean(naplan_reading_score)) |>
+  arrange(desc(mean_score))
+
+score_by_grade
+```
+:::
+
+:::: {.solution exercise="ex_5.2"}
+::: {.cell exercise='ex_5.2' solution='true'}
+```{webr}
+#| exercise: ex_5.2
+#| solution: true
+score_by_grade <- naplan |>
+  group_by(grade) |>
+  summarise(mean_score = mean(naplan_reading_score)) |>
+  arrange(desc(mean_score))
+
+score_by_grade
+```
+:::
+::::
+
+::: {.cell exercise='ex_5.2' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_5.2
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("score_by_grade", envir = .envir_result)) {
+    fail("Create a table named `score_by_grade`.")
+  }
+  s <- get("score_by_grade", envir = .envir_result)
+  if (!inherits(s, "data.frame")) fail("`score_by_grade` should be a data frame/tibble.")
+  if (!all(c("grade", "mean_score") %in% names(s))) fail("Include columns named `grade` and `mean_score`.")
+  if (nrow(s) != 4) fail("Expected one row per grade (4 rows).")
+  if (!isTRUE(all.equal(s$mean_score, sort(s$mean_score, decreasing = TRUE)))) {
+    fail("Make sure `score_by_grade` is sorted from highest mean score to lowest.")
+  }
+  if (as.character(s$grade[1]) != "Year 9") {
+    fail("Hint: the top row should be Year 9 once sorted descending.")
+  }
+  pass("Nice — that’s a good first summary before we move to plots.")
+})
+```
+:::
+:::
+
+## Exploratory data analysis {#sec-exploratory-plot}
+
+Before we fit any model, we look for:
+
+- obvious trends (linear vs curved),
+- differences across groups (categorical predictors),
+- potential [multicollinearity]{.glossary} (predictors that tell us almost the same thing),
+- outliers or unusual values that might affect the model.
+
+This is exactly the “EDA first” mindset in @sec-exploratory-data-analysis-and-theory-driven-model-development.
+
+### Outcome distribution (by grade)
+
+NAPLAN scores are on different ranges across grades (Year 3 scores are typically lower than Year 9 scores), so it helps to look grade-by-grade.
+
+```{webr chapter05-case-naplan-eda-score-by-grade}
+#| echo: true
+#| autorun: true
+ggplot(naplan, aes(x = naplan_reading_score)) +
+  geom_histogram(binwidth = 20, fill = "steelblue", colour = "white") +
+  facet_wrap(~ grade, ncol = 2, scales = "free_y") +
+  labs(x = "NAPLAN reading score", y = "Number of students")
 ```
 
-## Fitting the [least-squares]{.glossary term="Ordinary least squares"} model {#sec-fitting-the-least-squares-model}
+### Key bivariate relationships
 
-- Begin with a first-order additive model; consider [interactions]{.glossary term="Interaction"} or
-  [polynomial terms]{.glossary term="Polynomial term"} if exploratory plots suggest curvature.
+#### Reading score vs SES index
 
-```{r module05-case-naplan-fitting-the-least-squares-model-fit-lm}
-# model <- lm(Reading ~ predictor1 + predictor2, data = naplan)
-# summary(model)
+```{webr chapter05-case-naplan-eda-ses}
+#| echo: true
+#| autorun: true
+ggplot(naplan, aes(x = ses_index, y = naplan_reading_score, colour = grade)) +
+  geom_point(alpha = 0.25, size = 1) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "SES index", y = "NAPLAN reading score", colour = "Grade")
 ```
 
-## Model refinement and interpretation {#sec-model-refinement-and-interpretation}
+#### Reading score vs time spent reading at home
 
-- Check residual diagnostics (see Module 6). Address nonlinearity,
-  [heteroskedasticity]{.glossary}, or [influential points]{.glossary term="Influential point"}.
-- Interpret coefficients, including categorical contrasts and any
-  interaction terms.
+Because `reading_time_home` is reported in minutes per week and has a lot of small values (including zeros), we should be open to nonlinearity here (Chapter 03: @sec-non_linearity).
 
-```{r module05-case-naplan-model-refinement-and-interpretation-summary}
-# plot(model, which = 1:2)
-# coef(summary(model))
+```{webr chapter05-case-naplan-eda-reading-time}
+#| echo: true
+#| autorun: true
+ggplot(naplan, aes(x = reading_time_home, y = naplan_reading_score, colour = grade)) +
+  geom_point(alpha = 0.25, size = 1) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE), se = FALSE) +
+  labs(x = "Reading time at home (minutes/week)", y = "NAPLAN reading score", colour = "Grade")
 ```
+
+### Categorical predictors
+
+Boxplots make it easy to compare distributions across categories (see @sec-mlr_cat and @sec-multi-level-factors-and-anova).
+
+```{webr chapter05-case-naplan-eda-cats}
+#| echo: true
+#| autorun: true
+ggplot(naplan, aes(x = parent_education, y = naplan_reading_score)) +
+  geom_boxplot(outlier.alpha = 0.15) +
+  coord_flip() +
+  labs(x = "Parent education (highest)", y = "NAPLAN reading score")
+
+ggplot(naplan, aes(x = school_type, y = naplan_reading_score)) +
+  geom_boxplot(outlier.alpha = 0.15) +
+  labs(x = "School type", y = "NAPLAN reading score")
+
+ggplot(naplan, aes(x = gender, y = naplan_reading_score)) +
+  geom_boxplot(outlier.alpha = 0.15) +
+  labs(x = "Gender", y = "NAPLAN reading score")
+```
+
+### Correlations among continuous variables
+
+We don’t have `GGally::ggpairs()` available in this project, but we can still compute a correlation matrix and look at a basic pairs plot (see @sec-pairs-plots-and-correlation-matrices).
+
+```{webr chapter05-case-naplan-eda-cor}
+#| echo: true
+#| autorun: true
+naplan_cont <- naplan |>
+  select(naplan_reading_score, ses_index, reading_time_home, n_siblings) |>
+  mutate(across(everything(), as.numeric))
+
+round(cor(naplan_cont), 2)
+```
+
+```{webr chapter05-case-naplan-eda-pairs}
+#| echo: true
+#| autorun: true
+pairs(
+  naplan_cont,
+  pch = 19,
+  cex = 0.35,
+  col = scales::alpha("black", 0.25)
+)
+```
+
+::: Exercise
+Recreate one of the key EDA plots: reading time at home vs NAPLAN reading score, with a quadratic smoother and separate panels for each grade.
+
+After it runs, try experimenting (e.g., set `se = FALSE`, remove `facet_wrap(~ grade)`, or change the smoother to linear).
+
+::: {.cell exercise='ex_5.3' envir='Ex5' define='["p_readtime"]'}
+```{webr}
+#| exercise: ex_5.3
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - p_readtime
+p_readtime <- ggplot(naplan, aes(x = reading_time_home, y = naplan_reading_score)) +
+  geom_point(alpha = 0.25, size = 1) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE), se = TRUE) +
+  facet_wrap(~ grade) +
+  labs(x = "Reading time at home (minutes/week)", y = "NAPLAN reading score")
+
+p_readtime
+```
+:::
+
+:::: {.solution exercise="ex_5.3"}
+::: {.cell exercise='ex_5.3' solution='true'}
+```{webr}
+#| exercise: ex_5.3
+#| solution: true
+p_readtime <- ggplot(naplan, aes(x = reading_time_home, y = naplan_reading_score)) +
+  geom_point(alpha = 0.25, size = 1) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE), se = TRUE) +
+  facet_wrap(~ grade) +
+  labs(x = "Reading time at home (minutes/week)", y = "NAPLAN reading score")
+
+p_readtime
+```
+:::
+::::
+
+::: {.cell exercise='ex_5.3' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_5.3
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  p <- get("p_readtime", envir = .envir_result)
+  if (!inherits(p, "ggplot")) fail("Create a ggplot object named `p_readtime`.")
+  tryCatch(ggplot_build(p), error = function(e) {
+    fail("Your plot doesn't build yet. Hint: check brackets/commas and that `naplan` is spelled correctly.")
+  })
+  if (inherits(p$facet, "FacetNull")) fail("Add a facet, e.g. `facet_wrap(~ grade)`.")
+  pass("Nice — you’ve built a faceted plot showing the reading-time relationship by grade.")
+})
+```
+:::
+:::
+
+## Fitting the least-squares model {#sec-fitting-the-least-squares-model}
+
+We now fit regression models using [ordinary least squares]{.glossary term="Ordinary least squares"} (Chapter 01: @sec-a-simple-linear-model-in-r). We start with a **first-order** additive model and then consider targeted increases in complexity when the EDA suggests they are useful (Chapter 03: @sec-increasing-model-complexity-to-model-complex-relationships).
+
+### A first-order screening model
+
+This model includes *all* candidate predictors, including `birth_months`. Think of it as a starting point for refinement (not the final model).
+
+```{webr chapter05-case-naplan-fit-full}
+#| echo: true
+#| autorun: true
+formula(mod_full_first_order)
+```
+
+```{webr chapter05-case-naplan-fit-full-glance}
+#| echo: true
+#| autorun: true
+glance(mod_full_first_order)
+```
+
+### Model comparison: does birth month help?
+
+We compare the model with and without `birth_months` using AIC/BIC (Chapter 03: @sec-information-criteria-aic-bic) and an ANOVA comparison (Chapter 03: @sec-comparing-model-fit).
+
+```{webr chapter05-case-naplan-compare-birth-month}
+#| echo: true
+#| autorun: true
+anova(mod_no_birth, mod_full_first_order)
+fit_tbl |>
+  filter(model %in% c("Full first-order (+ birth month)", "Drop birth month")) |>
+  print()
+```
+
+The comparison suggests `birth_months` doesn’t meaningfully improve the model here, so we drop it.
+
+::: Exercise
+Fit the first-order “screening” model yourself, and store it as `my_full_mod`.
+
+::: {.cell exercise='ex_5.4' envir='Ex5' define='["my_full_mod"]'}
+```{webr}
+#| exercise: ex_5.4
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - my_full_mod
+my_full_mod <- lm(
+  naplan_reading_score ~ grade + ses_index + reading_time_home + n_siblings +
+    parent_education + school_type + gender + birth_months,
+  data = naplan
+)
+
+glance(my_full_mod)
+```
+:::
+
+:::: {.solution exercise="ex_5.4"}
+::: {.cell exercise='ex_5.4' solution='true'}
+```{webr}
+#| exercise: ex_5.4
+#| solution: true
+my_full_mod <- lm(
+  naplan_reading_score ~ grade + ses_index + reading_time_home + n_siblings +
+    parent_education + school_type + gender + birth_months,
+  data = naplan
+)
+
+glance(my_full_mod)
+```
+:::
+::::
+
+::: {.cell exercise='ex_5.4' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_5.4
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("my_full_mod", envir = .envir_result)) fail("Create an object named `my_full_mod`.")
+  m <- get("my_full_mod", envir = .envir_result)
+  if (!inherits(m, "lm")) fail("`my_full_mod` should be an `lm` model.")
+
+  rhs <- attr(terms(m), "term.labels")
+  needed <- c("grade", "ses_index", "reading_time_home", "n_siblings",
+              "parent_education", "school_type", "gender", "birth_months")
+  if (!all(needed %in% rhs)) fail("Hint: check that you included all candidate predictors.")
+  pass("Great — you’ve fitted the full first-order model.")
+})
+```
+:::
+:::
+
+## Model refinement and selection {#sec-model-refinement-and-interpretation}
+
+Now we refine the model in a controlled way, guided by what we saw in the EDA and by the tools in Chapter 03.
+
+::: Note
+Automated methods like stepwise regression can be useful as **screening tools**, but can be misleading if used blindly (see @sec-stepwise-regression and @sec-blind-model-selection). In this case study we prefer small, interpretable comparisons.
+:::
+
+### (Optional) Stepwise AIC screening
+
+If you want to see what a purely automated AIC search does, we can run a stepwise procedure on a **first-order** model (no interactions or polynomial terms). Treat this as a *starting point for thought*, not a final answer.
+
+```{webr chapter05-case-naplan-stepwise}
+#| echo: true
+#| edit: false
+#| eval: false
+scope_first_order <- list(
+  lower = ~ 1,
+  upper = ~ grade + ses_index + reading_time_home + n_siblings +
+    parent_education + school_type + gender + birth_months
+)
+
+step_mod <- step(
+  lm(naplan_reading_score ~ 1, data = naplan),
+  scope = scope_first_order,
+  direction = "both",
+  trace = 0
+)
+
+formula(step_mod)
+glance(step_mod)
+```
+
+### Add a quadratic term for reading time
+
+The scatterplot suggested possible curvature in the relationship between `reading_time_home` and `naplan_reading_score`. A natural next step is a quadratic term (Chapter 03: @sec-non_linearity).
+
+```{webr chapter05-case-naplan-compare-quad}
+#| echo: true
+#| autorun: true
+anova(mod_no_birth, mod_quad_time)
+
+fit_tbl |>
+  filter(model %in% c("Drop birth month", "Add quadratic reading time")) |>
+  print()
+```
+
+### Allow the reading-time curve to differ by grade (interaction)
+
+Because `grade` is strongly related to score, it’s plausible the reading-time pattern differs across grades. This is a continuous × categorical [interaction]{.glossary term="Interaction"} (Chapter 03: @sec-continuous-by-categorical-interactions).
+
+```{webr chapter05-case-naplan-compare-interaction}
+#| echo: true
+#| autorun: true
+anova(mod_quad_time, mod_quad_time_int_grade)
+
+fit_tbl |>
+  filter(model %in% c("Add quadratic reading time", "Add grade × reading time (quadratic)")) |>
+  print()
+```
+
+### Two competing “SES” choices: SES index vs parent education
+
+The dataset contains *two* SES-related variables:
+
+- `ses_index` (a numeric socioeconomic index),
+- `parent_education` (a categorical proxy related to SES).
+
+Including both can be redundant: they are different ways of measuring similar underlying circumstances. This is a good moment to practise the “partial effects” idea from @sec-partial-regression-coefficients-betai, and to remember the warning about multicollinearity in @sec-multicollinearity-diagnostics.
+
+We fit two versions:
+
+- `mod_ses_index`: includes `ses_index` (but not `parent_education`),
+- `final_mod`: includes `parent_education` (but not `ses_index`).
+
+```{webr chapter05-case-naplan-ses-compare}
+#| echo: true
+#| autorun: true
+fit_ses_tbl <- tibble(
+  model = c("SES index model", "Parent education model (final)"),
+  object = list(mod_ses_index, final_mod)
+) |>
+  mutate(glance = map(object, glance)) |>
+  unnest(glance) |>
+  transmute(model, adj_r2 = adj.r.squared, AIC, BIC)
+
+fit_ses_tbl |>
+  print()
+```
+
+In this dataset, the parent-education version fits better by AIC/BIC, so we use it as our final model for reporting. But we still report what the SES index suggests later, as a sensitivity check.
+
+Does the SES index add anything once parent education is already in the model?
+
+```{webr chapter05-case-naplan-ses-added-value}
+#| echo: true
+#| autorun: true
+anova(final_mod, mod_parent_edu_plus_ses)
+
+fit_tbl |>
+  filter(model %in% c("Final (use parent education; drop SES index)",
+                      "Add SES index to parent education")) |>
+  print()
+```
+
+::: Exercise
+Use an ANOVA comparison to test whether adding `birth_months` improves the first-order model. Store the p-value in `p_birth`.
+
+::: {.cell exercise='ex_5.5' envir='Ex5' define='["p_birth"]'}
+```{webr}
+#| exercise: ex_5.5
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - p_birth
+birth_cmp <- anova(mod_no_birth, mod_full_first_order)
+p_birth <- birth_cmp$`Pr(>F)`[2]
+p_birth
+```
+:::
+
+:::: {.solution exercise="ex_5.5"}
+::: {.cell exercise='ex_5.5' solution='true'}
+```{webr}
+#| exercise: ex_5.5
+#| solution: true
+birth_cmp <- anova(mod_no_birth, mod_full_first_order)
+p_birth <- birth_cmp$`Pr(>F)`[2]
+p_birth
+```
+:::
+::::
+
+::: {.cell exercise='ex_5.5' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_5.5
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("p_birth", envir = .envir_result)) fail("Create an object named `p_birth`.")
+  ans <- get("p_birth", envir = .envir_result)
+  if (!is.numeric(ans) || length(ans) != 1) fail("`p_birth` should be a single number.")
+
+  expected <- anova(mod_no_birth, mod_full_first_order)$`Pr(>F)`[2]
+  if (isTRUE(all.equal(ans, expected, tolerance = 1e-8))) {
+    pass("Nice — you’ve extracted the ANOVA p-value correctly.")
+  }
+  fail("Not quite. Hint: the p-value is in the second row of the ANOVA table.")
+})
+```
+:::
+:::
+
+## Diagnostics (does the model look reasonable?) {#sec-chapter05-diagnostics}
+
+As emphasized in Chapter 04, we always re-check residual diagnostics on the final model (see @sec-common-diagnostic-plots and @sec-diagnosing-issues-and-choosing-remedies).
+
+### A small set of diagnostic plots
+
+```{webr chapter05-case-naplan-diagnostics-plots}
+#| echo: true
+#| autorun: true
+ggplot(final_aug, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "gray40") +
+  geom_point(alpha = 0.25, size = 1) +
+  labs(x = "Fitted value", y = "Residual")
+
+ggplot(final_aug, aes(sample = .std.resid)) +
+  stat_qq(alpha = 0.25) +
+  stat_qq_line(colour = "gray40") +
+  labs(x = "Theoretical quantiles", y = "Standardised residuals")
+```
+
+The residual-vs-fitted plot is the main place to look for nonlinearity and changing variance (Chapter 04: @sec-diagnosing-nonlinearity and @sec-diagnosing-heteroskedasticity). In this case the pattern looks broadly centred around 0, with at most mild changes in spread.
+
+### Influence and unusual points
+
+```{webr chapter05-case-naplan-diagnostics-influence}
+#| echo: true
+#| autorun: true
+final_aug |>
+  arrange(desc(.cooksd)) |>
+  select(student_id, grade, naplan_reading_score, .fitted, .std.resid, .hat, .cooksd) |>
+  slice_head(n = 10) |>
+  print()
+```
+
+These points are worth checking, but the Cook’s distances are not extreme. This is the sort of “small number of influential points” situation discussed in @sec-standardised-residuals-leverage-cook-s-distance.
+
+### Multicollinearity check (VIF) on a simpler model
+
+Because VIFs can be inflated by raw polynomials and interactions, we compute VIFs on the simpler first-order model (no quadratic or interaction terms) to get a clearer sense of redundancy among predictors (Chapter 04: @sec-multicollinearity-diagnostics).
+
+```{webr chapter05-case-naplan-diagnostics-vif}
+#| echo: true
+#| autorun: true
+vif_from_lm <- function(model) {
+  x <- model.matrix(model)
+  x <- x[, colnames(x) != "(Intercept)", drop = FALSE]
+  if (ncol(x) == 0) return(tibble(term = character(), vif = numeric()))
+  if (ncol(x) == 1) return(tibble(term = colnames(x), vif = 1))
+
+  vifs <- map_dbl(seq_len(ncol(x)), function(j) {
+    r2 <- summary(lm(x[, j] ~ x[, -j]))$r.squared
+    1 / (1 - r2)
+  })
+
+  tibble(term = colnames(x), vif = vifs) |>
+    arrange(desc(vif))
+}
+
+vif_from_lm(mod_no_birth) |>
+  slice_head(n = 12) |>
+  print()
+```
+
+::: Exercise
+Recreate the core diagnostic plot from Chapter 04: residuals vs fitted values.
+
+::: {.cell exercise='ex_5.6' envir='Ex5' define='["p_resid"]'}
+```{webr}
+#| exercise: ex_5.6
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - p_resid
+p_resid <- ggplot(final_aug, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "gray40") +
+  geom_point(alpha = 0.25, size = 1) +
+  labs(x = "Fitted value", y = "Residual")
+
+p_resid
+```
+:::
+
+:::: {.solution exercise="ex_5.6"}
+::: {.cell exercise='ex_5.6' solution='true'}
+```{webr}
+#| exercise: ex_5.6
+#| solution: true
+p_resid <- ggplot(final_aug, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "gray40") +
+  geom_point(alpha = 0.25, size = 1) +
+  labs(x = "Fitted value", y = "Residual")
+
+p_resid
+```
+:::
+::::
+
+::: {.cell exercise='ex_5.6' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_5.6
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  p <- get("p_resid", envir = .envir_result)
+  if (!inherits(p, "ggplot")) fail("Create a ggplot object named `p_resid`.")
+
+  x <- rlang::as_label(p$mapping$x)
+  y <- rlang::as_label(p$mapping$y)
+  if (!(identical(x, ".fitted") && identical(y, ".resid"))) {
+    fail("Hint: use `aes(x = .fitted, y = .resid)` in your `ggplot()` call.")
+  }
+  pass("Nice — residual plots are a core diagnostic tool (see Chapter 04).")
+})
+```
+:::
+:::
 
 ## Reporting the results {#sec-reporting-the-results}
 
-- Present fitted effects with [confidence intervals]{.glossary term="Confidence interval"}, and provide a
-  [prediction interval]{.glossary term="Prediction interval"} for a meaningful scenario (e.g., a student profile
-  of interest).
-- Summarise key findings in plain language and note any limitations
-  (e.g., omitted variables, sample size).
+We now summarise the final model in a way that a reader can understand (Chapter 02: interpreting coefficients, @sec-partial-regression-coefficients-betai; and Chapter 01: confidence/prediction intervals, @sec-inference-about-the-response-y).
+
+### Model summary
+
+We fitted a multiple linear regression model to `r naplan_n` students. The overall model fit was:
+
+- Adjusted $R^2 \approx$ `r round(final_glance$adj.r.squared, 3)`
+- Residual standard error $\approx$ `r round(final_glance$sigma, 2)`
+- Overall $F$-test: $F($`r final_fstat[2]`$, $`r final_fstat[3]`$) = `r round(final_fstat[1], 1)`, p `r format.pval(final_p_overall, digits = 2, eps = 1e-16)`
+
+```{webr chapter05-case-naplan-final-fit}
+#| echo: true
+#| autorun: true
+formula(final_mod)
+glance(final_mod)
+```
+
+### Interpreting key coefficients
+
+For categorical predictors, coefficients are interpreted relative to their reference levels (Chapter 02: @sec-mlr_cat). In this model the references are:
+
+- `grade`: Year 3
+- `parent_education`: Year 10 or below
+- `school_type`: Government
+- `gender`: Female
+
+```{webr chapter05-case-naplan-final-coefs}
+#| echo: true
+#| autorun: true
+final_terms |>
+  filter(str_detect(term, "parent_education|school_type|gender")) |>
+  print()
+```
+
+From the table:
+
+- Higher parent education is associated with higher reading scores (e.g., Bachelor vs Year 10 or below: about `r round(coef(final_mod)["parent_educationBachelor degree"], 1)` points higher, holding other variables constant).
+- Independent schools score higher than Government schools by about `r round(coef(final_mod)["school_typeIndependent"], 1)` points on average (Catholic vs Government is much smaller).
+- Males score about `r round(coef(final_mod)["genderMale"], 1)` points lower than females, on average.
+
+### Interpreting the grade × reading-time pattern
+
+Because the model includes an interaction between grade and a quadratic reading-time term, it’s often easiest to interpret with predicted curves rather than trying to “read” raw polynomial coefficients (Chapter 03: @sec-continuous-by-categorical-interactions).
+
+```{webr chapter05-case-naplan-effects-reading-time}
+#| echo: true
+#| autorun: true
+profile_ref <- tibble(
+  parent_education = factor("Year 12", levels = levels(naplan$parent_education)),
+  school_type = factor("Government", levels = levels(naplan$school_type)),
+  gender = factor("Female", levels = levels(naplan$gender))
+)
+
+grid <- expand_grid(
+  grade = levels(naplan$grade),
+  reading_time_home = seq(0, 120, by = 5)
+) |>
+  mutate(
+    parent_education = profile_ref$parent_education,
+    school_type = profile_ref$school_type,
+    gender = profile_ref$gender
+  )
+
+grid$fit <- predict(final_mod, newdata = grid)
+
+ggplot(grid, aes(x = reading_time_home, y = fit, colour = grade)) +
+  geom_line(linewidth = 1) +
+  labs(
+    x = "Reading time at home (minutes/week)",
+    y = "Predicted NAPLAN reading score",
+    colour = "Grade",
+    caption = "Predictions shown for: Government school, Female, parent education = Year 12."
+  )
+```
+
+### A concrete prediction (with a prediction interval)
+
+Consider a Year 9 female student in a Government school, with parent education = Bachelor degree, who reports 30 minutes of reading at home per week. The fitted mean is:
+
+```{webr chapter05-case-naplan-prediction}
+#| echo: true
+#| autorun: true
+pred_profile <- tibble(
+  grade = factor("Year 9", levels = levels(naplan$grade)),
+  reading_time_home = 30,
+  parent_education = factor("Bachelor degree", levels = levels(naplan$parent_education)),
+  school_type = factor("Government", levels = levels(naplan$school_type)),
+  gender = factor("Female", levels = levels(naplan$gender))
+)
+
+predict(final_mod, newdata = pred_profile, interval = "confidence")
+predict(final_mod, newdata = pred_profile, interval = "prediction")
+```
+
+### Sensitivity check: what if we use the SES index instead?
+
+If we swap `parent_education` for the numeric SES index, the SES index is strongly associated with score.
+
+```{webr chapter05-case-naplan-ses-index-effect}
+#| echo: true
+#| autorun: true
+tidy(mod_ses_index, conf.int = TRUE) |>
+  filter(term == "ses_index") |>
+  print()
+```
+
+This illustrates an important modelling lesson: how you **operationalise** a construct like “SES” can change both interpretation and model fit. In this dataset, parent education seems to capture SES-related variation particularly well.
+
+::: Exercise
+Create a prediction interval for a specific student profile.
+
+Use a Year 9 student with:
+
+- `reading_time_home = 30`
+- `parent_education = "Bachelor degree"`
+- `school_type = "Government"`
+- `gender = "Female"`
+
+Store the result of `predict(..., interval = "prediction")` in `pred_pi`.
+
+::: {.cell exercise='ex_5.7' envir='Ex5' define='["pred_pi"]'}
+```{webr}
+#| exercise: ex_5.7
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - pred_pi
+my_profile <- tibble(
+  grade = factor("Year 9", levels = levels(naplan$grade)),
+  reading_time_home = 30,
+  parent_education = factor("Bachelor degree", levels = levels(naplan$parent_education)),
+  school_type = factor("Government", levels = levels(naplan$school_type)),
+  gender = factor("Female", levels = levels(naplan$gender))
+)
+
+pred_pi <- predict(final_mod, newdata = my_profile, interval = "prediction")
+pred_pi
+```
+:::
+
+:::: {.solution exercise="ex_5.7"}
+::: {.cell exercise='ex_5.7' solution='true'}
+```{webr}
+#| exercise: ex_5.7
+#| solution: true
+my_profile <- tibble(
+  grade = factor("Year 9", levels = levels(naplan$grade)),
+  reading_time_home = 30,
+  parent_education = factor("Bachelor degree", levels = levels(naplan$parent_education)),
+  school_type = factor("Government", levels = levels(naplan$school_type)),
+  gender = factor("Female", levels = levels(naplan$gender))
+)
+
+pred_pi <- predict(final_mod, newdata = my_profile, interval = "prediction")
+pred_pi
+```
+:::
+::::
+
+::: {.cell exercise='ex_5.7' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_5.7
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("pred_pi", envir = .envir_result)) fail("Create an object named `pred_pi`.")
+  ans <- get("pred_pi", envir = .envir_result)
+  if (!is.matrix(ans) || nrow(ans) != 1 || !all(c("fit", "lwr", "upr") %in% colnames(ans))) {
+    fail("`pred_pi` should be a 1×3 matrix with columns `fit`, `lwr`, and `upr`.")
+  }
+
+  expected_profile <- tibble(
+    grade = factor("Year 9", levels = levels(naplan$grade)),
+    reading_time_home = 30,
+    parent_education = factor("Bachelor degree", levels = levels(naplan$parent_education)),
+    school_type = factor("Government", levels = levels(naplan$school_type)),
+    gender = factor("Female", levels = levels(naplan$gender))
+  )
+  expected <- predict(final_mod, newdata = expected_profile, interval = "prediction")
+
+  if (isTRUE(all.equal(ans, expected, tolerance = 1e-6))) {
+    pass("Great — you computed the prediction interval correctly.")
+  }
+  fail("Not quite. Hint: check the profile values and that you used `interval = \"prediction\"`.")
+})
+```
+:::
+:::
+
+## Conclusion {#sec-chapter05-conclusion}
+
+Using `r naplan_n` students across Years 3, 5, 7, and 9, we fitted a multiple linear regression model relating NAPLAN reading scores to reading time at home, grade, parent education, school type, and gender. The model explained about `r round(100 * final_glance$adj.r.squared, 1)`% of the variation in scores (adjusted $R^2 \approx$ `r round(final_glance$adj.r.squared, 3)`), with a residual standard error of about `r round(final_glance$sigma, 1)` points.
+
+After adjusting for other variables, higher parent education was associated with higher reading scores (e.g., Bachelor vs Year 10 or below: roughly `r round(coef(final_mod)["parent_educationBachelor degree"], 1)` points higher). Independent schools scored higher than Government schools by about `r round(coef(final_mod)["school_typeIndependent"], 1)` points on average, and males scored about `r abs(round(coef(final_mod)["genderMale"], 1))` points lower than females.
+
+The relationship between reading time at home and score was not purely linear and differed by grade (a grade × quadratic reading-time interaction). Predicted curves suggested that increases in reading time are associated with higher predicted scores, but the shape of that association varies across schooling levels.
+
+**Limitations:** These are associations from observational data. Potential clustering within schools and omitted variables (e.g., prior achievement, classroom factors) may affect estimates. Always interpret results in context and re-check diagnostics, as in @sec-regression-pitfalls-and-diagnostics.

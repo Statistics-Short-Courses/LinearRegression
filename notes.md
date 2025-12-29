@@ -1,5 +1,5 @@
-Module 1 Revisions
-- change to module 0 (to emphasise pre-req nature)
+Chapter 1 Revisions
+- change to chapter 0 (to emphasise pre-req nature)
 
 - Switch order of alpha and beta sliders on first plot (so alpha first)
 - make it so a negative beta reads as 'E[Y]= a - bX' rather than 'E[Y]= a + -bX' in the plot. 
@@ -40,7 +40,7 @@ Use the ‘salary example parameters to generate data
  - add ‘continue’ before 2.3.1
  - need to add exercise 2.6
  - 
- - make reference to module on residual diagnostics in sec 2.3.1.1
+ - make reference to chapter on residual diagnostics in sec 2.3.1.1
  - make visualisation of changing reducing SE(b) effect on p-value
  - and on CI? (Need some visualisation here)
  - need RCode for CIs  

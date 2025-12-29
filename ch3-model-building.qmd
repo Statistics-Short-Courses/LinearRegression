@@ -53,14 +53,14 @@ resources:
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
-```{webr module03-model-building-setup}
+```{webr chapter03-model-building-setup}
 #| include: false
 library(tidyverse)
 library(plotly)
 theme_set(theme_bw())
 ```
 
-```{r module03-model-building-setup-2}
+```{r chapter03-model-building-setup-2}
 #| include: false
 library(tidyverse)
 theme_set(theme_bw())
@@ -68,9 +68,9 @@ theme_set(theme_bw())
 
 
 
-# Model Building and Selection {#sec-model-building-and-selection}
+# Model Building and Variable Selection {#sec-model-building-and-selection}
 
-In this module, we explore strategies for building effective regression models. We cover:
+In this chapter, we explore strategies for building effective regression models. We cover:
 - Increasing model complexity to capture non-linear relationships and interactions,
 - Assessing model fit while balancing complexity,
 - Techniques for selecting [parsimonious]{.glossary term="Parsimony"} models.
@@ -96,7 +96,7 @@ This first-order structure is the simplest linear model we can make with $X$. It
 ::: Example
 #### Non-linear relationships in data {#sec-non-linear-relationships-in-data}
 For example, fitting a straight line to the following data is not ideal, as the relationship between $X$ and $Y$ is curved (U-shaped), so there is always part of the relationship the line cannot capture: 
-```{r module03-model-building-non-linear-relationships-in-data-simulate}
+```{r chapter03-model-building-non-linear-relationships-in-data-simulate}
 #| echo: false
 #| define:
 #|  - quadData
@@ -245,7 +245,7 @@ $$
 
 allows more complex curvature with two changes in direction (an "S"-shape) that a quadratic term cannot capture.
 
-```{r module03-model-building-third-order-cubic-univariate-model-simulate}
+```{r chapter03-model-building-third-order-cubic-univariate-model-simulate}
 #| echo: false
 #| define:
 #|  - cubicData
@@ -338,7 +338,7 @@ Note that each term gets its own parameter ($\beta_i$). If we have $n$ data poin
 
 ::: Example
 #### Fitting higher-order [polynomial terms] {#sec-fitting-higher-order-polynomial-terms .glossary term="Polynomial term"}
-```{r module03-model-building-fitting-higher-order-polynomial-terms-simulate}
+```{r chapter03-model-building-fitting-higher-order-polynomial-terms-simulate}
 #| echo: false
 #| define:
 #|  - linearData
@@ -433,7 +433,7 @@ Plot.plot({
 
 :::
 
-Higher-order terms increase the model's flexibility, but also increase the risk of fitting random noise rather than meaningful structure. We will return to this important issue later in the module. 
+Higher-order terms increase the model's flexibility, but also increase the risk of fitting random noise rather than meaningful structure. We will return to this important issue later in the chapter. 
 
 ::: Note
 #### The meaning of "linear" in linear models {#sec-the-meaning-of-linear-in-linear-models}
@@ -442,12 +442,12 @@ Even though higher-order models can model nonlinear relationships between the ou
 
 #### Fitting higher-order univariate models in R {#sec-fitting-higher-order-univariate-models-in-r}
 In R, higher-order polynomial terms can be included using the `I()` function to indicate 'as is' operations. For example, to fit a quadratic model:
-```{r module03-model-building-fitting-higher-order-univariate-models-in-r-fit-lm}
+```{r chapter03-model-building-fitting-higher-order-univariate-models-in-r-fit-lm}
 #| echo: true
 lm(y ~ x + I(x^2), data = nonlinearData)
 ```
 or using the `poly()` function:
-```{r module03-model-building-fitting-higher-order-univariate-models-in-r-fit-lm-2}
+```{r chapter03-model-building-fitting-higher-order-univariate-models-in-r-fit-lm-2}
 #| echo: true
 lm(y ~ poly(x, 2), data = nonlinearData)
 ```
@@ -488,14 +488,14 @@ $$
 E[Sales] = \beta_0 + \beta_1TV + \beta_2Radio.
 $$ {#eq-ads_mod}
 
-```{r module03-model-building-fitting-an-interaction-model-to-the-advertising-load-data}
+```{r chapter03-model-building-fitting-an-interaction-model-to-the-advertising-load-data}
 #| echo: true
 #| edit: false
 ads <- read.csv("Data/Advertising.csv")
 ads_mod <- lm(Sales ~ TV + Radio, data = ads)
 ```
 
-```{r module03-model-building-fitting-an-interaction-model-to-the-advertising-setup}
+```{r chapter03-model-building-fitting-an-interaction-model-to-the-advertising-setup}
 #| edit: false
 #| echo: false
 library(plotly)
@@ -541,13 +541,13 @@ $$
 E[Sales] = \beta_0 + \beta_1TV + \beta_2Radio + \beta_3(TV \times Radio).
 $$ {#eq-ads_int}
 
-```{r module03-model-building-fitting-an-interaction-model-to-the-advertising-fit-lm}
+```{r chapter03-model-building-fitting-an-interaction-model-to-the-advertising-fit-lm}
 #| echo: false
 #| edit: false
 ads_mod_int <- lm(Sales ~ TV + Radio+ TV:Radio, data = ads)
 ```
 The fitted interaction model has a charateristic 'saddle' shape, which can better capture the data structure:
-```{r module03-model-building-fitting-an-interaction-model-to-the-advertising-predict}
+```{r chapter03-model-building-fitting-an-interaction-model-to-the-advertising-predict}
 #| edit: false
 #| echo: false
 
@@ -591,7 +591,7 @@ fig
 The interaction effect can also be visualised by fixing one predictor and plotting the relationship between the other predictor and the outcome. In this case, we can plot  lines representing the relationship between TV advertising and Sales  when Radio advertising is low (\$0 spent), average (i.e. `mean(ads$Radio)`= `r mean(ads$Radio)` thousand dollars ), and high (i.e. `max(ads$Radio)`= \$`r max(ads$Radio)` thousand dollars):
 
 
-```{r module03-model-building-fitting-an-interaction-model-to-the-advertising-setup-2}
+```{r chapter03-model-building-fitting-an-interaction-model-to-the-advertising-setup-2}
 #| echo: false
 library(ggplot2)
 library(scales)
@@ -642,7 +642,7 @@ The $\beta_7$ parameter here captures how the interaction between two predictors
 
 As in the case of higher-order univariate models, we can extend this idea to include both higher-order interaction terms and higher-order univariate terms for each predictor, allowing for very flexible modeling of complex relationships.
 
-However, as before, increasing model complexity in this way raises the risk of [overfitting]{.glossary} and interpretability challenges, which we will discuss later in this module.
+However, as before, increasing model complexity in this way raises the risk of [overfitting]{.glossary} and interpretability challenges, which we will discuss later in this chapter.
 
 ---
 
@@ -651,14 +651,14 @@ However, as before, increasing model complexity in this way raises the risk of [
 
 #### Fitting interaction models in R {#sec-fitting-interaction-models-in-r}
 In R, interaction terms can be included using the `*` operator in the formula. For example, to fit a second-order interaction model with two predictors:
-```{r module03-model-building-fitting-interaction-models-in-r-fit-lm}
+```{r chapter03-model-building-fitting-interaction-models-in-r-fit-lm}
 #| echo: true
 #| eval: false
 lm(Y ~ X1*X2*X3, data = mydata)
 ```
 This expands to include both main effects and the interaction term. To include only the interaction term without main effects, use the `:` operator. For example, if we only wanted the interaction between `X1` and `X2`, along with the linear terms for `X1`, `X2`, and `X3`:
 
-```{r module03-model-building-fitting-interaction-models-in-r-fit-lm-2}
+```{r chapter03-model-building-fitting-interaction-models-in-r-fit-lm-2}
 #| echo: true
 #| eval: false
 lm(Y ~ X1+X2+X3+X1:X2, data = mydata)
@@ -677,7 +677,7 @@ $$
 * Each $\gamma_j$ measures the difference between level $j$ and the baseline.
 * Changing the baseline changes interpretations but not fitted values.
 
-```{webr module03-model-building-cat-interaction-setup}
+```{webr chapter03-model-building-cat-interaction-setup}
 #| include: false
 mtcars_cat <- mtcars %>%
   mutate(
@@ -693,13 +693,13 @@ E[Y] = \beta_0 + \beta_1X + \gamma D + \delta (XD),
 $$
 where $D$ indicates the non-reference group. The baseline group has slope $\beta_1$, and the other group has slope $\beta_1 + \delta$.
 
-```{webr module03-model-building-continuous-by-categorical-fit-lm}
+```{webr chapter03-model-building-continuous-by-categorical-fit-lm}
 #| echo: true
 mod_am_wt <- lm(mpg ~ wt * am_f, data = mtcars_cat)
 summary(mod_am_wt)$coefficients
 ```
 
-```{webr module03-model-building-continuous-by-categorical-plot}
+```{webr chapter03-model-building-continuous-by-categorical-plot}
 #| echo: false
 ggplot(mtcars_cat, aes(x = wt, y = mpg, color = am_f)) +
   geom_point() +
@@ -712,7 +712,7 @@ The interaction term tells us whether the relationship between weight and fuel e
 #### Categorical $\times$ categorical interactions {#sec-categorical-by-categorical-interactions}
 With two factors, an interaction means the difference between levels of one factor depends on the level of the other. This is the two-way ANOVA setting with an interaction term.
 
-```{webr module03-model-building-categorical-by-categorical-fit-lm}
+```{webr chapter03-model-building-categorical-by-categorical-fit-lm}
 #| echo: true
 mod_cyl_am <- lm(mpg ~ cyl_f * am_f, data = mtcars_cat)
 anova(mod_cyl_am)
@@ -814,7 +814,7 @@ Unlike adjusted $R^2$, AIC and BIC do not have a fixed scale, so their absolute 
 
 #### Calculating fit metrics with `broom::glance()` {#sec-calculating-fit-metrics-with-broom-glance}
 In R, we can calculate adjusted $R^2$, AIC, and BIC using the `broom` package's `glance()` function, which provides a tidy summary of model fit statistics. For example, using our fitted 2nd-order interaction model of the advertising dataset:
-```{r module03-model-building-calculating-fit-metrics-with-broom-glance-setup}
+```{r chapter03-model-building-calculating-fit-metrics-with-broom-glance-setup}
 #| echo: true
 library(broom)
 glance(ads_mod_int)
@@ -836,7 +836,7 @@ Lets combine the fit metrics from both models into a single table for easy compa
 
 ::: {.panel-tabset}
 ##### Table of fit metrics {#sec-table-of-fit-metrics}
-```{r module03-model-building-table-of-fit-metrics}
+```{r chapter03-model-building-table-of-fit-metrics}
 ads_fit_glance <- rbind(
   glance(ads_mod) |> `rownames<-`("First-order model"),
   glance(ads_mod_int) |> `rownames<-`("Interaction model"))
@@ -845,7 +845,7 @@ ads_fit_glance
 ```
 
 ##### Code {#sec-table-of-fit-metrics-code}
-```{r module03-model-building-table-of-fit-metrics-code}
+```{r chapter03-model-building-table-of-fit-metrics-code}
 #| echo: true
 #| eval: false
 ads_fit_glance <- rbind(
@@ -858,7 +858,7 @@ ads_fit_glance
 Since the interaction model @eq-ads_int differs from the first-order model @eq-ads_mod by the addition of only the $TV \times Radio$ interaction term, we can interpret the change in fit metrics as the change in model fit due to adding this term. From the table above, we can see that the interaction model has a higher adjusted $R^2$ and lower AIC and BIC values compared to the first-order model. This indicates that adding the interaction term improves the model's fit to the data, even after accounting for the increased complexity.
 
 Moreover, we can test the hypothesis that the interaction term significantly improves model fit using an ANOVA comparison:
-```{r module03-model-building-table-of-fit-metrics-code-2}
+```{r chapter03-model-building-table-of-fit-metrics-code-2}
 #| echo: true
 anova(ads_mod, ads_mod_int)
 ```
@@ -882,7 +882,7 @@ Before fitting any models, it is crucial to conduct exploratory data analysis (E
 #### Pairs plots and correlation matrices {#sec-pairs-plots-and-correlation-matrices}
 
 Pairs plots and correlation matrices are useful tools for visualising relationships between multiple variables simultaneously. They can help identify potential predictors for inclusion in the model, as well as potential interactions or non-linear relationships. For example, a pairs plot can show scatterplots of each pair of variables, along with histograms of each variable on the diagonal. A correlation matrix can show the strength and direction of linear relationships between variables. We will use the ``ggpairs()` function from the `GGally` package (an extension to `ggplot2`) to create pairs plots in R
-```{r module03-model-building-pairs-plots-and-correlation-matrices-setup}
+```{r chapter03-model-building-pairs-plots-and-correlation-matrices-setup}
 #| echo: true
 #| eval: false
 library(GGally)
@@ -910,12 +910,12 @@ Stepwise procedures should be treated as **screening tools**, not definitive mod
 ::: Example
 #### Samara: comparing seeds across trees {#sec-samara-comparing-seeds-across-trees}
 Maple samara (seeds) fall like tiny helicopters. A forest scientist measured their fall speed (`Velocity`) against their 'disk loading' (a quantity based on their size and weight; encoded as`Load`) on three trees (`Tree`). The goal: check whether the rate of change in velocity differs between trees.
-```{r module03-model-building-samara-comparing-seeds-across-trees-load-data}
+```{r chapter03-model-building-samara-comparing-seeds-across-trees-load-data}
 #| echo: true
 samara <- read_csv("Data/samara.csv", show_col_types = FALSE) |>
   mutate(Tree = factor(Tree))
 ```
-```{r module03-model-building-samara-comparing-seeds-across-trees-plot}
+```{r chapter03-model-building-samara-comparing-seeds-across-trees-plot}
 ggplot(samara, aes(Load, Velocity, colour = Tree)) +
   geom_point(size = 2, alpha = 0.85, show.legend = FALSE) +
   geom_smooth(method = "lm", se = FALSE, show.legend = FALSE) +
@@ -925,7 +925,7 @@ ggplot(samara, aes(Load, Velocity, colour = Tree)) +
 The slopes look similar but not identical. Perhaps tree identity matters, and perhaps the slopes differ slightly by tree. We can compare three candidate models:
 
 **Candidate models**
-```{r module03-model-building-samara-comparing-seeds-across-trees-fit-lm}
+```{r chapter03-model-building-samara-comparing-seeds-across-trees-fit-lm}
 #| echo: true 
 sam_mods <- list(
   same_slope   = lm(Velocity ~ Load, data = samara),
@@ -935,7 +935,7 @@ sam_mods <- list(
 ```
 
 **ANOVA and fit metrics**
-```{r module03-model-building-samara-comparing-seeds-across-trees-anova}
+```{r chapter03-model-building-samara-comparing-seeds-across-trees-anova}
 #| echo: true
 anova(sam_mods$same_slope, sam_mods$add_tree, sam_mods$interaction)
 
@@ -949,7 +949,7 @@ sam_fit
 `Tree` alone does not add much (p ≈ 0.38). The interaction is borderline (p ≈ 0.05) and has the lowest AIC/BIC, hinting that slopes might vary slightly by tree.
 
 **Forward vs backward stepwise selection**
-```{r module03-model-building-samara-comparing-seeds-across-trees-fit-lm-2}
+```{r chapter03-model-building-samara-comparing-seeds-across-trees-fit-lm-2}
 #| echo: true
 scope <- list(lower = ~1, upper = ~Load * Tree)
 step_forward  <- step(lm(Velocity ~ 1, samara), scope = scope,

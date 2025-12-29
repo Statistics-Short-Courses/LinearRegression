@@ -83,7 +83,7 @@ Below is a plot comparing salary trends for both companies:
 
 ::: {.cell}
 ::: {.cell-output-display}
-![Linear salary trends for two companies.](module00-lm_files/figure-html/module00-lm-linear-prediction-plot-1.png){width=672}
+![Linear salary trends for two companies.](ch0-lm_files/figure-html/chapter00-lm-linear-prediction-plot-1.png){width=672}
 :::
 :::
 

@@ -47,14 +47,14 @@ resources:
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
-```{webr module02-mlr-setup}
+```{webr chapter02-mlr-setup}
 #| include: false
 library(tidyverse)
 library(plotly)
 theme_set(theme_bw())
 ```
 
-```{r module02-mlr-setup-2}
+```{r chapter02-mlr-setup-2}
 #| include: false
 library(tidyverse)
 theme_set(theme_bw())
@@ -78,13 +78,13 @@ SLR is limited to one predictor. MLR becomes appropriate when:
 ::: Example
 ### Advertising sales {#sec-advertising-sales}
 Lets consider a simple example using the `Advertising` dataset
-```{webr module02-mlr-advertising-sales-load-data}
+```{webr chapter02-mlr-advertising-sales-load-data}
 #| edit: false
 ads <- read.csv("Data/Advertising.csv")
 ```
 Suppose that we are statistical consultants hired by a client to investigate the association between advertising and sales of a particular product. The `Advertising` dataset (which we have imported as `ads`) consists of the sales of that product in 200 different markets, along with advertising budgets for the product in each of those markets for two different media: TV, and radio. [^1]
 
-```{webr module02-mlr-advertising-sales}
+```{webr chapter02-mlr-advertising-sales}
 #| edit: false
 ads
 ```
@@ -95,7 +95,7 @@ We might look at each bivariate (i.e. two variables) relationship between sales 
 
 :::: {.panel-tabset}
 ### $\text{Sales} \sim \text{TV}$ {#sec-text-sim-text}
-```{webr module02-mlr-sales-tv-plot}
+```{webr chapter02-mlr-sales-tv-plot}
 #| edit: false
 #| echo: false
 ggplot(ads, aes(x = TV, y = Sales)) +
@@ -103,7 +103,7 @@ ggplot(ads, aes(x = TV, y = Sales)) +
   labs(x = "TV", y = "Sales")
 ```
 ### $\text{Sales}\sim \text{Radio}$ {#sec-text-sim-text-2}
-```{webr module02-mlr-sales-radio-plot}
+```{webr chapter02-mlr-sales-radio-plot}
 #| edit: false
 #| echo: false
 ggplot(ads, aes(x = Radio, y = Sales)) +
@@ -117,7 +117,7 @@ However we might also look at the *multivariate* relationship:
 :::: {.panel-tabset}
 ### Coloured Scatter {#sec-coloured-scatter}
 Here we encode the values of the second predictor (`Radio`) with colour
-```{webr module02-mlr-coloured-scatter-plot}
+```{webr chapter02-mlr-coloured-scatter-plot}
 #| edit: false
 #| echo: false
 ggplot(ads, aes(x = TV, y = Sales, colour = Radio)) +
@@ -127,7 +127,7 @@ ggplot(ads, aes(x = TV, y = Sales, colour = Radio)) +
 ```
 ### 3-D Scatter {#sec-3-d-scatter}
 In the case of 3 variables we can also extend our visualisation to 3 dimensions
-```{webr module02-mlr-3-d-scatter}
+```{webr chapter02-mlr-3-d-scatter}
 #| edit: false
 #| echo: false
 plot_ly(ads, x = ~TV, y = ~Radio, z = ~Sales,
@@ -165,7 +165,7 @@ The random error term, $\varepsilon$, stays the same, so the assumptions of MLR 
 ::: Note
 ### Multivariate Linearity {#sec-multivariate-linearity}
 Although this is still a *linear* model, the term "linear" no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, "linear" means that the model is **linear in its parameters**: each $\beta_i$ multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model may instead look like a *plane* - the three dimensional equivalent of a line in two dimensions.
-```{webr module02-mlr-multivariate-linearity-fit-lm}
+```{webr chapter02-mlr-multivariate-linearity-fit-lm}
 #| echo: false
 #| edit: false
 
@@ -231,7 +231,7 @@ $$
 
 i.e. only one *variable* (`TV`) remains (`Radio` no longer varies but is held constant - contributing $0.2\cdot 5=1$k units to $E[Y]$), so the parameter $\beta_1$ can be interpreted as the slope of the SLR line:
 
-```{r module02-mlr-interpreting-a-partial-coefficient-beta-i-plot}
+```{r chapter02-mlr-interpreting-a-partial-coefficient-beta-i-plot}
 ggplot()+
   geom_abline(intercept=4,slope= 0.1, color='#2196F3')+
   lims(x=c(0,50),y=c(0,10))
@@ -262,7 +262,7 @@ $12k has been spent on TV advertising due to a persisting contract. How much sho
 Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares. Residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique *[least squares estimates]{.glossary term="Ordinary least squares"}* for the model parameters $\hat{\beta}_0, \ldots, \hat{\beta}_k$.
 
 In `R` we use the same `lm()` function as SLR (these are both 'linear models', after all). Now however, the model `formula` includes both predictors on the RHS, separated by a `+`:
-```{webr module02-mlr-fitting-mlr-models-in-r-fit-lm}
+```{webr chapter02-mlr-fitting-mlr-models-in-r-fit-lm}
 ads_mod <- lm(Sales ~ TV + Radio, data = ads)
 ```
 
@@ -273,7 +273,7 @@ ads_mod <- lm(Sales ~ TV + Radio, data = ads)
 
 Lets visualise our fitted model:
 
-```{webr module02-mlr-r-formulas-fit-lm}
+```{webr chapter02-mlr-r-formulas-fit-lm}
 #| echo: false
 #| edit: false
 
@@ -320,13 +320,13 @@ We can extract our fitted model coefficients in the same way:
 
 ::: {.panel-tabset}
 #### Using indexing {#sec-using-indexing}
-```{webr module02-mlr-using-indexing}
+```{webr chapter02-mlr-using-indexing}
 #| echo: true
 ads_mod$coefficients
 ```
 #### The `coef()` function {#sec-the-coef-function}
 
-```{webr module02-mlr-the-coef-function}
+```{webr chapter02-mlr-the-coef-function}
 #| echo: true
 coef(mod)
 ```
@@ -351,7 +351,7 @@ ggplot(ads)+
 
 ### `broom::tidy()` {#sec-broom-tidy}
 We can also use the `tidy()` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter:
-```{webr module02-mlr-broom-tidy-setup}
+```{webr chapter02-mlr-broom-tidy-setup}
 #| edit: false
 library(broom)
 tidy(ads_mod, conf.int = TRUE)
@@ -386,7 +386,7 @@ Because of this:
 - least squares is an amazing method for fitting but it has a weakness
 - correlated predictors can cause unstable parameter estimates
 - Check for correlation using a correlation matrix or using `vif`
-- this will be adressed more comprehensively in module 6: diagnostics an transformations. 
+- this will be adressed more comprehensively in chapter 6: diagnostics an transformations. 
 :::
 
 ::: Note 
@@ -439,7 +439,7 @@ Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hyp
 We can obtain the model F-statistic using the `anova()` function, which reinforces the
 connection between regression and the ANOVA framework introduced earlier.
 
-```{webr module02-mlr-global-statistics-with-anova}
+```{webr chapter02-mlr-global-statistics-with-anova}
 anova(mod)
 ```
 
@@ -449,7 +449,7 @@ The final row of the ANOVA table reports the global F-test for the model.
 The `glance()` function from the `broom` package also reports the model F-statistic
 while providing several additional summary measures in one place.
 
-```{webr module02-mlr-global-statistics-with-glance}
+```{webr chapter02-mlr-global-statistics-with-glance}
 glance(mod)
 ```
 
@@ -504,13 +504,13 @@ Although they appear alongside the F-statistic and $R^2$, they serve a different
 AIC and BIC are **not** measures of how well a single model fits the data in an absolute sense.  
 Instead, they are designed for **comparing multiple competing models**, balancing goodness of fit against model complexity. Lower values indicate a preferable trade-off, but only **relative** comparisons are meaningful.
 
-Because AIC and BIC are tools for *model selection* rather than model assessment, we do not interpret them here. They will be discussed in detail in **Module 5 (Principles of Model Building)**, where they are used to guide decisions about which predictors to include in a regression model.
+Because AIC and BIC are tools for *model selection* rather than model assessment, we do not interpret them here. They will be discussed in detail in **Chapter 5 (Principles of Model Building)**, where they are used to guide decisions about which predictors to include in a regression model.
 
 
 ## Categorical predictors in MLR {#sec-mlr_cat}
 So far, we have only considered numerical predictors in our multiple linear regression models. However, categorical predictors (also called *[factors]{.glossary term="Factor"}* in R) can also be included seamlessly.
 
-```{r module02-mlr-categorical-setup}
+```{r chapter02-mlr-categorical-setup}
 #| include: false
 mtcars_cat <- mtcars %>%
   mutate(
@@ -534,14 +534,14 @@ Here, $\beta_0$ is the mean of the **[reference level]{.glossary term="Reference
 #### Transmission type and fuel economy {#sec-transmission-type-and-fuel-economy}
 In `mtcars`, transmission (`am`) is coded as 0 = automatic and 1 = manual. We can treat this as a factor and model mean fuel economy by transmission type.
 
-```{webr module02-mlr-transmission-means}
+```{webr chapter02-mlr-transmission-means}
 #| echo: true
 mtcars_cat %>%
   group_by(am_f) %>%
   summarise(mean_mpg = mean(mpg))
 ```
 
-```{webr module02-mlr-transmission-lm}
+```{webr chapter02-mlr-transmission-lm}
 #| echo: true
 mod_am <- lm(mpg ~ am_f, data = mtcars_cat)
 summary(mod_am)$coefficients
@@ -553,13 +553,13 @@ The intercept is the mean mpg for the reference group (automatic), and the `am_f
 ### Multi-level factors and one-way ANOVA {#sec-multi-level-factors-and-anova}
 For a factor with $k$ levels, R creates $k-1$ dummy variables by default (a *[contrast]{.glossary term="Contrast"}* coding scheme). The overall F-test for the factor is the same as the one-way ANOVA you have already seen.
 
-```{webr module02-mlr-cyl-lm}
+```{webr chapter02-mlr-cyl-lm}
 #| echo: true
 mod_cyl <- lm(mpg ~ cyl_f, data = mtcars_cat)
 summary(mod_cyl)$coefficients
 ```
 
-```{webr module02-mlr-cyl-anova}
+```{webr chapter02-mlr-cyl-anova}
 #| echo: true
 anova(mod_cyl)
 ```
@@ -569,7 +569,7 @@ The ANOVA table tests whether **any** cylinder group differs from the reference 
 ### Adjusted comparisons (ANCOVA) {#sec-adjusted-comparisons-ancova}
 We can combine categorical and numerical predictors. This lets us compare group means *while controlling for* other variables (an ANCOVA-style interpretation).
 
-```{webr module02-mlr-ancova-lm}
+```{webr chapter02-mlr-ancova-lm}
 #| echo: true
 mod_am_wt <- lm(mpg ~ wt + am_f, data = mtcars_cat)
 summary(mod_am_wt)$coefficients
@@ -580,7 +580,7 @@ Here, the `am_fmanual` coefficient estimates the difference in mpg between manua
 ### Reference levels and releveling {#sec-reference-levels-and-releveling}
 The **reference level** is the baseline against which other levels are compared. You can change it to make interpretation easier:
 
-```{webr module02-mlr-relevel}
+```{webr chapter02-mlr-relevel}
 #| echo: true
 mtcars_cat$am_f <- relevel(mtcars_cat$am_f, ref = "manual")
 summary(lm(mpg ~ am_f, data = mtcars_cat))$coefficients

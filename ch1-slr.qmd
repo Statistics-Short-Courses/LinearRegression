@@ -51,19 +51,19 @@ webr:
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
-```{webr module01-slr-setup}
+```{webr chapter01-slr-setup}
 #| include: false
 library(tidyverse)
 theme_set(theme_bw())
 ```
 
-```{r module01-slr-setup-2}
+```{r chapter01-slr-setup-2}
 #| include: false
 library(tidyverse)
 theme_set(theme_bw())
 ```
 
-```{r module01-slr-setup-simulate}
+```{r chapter01-slr-setup-simulate}
 #| echo: false
 #| define:
 #|  - linearData
@@ -101,7 +101,7 @@ Indeed, at the end of @sec-simple_linear_model we generated data from a linear m
 
 ::: {.panel-tabset}
 ### Plot {#sec-fitting-models-to-data-plot}
-```{r module01-slr-fitting-models-to-data-plot}
+```{r chapter01-slr-fitting-models-to-data-plot}
 #| echo: false
 #| input:
 #|   - linearData
@@ -111,7 +111,7 @@ ggplot(linearData)+
 ```
 
 ### Data {#sec-fitting-models-to-data-data}
-```{r module01-slr-fitting-models-to-data}
+```{r chapter01-slr-fitting-models-to-data}
 #| echo: false
 #| input:
 #|   - linearData
@@ -512,19 +512,19 @@ We call the estimates $a$ and $b$ which minimise the sum of squares the *[least 
 
 In R the `lm()` function computes the least squares estimates $a$ and $b$ for our simple linear model (among other things) in a single command: 
 
-```{webr module01-slr-fitting-a-model-with-the-lm-function-fit-lm}
+```{webr chapter01-slr-fitting-a-model-with-the-lm-function-fit-lm}
 #| input:
 #|   - linearData
 lm_1 <- lm(y~x,linearData)
 ```
 We can  extract the coefficients from the `lm` by indexing:
 
-```{webr module01-slr-fitting-a-model-with-the-lm-function}
+```{webr chapter01-slr-fitting-a-model-with-the-lm-function}
 lm_1$coefficients
 ```
 or by the `coef()` function:
 
-```{webr module01-slr-fitting-a-model-with-the-lm-function-2}
+```{webr chapter01-slr-fitting-a-model-with-the-lm-function-2}
 coef(lm_1)
 ```
 -  [ ] How do these estimates compare with yours? 
@@ -587,7 +587,7 @@ As you might expect, we again utilise the residuals from our least squares linea
 
 We can extract the individual residual values from the fitted `lm` object by indexing (e.g. `my_lm$residuals`) or with the `residuals()` function.
 
-```{webr module01-slr-estimating-variance}
+```{webr chapter01-slr-estimating-variance}
 residuals(lm_1)
 ```
 
@@ -1066,7 +1066,7 @@ While the assumption of Normality is what theoretically grounds the use of the t
 
 ::: {.panel-tabset}
 #### p-value vs SE(b) {#sec-seb-pvalue-visual}
-```{webr module01-slr-seb-pvalue-visual}
+```{webr chapter01-slr-seb-pvalue-visual}
 #| echo: false
 #| input:
 #|   - linearData
@@ -1087,7 +1087,7 @@ ggplot(plot_df, aes(se, p_value)) +
   labs(x = "SE(b)", y = "Two-sided p-value")
 ```
 #### CI width vs SE(b) {#sec-seb-ci-visual}
-```{webr module01-slr-seb-ci-visual}
+```{webr chapter01-slr-seb-ci-visual}
 #| echo: false
 #| input:
 #|   - linearData
@@ -1137,7 +1137,7 @@ Confidence intervals complement hypothesis tests by communicating both the direc
 
 In R, you can compute the confidence interval for the slope directly:
 
-```{webr module01-slr-confidence-interval-for-the-slope}
+```{webr chapter01-slr-confidence-interval-for-the-slope}
 confint(lm_1, "x")
 ```
 
@@ -1204,7 +1204,7 @@ predict(fit, newdata = new_point, interval = "prediction")
 
 ::: {.panel-tabset}
 #### R code: confidence interval {#sec-ci-r-code}
-```{webr module01-slr-ci-r-code}
+```{webr chapter01-slr-ci-r-code}
 #| input:
 #|   - linearData
 lm_1 <- lm(y ~ x, linearData)
@@ -1212,7 +1212,7 @@ new_point <- data.frame(x = 2)
 predict(lm_1, newdata = new_point, interval = "confidence")
 ```
 #### R code: prediction interval {#sec-pi-r-code}
-```{webr module01-slr-pi-r-code}
+```{webr chapter01-slr-pi-r-code}
 #| input:
 #|   - linearData
 lm_1 <- lm(y ~ x, linearData)

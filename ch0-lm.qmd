@@ -40,13 +40,13 @@ custom-numbered-blocks:
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
-```{r module00-lm-setup}
+```{r chapter00-lm-setup}
 #| include: false
 library(ggplot2)
 theme_set(theme_bw())
 ```
 
-```{webr module00-lm-setup-2}
+```{webr chapter00-lm-setup-2}
 #| include: false
 library(ggplot2)
 theme_set(theme_bw())
@@ -96,14 +96,14 @@ This is the familiar 'straight-line' relationship:
 - $\beta$ is the [slope]{.glossary}, describing how we expect $Y$ to change when $x$ increases by one unit.
 
 
-```{ojs module00-lm-linear-prediction-view}
+```{ojs chapter00-lm-linear-prediction-view}
 //| panel: sidebar
 //| echo: false
 viewof b0 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
 viewof b1 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β)"})
 ```
 
-```{ojs module00-lm-linear-prediction-ojs}
+```{ojs chapter00-lm-linear-prediction-ojs}
 //| panel: fill
 //| echo: false
 xRange = [-10,10]
@@ -145,7 +145,7 @@ $$
 
 ## Plot {#sec-salary-growth-over-time-plot}
 
-```{r module00-lm-salary-growth-over-time-plot}
+```{r chapter00-lm-salary-growth-over-time-plot}
 #| echo: false
 #| fig-cap: "Expected salary at Company A as a function of years employed."
 ggplot() +
@@ -156,7 +156,7 @@ ggplot() +
 
 ## Code {#sec-salary-growth-over-time-code}
 
-```{r module00-lm-salary-growth-over-time-code}
+```{r chapter00-lm-salary-growth-over-time-code}
 #| eval: false
 ggplot() +
   geom_abline(intercept = 5e4, slope = 5e3, colour = '#2196F3') +
@@ -191,7 +191,7 @@ $$
 
 Assign these values to the R variables `alpha` and `beta`:
 
-```{webr module00-lm-choosing-parameters}
+```{webr chapter00-lm-choosing-parameters}
 #| exercise: ex_1.1.1
 #| envir: Ex1
 alpha <- _______
@@ -204,7 +204,7 @@ beta <- _______
 * The starting salary gives $\alpha = 70{,}000$.
 * The 6-year increase gives $6\beta = 18{,}000$, so $\beta = 3{,}000$.
 
-```{webr module00-lm-choosing-parameters-solution}
+```{webr chapter00-lm-choosing-parameters-solution}
 #| exercise: ex_1.1.1
 #| solution: true
 #| envir: Ex1
@@ -214,7 +214,7 @@ beta <- 3000
 
 :::::
 
-```{webr module00-lm-choosing-parameters-solution-2}
+```{webr chapter00-lm-choosing-parameters-solution-2}
 #| exercise: ex_1.1.1
 #| check: true
 #| class: wait
@@ -242,7 +242,7 @@ Below is a plot comparing salary trends for both companies:
 
 ## Plot {#sec-linear-prediction-plot}
 
-```{r module00-lm-linear-prediction-plot}
+```{r chapter00-lm-linear-prediction-plot}
 #| echo: false
 #| fig-cap: "Linear salary trends for two companies."
 ggplot() +
@@ -259,7 +259,7 @@ ggplot() +
 
 ## Code {#sec-linear-prediction-code}
 
-```{r module00-lm-linear-prediction-code}
+```{r chapter00-lm-linear-prediction-code}
 #| eval: false
 ggplot() +
   geom_abline(aes(intercept = 7e4, slope = 3e3, colour = "Company B")) +
@@ -277,7 +277,7 @@ ggplot() +
 
 Now compute the expected salary after 15 years, using the `alpha` and `beta` values you just assigned:
 
-```{webr module00-lm-linear-prediction-code-2}
+```{webr chapter00-lm-linear-prediction-code-2}
 #| exercise: ex_1.1.2
 #| envir: Ex1
 E_Y <- _____ + (_____ * _____)
@@ -285,7 +285,7 @@ E_Y <- _____ + (_____ * _____)
 
 ::::: {.solution exercise="ex_1.1.2"}
 
-```{webr module00-lm-linear-prediction-code-3}
+```{webr chapter00-lm-linear-prediction-code-3}
 #| exercise: ex_1.1.2
 #| solution: true
 #| envir: Ex1
@@ -294,7 +294,7 @@ E_Y <- alpha + (beta * 15)
 
 :::::
 
-```{webr module00-lm-linear-prediction-code-4}
+```{webr chapter00-lm-linear-prediction-code-4}
 #| exercise: ex_1.1.2
 #| check: true
 #| class: wait
@@ -312,7 +312,7 @@ gradethis::grade_this_code()
 
 Evaluating the expression in R:
 
-```{webr module00-lm-using-r-functions}
+```{webr chapter00-lm-using-r-functions}
 #| exercise: ex_1.1.2.2
 #| envir: Ex1
 #| edit: false
@@ -327,7 +327,7 @@ $$
 
 Now we can turn this into a reusable function:
 
-```{webr module00-lm-using-r-functions-2}
+```{webr chapter00-lm-using-r-functions-2}
 #| edit: false
 simple_linear_prediction <- function(x, alpha = 7e4, beta = 3e3) {
   alpha + (beta * x)
@@ -336,12 +336,12 @@ simple_linear_prediction <- function(x, alpha = 7e4, beta = 3e3) {
 
 Predict salaries for these employment durations:
 
-```{webr module00-lm-using-r-functions-3}
+```{webr chapter00-lm-using-r-functions-3}
 #| edit: false
 x <- c(9, 4, 5, 2, 6)
 ```
 
-```{webr module00-lm-using-r-functions-4}
+```{webr chapter00-lm-using-r-functions-4}
 #| exercise: ex_1.1.3
 #| envir: Ex1
 
@@ -349,7 +349,7 @@ x <- c(9, 4, 5, 2, 6)
 
 ::::: {.solution exercise="ex_1.1.3"}
 
-```{webr module00-lm-using-r-functions-5}
+```{webr chapter00-lm-using-r-functions-5}
 #| exercise: ex_1.1.3
 #| solution: true
 simple_linear_prediction(x)
@@ -357,7 +357,7 @@ simple_linear_prediction(x)
 
 :::::
 
-```{webr module00-lm-using-r-functions-6}
+```{webr chapter00-lm-using-r-functions-6}
 #| exercise: ex_1.1.3
 #| check: true
 #| class: wait
@@ -436,7 +436,7 @@ The error is normally distributed ([normal errors]{.glossary}) with mean $\mu=0$
 
 The normal distribution is familiar and convenient to work with, and is often a reasonable approximation for real-world data. As a reminder of its shape, you can use the interactive plot below to explore normal distributions with different means and standard deviations.
 
-```{ojs module00-lm-normal-distribution-view}
+```{ojs chapter00-lm-normal-distribution-view}
 //| echo: false
 //| panel: sidebar
 viewof mu = Inputs.range([-5, 5], {
@@ -464,7 +464,7 @@ densityGrid_1 = d3.range((-4 * sigma)+mu, mu+(4 * sigma), sigma / 50).map(x => (
 tex.block`\varepsilon \sim \text{Normal}(${mu}, ${sigma}^2)`
 ```
 
-```{ojs module00-lm-normal-distribution-ojs}
+```{ojs chapter00-lm-normal-distribution-ojs}
 //| echo: false
 //| panel: fill
 //| fig-cap: "Normal distribution with adjustable mean and standard deviation."
@@ -525,7 +525,7 @@ For example, we want to know if employed at *company A*, what is the probability
 
 First let's calculate the average salary after 10 years
 
-```{r module00-lm-variation-in-salary}
+```{r chapter00-lm-variation-in-salary}
 50000+(5000*10)
 ```
 
@@ -533,13 +533,13 @@ First let's calculate the average salary after 10 years
 
 Now
 
-```{r module00-lm-variation-in-salary-2}
+```{r chapter00-lm-variation-in-salary-2}
 pnorm(11e4,1e5, 4e3, lower.tail = FALSE)
 ```
 
 The following diagram tells us roughly the probability of observing a $Y$ value in the given range:
 
-```{ojs module00-lm-variation-in-salary-view}
+```{ojs chapter00-lm-variation-in-salary-view}
 //| echo: false
 //| panel: sidebar
 
@@ -578,7 +578,7 @@ shaded = densityGrid_salary.filter(d => d.y >= a && d.y <= b)
 tex.block`P(${Math.round(a).toLocaleString()} \le Y \le ${Math.round(b).toLocaleString()}) = ${prob.toFixed(3)} \;\;(\approx ${(prob*100).toFixed(1)}\%)`
 ```
 
-```{ojs module00-lm-variation-in-salary-ojs}
+```{ojs chapter00-lm-variation-in-salary-ojs}
 //| echo: false
 //| panel: fill
 //| fig-cap: "Probability of salary falling within a chosen interval."
@@ -610,20 +610,20 @@ Here $\varepsilon$ represents random deviations from the expected (average) sala
 ::: Exercise
 ### Normally distributed errors
 Considering our model of salary with $\varepsilon \sim \mathcal{N}(0, 4000^2)$, what is the probability that an employee with 5 years of experience earns more than \$83,000?
-```{webr module00-lm-normally-distributed-errors}
+```{webr chapter00-lm-normally-distributed-errors}
 #| exercise: ex_1.2.1
 #| envir: Ex2
 pnorm(83000, _______, _______, lower.tail = FALSE)
 ```
 ::::: {.solution exercise="ex_1.2.1"}
-```{webr module00-lm-normally-distributed-errors-solution}
+```{webr chapter00-lm-normally-distributed-errors-solution}
 #| exercise: ex_1.2.1
 #| solution: true
 #| envir: Ex2
 pnorm(83000, 75000, 4000, lower.tail = FALSE)
 ```
 :::::   
-```{webr module00-lm-normally-distributed-errors-solution-2}
+```{webr chapter00-lm-normally-distributed-errors-solution-2}
 #| exercise: ex_1.2.1
 #| check: true
 #| class: wait
@@ -647,7 +647,7 @@ $$
 
 This model how the outcome variable $Y$ depends on the predictor variable $x$, with parameters $\alpha$ (intercept), $\beta$ (slope), and $\sigma$ (standard deviation of the errors). These parameters control the location, direction, and spread of the data around the linear trend. We can visualise the probability distribution of our outcome variable $Y$ for different values of $x$ using the interactive plot below:
 
-```{ojs module00-lm-the-simple-linear-model-view}
+```{ojs chapter00-lm-the-simple-linear-model-view}
 //| panel: sidebar
 //| echo: false
 
@@ -660,7 +660,7 @@ viewof n_cs = Inputs.range([10, 50], {step: 1, value: 50, label: "Number of cros
 tex.block`Y = ${b0_2} + ${b1_2}x + \varepsilon, \quad \varepsilon \sim \text{Normal}(0, ${sigma_2}^2)`
 ```
 
-```{ojs module00-lm-the-simple-linear-model-ojs}
+```{ojs chapter00-lm-the-simple-linear-model-ojs}
 //| panel: fill
 //| echo: false
 //| width: 700
@@ -720,7 +720,7 @@ To see how the model 'generates' data, we will simulate observations using the s
 
 1.  To begin, we start with a collection of $x$ values.
 We treat these as fixed values, representing years of experience at the company. We can generate some example $x$ values in R like this:
-```{r module00-lm-a-simple-linear-model-in-r-simulate}
+```{r chapter00-lm-a-simple-linear-model-in-r-simulate}
 n <- 100
 x <- runif(n, min = 0, max = 20)
 head(x)
@@ -732,7 +732,7 @@ head(x)
 
 Next, we construct our simple linear model
 
-```{r module00-lm-a-simple-linear-model-in-r-simulate-2}
+```{r chapter00-lm-a-simple-linear-model-in-r-simulate-2}
 simple_linear_model <- function(x, alpha, beta, sigma) {
   E_Y <- alpha + (beta * x) # Expected value of Y 
   epsilon <- rnorm(length(x), mean = 0, sd = sigma) # random normal errors
@@ -745,7 +745,7 @@ The `simple_linear_model()` function takes x values and returns the specified li
 
 Now we can simulate observations of $Y$ given our collection of $x$ values and the parameters we have chosen for our salary example:
 
-```{r module00-lm-a-simple-linear-model-in-r}
+```{r chapter00-lm-a-simple-linear-model-in-r}
 Y <- simple_linear_model(x, alpha=5e4, beta=5e3, sigma=4e3)
 head(Y)
 ```
@@ -754,7 +754,7 @@ Let's look at the joint distribution of x and Y:
 
 ::: {.panel-tabset}
 ## Plot {#sec-a-simple-linear-model-in-r-plot}
-```{r module00-lm-a-simple-linear-model-in-r-setup}
+```{r chapter00-lm-a-simple-linear-model-in-r-setup}
 #| echo: false
 #| fig-cap: "Data generated from the simple linear model $Y=50{,}000+5{,}000\\times x + \\varepsilon$, with $\\varepsilon\\sim N(0,4{,}000^2)$. Dashed line shows $E[Y|x] = \\alpha + \\beta x$."
 
@@ -768,7 +768,7 @@ ggplot(df, aes(x, Y)) +
 ```
 ## Code {#sec-a-simple-linear-model-in-r-code}
 
-```{r module00-lm-a-simple-linear-model-in-r-code}
+```{r chapter00-lm-a-simple-linear-model-in-r-code}
 #| eval: false
 library(ggplot2)
 
@@ -785,7 +785,7 @@ The scatter plot shows a single simulated 'sample' of data from our simple linea
 
 Here's the same code running in webR - try adjusting some of the parameters (e.g. the number of samples), or just running again to plot a different random sample from the same model!
 
-```{webr module00-lm-a-simple-linear-model-in-r-code-2}
+```{webr chapter00-lm-a-simple-linear-model-in-r-code-2}
 #| code-fold: true
 #| code-summary: "show code"
 n <- 100

@@ -11,9 +11,9 @@
     "Use AIC, multicollinearity diagnostics, and stepwise procedures for model selection.",
     "Perform residual analysis, identify influential observations, and apply transformations."
   ],
-  "modules": [
+  "chapters": [
     {
-      "module_number": 0,
+      "chapter_number": 0,
       "title": "Linear statistical models",
       "topics": [
         "Purpose of statistical modelling and framing predictors/outcomes",
@@ -23,7 +23,7 @@
       ]
     },
     {
-      "module_number": 1,
+      "chapter_number": 1,
       "title": "Simple Linear Regression (SLR)",
       "topics": [
         "Deciding when SLR is appropriate",
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "module_number": 2,
+      "chapter_number": 2,
       "title": "Multiple Linear Regression (MLR)",
       "topics": [
         "When to extend SLR to multiple predictors",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "module_number": 3,
+      "chapter_number": 3,
       "title": "Model Building and Variable Screening",
       "topics": [
         "Exploratory analysis and theory-driven model formulation",
@@ -59,7 +59,7 @@
       ]
     },
     {
-      "module_number": 4,
+      "chapter_number": 4,
       "title": "Regression Pitfalls and Diagnostics",
       "topics": [
         "Common pitfalls: misspecification, extrapolation, overfitting, and leverage outliers",
@@ -72,7 +72,7 @@
       ]
     },
     {
-      "module_number": 5,
+      "chapter_number": 5,
       "title": "Case Study: NAPLAN",
       "topics": [
         "Defining the research question",
@@ -85,7 +85,7 @@
     }
   ],
   "assessment_options": {
-    "exercises": "Short practical or theoretical exercises linked to each module.",
+    "exercises": "Short practical or theoretical exercises linked to each chapter.",
     "capstone_project": {
       "description": "A modelling project requiring exploratory analysis, model formulation, model selection, diagnostics, and interpretation.",
       "components": [
