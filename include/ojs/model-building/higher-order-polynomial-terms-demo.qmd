@@ -1,0 +1,79 @@
+```{ojs}
+//| echo: false
+
+reg= require("d3-regression")
+polyData=transpose(nonlinearData)
+viewof degree = Inputs.range([1, 9], {step: 1, label: "Model Order", value: 1})
+
+polyRegression = reg.regressionPoly()
+  .x((d) => d.x)
+  .y((d) => d.y)
+  .order(degree)
+  .domain(d3.extent(polyData, (d) => d.x));
+
+polyCurveRaw = polyRegression(polyData)
+polyCurve = polyCurveRaw.map(([x, y]) => ({ x, y }))
+polyPredict = (x) => {
+  if (typeof polyRegression.predict === "function") return polyRegression.predict(x);
+  if (polyCurveRaw.coefficients) {
+    return polyCurveRaw.coefficients.reduce((acc, coeff, i) => acc + coeff * x ** i, 0);
+  }
+  return NaN;
+}
+polyResiduals = polyData.map((d) => {
+  const fit = polyPredict(d.x);
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+polyMaxAbsResid = d3.max(polyResiduals, (d) => Math.abs(d.resid)) || 1;
+```
+
+```{ojs}
+//| echo: false
+
+polyTerms = Array.from({length: degree + 1}, (_, k) => {
+  if (k === 0) return `\\beta_{0}`;
+  if (k === 1) return `\\beta_{1} x`;
+  return `\\beta_{${k}} x^{${k}}`;
+}).join(" + ");
+
+html`<div style="text-align:center; margin: 0.5rem 0;">${tex`E[Y] = ${polyTerms}`}</div>`
+```
+
+```{ojs}
+polyYDomain = d3.extent([
+  ...polyData.map((d) => d.y),
+  ...polyCurve.map((d) => d.y),
+  ...polyResiduals.map((d) => d.fit)
+])
+
+Plot.plot({
+  marginLeft: 50,
+  height: 320,
+  x: {label: "Predictor (x)"},
+  y: {label: "Outcome (y)", domain: polyYDomain},
+  marks: [
+    Plot.link(polyResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / polyMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.dot(polyData, {
+      x: "x",
+      y: "y",
+      r: 4,
+    }), 
+    Plot.line(polyCurve, {
+      x: "x",
+      y: "y",
+      strokeWidth: 2,
+    }),
+  ],
+});
+```
+
+

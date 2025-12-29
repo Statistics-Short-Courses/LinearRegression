@@ -9,12 +9,12 @@ book:
   title: "Linear Regression and Model Selection with R"
   chapters:
     - index.qmd
-    - module00-lm.qmd
-    - module01-slr.qmd
-    - module02-mlr.qmd
-    - module03-model-building.qmd
-    - module04-regression-pitfalls-diagnostics.qmd
-    - module05-case-naplan.qmd
+    - ch0-lm.qmd
+    - ch1-slr.qmd
+    - ch2-mlr.qmd
+    - ch3-model-building.qmd
+    - ch4-pitfalls-diagnostics-remedies.qmd
+    - ch5-case-naplan.qmd
     - glossary.qmd
   page-navigation: false
 format:

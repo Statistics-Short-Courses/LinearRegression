@@ -1,0 +1,609 @@
+---
+format: 
+  live-html:
+    toc: true
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Note:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+webr:
+  render-df: gt-interactive
+
+resources:
+  - Data
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+```{webr chapter02-mlr-setup}
+#| include: false
+library(tidyverse)
+library(plotly)
+theme_set(theme_bw())
+```
+
+```{r chapter02-mlr-setup-2}
+#| include: false
+library(tidyverse)
+theme_set(theme_bw())
+```
+
+
+# Multiple Linear Regression (MLR) {#sec-multiple-linear-regression-mlr}
+
+Most practical applications of linear regression require models more complex than the simple linear regression(SLR) model introduced in @sec-simple_linear_model.  Multiple linear regression (MLR) extends simple linear regression by allowing $Y$ to depend on more than one predictor variable. This enables richer models and allows us to estimate the *partial* contribution of each predictor while accounting for others.
+
+- [ ] Continue
+
+## When to extend SLR {#sec-when-to-extend-slr}
+
+SLR is limited to one predictor. MLR becomes appropriate when:
+
+* Multiple factors plausibly influence the response.
+* Excluding predictors may bias results.
+* You wish to measure the unique contribution of each predictor while controlling for others.
+
+::: Example
+### Advertising sales {#sec-advertising-sales}
+Lets consider a simple example using the `Advertising` dataset
+```{webr chapter02-mlr-advertising-sales-load-data}
+#| edit: false
+ads <- read.csv("Data/Advertising.csv")
+```
+Suppose that we are statistical consultants hired by a client to investigate the association between advertising and sales of a particular product. The `Advertising` dataset (which we have imported as `ads`) consists of the sales of that product in 200 different markets, along with advertising budgets for the product in each of those markets for two different media: TV, and radio. [^1]
+
+```{webr chapter02-mlr-advertising-sales}
+#| edit: false
+ads
+```
+
+[^1]: This exmple is adapted from "Introduction to Statistical Learning (2)" - an excellent (and freely available) text on statistical modelling.  
+
+We might look at each bivariate (i.e. two variables) relationship between sales and advertising expendature separately:
+
+:::: {.panel-tabset}
+### $\text{Sales} \sim \text{TV}$ {#sec-text-sim-text}
+```{webr chapter02-mlr-sales-tv-plot}
+#| edit: false
+#| echo: false
+ggplot(ads, aes(x = TV, y = Sales)) +
+  geom_point() +
+  labs(x = "TV", y = "Sales")
+```
+### $\text{Sales}\sim \text{Radio}$ {#sec-text-sim-text-2}
+```{webr chapter02-mlr-sales-radio-plot}
+#| edit: false
+#| echo: false
+ggplot(ads, aes(x = Radio, y = Sales)) +
+  geom_point() +
+  labs(x = "Radio", y = "Sales")
+```
+::::
+
+However we might also look at the *multivariate* relationship:
+
+:::: {.panel-tabset}
+### Coloured Scatter {#sec-coloured-scatter}
+Here we encode the values of the second predictor (`Radio`) with colour
+```{webr chapter02-mlr-coloured-scatter-plot}
+#| edit: false
+#| echo: false
+ggplot(ads, aes(x = TV, y = Sales, colour = Radio)) +
+  geom_point() +
+  scale_colour_viridis_c() +
+  labs(x = "TV", y = "Sales", colour = "Radio")
+```
+### 3-D Scatter {#sec-3-d-scatter}
+In the case of 3 variables we can also extend our visualisation to 3 dimensions
+```{webr chapter02-mlr-3-d-scatter}
+#| edit: false
+#| echo: false
+plot_ly(ads, x = ~TV, y = ~Radio, z = ~Sales,
+        type = "scatter3d", mode = "markers", showlegend=FALSE, opacity=0.8)
+```
+::::
+Using multiple predictors simultaneously gives us more information than using each variable separately - this is a great case for applying multiple regression!
+:::
+
+- [ ] Continue
+
+## The multiple linear regression model {#sec-multiple_linear_regression}
+
+The [multiple linear regression]{.glossary term="Multiple linear regression"} model extends the simple linear model from @sec-simple_linear_model straightforwardly by adding the extra variables to the deterministic [linear predictor]{.glossary}, each with its own parameter:
+
+::: Key-point
+### The MLR model {#sec-the-mlr-model}
+$$
+Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilon \sim N(0,\sigma^2)
+$$
+:::
+
+Now, instead of a single predictor $x$, we may have several ($k$) predictors $x_1, x_2, \ldots, x_k$, each corresponding to a column in our dataset. We use an index to distinguish these predictors, and each predictor $x_i$ has a corresponding parameter $\beta_i$ governing its effect on the response. Note that we have updated the intercept parameter $\alpha$ from the simple linear regression section to $\beta_0$, because it is simply another parameter in the model!
+
+The random error term, $\varepsilon$, stays the same, so the assumptions of MLR are very similar to those of SLR:
+
+::: Assumption
+### Assumptions of the MLR model {#sec-assumptions-of-the-mlr-model}
+- A *linear* [predictor]{.glossary term="Linear predictor"}, e.g. $E[Y]=\beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k$. 
+- [Independent]{.glossary term="Independence"} and identically distributed random error terms that
+  - Have a mean $\mu=0$ ([mean-zero errors]{.glossary}), and a constant variance $Var(\varepsilon)=\sigma^2$ ([homoscedasticity]{.glossary})
+  - Follow a normal distribution ([normal errors]{.glossary}): $N(0,\sigma^2)$
+:::
+
+::: Note
+### Multivariate Linearity {#sec-multivariate-linearity}
+Although this is still a *linear* model, the term "linear" no longer refers to a literal straight line in two dimensions as it did in simple linear regression. Instead, "linear" means that the model is **linear in its parameters**: each $\beta_i$ multiplies a predictor and enters additively. This linear model may live in a high-dimensional predictor space and cannot be visualised as a single line. For example, for the three dimensional data presented above (one outcome: Sales + two predictors: TV, Radio), a linear model may instead look like a *plane* - the three dimensional equivalent of a line in two dimensions.
+```{webr chapter02-mlr-multivariate-linearity-fit-lm}
+#| echo: false
+#| edit: false
+
+# Fit least squares plane
+fit <- lm(Sales ~ TV + Radio, data = ads)
+
+# Create grid for the plane
+tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 4)
+radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 4)
+grid   <- expand.grid(TV = tv_seq, Radio = radio_seq)
+grid$sales_hat <- predict(fit, newdata = grid)
+
+z_mat <- matrix(grid$sales_hat, nrow = length(tv_seq), ncol = length(radio_seq))
+
+# Plotly 3D scatter + plane
+fig <- plot_ly() |>
+  add_surface(
+    x = radio_seq,
+    y = tv_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "Radio"),
+      yaxis = list(title = "TV"),
+      zaxis = list(title = "Sales")
+    ),
+    showlegend = FALSE
+  ) 
+
+fig
+```
+
+A further discussion of *linearity* will take place in @sec-non_linearity, when we discuss higher order multiple regression models. 
+:::
+
+- [ ] Continue 
+
+## [Partial regression coefficients]{.glossary term="Partial regression coefficient"}, $\beta_i$ {#sec-partial-regression-coefficients-betai}
+Even though our model is no longer just a straight line, the *[slope]{.glossary}* interpretation from SLR is still relevant in MLR. Now however, $\beta_i$ describes the expected change in the mean response for a one-unit increase in $x_i$, **holding all other predictors constant**. 
+
+::: Example
+#### Interpreting a partial coefficient, $\beta_i$ {#sec-interpreting-a-partial-coefficient-betai}
+We may propose a model for `Sales` whereby the baseline sales (when no money is invested in advertising) is $\beta_0=3$,  $\beta_{TV}= 0.1$ and $\beta_{Radio}= 0.2$, i.e. 
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
+$$
+In this model:
+* A $1k increase in TV advertising expenditure is associated with an expected 100 unit (0.1*1000units - the scale of the outcome) increase in sales, holding Radio expenditure constant.
+* Converely, at a fixed level of `TV` advertising expenditure, a $1k increase in Radio advertisin expenditure corresponds to an expected 200 unit increase in sales.
+
+
+- [ ] Continue
+
+For example, lets fix one predictor.  Say, we have already have invested $5k in Radio,  then our linear predictor becomes
+
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot 5= 4 + 0.1\cdot\text{TV}
+$$
+
+i.e. only one *variable* (`TV`) remains (`Radio` no longer varies but is held constant - contributing $0.2\cdot 5=1$k units to $E[Y]$), so the parameter $\beta_1$ can be interpreted as the slope of the SLR line:
+
+```{r chapter02-mlr-interpreting-a-partial-coefficient-beta-i-plot}
+ggplot()+
+  geom_abline(intercept=4,slope= 0.1, color='#2196F3')+
+  lims(x=c(0,50),y=c(0,10))
+```
+:::
+
+
+::: Exercise
+### Calculating the expected outcome of a multiple regression model {#sec-calculating-the-expected-outcome-of-a-multiple-regression-model}
+Given this model of sales by TV and Radio advertising, 
+$$
+E[Sales]= 3 + 0.1\cdot\text{TV} + 0.2\cdot \text{Radio}
+$$
+
+$12k has been spent on TV advertising due to a persisting contract. How much should the company invest in Radio advertising so that the expected sales matches their inventory of 8k units?
+
+
+::: {.cell}
+```{webr}
+
+```
+:::
+
+:::
+
+
+### Fitting MLR Models in R {#sec-fitting-mlr-models-in-r}
+Fitting a multiple linear regression uses the exact same conceptual process from @sec-leastsquares. Residuals are still defined $e = Y- \hat{Y}$, and minimising the sum of squared residuals provides optimal and unique *[least squares estimates]{.glossary term="Ordinary least squares"}* for the model parameters $\hat{\beta}_0, \ldots, \hat{\beta}_k$.
+
+In `R` we use the same `lm()` function as SLR (these are both 'linear models', after all). Now however, the model `formula` includes both predictors on the RHS, separated by a `+`:
+```{webr chapter02-mlr-fitting-mlr-models-in-r-fit-lm}
+ads_mod <- lm(Sales ~ TV + Radio, data = ads)
+```
+
+::: Note
+### R `formulas` {#sec-r-formulas}
+(the first argument, identified by the `~` separating the LHS and RHS)
+:::
+
+Lets visualise our fitted model:
+
+```{webr chapter02-mlr-r-formulas-fit-lm}
+#| echo: false
+#| edit: false
+
+# Fit least squares plane
+fit <- lm(Sales ~ TV + Radio, data = ads)
+
+# Create grid for the plane
+tv_seq <- seq(min(ads$TV), max(ads$TV), length.out = 4)
+radio_seq <- seq(min(ads$Radio), max(ads$Radio), length.out = 4)
+grid   <- expand.grid(TV = tv_seq, Radio = radio_seq)
+grid$sales_hat <- predict(fit, newdata = grid)
+
+z_mat <- matrix(grid$sales_hat, nrow = length(tv_seq), ncol = length(radio_seq))
+
+# 3D scatter + plane
+fig <- plot_ly() |>
+  add_markers(
+    data = ads,
+    x = ~Radio, y = ~TV, z = ~Sales,
+    type = "scatter3d",
+    mode = "markers") |>
+  add_surface(
+    x = radio_seq,
+    y = tv_seq,
+    z = z_mat,
+    opacity = 0.6,
+    showscale = FALSE,
+    name = "LS plane"
+  ) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "Radio"),
+      yaxis = list(title = "TV"),
+      zaxis = list(title = "Sales")
+    ),
+    showlegend = FALSE
+  ) 
+
+fig
+
+```
+
+We can extract our fitted model coefficients in the same way: 
+
+::: {.panel-tabset}
+#### Using indexing {#sec-using-indexing}
+```{webr chapter02-mlr-using-indexing}
+#| echo: true
+ads_mod$coefficients
+```
+#### The `coef()` function {#sec-the-coef-function}
+
+```{webr chapter02-mlr-the-coef-function}
+#| echo: true
+coef(mod)
+```
+:::
+
+::: Exercise
+#### extracting coefficients from an `lm` model {#sec-extracting-coefficients-from-an-lm-model}
+Use the the least-squares coefficients from `abs mod` to complete these partial regression plots
+
+
+::: {.cell}
+```{webr}
+ggplot(ads)+
+  aes(x=TV, y=Sales)+
+  geom_point()+
+  geom_abline(intercept = ads_mod$coefficients[1], ads_slope = ______)
+```
+:::
+
+:::
+
+
+### `broom::tidy()` {#sec-broom-tidy}
+We can also use the `tidy()` function from the `broom` package for a nice summary of the relevant inferential statistics for each parameter:
+```{webr chapter02-mlr-broom-tidy-setup}
+#| edit: false
+library(broom)
+tidy(ads_mod, conf.int = TRUE)
+```
+The hypotheses being tested for each coefficient is analagous to that in the SLR case (@sec-beta_inference).
+$$
+H_0 : \beta_i = 0 
+\qquad\text{vs}\qquad
+H_a : \beta_i \ne 0.
+$$
+using t-statistic which takes into account the size of the estimate along with its [standard error]{.glossary}:
+$$
+t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
+$$
+
+The main difference in calculation here is that this test statistic has [degrees of freedom]{.glossary term="Degrees of freedom"} that depend on the number of predictors in the model. Specifically, $t_i$ has $n - (k+1)$ degrees of freedom - where $n$ is the number of observations and $k$ is the number of predictor variables. Note that this is consistent with the df used for SLR.  
+
+The interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of $\beta_i$ here does not represent the relationship between $Y$ and $X_i$ without qualification - but only as the other variables are held constant. Analogously, the hypothesis being tested by $t_i$ is whether $X_i$ is related to to $Y$ - *once we account for the other predictors in the model*. 
+
+::: Key-point
+#### Interpreting the [t-test]{.glossary term="t-test"} of $\beta_i$ {#sec-interpreting-the-t-test-of-betai}
+$t_i$ is a $n-k+1$ statistic which tests the null hypothesis that $\beta_i=0$ in the multiple regression model. A significant [p-value]{.glossary term="p-value"} for this test entails that *given the other predictors in the model*.
+:::
+
+Because of this:
+
+- The significance of a predictor can change when variables are added or removed.
+- A small p-value for $\beta_i$ suggests a meaningful **partial effect**, not necessarily a *marginal* (unadjusted) one.
+
+::: Warning
+###  [Multicollinearity] {#sec-multicollinearity .glossary}
+- least squares is an amazing method for fitting but it has a weakness
+- correlated predictors can cause unstable parameter estimates
+- Check for correlation using a correlation matrix or using `vif`
+- this will be adressed more comprehensively in chapter 6: diagnostics an transformations. 
+:::
+
+::: Note 
+### Multiple [t-tests]{.glossary term="t-test"} and type I error inflation {#sec-multiple-t-tests-and-type-i-error-inflation}
+While it is easy to compute [t-tests]{.glossary term="t-test"} for each model coefficient individually, this is generally not a good way to determine whether the model as a whole is contributing useful information for the prediction of $Y$. While the model above only has two predictors, larger datasets have the potential for dozens, hundreds, or thousands of predictors! If we were to rely on this series of $t$-tests alone to determine whether we have *any* useful predictors of the outcome, we would be compounding our chance of making a 'type I error' (i.e. concluding there is a effect where there is none) with each test. Instead of performing several small tests, we have reason to want a single *global* test - one that encompasses all the $\beta$ parameters. 
+:::
+
+## The [F-test]{.glossary term="F-test (overall model test)"} for model model usefulness. :  and measures of model fit {#sec-the-f-test-for-model-model-usefulness-and-measures-of-model-fit}
+
+Having multiple predictor variables expands the scope of the kind of questions we can ask about our linear model. Rather than looking at each coefficient separately, we can ask whether our model *as a whole* is effective in explaining the outcome $Y$ In other words, is the combined contribution of the predictors enough to conclude that a linear relationship exists?
+
+Formally, the global hypothesis test is:
+
+- $H_0$: all slope coefficients are zero (no linear relationship between $Y$ and the predictors)  
+- $H_a$: at least one slope coefficient is non-zero (the model is useful)
+
+This shift parallels the move from multiple t-tests to an ANOVA - instead of testing individual “effects,” we examine the overall **variance explained** by a model.
+
+The F-statistic compares:
+
+- **variation explained by the model** (mean regression sum of squares, MSR),  
+- **residual variation** (mean squared error, [MSE]{.glossary term="Mean squared error"}).
+
+Because each of these quantities is constructed from squared normal deviations, the ratio
+
+$$
+F = \frac{\text{MSR}}{\text{MSE}}
+$$
+
+follows an F-distribution under $H_0$.  
+If the model truly explains some structure in the data, MSR will be noticeably larger than MSE.
+
+[#^1] The links between ANOVA and linear regression will be futher explored here in @sec-mlr_cat. 
+
+::: Example
+In the life expectancy example, the output might report
+
+```
+F-statistic: 28.2 on 4 and 44 DF,  p-value: 1.19e-11
+```
+
+The very small p-value indicates strong evidence against $H_0$. We conclude that at least one of the predictors (Population, Health, Internet, BirthRate) is useful for predicting life expectancy, and that the model is useful overall.
+:::
+
+::: Exercise
+Given an F-statistic of 12.3 with p = 0.0004, state the null and alternative hypotheses and conclude whether the model is useful at the 5% level.
+:::
+
+#### global statistics with `anova()` {#sec-global-statistics-with-anova}
+We can obtain the model F-statistic using the `anova()` function, which reinforces the
+connection between regression and the ANOVA framework introduced earlier.
+
+```{webr chapter02-mlr-global-statistics-with-anova}
+anova(mod)
+```
+
+The final row of the ANOVA table reports the global F-test for the model.
+
+#### global statistics with `glance()` {#sec-global-statistics-with-glance}
+The `glance()` function from the `broom` package also reports the model F-statistic
+while providing several additional summary measures in one place.
+
+```{webr chapter02-mlr-global-statistics-with-glance}
+glance(mod)
+```
+
+This output includes several global model features besides the global test statistic and p-value. 
+
+### Adjusted $R^2$ {#sec-adjusted-r-2}
+
+Once we have established that the model is useful overall, we can quantify *how much* of the variation in $Y$ it explains. The measure $R^2$ was introduced in SLR and extends naturally to MLR In multiple regression, $R^2$ plays the same descriptive role, but its
+interpretation changes subtly because the model now includes several predictors.
+
+### $R^2$ in Multiple Regression {#sec-r-2-in-multiple-regression}
+
+We define
+$$
+R^2 = 1 - \frac{\text{SSE}}{\text{SST}},
+$$
+exactly as before. The difference lies in what $R^2$ represents:
+
+- In SLR, $R^2$ reflects how well a *single predictor* explains variation in $Y$.
+- In MLR, $R^2$ reflects the **combined explanatory power of all predictors working together**.
+
+Because adding a new predictor can never increase SSE, it follows that **$R^2$ can never decrease when more predictors are added**, even if the new predictor has little or no real relationship with the response.
+For this reason, $R^2$ is not reliable for comparing models with different numbers of predictors.
+
+### Adjusted $R^2$ {#sec-adjusted-r-2-2}
+
+To address the fact that $R^2$ is overly optimistic in larger models, we use the *adjusted coefficient of determination*:
+$$
+R^2_{\text{adj}} = 1 -\frac{\text{SSE}/(n - k - 1)}{\text{SST}/(n - 1)}.
+$$
+
+Adjusted [R-squared]{.glossary term="Adjusted R-squared"}:
+
+- **penalises** the inclusion of additional predictors,
+- increases only when a predictor provides meaningful explanatory value,
+- and may decrease when a predictor contributes little or nothing.
+
+Thus,
+
+- **$R^2$** is appropriate as a descriptive measure of how much variation the fitted model explains,
+- **adjusted $R^2$** is more appropriate for comparing different models, especially those with differing numbers of predictors.
+
+This completes our introduction to multiple linear regression: we now have a
+model with several predictors, an interpretation for its coefficients, and
+tools to judge whether the model is useful and how well it fits the data.
+
+### Other model fit statistics: logLikelihood, AIC, and BIC {#sec-other-model-fit-statistics-loglikelihood-aic-and-bic}
+
+The `glance()` output also includes two additional quantities: **[AIC]{.glossary term="Akaike Information Criterion"}** (Akaike Information Criterion) and **[BIC]{.glossary term="Bayesian Information Criterion"}** (Bayesian Information Criterion).  
+Although they appear alongside the F-statistic and $R^2$, they serve a different purpose.
+
+AIC and BIC are **not** measures of how well a single model fits the data in an absolute sense.  
+Instead, they are designed for **comparing multiple competing models**, balancing goodness of fit against model complexity. Lower values indicate a preferable trade-off, but only **relative** comparisons are meaningful.
+
+Because AIC and BIC are tools for *model selection* rather than model assessment, we do not interpret them here. They will be discussed in detail in **Chapter 5 (Principles of Model Building)**, where they are used to guide decisions about which predictors to include in a regression model.
+
+
+## Categorical predictors in MLR {#sec-mlr_cat}
+So far, we have only considered numerical predictors in our multiple linear regression models. However, categorical predictors (also called *[factors]{.glossary term="Factor"}* in R) can also be included seamlessly.
+
+```{r chapter02-mlr-categorical-setup}
+#| include: false
+mtcars_cat <- mtcars %>%
+  mutate(
+    am_f = factor(am, labels = c("auto", "manual")),
+    cyl_f = factor(cyl)
+  )
+```
+
+### Factors and indicator variables {#sec-factors-and-indicator-variables}
+To include a categorical predictor in a linear model, we represent each category using **[dummy variables]{.glossary term="Dummy variable"}**. For a binary factor with levels A (reference) and B, we create a single indicator
+$$
+D = I(\text{Group} = B),
+$$
+and fit
+$$
+Y = \beta_0 + \beta_1 D + \varepsilon.
+$$
+Here, $\beta_0$ is the mean of the **[reference level]{.glossary term="Reference level"}** (A), and $\beta_1$ is the difference in means between B and A. This is exactly the same comparison made by a two-sample t-test, and the slope test of $\beta_1$ uses the same logic as @sec-beta_inference.
+
+::: Example
+#### Transmission type and fuel economy {#sec-transmission-type-and-fuel-economy}
+In `mtcars`, transmission (`am`) is coded as 0 = automatic and 1 = manual. We can treat this as a factor and model mean fuel economy by transmission type.
+
+```{webr chapter02-mlr-transmission-means}
+#| echo: true
+mtcars_cat %>%
+  group_by(am_f) %>%
+  summarise(mean_mpg = mean(mpg))
+```
+
+```{webr chapter02-mlr-transmission-lm}
+#| echo: true
+mod_am <- lm(mpg ~ am_f, data = mtcars_cat)
+summary(mod_am)$coefficients
+```
+
+The intercept is the mean mpg for the reference group (automatic), and the `am_fmanual` coefficient is the mean difference (manual minus automatic).
+:::
+
+### Multi-level factors and one-way ANOVA {#sec-multi-level-factors-and-anova}
+For a factor with $k$ levels, R creates $k-1$ dummy variables by default (a *[contrast]{.glossary term="Contrast"}* coding scheme). The overall F-test for the factor is the same as the one-way ANOVA you have already seen.
+
+```{webr chapter02-mlr-cyl-lm}
+#| echo: true
+mod_cyl <- lm(mpg ~ cyl_f, data = mtcars_cat)
+summary(mod_cyl)$coefficients
+```
+
+```{webr chapter02-mlr-cyl-anova}
+#| echo: true
+anova(mod_cyl)
+```
+
+The ANOVA table tests whether **any** cylinder group differs from the reference group, just like a standard one-way ANOVA. This mirrors the overall model test described in @sec-the-f-test-for-model-model-usefulness-and-measures-of-model-fit.
+
+### Adjusted comparisons (ANCOVA) {#sec-adjusted-comparisons-ancova}
+We can combine categorical and numerical predictors. This lets us compare group means *while controlling for* other variables (an ANCOVA-style interpretation).
+
+```{webr chapter02-mlr-ancova-lm}
+#| echo: true
+mod_am_wt <- lm(mpg ~ wt + am_f, data = mtcars_cat)
+summary(mod_am_wt)$coefficients
+```
+
+Here, the `am_fmanual` coefficient estimates the difference in mpg between manual and automatic cars **holding weight constant**.
+
+### Reference levels and releveling {#sec-reference-levels-and-releveling}
+The **reference level** is the baseline against which other levels are compared. You can change it to make interpretation easier:
+
+```{webr chapter02-mlr-relevel}
+#| echo: true
+mtcars_cat$am_f <- relevel(mtcars_cat$am_f, ref = "manual")
+summary(lm(mpg ~ am_f, data = mtcars_cat))$coefficients
+```
+
+Notice how the sign of the coefficient flips when the reference group changes.
+
+::: Exercise
+### Interpreting a binary factor {#sec-exercise-interpreting-binary-factor}
+Fit `mpg ~ am_f` on `mtcars_cat`.
+
+1. What does the intercept represent?
+2. What does the `am_fmanual` coefficient represent?
+3. How does this relate to a two-sample t-test?
+:::
+
+
+::: Exercise
+### Factor with three levels {#sec-exercise-factor-with-three-levels}
+Fit `mpg ~ cyl_f` and identify the reference level.
+
+1. Which cylinder group is the baseline?
+2. How would you change the baseline to 8 cylinders?
+3. Which test in the ANOVA table tells you whether *any* cylinder group differs?
+:::
+

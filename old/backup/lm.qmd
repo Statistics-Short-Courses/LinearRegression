@@ -1,0 +1,820 @@
+---
+format: 
+  live-html:
+    toc: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Technical-point:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: true
+    Terminology:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+```{r chapter00-lm-setup}
+#| include: false
+library(ggplot2)
+theme_set(theme_bw())
+```
+
+```{webr chapter00-lm-setup-2}
+#| include: false
+library(ggplot2)
+theme_set(theme_bw())
+```
+# Chapter 0: Introduction to linear models {.unnumbered #sec-introduction-to-linear-models}
+
+This chapter serves as a conceptual introduction to linear models, the foundation of linear regression. By constructing a simple linear model from basic principles, we aim to understand the assumptions which play a crucial role in linear regression analysis. 
+
+## Statistical models {#sec-statistical-models}
+
+A central aim of statistical modelling is to understand how one *variable* changes in relation to others. In your own work, these variables will have concrete meaning - perhaps plant growth, reaction time, exam score, or income - but for now we will simply call them $x$ and $Y$.
+
+In regression, we choose one variable $Y$ to treat as the **[outcome]{.glossary term="Response (outcome) variable"}** we want to explain or predict, and $x$ as one or more **[predictors]{.glossary term="Predictor (explanatory) variable"}**. Our goal is to describe how changes in $x$ are associated with changes in $Y$.
+
+A simple way to express this idea is
+
+$$
+Y = f(x)
+$$
+
+meaning that the value of $Y$ can be described by some function of $x$. If we knew this function exactly, and if the world behaved perfectly, then knowing $x$ would tell us everything about $Y$. Many physical laws look like this (for example, $E = mc^2$) but real data rarely follow a perfectly deterministic relationship.
+
+In practice, even when $x$ is held constant, repeated observations of $Y$ will vary. People respond differently, instruments fluctuate, biological systems are noisy, and experimental conditions change. To recognise this, [statistical models]{.glossary term="Statistical model"} include a **[random error term]{.glossary}**:
+
+$$
+Y = f(x) + \varepsilon.
+$$
+
+Here, $\varepsilon$ represents natural variability: the part of $Y$ that our model does not or cannot explain. 
+
+## Linear prediction {#sec-linear-prediction}
+
+To make our model concrete, we need to choose a form for the function $f(x)$. A natural starting point—because it is simple, interpretable, and surprisingly powerful—is a **[linear function]{.glossary}**:
+
+$$
+ f(x) = \alpha + \beta x .
+$$
+
+This allows us to describe the **expected value** of $Y$ as
+
+$$
+E[Y] = \alpha + \beta x
+$$
+
+This is the familiar 'straight-line' relationship:  
+- $\alpha$ is the [intercept]{.glossary}, the point where the line meets the vertical axis, and  
+- $\beta$ is the [slope]{.glossary}, describing how we expect $Y$ to change when $x$ increases by one unit.
+
+
+```{ojs chapter00-lm-linear-prediction-view}
+//| panel: sidebar
+//| echo: false
+viewof b0 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
+viewof b1 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β)"})
+```
+
+```{ojs chapter00-lm-linear-prediction-ojs}
+//| panel: fill
+//| echo: false
+xRange = [-10,10]
+lineData = xRange.map(x => ({x, y: (b1 * x) + b0}))
+
+tex.block`E[Y] = ${b0} + ${b1}x`
+
+Plot.plot({
+  x:{domain: [-10,10], label: "x", grid: true},
+  y:{domain: [-10,10], label: "Y", grid: true},
+  marks: [
+    Plot.line(lineData, { x: "x", y: "y" })]
+})
+```
+
+This decision to model $E[Y]$ as a linear function of $x$ is a key part of the **[simple linear model]{.glossary}**. By choosing a linear function (rather than some other form), we are making an important [assumption]{.glossary} about the relationship between $x$ and $Y$:
+
+::: Assumption
+### Linearity of 
+Y and x have a linear relationship
+:::
+
+-  [ ] Continue
+
+
+::: Example
+
+### Salary growth over time {#sec-salary-growth-over-time}
+
+Suppose you have received a job offer from *Company A*, and you want to predict your salary after working there for 10 years. You are told that the **average starting salary** at this company is $50,000, and that salaries **increase by $5,000 per year** of employment.
+
+We can represent this relationship using a simple [linear predictor]{.glossary}. For an employee with $x$ years at the company, the expected salary is
+
+$$
+E[Y] = 50{,}000 + 5{,}000 \cdot x.
+$$
+
+::: {.panel-tabset}
+
+## Plot {#sec-salary-growth-over-time-plot}
+
+```{r chapter00-lm-salary-growth-over-time-plot}
+#| echo: false
+#| fig-cap: "Expected salary at Company A as a function of years employed."
+ggplot() +
+  geom_abline(intercept = 5e4, slope = 5e3, colour = '#2196F3') +
+  lims(x = c(0, 15), y = c(4e4, 13e4)) +
+  labs(x = "Years Employed", y = "Expected Salary ($)")
+```
+
+## Code {#sec-salary-growth-over-time-code}
+
+```{r chapter00-lm-salary-growth-over-time-code}
+#| eval: false
+ggplot() +
+  geom_abline(intercept = 5e4, slope = 5e3, colour = '#2196F3') +
+  lims(x = c(0, 15), y = c(4e4, 13e4)) +
+  labs(x = "Years Employed", y = "Expected Salary ($)")
+```
+
+:::
+
+After 10 years of employment ($x = 10$), our linear predictor gives
+
+$$
+E[Y] = 50{,}000 + 5{,}000 \times 10 = 100{,}000.
+$$
+:::
+
+---
+
+::: Exercise
+
+### A competing offer {#sec-a-competing-offer}
+
+A second company also offers you a position. Their **starting salary** is higher—$70,000 on average—but their yearly pay increases are smaller. Employees who have been at the company for 6 years earn, on average, **$18,000 more** than when they started.
+
+We model expected salary after $x$ years as:
+
+$$
+E[Y] = \alpha + \beta x.
+$$
+
+::::{}
+
+Assign these values to the R variables `alpha` and `beta`:
+
+```{webr chapter00-lm-choosing-parameters}
+#| exercise: ex_1.1.1
+#| envir: Ex1
+alpha <- _______
+beta <- _______
+```
+
+::::: {.solution exercise="ex_1.1.1"}
+
+##### Solution {#sec-choosing-parameters-solution}
+* The starting salary gives $\alpha = 70{,}000$.
+* The 6-year increase gives $6\beta = 18{,}000$, so $\beta = 3{,}000$.
+
+```{webr chapter00-lm-choosing-parameters-solution}
+#| exercise: ex_1.1.1
+#| solution: true
+#| envir: Ex1
+alpha <- 70000
+beta <- 3000
+```
+
+:::::
+
+```{webr chapter00-lm-choosing-parameters-solution-2}
+#| exercise: ex_1.1.1
+#| check: true
+#| class: wait
+#| envir: Ex1
+gradethis::grade_this_code()
+```
+
+::::
+
+---
+
+::::{}
+
+#### Linear prediction {#sec-linear-prediction-2}
+
+Thus the linear predictor for Company B is
+
+$$
+E[Y] = 70{,}000 + 3{,}000 \cdot x.
+$$
+
+Below is a plot comparing salary trends for both companies:
+
+::: {.panel-tabset}
+
+## Plot {#sec-linear-prediction-plot}
+
+```{r chapter00-lm-linear-prediction-plot}
+#| echo: false
+#| fig-cap: "Linear salary trends for two companies."
+ggplot() +
+  geom_abline(aes(intercept = 7e4, slope = 3e3, colour = "Company B")) +
+  geom_abline(aes(intercept = 5e4, slope = 5e3, colour = "Company A")) +
+  lims(x = c(0, 15), y = c(4e4, 13e4)) +
+  labs(
+    x = "Years Employed",
+    y = "Expected Salary ($)",
+    colour = "Company"
+  ) +
+  scale_color_manual(values = c("Company B" = "#4CAF50", "Company A" = "#2196F3"))
+```
+
+## Code {#sec-linear-prediction-code}
+
+```{r chapter00-lm-linear-prediction-code}
+#| eval: false
+ggplot() +
+  geom_abline(aes(intercept = 7e4, slope = 3e3, colour = "Company B")) +
+  geom_abline(aes(intercept = 5e4, slope = 5e3, colour = "Company A")) +
+  lims(x = c(0, 15), y = c(4e4, 13e4)) +
+  labs(
+    x = "Years Employed",
+    y = "Expected Salary ($)",
+    colour = "Company"
+  ) +
+  scale_color_manual(values = c("Company B" = "#4CAF50", "Company A" = "#2196F3"))
+```
+
+:::
+
+Now compute the expected salary after 15 years, using the `alpha` and `beta` values you just assigned:
+
+```{webr chapter00-lm-linear-prediction-code-2}
+#| exercise: ex_1.1.2
+#| envir: Ex1
+E_Y <- _____ + (_____ * _____)
+```
+
+::::: {.solution exercise="ex_1.1.2"}
+
+```{webr chapter00-lm-linear-prediction-code-3}
+#| exercise: ex_1.1.2
+#| solution: true
+#| envir: Ex1
+E_Y <- alpha + (beta * 15)
+```
+
+:::::
+
+```{webr chapter00-lm-linear-prediction-code-4}
+#| exercise: ex_1.1.2
+#| check: true
+#| class: wait
+#| envir: Ex1
+gradethis::grade_this_code()
+```
+
+::::
+
+---
+
+::::{}
+
+#### Using R functions {#sec-using-r-functions}
+
+Evaluating the expression in R:
+
+```{webr chapter00-lm-using-r-functions}
+#| exercise: ex_1.1.2.2
+#| envir: Ex1
+#| edit: false
+E_Y
+```
+
+This matches the calculation:
+
+$$
+E[Y] = 70{,}000 + 3{,}000 \times 15 = 115{,}000.
+$$
+
+Now we can turn this into a reusable function:
+
+```{webr chapter00-lm-using-r-functions-2}
+#| edit: false
+simple_linear_prediction <- function(x, alpha = 7e4, beta = 4e3) {
+  alpha + (beta * x)
+}
+```
+
+Predict salaries for these employment durations:
+
+```{webr chapter00-lm-using-r-functions-3}
+#| edit: false
+x <- c(9, 4, 5, 2, 6)
+```
+
+```{webr chapter00-lm-using-r-functions-4}
+#| exercise: ex_1.1.3
+#| envir: Ex1
+
+```
+
+::::: {.solution exercise="ex_1.1.3"}
+
+```{webr chapter00-lm-using-r-functions-5}
+#| exercise: ex_1.1.3
+#| solution: true
+simple_linear_prediction(x)
+```
+
+:::::
+
+```{webr chapter00-lm-using-r-functions-6}
+#| exercise: ex_1.1.3
+#| check: true
+#| class: wait
+gradethis::grade_this_code()
+```
+
+::::
+
+### Good work! {#sec-good-work .unnumbered}
+
+Next we will extend our linear predictor to form a full linear *statistical* model.
+:::
+
+-  [ ] Continue
+
+## Random Errors {#sec-random-errors}
+
+ In practice, data rarely fall perfectly on a straight line. Even if the underlying relationship between $x$ and $Y$ is approximately linear, individual observations tend to vary around that line. As mentioned in Section @sec-statistical-models, to account for this variation we add an *error term*, $\varepsilon$, to our model:
+
+$$
+Y=\alpha + \beta x + \varepsilon
+$$
+
+The error term is the difference between the observed value and the linear predictor:
+$$
+\varepsilon = Y - E[Y] = Y - (\alpha + \beta x).
+$$
+
+$\varepsilon$ is a [random variable]{.glossary}, meaning that it can take different values each time we observe $Y$ for a given $x$. This randomness captures the idea that even when $x$ is held constant, repeated observations of $Y$ will vary. 
+
+While we dont know the exact value of $\varepsilon$ for any particular observation, we can describe its overall behaviour using probability. We typically assume three properties of $\varepsilon$:
+
+- [ ] The first key property of $\varepsilon$ is that
+
+On average, we expect the error terms to balance out.
+
+::: Assumption
+### Mean of errors
+The mean of the error term is zero ([mean-zero errors]{.glossary}):
+
+$$
+E[\varepsilon]=\mu=0
+$$
+:::
+
+i.e. The linear predictor gives the correct value of $Y$ on average. This is why the 'expected value' of $Y$ is given by the linear function:
+$$
+E[Y]=\alpha + \beta x + E[\varepsilon] = \alpha + \beta x + 0 = \alpha + \beta x
+$$
+---
+
+-  [ ] The second key property of $\varepsilon$ is that
+
+While correct on average, we expect there to be some *spread* of data around the line (this is why we have the error term). The spread of a random variable like $\varepsilon$ is captured by its **[variance]{.glossary}**, which we denote $Var(\varepsilon)$. 
+We assume that $Var(\varepsilon)$ does not depend on $x$. That is, the spread of errors is the same for all values of $x$.
+
+::: Assumption 
+The variance of the error term is constant for all values of x ([homoscedasticity]{.glossary}): $$Var(\varepsilon)=\sigma^2$$
+:::
+This is similar to the $\mu=0$ assumption above, but where there we specified the specific constant value (zero), here we specify that the variance is constant but leave its value ($\sigma^2$) unspecified.
+
+The term *homoscedasticity* comes from the Greek words for 'same' (homo) and 'spread' (scedasis), meaning 'same spread' and is therefore another way of describing the same property. 
+::: Terminology
+### Homoscedasticity
+*Homoscedasticity* means constant error variance across all values of $x$.
+:::
+--- 
+
+- [ ] The final assumption we make about $\varepsilon$
+The 
+
+While the assumptions of $\mu=0$ and $Var(\varepsilon=\sigma^2) describe the center and spread of the errors, they don’t fully specify the shape of their distribution. If we want to draw precise inferences about the probabilty events (e.g. to test hypotheses using p-values), we can make a stronger assumption about the [distribution]{.glossary} of the errors. In particular, we choose to assume that the errors follow a [Normal distribution]{.glossary}.
+
+::: Assumption
+The error is normally distributed ([normal errors]{.glossary}) with mean $\mu=0$ and variance $\sigma^2$. $$\varepsilon \sim \mathcal{N}(0, \sigma^2)$$
+:::
+
+The normal distribution is familiar and convenient to work with, and is often a reasonable approximation for real-world data. As a reminder of its shape, you can use the interactive plot below to explore normal distributions with different means and standard deviations.
+
+```{ojs chapter00-lm-normal-distribution-view}
+//| echo: false
+//| panel: sidebar
+viewof mu = Inputs.range([-5, 5], {
+  value: 0,
+  step: 0.1,
+  label: `Mean (μ):`
+})
+
+viewof sigma = Inputs.range([0.2, 5], {
+  value: 1,
+  step: 0.1,
+  label: 'Standard deviation (σ):'
+})
+
+SQRT2PI=Math.sqrt(2 * Math.PI)
+
+normalDensity = (x, mean, sd) =>
+  (1 / (sd * SQRT2PI)) * Math.exp(-0.5 * ((x - mean) / sd) ** 2);
+  
+densityGrid_1 = d3.range((-4 * sigma)+mu, mu+(4 * sigma), sigma / 50).map(x => ({
+  x,
+  density: normalDensity(x,mu,sigma)
+}));
+
+tex.block`\varepsilon \sim \text{Normal}(${mu}, ${sigma}^2)`
+```
+
+```{ojs chapter00-lm-normal-distribution-ojs}
+//| echo: false
+//| panel: fill
+//| fig-cap: "Normal distribution with adjustable mean and standard deviation."
+
+Plot.plot({
+  height: 280,
+  marginLeft: 48,
+  marginBottom: 40,
+  y: { label: "Density" },
+  x: {domain: [-10,10], label: "ε" },
+  marks: [
+    Plot.areaY(densityGrid_1, {
+      x: "x",
+      y: "density",
+      fillOpacity: 0.2,
+      stroke: "#2a5599",
+      fill: "#2a5599"
+    })
+  ]
+})
+```
+
+This bell-shaped curve tells us that most values of $\varepsilon$ are close to zero, with larger deviations becoming increasingly rare. The standard deviation, $\sigma$, controls how tightly the errors cluster around zero: smaller values of $\sigma$ lead to a narrower peak, while larger values spread the errors out more widely. 
+
+::: Example
+### Variation in salary {#sec-variation-in-salary}
+
+Lets return to our simple linear model of salary at ~company A~,
+
+$$
+E[Salary] = 50,000 + 5,000\times Years 
+$$ 
+
+This expresses how salary tends to increase with experience (i.e. on averaage). But in practice, not every employee with the same number of years earns the same amount — some earn a bit more, some a bit less. Suppose we know that most employees — about two-thirds of them — earn within roughly \$4,000 of the average salary for their experience level. In other words, if the average salary after five years is \$75,000, then about two-thirds of employees earn between \$71,000 and \$79,000, and almost everyone (about 95%) earns between \$67,000 and \$83,000.
+
+We can capture this variability with a random error term, $\varepsilon$, assumed to follow a Normal distribution with mean 0 and standard deviation $\sigma = 4,000$.
+
+$$
+Salary = 50,000 + 5,000\times Years + \varepsilon, \quad{\varepsilon \sim \mathcal{N}(0,4000^2)}
+$$
+
+This means that for a given number of years $x$: - The expected salary is $50,000 + 5,000\cdot x$ - Actual salaries will vary around that average, typically within about ±\$4,000
+
+For example, after 5 years (x=5): 
+$$
+E[Y]=\$50,000 + \$5,000 \times 5 = \$75,000 
+$$
+
+The distribution of salaries for employees with 5 years' experience is
+
+$$
+Y\sim \mathcal{N}(75,000, 4,000^2)
+$$
+
+Since we have a probability distribution over $Y$, we can use R to evaluate the probability of any given salary after x years at the company.
+
+For example, we want to know if employed at *company A*, what is the probabity after working there for 10 years I will have a salary of at least \$110,000?
+
+First lets calculate the average salary after 10 years
+
+```{r chapter00-lm-variation-in-salary}
+50000+(5000*10)
+```
+
+\$100,000.
+
+Now
+
+```{r chapter00-lm-variation-in-salary-2}
+pnorm(11e4,1e5, 4e3, lower.tail = FALSE)
+```
+
+The following diagram tells us roughly the probability of observing a $Y$ value in the given range:
+
+```{ojs chapter00-lm-variation-in-salary-view}
+//| echo: false
+//| panel: sidebar
+
+mu_salary = 75000
+sigma_salary = 4000
+
+viewof k = Inputs.range([0, 3], {step: 0.1, value: 1, label: "Interval width (in σ units)"})
+viewof offset_z = Inputs.range([-5, 5], {step: 0.1, value: 0, label: "Centre offset (in σ units)"})
+
+centre = mu_salary + offset_z * sigma_salary
+a = centre - k * sigma_salary
+b = centre + k * sigma_salary
+
+// --- Numerical helpers ---
+erf = x => {
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741,
+  a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+  const sign = Math.sign(x) || 1;
+  x = Math.abs(x);
+  const t = 1 / (1 + p * x);
+  const y = 1 - (((((a5*t + a4)*t + a3)*t + a2)*t + a1)*t) * Math.exp(-x*x);
+  return sign * y;
+}
+normalCDF = (x, mean, sd) => 0.5 * (1 + erf((x - mean) / (sd * Math.SQRT2)))
+
+// Probability mass between a and b
+prob = Math.max(0, Math.min(1, normalCDF(b, mu_salary, sigma_salary) - normalCDF(a, mu_salary, sigma_salary)))
+
+// Density grid and shaded interval
+densityGrid_salary = d3.range(mu_salary - 4*sigma_salary, mu_salary + 4*sigma_salary, sigma_salary/100)
+.map(y => ({ y, density: normalDensity(y, mu_salary, sigma_salary) }))
+
+shaded = densityGrid_salary.filter(d => d.y >= a && d.y <= b)
+
+// Display text summary
+tex.block`P(${Math.round(a).toLocaleString()} \le Y \le ${Math.round(b).toLocaleString()}) = ${prob.toFixed(3)} \;\;(\approx ${(prob*100).toFixed(1)}\%)`
+```
+
+```{ojs chapter00-lm-variation-in-salary-ojs}
+//| echo: false
+//| panel: fill
+//| fig-cap: "Probability of salary falling within a chosen interval."
+Plot.plot({
+  height: 300,
+  marginLeft: 56,
+  marginBottom: 40,
+  x: { label: "Salary ($)", grid: true, domain: [mu_salary - 4*sigma_salary, mu_salary + 4*sigma_salary] },
+  y: { label: "Density",  },
+  marks: [
+    // Full curve (light)
+    Plot.areaY(densityGrid_salary, {x:"y", y:"density", fill:"#2a5599", fillOpacity:0.12, stroke:"#2a5599"}),
+    // Shaded probability region
+    Plot.areaY(shaded, {x:"y", y:"density", fill:"#FFD54F", fillOpacity:0.35}),
+    // Vertical rules
+    Plot.ruleX([mu_salary], {stroke: "black", strokeDash: [4,4]}),
+    Plot.ruleX([a], {y1:0, y2:normalDensity(a, mu_salary, sigma_salary), stroke:"#2a5599"}),
+    Plot.ruleX([b], {y1:0, y2:normalDensity(b, mu_salary, sigma_salary), stroke:"#2a5599"}),
+    // Baseline
+    Plot.ruleY([0])
+  ]
+})
+
+```
+
+Here $\varepsilon$ represents random deviations from the expected (average) salary for a given number of years x. - Same model as above - given standard deviation - Example Y values - Illustrate error with normal overay - Excersises: - which variance is larger? - (hard) probability of finding E\[Y\]+2sd observation
+:::
+
+::: Exercise
+### Normally distributed errors
+Considering our model of salary with $\varepsilon \sim \mathcal{N}(0, 4000^2)$, what is the probability that an employee with 5 years of experience earns more than \$83,000?
+```{webr chapter00-lm-normally-distributed-errors}
+#| exercise: ex_1.2.1
+#| envir: Ex2
+pnorm(83000, _______, _______, lower.tail = FALSE)
+```
+::::: {.solution exercise="ex_1.2.1"}
+```{webr chapter00-lm-normally-distributed-errors-solution}
+#| exercise: ex_1.2.1
+#| solution: true
+#| envir: Ex2
+pnorm(83000, 75000, 4000, lower.tail = FALSE)
+```
+:::::   
+```{webr chapter00-lm-normally-distributed-errors-solution-2}
+#| exercise: ex_1.2.1
+#| check: true
+#| class: wait
+#| envir: Ex2
+gradethis::grade_this_code()
+```
+::::   
+
+
+## The Simple Linear Model {#sec-simple_linear_model}
+
+Putting these pieces together we obtain the full specification of the simple linear model:
+
+::: Assumption
+### The Simple Linear Model
+The relationship between $Y$ and $x$ is described by a linear function plus normally distributed random error:
+$$
+Y=\alpha+\beta x+\varepsilon, \quad{\varepsilon \sim N(0,\sigma^2)}
+$$
+:::
+
+This model how the outcome variable $Y$ depends on the predictor variable $x$, with parameters $\alpha$ (intercept), $\beta$ (slope), and $\sigma$ (standard deviation of the errors). These parameters control the location, direction, and spread of the data around the linear trend. We can visualise the probability distribution of our outcome variable $Y$ for different values of $x$ using the interactive plot below:
+
+```{ojs chapter00-lm-the-simple-linear-model-view}
+//| panel: sidebar
+//| echo: false
+
+viewof b1_2 = Inputs.range([-2, 2], {step: 0.1, label: "Slope (β)"})
+viewof b0_2 = Inputs.range([-10, 10], {step: 1, label: "Intercept (α)"})
+viewof sigma_2 = Inputs.range([0.2, 5], {step: 0.1, value: 2.5, label: "Std. deviation (σ)"})
+
+viewof n_cs = Inputs.range([10, 50], {step: 1, value: 50, label: "Number of cross sections visualised"})
+
+tex.block`Y = ${b0_2} + ${b1_2}x + \varepsilon, \quad \varepsilon \sim \text{Normal}(0, ${sigma_2}^2)`
+```
+
+```{ojs chapter00-lm-the-simple-linear-model-ojs}
+//| panel: fill
+//| echo: false
+//| width: 700
+//| fig-cap: "Cross-sections of the simple linear model normal error density."
+
+xMin = -10;
+xMax = 10;
+step = (xMax - xMin) / (n_cs - 1);
+xSampleValues = d3.range(xMin, xMax + step/2, step);  
+
+ySectionValues = d3.range(-10, 10.001, 0.1)
+widthScale = Math.min(1.8, sigma_2 * 0.9)
+
+densityCurveData = xSampleValues.flatMap(xVal => {
+  const mu = b0_2 + b1_2 * xVal;
+  const peakDensity = normalDensity(mu, mu, sigma_2);
+
+  const rightSide = ySectionValues.map(y => {
+    const density = normalDensity(y, mu, sigma_2);
+    const width = (density / peakDensity) * widthScale;
+    return {x: xVal + width, y, group: xVal};
+  });
+
+  return rightSide
+});
+
+crossSectionTrendLine = xSampleValues.map(x => ({
+  x,
+  y: b0_2 + b1_2 * x
+}))
+
+Plot.plot({
+  x: {domain: [-10, 10], label: "x", grid: true},
+  y: {domain: [-10, 10], label: "Y", grid: true},
+  marks: [
+    Plot.line(densityCurveData, {
+      x: "x",
+      y: "y",
+      z: "group",
+      stroke: "#2a5599",
+      strokeWidth: 1.5,
+      curve: "basis"
+    }),
+    Plot.line(crossSectionTrendLine, {x: "x", y: "y", stroke: "black", strokeWidth: 2})
+  ]
+});
+```
+Here, each vertical 'slice' of the plot shows the Normal distribution of $Y$ for a specific value of $x$, with the black line indicating the expected value $E[Y] = \alpha + \beta x$. The 'peak' of each slice corresponds to the most probable value of $Y$ for that $x$, while the spread reflects the variability introduced by the error term $\varepsilon$. 
+
+When we assume a linear model, we make an assumption about the 'process' that generates our data. Specifically, we assume that for each value of $x$, the corresponding $Y$ values are drawn from a Normal distribution whose mean is given by the linear function $\alpha + \beta x$ and whose standard deviation is $\sigma$. While our model is simple, we can use it to generate realistic data that captures both the linear trend and the natural variability around it.
+
+-  [ ] Continue
+
+## A simple Linear model in R {#sec-a-simple-linear-model-in-r}
+
+To see how the model 'generates' data, we will simulate observations using the salary example parameters from above. ^[1] The $x$ values here are generated just for illustration; in regression we condition on $x$ rather than treat it as random.
+
+1.  To begin, we start with a collection of $x$ values.
+We treat these as fixed values, representing years of experience at the company. We can generate some example $x$ values in R like this:
+```{r chapter00-lm-a-simple-linear-model-in-r-simulate}
+n <- 100
+x <- runif(n, min = 0, max = 20)
+head(x)
+```
+
+-   This code randomly chooses `n = 100` values uniformy at random from the interval $[0,20]$. We treat these values as fixed once chosen; the randomness here is just for example data generation.
+
+2.  Define the model
+
+Next, we construct our simple linear model
+
+```{r chapter00-lm-a-simple-linear-model-in-r-simulate-2}
+simple_linear_model <- function(x, alpha, beta, sigma) {
+  E_Y <- alpha + (beta * x) # Expected value of Y 
+  epsilon <- rnorm(length(x), mean = 0, sd = sigma) # random normal errors
+  Y <- E_Y + epsilon # 'Observed' Y values
+  return(Y) 
+}
+```
+
+The `simple_linear_model()` function takes x values and returns the specified linear function with normally distributed random noise added.
+
+Now we can simulate observations of $Y$ given our collection of $x$ values and the parameters we have chosen for our salary example:
+
+```{r chapter00-lm-a-simple-linear-model-in-r}
+Y <- simple_linear_model(x, alpha=5e4, beta=5e3, sigma=4e3)
+head(Y)
+```
+
+lets look at the joint distribution of x and Y:
+
+::: {.panel-tabset}
+## Plot {#sec-a-simple-linear-model-in-r-plot}
+```{r chapter00-lm-a-simple-linear-model-in-r-setup}
+#| echo: false
+#| fig-cap: "Data generated from the simple linear model $Y=50{,}000+5{,}000\\times x + \\varepsilon$, with $\\varepsilon\\sim N(0,4{,}000^2)$. Dashed line shows $E[Y|x] = \\alpha + \\beta x$."
+
+library(ggplot2)
+
+df <- data.frame(x = x, Y = Y)
+
+ggplot(df, aes(x, Y)) +
+  geom_point(alpha = 0.7) +
+  theme_minimal()
+```
+## Code {#sec-a-simple-linear-model-in-r-code}
+
+```{r chapter00-lm-a-simple-linear-model-in-r-code}
+#| eval: false
+library(ggplot2)
+
+df <- data.frame(x = x, Y = Y)
+
+ggplot(df, aes(x, Y)) +
+  geom_point(alpha = 0.7) +
+  theme_minimal()
+```
+:::
+
+
+The scatter plot shows a single simulated 'sample' of data from our simple linear model. If we repeated the simulation, we would get a different set of $Y$ values (because of the randomness introduced by the error term), but they would still cluster around the same dashed line representing the expected value $E[Y|x] = \alpha + \beta x$.
+
+Heres the same code running in webR - try adjusting some of the parameters (e.g. the number of samples), or just running again to plot a different random sample from the same model!
+
+```{webr chapter00-lm-a-simple-linear-model-in-r-code-2}
+#| code-fold: true
+#| code-summary: "show code"
+n <- 100
+x <- runif(n, min = 0, max = 15)
+
+
+simple_linear_model <- function(x, alpha, beta, sigma) {
+  mu <- alpha + (beta * x) 
+  mu + rnorm(length(x), mean = 0, sd = sigma)
+}
+
+Y <- simple_linear_model(x, alpha=5e4, beta=5e3, sigma=4e3)
+
+library(ggplot2)
+
+df <- data.frame(x = x, Y = Y)
+
+ggplot(df, aes(x, Y)) +
+  geom_point(alpha = 0.7) +
+  geom_abline(intercept = alpha, slope = beta, linetype = "dashed")
+```
+
+
+## Summary {#sec-summary}
+In this section, we have introduced the **simple linear model**, which describes the relationship between an outcome variable $Y$ and a predictor variable $x$ using a linear function plus normally distributed random error:
+$$
+Y=\alpha + \beta x + \varepsilon, \quad{\varepsilon \sim N(0,\sigma^2)}
+$$
+This model captures both the expected trend of $Y$ as a function of $x$ (given by the linear function $\alpha + \beta x$) and the natural variability around that trend (captured by the error term $\varepsilon$). 
+
+We have also seen how this model can 'generate' realistic data that reflects both the linear relationship and the random variation. In the next section, we will explore how to use *observed* data to estimate the parameters $\alpha$, $\beta$, and $\sigma$ of the simple linear model.

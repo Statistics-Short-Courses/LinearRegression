@@ -117,8 +117,12 @@ local function has_class(el, class)
 end
 
 local function normalize_key(text)
-  local s = text:gsub("^%s+", ""):gsub("%s+$", "")
-  return s:lower()
+  local s = text:gsub("^%s+", ""):gsub("%s+$", ""):lower()
+  s = s:gsub("’", "'"):gsub("‘", "'")
+  s = s:gsub("“", "\""):gsub("”", "\"")
+  s = s:gsub("–", "-"):gsub("—", "-")
+  s = s:gsub("%s+", " ")
+  return s
 end
 
 local function slugify(text)
@@ -156,6 +160,21 @@ local function meta_string(value)
 end
 
 local function definition_blocks(value)
+  if value == nil then
+    return {}
+  end
+
+  local t = pandoc.utils.type(value)
+  if t == "MetaBlocks" or t == "Blocks" then
+    return value
+  end
+  if t == "MetaInlines" or t == "Inlines" then
+    return { pandoc.Para(value) }
+  end
+  if t == "Block" then
+    return { value }
+  end
+
   local text = pandoc.utils.stringify(value)
   if text == "" then
     return {}
@@ -189,16 +208,19 @@ local function parse_glossary(meta)
     if is_map(item) then
       local term = meta_string(item.term or item.name)
       local definition = item.definition or item.def
+      local details = item.details or item.more or item.notes
       if term and definition then
         local raw_id = meta_string(item.id)
         local anchor_base = "glossary-" .. (raw_id or slugify(term))
         local anchor = unique_anchor(anchor_base, anchor_used)
         local blocks = definition_blocks(definition)
+        local details_blocks = details and definition_blocks(details) or {}
         local entry = {
           term = term,
           anchor = anchor,
           definition = blocks,
           definition_text = definition_text(blocks),
+          details = details_blocks,
         }
         table.insert(glossary_entries, entry)
 
@@ -337,6 +359,9 @@ local function build_glossary_blocks()
     }
     for _, def_block in ipairs(entry.definition) do
       table.insert(content, def_block)
+    end
+    if entry.details and #entry.details > 0 then
+      table.insert(content, pandoc.Div(entry.details, pandoc.Attr("", { "glossary-details" })))
     end
     table.insert(blocks, pandoc.Div(content, pandoc.Attr(entry.anchor, { "glossary-entry" })))
   end

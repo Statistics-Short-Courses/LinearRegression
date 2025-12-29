@@ -1,0 +1,48 @@
+::: Exercise
+#### Calculate the Residual Standard Error {#sec-calculate-the-residual-standard-error}
+Using your `rss` object defined in the previous exercise, calculate the residual standard error of the least squares model.
+
+::: {.cell exercise='ex_2.2.3' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3
+#| envir: ex_2.2
+rse <- ______
+```
+:::
+
+
+::: {.hint exercise="ex_2.2.3"}
+The RSE is $s = \sqrt{\frac{RSS}{n-2}}$. You can get $n$ using `nrow(linearData)`.
+:::
+:::: {.solution exercise="ex_2.2.3"}
+#### Solution {#sec-calculate-the-residual-standard-error-solution}
+
+::: {.cell exercise='ex_2.2.3' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3
+#| solution: true
+#| envir: ex_2.2
+rse <- sqrt(sum(e^2)/(nrow(linearData)-2))
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.3' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.3
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this({
+  expected <- sqrt(sum(e^2) / (nrow(linearData) - 2))
+  if (isTRUE(all.equal(.result, expected, tolerance = 1e-6))) {
+    pass("Correct!")
+  }
+  fail("Check your calculation of the residual standard error.")
+})
+```
+:::
+
+:::

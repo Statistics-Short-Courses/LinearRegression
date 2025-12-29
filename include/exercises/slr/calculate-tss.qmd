@@ -1,0 +1,46 @@
+::: Exercise
+#### Calculate TSS {#sec-calculate-tss}
+Using `linearData`, calculate the total sum of squares (TSS).
+
+
+::: {.cell exercise='ex_2.2.3b' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| envir: ex_2.2
+TSS <- ______
+```
+:::
+
+
+::: { .hint exercise="ex_2.2.3b" }
+TSS is `sum((linearData$y - mean(linearData$y))^2)`.
+:::
+
+
+::: {.cell exercise='ex_2.2.3b' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| solution: true
+#| envir: ex_2.2
+TSS <- sum((linearData$y - mean(linearData$y))^2)
+TSS
+```
+:::
+
+
+
+::: {.cell exercise='ex_2.2.3b' check='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| check: true
+#| envir: ex_2.2
+grade_this({
+  if (isTRUE(all.equal(.result, 265.3973, tolerance = 0.01))) {
+    pass("Correct! TSS = 265.40")
+  }
+  fail("Check your calculation. TSS is the sum of squared deviations from the mean of y.")
+})
+```
+:::
+
+:::

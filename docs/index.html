@@ -43,6 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/bootstrap/bootstrap-e92ef7ca8f646017bdb218b79b4f62fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/foldbox/foldbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -72,7 +73,42 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+<style>
+.Key-point {
+  --color1: #FFF9C4;
+  --color2: #FFEB3B;
+}
+</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/style.css">
@@ -120,38 +156,38 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module00-lm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to linear models</span></span></a>
+  <a href="./ch0-lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Chapter 0: Introduction to linear models</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module01-slr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
+  <a href="./ch1-slr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simple Linear Regression (SLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module02-mlr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
+  <a href="./ch2-mlr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multiple Linear Regression (MLR)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module03-model-building.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Model Building and Selection</span></span></a>
+  <a href="./ch3-model-building.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model Building and Variable Selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module04-regression-pitfalls-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Pitfalls and Diagnostics</span></span></a>
+  <a href="./ch4-pitfalls-diagnostics-remedies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pitfalls, Diagnostics, and Remedies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./module05-case-naplan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></span></a>
+  <a href="./ch5-case-naplan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Regression Case Study: NAPLAN Reading Scores</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -173,6 +209,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#sec-course-overview" id="toc-sec-course-overview" class="nav-link active" data-scroll-target="#sec-course-overview">Course Overview</a>
   <ul class="collapse">
   <li><a href="#sec-what-you-will-learn" id="toc-sec-what-you-will-learn" class="nav-link" data-scroll-target="#sec-what-you-will-learn">What you will learn</a></li>
+  <li><a href="#sec-course-roadmap" id="toc-sec-course-roadmap" class="nav-link" data-scroll-target="#sec-course-roadmap">Course roadmap</a></li>
   <li><a href="#sec-how-to-use-this-book" id="toc-sec-how-to-use-this-book" class="nav-link" data-scroll-target="#sec-how-to-use-this-book">How to use this book</a></li>
   </ul></li>
   </ul>
@@ -202,25 +239,50 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="sec-course-overview" class="level1 unnumbered">
 <h1 class="unnumbered">Course Overview</h1>
+<p>Linear regression is one of the most widely used tools in data analysis. It helps us describe and predict an outcome <span class="math inline">\(Y\)</span> using one or more predictors <span class="math inline">\(X\)</span>, while also quantifying how uncertain our conclusions are.</p>
+<p>This short course focuses on <strong>practical regression workflows</strong>:</p>
+<ol type="1">
+<li><strong>Specify</strong> a sensible model for your question,</li>
+<li><strong>Fit and interpret</strong> it in R,</li>
+<li><strong>Diagnose</strong> whether the model is misleading,</li>
+<li><strong>Remedy</strong> common problems (or revise the model), and</li>
+<li><strong>Communicate</strong> what the model does—and does not—support.</li>
+</ol>
+<div id="Key-point*-1" class="Key-point">
+<p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point</strong></summary><div>Regression is not just “fit a line”: it is a cycle of modelling, checking, and improving.<p></p>
+</div></details>
+</div>
 <section id="sec-what-you-will-learn" class="level2">
 <h2 class="anchored" data-anchor-id="sec-what-you-will-learn">What you will learn</h2>
 <ul>
-<li>Formulate simple and multiple linear regression models and articulate their assumptions.</li>
-<li>Interpret regression coefficients, including partial, interaction, and categorical effects.</li>
-<li>Evaluate model utility using hypothesis tests, R-squared metrics, and prediction accuracy.</li>
-<li>Identify when additive models fail and implement interaction or polynomial terms.</li>
-<li>Incorporate qualitative predictors using indicator (dummy) variables.</li>
-<li>Apply principles of parsimony and evidence-based model building.</li>
-<li>Use AIC, multicollinearity diagnostics, and stepwise procedures for model selection.</li>
-<li>Perform residual analysis, identify influential observations, and apply transformations.</li>
+<li>Turn real questions into simple and multiple linear regression models (and state the assumptions clearly).</li>
+<li>Interpret regression output: coefficients, partial effects, interactions, and categorical predictors.</li>
+<li>Quantify uncertainty using standard errors, confidence intervals, prediction intervals, and hypothesis tests.</li>
+<li>Compare and refine models using fit metrics (including <span class="math inline">\(R^2\)</span> / adjusted <span class="math inline">\(R^2\)</span>) and information criteria (AIC/BIC).</li>
+<li>Detect common pitfalls: nonlinearity, heteroskedasticity, non-normal errors, dependence, multicollinearity, outliers, leverage, and influential observations.</li>
+<li>Apply practical remedies: transformations, adding appropriate terms, revising variables, and using robust approaches when needed.</li>
+</ul>
+</section>
+<section id="sec-course-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="sec-course-roadmap">Course roadmap</h2>
+<p>These chapters are designed to build from foundations → modelling → diagnostics → an end-to-end case study.</p>
+<ul>
+<li><strong>Chapter 00 — Introduction to linear models:</strong> what a regression model is, why we need an error term, and what assumptions mean in practice.</li>
+<li><strong>Chapter 01 — Simple linear regression (SLR):</strong> least squares, fitted values and residuals, inference, and prediction.</li>
+<li><strong>Chapter 02 — Multiple linear regression (MLR):</strong> partial regression coefficients, adjustment, categorical predictors, and overall model tests.</li>
+<li><strong>Chapter 03 — Model building:</strong> interactions, polynomial terms, parsimony, and model comparison/selection (with caveats).</li>
+<li><strong>Chapter 04 — Regression pitfalls &amp; diagnostics:</strong> how to recognise assumption violations and influence, and what to do about them.</li>
+<li><strong>Chapter 05 — Case study (NAPLAN):</strong> a guided workflow from question → model → diagnostics → interpretation.</li>
+<li><strong>Glossary:</strong> short definitions plus formulas and useful R functions.</li>
 </ul>
 </section>
 <section id="sec-how-to-use-this-book" class="level2">
 <h2 class="anchored" data-anchor-id="sec-how-to-use-this-book">How to use this book</h2>
 <ul>
-<li>Each chapter corresponds to a module in the syllabus and ends with short practice prompts.</li>
-<li>R examples use base <code>lm()</code> and standard diagnostics; you can run code chunks directly if you enable execution.</li>
-<li>The <em>Assessments</em> chapter outlines optional exercises and a capstone project that integrate exploration, model selection, and diagnostics.</li>
+<li><strong>Read sequentially</strong> if you are new to regression; jump to Chapter 04 if you mainly need a diagnostics “field guide”.</li>
+<li><strong>Run the examples</strong> as you go. Most examples are written to run in-browser using WebR; you can also run them in R/RStudio.</li>
+<li><strong>Hover or click glossary terms</strong>: glossary links include short tooltips and take you to a full entry with formulas and relevant R functions.</li>
+<li><strong>Treat diagnostics as part of the analysis</strong>: when a plot or check suggests a problem, the chapter aims to show a reasonable next step rather than a one-size-fits-all rule.</li>
 </ul>
 
 
@@ -903,23 +965,31 @@ if (window.location.href.includes('displayall')) {
     saveState(state);
   }
 
-  function applySkipAttr(el, skipped) {
+  function isGraded(exId) {
+    return !!document.querySelector('[data-exercise="' + exId + '"] .exercise-grade.alert-success');
+  }
+
+  function applySkipAttr(el, skipped, graded) {
     if (skipped) {
       el.setAttribute('data-skip', 'true');
       el.setAttribute('data-complete', 'true');
     } else {
       el.removeAttribute('data-skip');
-      // Only remove data-complete if this cell wasn't actually completed
-      // by grading (has a success alert). If it was graded, leave complete.
-      const graded = !!el.querySelector('.exercise-grade.alert-success');
       if (!graded) el.removeAttribute('data-complete');
     }
   }
 
-  function buildButton(el, state, exId) {
+  function applyToExerciseCells(exId, fn) {
+    document
+      .querySelectorAll('.cell.wait[data-check="true"][data-exercise="' + exId + '"]')
+      .forEach(fn);
+  }
+
+  function buildButton(state, exId) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'btn btn-sm btn-outline-secondary skip-exercise-btn';
+    btn.dataset.exercise = exId;
     const skipped = isSkipped(state, exId);
     btn.textContent = skipped ? 'Undo skip' : 'Skip exercise';
     btn.setAttribute('aria-pressed', skipped ? 'true' : 'false');
@@ -927,7 +997,8 @@ if (window.location.href.includes('displayall')) {
 
     btn.addEventListener('click', function () {
       const nowSkipped = btn.getAttribute('aria-pressed') !== 'true';
-      applySkipAttr(el, nowSkipped);
+      const graded = isGraded(exId);
+      applyToExerciseCells(exId, function (cell) { applySkipAttr(cell, nowSkipped, graded); });
       setSkipped(state, exId, nowSkipped);
       btn.textContent = nowSkipped ? 'Undo skip' : 'Skip exercise';
       btn.setAttribute('aria-pressed', nowSkipped ? 'true' : 'false');
@@ -937,22 +1008,39 @@ if (window.location.href.includes('displayall')) {
 
   document.addEventListener('DOMContentLoaded', function () {
     const state = loadState();
-    document.querySelectorAll('.cell.wait[data-check="true"]').forEach(function (cell) {
+    const cells = Array.from(document.querySelectorAll('.cell.wait[data-check="true"][data-exercise]'));
+
+    // Group cells by exercise id. Some exercises end up with nested .cell nodes that
+    // both match the selector; we only want one skip button per exercise.
+    const byExercise = new Map();
+    cells.forEach(function (cell) {
       const exId = cell.getAttribute('data-exercise');
       if (!exId) return;
+      if (!byExercise.has(exId)) byExercise.set(exId, []);
+      byExercise.get(exId).push(cell);
+    });
 
-      // Reapply stored skip state
-      applySkipAttr(cell, isSkipped(state, exId));
+    byExercise.forEach(function (exCells, exId) {
+      // Reapply stored skip state to all matching cells
+      const skipped = isSkipped(state, exId);
+      const graded = isGraded(exId);
+      exCells.forEach(function (cell) { applySkipAttr(cell, skipped, graded); });
 
-      // Insert the button just before the exercise cell
-      const btn = buildButton(cell, state, exId);
-      const parent = cell.parentElement || cell;
-      parent.insertBefore(btn, cell);
+      // If the button already exists (e.g., script included twice), do nothing
+      if (document.querySelector('.skip-exercise-btn[data-exercise="' + exId + '"]')) return;
+
+      // Choose the outer-most matching cell to insert the button before
+      const targetCell = exCells.find(function (candidate) {
+        return !exCells.some(function (other) { return other !== candidate && other.contains(candidate); });
+      }) || exCells[0];
+
+      const btn = buildButton(state, exId);
+      const parent = targetCell.parentElement || targetCell;
+      parent.insertBefore(btn, targetCell);
     });
   });
 })();
 </script>
-
 <script type="ojs-module-contents">
 eyJjb250ZW50cyI6W119
 </script>

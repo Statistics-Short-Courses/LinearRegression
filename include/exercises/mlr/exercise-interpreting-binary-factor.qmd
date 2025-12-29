@@ -1,0 +1,8 @@
+::: Exercise
+### Interpreting a binary factor {#sec-exercise-interpreting-binary-factor}
+Fit `mpg ~ am_f` on `mtcars_cat`.
+
+1. What does the intercept represent?
+2. What does the `am_fmanual` coefficient represent?
+3. How does this relate to a two-sample t-test?
+:::

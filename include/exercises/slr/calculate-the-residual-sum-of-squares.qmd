@@ -1,0 +1,38 @@
+::: Exercise
+#### Calculate the Residual Sum of Squares {#sec-calculate-the-residual-sum-of-squares}
+using your `e` object defined in the previous exercise, calculate the residual sum of squares of the least squares model.
+
+::: {.cell exercise='ex_2.2.2' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.2
+#| envir: ex_2.2
+rss <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.2"}
+#### Solution {#sec-calculate-the-residual-sum-of-squares-solution}
+We simply square each residual using `r^2` and then sum them together using the `sum()` function:
+
+::: {.cell exercise='ex_2.2.2' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.2
+#| solution: true
+#| envir: ex_2.2
+rss <- sum(e^2)
+```
+:::
+
+::::
+
+::: {.cell exercise='ex_2.2.2' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.2
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+:::

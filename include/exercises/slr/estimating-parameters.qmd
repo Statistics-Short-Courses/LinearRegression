@@ -1,0 +1,42 @@
+::: Exercise
+What is your best [estimate]{.glossary term="Estimation"} for the values of $\alpha$ and $\beta$ that best fit the given data?
+
+
+::: {.cell exercise='ex_2.1' envir='Ex2' define='["my_a","my_b"]'}
+```{webr}
+#| exercise: ex_2.1
+#| envir: Ex2
+#| define:
+#|   - my_a
+#|   - my_b
+my_a <- ______
+my_b <- ______
+```
+:::
+
+
+:::: {.solution exercise="ex_1"}
+
+::: {.cell exercise='ex_2.1' solution='true'}
+```{webr}
+#| exercise: ex_2.1
+#| solution: true
+```
+:::
+
+::::
+
+::: {.cell exercise='ex_2.1' envir='Ex2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.1
+#| envir: Ex2
+#| check: true
+#| class: wait
+grade_this({
+  if (is.numeric(get("my_a", envir = .envir_result)) && is.numeric(get("my_b", envir = .envir_result))){pass("Good guess!")}
+  fail("both $a$ and $b$ should be numbers")
+})
+```
+:::
+
+:::

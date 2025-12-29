@@ -1,0 +1,804 @@
+---
+format:
+  live-html:
+    toc: true
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: true
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+    Note:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-term:
+      colors: [D1C4E9, 673AB7]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+
+webr:
+  render-df: gt-interactive
+
+resources:
+  - Data
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+```{webr chapter04-regression-pitfalls-diagnostics-setup}
+#| include: false
+library(tidyverse)
+library(broom)
+library(MASS)
+theme_set(theme_bw())
+```
+
+```{r chapter04-regression-pitfalls-diagnostics-setup-r}
+#| include: false
+library(tidyverse)
+library(broom)
+library(MASS)
+theme_set(theme_bw())
+```
+
+# Pitfalls, Diagnostics, and Remedies {#sec-regression-pitfalls-and-diagnostics}
+
+In @sec-model-building-and-selection we saw that regression models can go wrong due to [overfitting]{.glossary term="Overfitting"}—fitting to noise rather than signal in the data. But even a simple model can be misleading if its assumptions are violated, or if a small number of observations have an outsized effect on the fit.
+
+In this chapter we focus on the ways in which linear regression can go wrong, how to diagnose problems using residuals, and what to do when issues arise. 
+
+In @sec-introduction-to-linear-models, we introduced the basic assumptions for constructing a simple linear model model of the relationship between two variables. In @sec-multiple-linear-regression-mlr we extended these these assumptions to the multiple predictor setting. As a reminder, a linear regression analysis assumes that the data were generated according to something of following form:
+
+::: Assumption
+### The linear model {#assumption-linear-model}
+The response $Y$ for observation $i$ is related to predictor variables $X_1, X_2, \ldots, X_p$ according to:
+$$
+Y_i = \beta_0 + \beta_1 X_{i,1} + \beta_2 X_{i,2} + \cdots + \beta_p X_{i,p} + \varepsilon_i, \quad i = 1, 2, \ldots, n
+$$
+where
+$$
+\varepsilon_i \stackrel{\text{iid}}{\sim} \text{Normal}(0, \sigma^2)
+$$
+for some unknown parameters $\beta_0, \beta_1, \ldots, \beta_p$ and $\sigma^2 > 0$.
+:::
+
+By assuming this form we can proceed to estimate the parameters $b_0, b_1, \ldots, b_p$ and $s^2$ using the method of least squares, and then use these estimates to perform inference and prediction. However, if it is not the case that the data were generated according to this form, then our estimates, inferences, and predictions may be misleading.
+
+## Common assumptions and pitfalls {#sec-common-assumptions-and-pitfalls}
+It is often the case, some aspects of \ref{assumption-linear-model} may be violated while others are still reasonably satisfied. For example, a model may have nonconstant variance but still have linear mean structure and approximately normal errors. For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to state present the assumptions of a linear model is via the following four assumptions about the error terms $\epsilon_i$:
+
+
+::: Assumption
+### Linearity
+The relationship between the predictors and the response is linear (in the parameters)
+$$
+Y_i ~ \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_p X_{ip}
+$$
+Where 
+:::
+
+::: Assumption
+### Homoscedasticity
+The variance of the errors is constant across the range of predictors:
+$$
+\text{Var}(\epsilon_i) = \sigma^2
+$$
+:::
+::: Assumption
+### Normality
+The errors are approximately normally distributed:
+$$
+\epsilon_i \sim \text{Normal}(0, \sigma^2)
+$$
+:::
+::: Assumption
+### Independence
+The errors are independent: $\epsilon_i$ is independent of $\epsilon_j$ for $i \neq j$. 
+:::
+
+When 
+
+Other common pitfalls that can undermine interpretation include:
+
+- **[Influential points]{.glossary term="Influential point"}**: observations that strongly affect estimates.
+- **[Multicollinearity]{.glossary}**: predictors that are highly correlated, inflating uncertainty.
+- **[Extrapolation]{.glossary}**: making predictions outside the range of observed data.
+- **Blind model selection**: using automated procedures without scientific context or diagnostic checks.
+
+::: Key-point
+Diagnostics are not an optional add-on—they are part of the modelling workflow. A good model should have residuals that look like *structureless noise*.
+:::
+
+- [ ] Continue
+
+## Why check residuals? Anscombe's quartet {#sec-the-importance-of-checking-residuals-anscombe-s-quartet}
+
+::: Example
+Anscombe's quartet is a classic reminder that identical regression summaries can mask radically different data patterns. Each dataset below has the same $n$, mean $x$, mean $y$, correlation, and the same fitted regression line, yet the residual plots tell very different stories.
+
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-setup}
+#| edit: false
+anscombe_long <- anscombe |>
+  pivot_longer(
+    cols = everything(),
+    names_to = c(".value", "set"),
+    names_pattern = "([xy])(\\d)"
+  ) |>
+  mutate(set = paste0("Set ", set))
+
+anscombe_aug <- anscombe_long |>
+  nest(data = c(x, y)) |>
+  mutate(
+    model = map(data, ~ lm(y ~ x, data = .x)),
+    aug = map2(model, data, broom::augment)
+  ) |>
+  unnest(aug)
+```
+
+:::: {.panel-tabset}
+### Scatter plots (with fitted line)
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-scatter}
+#| edit: false
+ggplot(anscombe_aug, aes(x = x, y = y)) +
+  geom_point(size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  facet_wrap(~ set, ncol = 2) +
+  labs(title = "Same fitted line, very different datasets")
+```
+
+### Residual plots
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-residuals}
+#| edit: false
+ggplot(anscombe_aug, aes(x = .fitted, y = .resid)) +
+  geom_point(size = 2) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  facet_wrap(~ set, ncol = 2) +
+  labs(x = "Fitted value", y = "Residual")
+```
+::::
+
+Residual plots often reveal problems that are easy to miss from summaries and even from the original scatter plot (especially when you have many predictors).
+:::
+
+- [ ] Continue
+
+## Residuals as diagnostic tools {#sec-residuals-as-diagnostic-tools}
+
+How can we check whether the assumptions of a linear regression model are met? One of the most common approaches is to examine the residuals of the model. Residuals are the part of the data that your model did *not* explain.
+
+::: Key-term
+### Residual {#sec-residual}
+The residual for observation $i$ in a regression model is defined as
+$$e_i = y_i - \hat{y}_i$$
+where $e_i$ is the residual for observation $i$, $y_i$ is the observed value, and $\hat{y}_i$ is the predicted value from the model.
+:::
+
+We used residuals in @sec-leastsquares to estimate the parameters of the linear model, but they can also be used to diagnose model problems. Since residuals encode the information about what the model has *not* captured, plotting residuals can reveal systematic patterns such as:
+
+- curvature (missing nonlinearity),
+- changing spread (nonconstant variance),
+- extreme points (outliers/influence),
+- departures from normality.
+
+::: Example
+### Residuals in the Olympic cholesterol data {#sec-residuals-in-the-olympic-cholesterol-data}
+
+The OLYMPIC dataset records fat intake (mg) and cholesterol (mg/L) for 20 athletes. A simple linear model leaves a curved pattern in the residuals.
+
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-setup}
+#| edit: false
+olympic <- read.delim("Data/OLYMPIC.txt")
+olympic_mod <- lm(CHOLESTEROL ~ FAT, data = olympic)
+olympic_aug <- augment(olympic_mod)
+```
+
+:::: {.panel-tabset}
+### Scatter plot (with fitted line)
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-scatter}
+#| edit: false
+ggplot(olympic, aes(x = FAT, y = CHOLESTEROL)) +
+  geom_point(size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8)
+```
+
+### Residuals vs fitted
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-residuals-vs-fitted}
+#| edit: false
+ggplot(olympic_aug, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(x = "Fitted value", y = "Residual")
+```
+
+### Residuals vs FAT
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-residuals-vs-fat}
+#| edit: false
+ggplot(olympic_aug, aes(x = FAT, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(y = "Residual")
+```
+::::
+
+The curved pattern indicates that a straight-line model is missing structure in the data (a sign of nonlinearity).
+:::
+
+### Extracting diagnostics with `broom::augment()` {#sec-extracting-residuals-and-broom-augment}
+
+We saw in @sec-residuals how to extract residuals using `resid()`. A convenient alternative is `broom::augment()`, which returns a data frame containing the original data plus fitted values, residuals, and several diagnostic quantities.
+
+::: Example
+### Olympic residuals with `broom::augment()` {#sec-olympic-residuals-with-broom-augment}
+
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-augment-preview}
+#| edit: false
+olympic_aug |>
+  select(FAT, CHOLESTEROL, .fitted, .resid, .std.resid, .hat, .cooksd) |>
+  slice(1:6)
+```
+:::
+
+- [ ] Continue
+
+## A small set of diagnostic plots {#sec-common-diagnostic-plots}
+
+In practice you can learn a lot from a small, repeatable set of plots. The most common ones correspond closely to the default `plot(lm_object)` panel in base R:
+
+1. Residuals vs fitted: check linearity and constant variance.
+2. Normal Q–Q: assess whether residuals are approximately normal.
+3. Scale–location: another view of nonconstant variance.
+4. Residuals vs leverage (Cook’s distance): identify influential observations.
+
+::: Note
+Diagnostics are *graphical* because many important failures are about patterns. A model summary is a single snapshot; a diagnostic plot is a pattern detector.
+:::
+
+```{webr chapter04-regression-pitfalls-diagnostics-diagnostic-model-setup}
+#| edit: false
+diag_mod <- lm(mpg ~ wt + hp + am, data = mtcars)
+diag_aug <- augment(diag_mod) |> mutate(.index = row_number())
+```
+
+:::: {.panel-tabset}
+### Residuals vs fitted
+```{webr chapter04-regression-pitfalls-diagnostics-residuals-vs-fitted}
+#| edit: false
+ggplot(diag_aug, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(x = "Fitted value", y = "Residual")
+```
+
+### Normal Q–Q
+```{webr chapter04-regression-pitfalls-diagnostics-normal-qq}
+#| edit: false
+ggplot(diag_aug, aes(sample = .std.resid)) +
+  stat_qq(size = 2) +
+  stat_qq_line(color = "gray40") +
+  labs(x = "Theoretical quantiles", y = "Standardised residuals")
+```
+
+### Scale–location
+```{webr chapter04-regression-pitfalls-diagnostics-scale-location}
+#| edit: false
+ggplot(diag_aug, aes(x = .fitted, y = sqrt(abs(.std.resid)))) +
+  geom_point(size = 2) +
+  geom_smooth(se = FALSE, linewidth = 0.8, color = "gray40") +
+  labs(x = "Fitted value", y = expression(sqrt("|Standardised residual|")))
+```
+
+### Residuals vs leverage
+```{webr chapter04-regression-pitfalls-diagnostics-residuals-vs-leverage}
+#| edit: false
+ggplot(diag_aug, aes(x = .hat, y = .std.resid, size = .cooksd)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(alpha = 0.8) +
+  scale_size_continuous(range = c(1, 10)) +
+  labs(x = "Leverage (hat value)", y = "Standardised residual", size = "Cook's D")
+```
+::::
+
+::: Key-point
+If residuals show a clear *pattern*, that pattern is telling you what your model is missing.
+:::
+
+- [ ] Continue
+
+## Diagnosing issues and choosing remedies {#sec-diagnosing-issues-and-choosing-remedies}
+
+This section focuses on the most common “what now?” moves: what to look for, and what you might do when you see it.
+
+### Nonlinearity (missing curvature) {#sec-diagnosing-nonlinearity}
+
+**Symptoms**
+
+- A curved trend in residuals vs fitted (or residuals vs a predictor).
+
+**Common remedies**
+
+- Add polynomial terms (Chapter 03), transformations, or interactions.
+- Consider omitted predictors that explain structure in the residuals.
+
+::: Example
+#### A residual curve suggests missing nonlinearity {#sec-nonlinearity-example}
+
+```{webr chapter04-regression-pitfalls-diagnostics-nonlinearity-sim}
+#| edit: false
+set.seed(42)
+n <- 80
+x <- runif(n, -3, 3)
+y <- 2 + 1.2 * x + 0.8 * x^2 + rnorm(n, 0, 2)
+nl_dat <- tibble(x, y)
+
+m_lin <- lm(y ~ x, data = nl_dat)
+m_quad <- lm(y ~ x + I(x^2), data = nl_dat)
+
+aug_lin <- augment(m_lin)
+aug_quad <- augment(m_quad)
+```
+
+:::: {.panel-tabset}
+### Linear model residuals
+```{webr chapter04-regression-pitfalls-diagnostics-nonlinearity-lin-resid}
+#| edit: false
+ggplot(aug_lin, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(title = "Linear fit", x = "Fitted value", y = "Residual")
+```
+
+### Quadratic model residuals
+```{webr chapter04-regression-pitfalls-diagnostics-nonlinearity-quad-resid}
+#| edit: false
+ggplot(aug_quad, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(title = "Quadratic fit", x = "Fitted value", y = "Residual")
+```
+::::
+:::
+
+### Nonconstant variance ([heteroskedasticity]{.glossary}) {#sec-diagnosing-heteroskedasticity}
+
+**Symptoms**
+
+- A “funnel” shape in residuals vs fitted (spread increases or decreases with the fitted value).
+- A trend in the scale–location plot.
+
+**Common remedies**
+
+- Transform the response (e.g., log or square-root) to stabilise variance.
+- Use weighted least squares if you can model how variance changes.
+- Use robust standard errors when inference is the main goal.
+
+::: Example
+#### A funnel shape suggests heteroskedasticity {#sec-heteroskedasticity-example}
+
+```{webr chapter04-regression-pitfalls-diagnostics-hetero-sim}
+#| edit: false
+set.seed(7)
+n <- 120
+x <- runif(n, 0, 10)
+y <- 20 + 3 * x + rnorm(n, 0, sd = 0.7 * x)
+het_dat <- tibble(x, y)
+
+m_raw <- lm(y ~ x, data = het_dat)
+m_log <- lm(log(y) ~ x, data = het_dat)
+
+aug_raw <- augment(m_raw)
+aug_log <- augment(m_log)
+```
+
+:::: {.panel-tabset}
+### Residuals (raw scale)
+```{webr chapter04-regression-pitfalls-diagnostics-hetero-raw}
+#| edit: false
+ggplot(aug_raw, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(title = "Funnel-shaped residuals", x = "Fitted value", y = "Residual")
+```
+
+### Residuals (log-transformed response)
+```{webr chapter04-regression-pitfalls-diagnostics-hetero-log}
+#| edit: false
+ggplot(aug_log, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(title = "After log transform", x = "Fitted value", y = "Residual")
+```
+::::
+:::
+
+### Normality (and when it matters) {#sec-assessing-normality-of-residuals}
+
+Normality of errors matters most for small-sample $t$-tests and confidence intervals. In large samples, linear regression often remains useful even when residuals are not perfectly normal, but it is still worth checking for strong departures caused by outliers or skewness.
+
+**Symptoms**
+
+- Strong curvature or heavy tails in the Q–Q plot.
+
+**Common remedies**
+
+- Check for outliers/data errors first.
+- Consider a transformation of the response.
+- Consider robust or resampling-based inference.
+
+### Independence (autocorrelation) {#sec-assessing-independence}
+
+The [independence]{.glossary} assumption is most commonly violated when observations are collected over time (or space). If residuals are correlated, standard errors can be too small, and $p$-values can look “better” than they should.
+
+**Symptoms**
+
+- Residuals show runs/clustering when plotted against time/order.
+- Residuals have clear autocorrelation (e.g., via an ACF plot).
+
+**Common remedies**
+
+- Add time/seasonality terms if they explain structure.
+- Use models designed for correlated errors (time series, mixed models, GLS).
+
+::: Example
+#### Residuals over time can reveal dependence {#sec-independence-example}
+
+```{webr chapter04-regression-pitfalls-diagnostics-independence-sim}
+#| edit: false
+set.seed(99)
+n <- 90
+time <- seq_len(n)
+x <- rnorm(n)
+
+# AR(1) errors
+phi <- 0.7
+e <- numeric(n)
+e[1] <- rnorm(1)
+for (i in 2:n) e[i] <- phi * e[i - 1] + rnorm(1)
+
+y <- 1 + 0.6 * x + e
+dep_dat <- tibble(time, x, y)
+
+dep_mod <- lm(y ~ x, data = dep_dat)
+dep_res <- resid(dep_mod)
+
+acf_obj <- acf(dep_res, plot = FALSE)
+acf_df <- tibble(lag = as.numeric(acf_obj$lag), acf = as.numeric(acf_obj$acf)) |>
+  filter(lag > 0)
+```
+
+:::: {.panel-tabset}
+### Residuals vs time
+```{webr chapter04-regression-pitfalls-diagnostics-independence-resid-time}
+#| edit: false
+tibble(time = time, resid = dep_res) |>
+  ggplot(aes(x = time, y = resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_line(linewidth = 0.6) +
+  labs(x = "Time (order)", y = "Residual")
+```
+
+### ACF of residuals
+```{webr chapter04-regression-pitfalls-diagnostics-independence-acf}
+#| edit: false
+ggplot(acf_df, aes(x = lag, y = acf)) +
+  geom_hline(yintercept = 0, color = "gray40") +
+  geom_segment(aes(xend = lag, yend = 0), linewidth = 0.8) +
+  labs(x = "Lag", y = "Autocorrelation (ACF)")
+```
+::::
+:::
+
+### Standardised residuals, leverage, and Cook’s distance {#sec-standardised-residuals-leverage-cook-s-distance}
+
+Influence diagnostics answer a different question than “is the relationship real?” They ask: *are my conclusions stable if I perturb the data slightly?*
+
+::: Key-term
+#### Standardised residuals and influence diagnostics {#sec-influence-diagnostics-key-term}
+
+- [Standardised residuals]{.glossary term="Standardized residual"} scale residuals by an estimate of their variability.
+- [Leverage]{.glossary} identifies observations with unusual predictor values.
+- [Cook’s distance]{.glossary term="Cook's distance"} combines leverage and residual size to measure influence.
+:::
+
+::: Note
+Rules of thumb (use with caution): observations with |standardised residual| > 2 may be unusual; Cook’s distance values that stand out relative to the rest merit investigation.
+:::
+
+```{webr chapter04-regression-pitfalls-diagnostics-influence-table}
+#| edit: false
+diag_aug |>
+  select(.index, .std.resid, .hat, .cooksd) |>
+  arrange(desc(.cooksd)) |>
+  slice(1:6)
+```
+
+### Extrapolation and high-leverage prediction {#sec-extrapolation-and-high-leverage}
+
+[Extrapolation]{.glossary} means predicting for predictor values outside the range you observed. It is risky because the *relationship itself* may change outside the observed region, and because uncertainty grows rapidly when you move away from the data cloud (often showing up as high leverage).
+
+::: Key-point
+Before you trust a prediction, check whether it is an extrapolation. A simple first step is to compare each new predictor value to the observed range.
+:::
+
+```{webr chapter04-regression-pitfalls-diagnostics-extrapolation-range}
+#| edit: false
+tibble(
+  predictor = c("wt", "hp"),
+  min = c(min(mtcars$wt), min(mtcars$hp)),
+  max = c(max(mtcars$wt), max(mtcars$hp))
+)
+```
+
+### Transformations including Box–Cox {#sec-transformations-including-box-cox}
+
+Transformations can help when residual plots show curvature or nonconstant variance. A systematic way to explore power transformations of the response is the [Box–Cox transformation]{.glossary term="Box-Cox transformation"}.
+
+::: Note
+Box–Cox requires the response to be strictly positive.
+:::
+
+```{webr chapter04-regression-pitfalls-diagnostics-boxcox}
+#| edit: false
+bc <- MASS::boxcox(diag_mod, plotit = FALSE)
+bc_df <- tibble(lambda = bc$x, logLik = bc$y)
+lambda_hat <- bc_df$lambda[which.max(bc_df$logLik)]
+
+ggplot(bc_df, aes(x = lambda, y = logLik)) +
+  geom_line(linewidth = 0.8) +
+  geom_vline(xintercept = lambda_hat, linetype = "dashed", color = "gray40") +
+  labs(title = "Box–Cox profile log-likelihood",
+       subtitle = paste0("Best lambda ≈ ", round(lambda_hat, 2)),
+       x = expression(lambda),
+       y = "Profile log-likelihood")
+```
+
+### Multicollinearity {#sec-multicollinearity-diagnostics}
+
+[Multicollinearity]{.glossary} occurs when predictors are strongly correlated. It does *not* necessarily make predictions bad, but it can make coefficient estimates unstable and inflate standard errors—so interpretation and “which predictor matters?” questions become fragile.
+
+**Symptoms**
+
+- Large standard errors and coefficient sign changes when you add/remove a correlated predictor.
+- Large [variance inflation factors]{.glossary term="Variance inflation factor"} (VIFs).
+
+**Common remedies**
+
+- Drop or combine redundant predictors (guided by scientific context).
+- Collect more data (especially with more diverse predictor combinations).
+- Use dimension reduction or penalised regression when prediction is the goal.
+
+```{webr chapter04-regression-pitfalls-diagnostics-vif-helper}
+#| edit: false
+vif_from_lm <- function(model) {
+  x <- model.matrix(model)
+  x <- x[, colnames(x) != "(Intercept)", drop = FALSE]
+  if (ncol(x) == 0) return(tibble(term = character(), vif = numeric()))
+  if (ncol(x) == 1) return(tibble(term = colnames(x), vif = 1))
+
+  vifs <- map_dbl(seq_len(ncol(x)), function(j) {
+    r2 <- summary(lm(x[, j] ~ x[, -j]))$r.squared
+    1 / (1 - r2)
+  })
+
+  tibble(term = colnames(x), vif = vifs) |>
+    arrange(desc(vif))
+}
+```
+
+```{webr chapter04-regression-pitfalls-diagnostics-vif-example}
+#| edit: false
+col_mod <- lm(mpg ~ wt + disp + hp, data = mtcars)
+vif_from_lm(col_mod)
+```
+
+### Blind model selection {#sec-blind-model-selection}
+
+Automated selection procedures (stepwise, “try everything”, repeatedly adding/removing predictors until something is significant) can be useful for exploration, but they are easy to misuse.
+
+**Pitfalls**
+
+- $p$-values and confidence intervals become hard to interpret after extensive searching.
+- Selected models can overfit and can be unstable to small data changes.
+
+**Remedies**
+
+- Use scientific context to limit the candidate set.
+- Use out-of-sample validation (Chapter 03) and always re-check residual diagnostics on the final model.
+
+- [ ] Continue
+
+## Exercises {#sec-chapter04-exercises}
+
+The goal of these exercises is to practise diagnosing patterns and choosing a sensible next step.
+
+### Exercise 1: Identify heteroskedasticity {#sec-chapter04-exercise-1}
+
+Run the simulation below and look at the residual plot. Then answer: what issue is the plot mainly suggesting?
+
+```{webr chapter04-regression-pitfalls-diagnostics-ex1-setup}
+#| echo: false
+#| edit: false
+set.seed(123)
+n <- 150
+x <- runif(n, 0, 10)
+y <- 10 + 2 * x + rnorm(n, 0, sd = 0.4 * x)
+ex1_dat <- tibble(x, y)
+ex1_mod <- lm(y ~ x, data = ex1_dat)
+ex1_aug <- augment(ex1_mod)
+
+ggplot(ex1_aug, aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(size = 2) +
+  labs(x = "Fitted value", y = "Residual")
+```
+
+::: Exercise
+Write your answer as a short phrase (e.g., `"heteroskedasticity"` or `"nonconstant variance"`).
+
+::: {.cell exercise='ex_4.1' envir='Ex4' define='["issue_4_1"]'}
+```{webr}
+#| exercise: ex_4.1
+#| envir: Ex4
+#| define:
+#|   - issue_4_1
+issue_4_1 <- "____"
+```
+:::
+
+:::: {.solution exercise="ex_4.1"}
+::: {.cell exercise='ex_4.1' solution='true'}
+```{webr}
+#| exercise: ex_4.1
+#| solution: true
+issue_4_1 <- "heteroskedasticity"
+```
+:::
+::::
+
+::: {.cell exercise='ex_4.1' envir='Ex4' check='true' class='wait'}
+```{webr}
+#| exercise: ex_4.1
+#| envir: Ex4
+#| check: true
+#| class: wait
+grade_this({
+  ans <- tolower(trimws(get("issue_4_1", envir = .envir_result)))
+  ok <- ans %in% c("heteroskedasticity", "nonconstant variance", "heteroscedasticity")
+  if (ok) pass("Yes — the spread increases with the fitted value.")
+  fail("Hint: look for a funnel shape (changing spread).")
+})
+```
+:::
+:::
+
+- [ ] Continue
+
+### Exercise 2: Use VIF to spot multicollinearity {#sec-chapter04-exercise-2}
+
+Fit the model and compute VIFs. Which term has the largest VIF?
+
+```{webr chapter04-regression-pitfalls-diagnostics-ex2-setup}
+#| echo: false
+#| edit: false
+ex2_mod <- lm(mpg ~ wt + disp + hp, data = mtcars)
+vif_from_lm(ex2_mod)
+```
+
+::: Exercise
+Set `worst_term` equal to the term with the largest VIF.
+
+::: {.cell exercise='ex_4.2' envir='Ex4' define='["worst_term"]'}
+```{webr}
+#| exercise: ex_4.2
+#| envir: Ex4
+#| define:
+#|   - worst_term
+worst_term <- "____"
+```
+:::
+
+:::: {.solution exercise="ex_4.2"}
+::: {.cell exercise='ex_4.2' solution='true'}
+```{webr}
+#| exercise: ex_4.2
+#| solution: true
+worst_term <- vif_from_lm(ex2_mod)$term[1]
+```
+:::
+::::
+
+::: {.cell exercise='ex_4.2' envir='Ex4' check='true' class='wait'}
+```{webr}
+#| exercise: ex_4.2
+#| envir: Ex4
+#| check: true
+#| class: wait
+grade_this({
+  true_term <- vif_from_lm(ex2_mod)$term[1]
+  ans <- trimws(get("worst_term", envir = .envir_result))
+  if (identical(ans, true_term)) pass("Correct.")
+  fail("Hint: your answer should match the first row of the VIF table (largest VIF).")
+})
+```
+:::
+:::
+
+- [ ] Continue
+
+### Exercise 3: Interpret a Box–Cox suggestion {#sec-chapter04-exercise-3}
+
+In the Box–Cox plot earlier, we computed `lambda_hat`. Based on its value, which option is the best *rough* interpretation?
+
+::: Exercise
+Choose one: `"no transform"`, `"log transform"`, or `"square-root transform"`.
+
+::: {.cell exercise='ex_4.3' envir='Ex4' define='["boxcox_choice"]'}
+```{webr}
+#| exercise: ex_4.3
+#| envir: Ex4
+#| define:
+#|   - boxcox_choice
+boxcox_choice <- "____"
+```
+:::
+
+:::: {.solution exercise="ex_4.3"}
+::: {.cell exercise='ex_4.3' solution='true'}
+```{webr}
+#| exercise: ex_4.3
+#| solution: true
+boxcox_choice <- if (abs(lambda_hat) < 0.25) "log transform" else if (abs(lambda_hat - 0.5) < 0.25) "square-root transform" else "no transform"
+```
+:::
+::::
+
+::: {.cell exercise='ex_4.3' envir='Ex4' check='true' class='wait'}
+```{webr}
+#| exercise: ex_4.3
+#| envir: Ex4
+#| check: true
+#| class: wait
+grade_this({
+  ans <- tolower(trimws(get("boxcox_choice", envir = .envir_result)))
+  expected <- if (abs(lambda_hat) < 0.25) "log transform" else if (abs(lambda_hat - 0.5) < 0.25) "square-root transform" else "no transform"
+  if (identical(ans, expected)) pass("Good — you matched the rough interpretation of lambda.")
+  fail("Hint: lambda ≈ 0 suggests log; lambda ≈ 0.5 suggests sqrt; lambda ≈ 1 suggests no transform.")
+})
+```
+:::
+:::
+
+## Handling [outliers]{.glossary term="Outlier"} and influential observations {#sec-handling-outliers-and-influential-observations}
+
+When diagnostics flag influential observations, slow down and investigate rather than deleting points automatically.
+
+- Check data quality first (entry errors, unusual units, miscoding).
+- If influential points are real, fit with and without them to assess robustness; report how conclusions change.
+- Prefer model improvements (functional form, additional predictors, variance stabilisation) over deletion.

@@ -1,33 +1,58 @@
 ---
 format: live-html
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Key-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
 ---
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
 # Course Overview {#sec-course-overview .unnumbered}
 
+Linear regression is one of the most widely used tools in data analysis. It helps us describe and predict an outcome $Y$ using one or more predictors $X$, while also quantifying how uncertain our conclusions are.
+
+This short course focuses on **practical regression workflows**:
+
+1. **Specify** a sensible model for your question,
+2. **Fit and interpret** it in R,
+3. **Diagnose** whether the model is misleading,
+4. **Remedy** common problems (or revise the model), and
+5. **Communicate** what the model does—and does not—support.
+
+::: Key-point
+Regression is not just “fit a line”: it is a cycle of modelling, checking, and improving.
+:::
 
 ## What you will learn {#sec-what-you-will-learn}
 
-- Formulate simple and multiple linear regression models and articulate
-  their assumptions.
-- Interpret regression coefficients, including partial, interaction, and
-  categorical effects.
-- Evaluate model utility using hypothesis tests, R-squared metrics, and
-  prediction accuracy.
-- Identify when additive models fail and implement interaction or
-  polynomial terms.
-- Incorporate qualitative predictors using indicator (dummy) variables.
-- Apply principles of parsimony and evidence-based model building.
-- Use AIC, multicollinearity diagnostics, and stepwise procedures for
-  model selection.
-- Perform residual analysis, identify influential observations, and
-  apply transformations.
+- Turn real questions into simple and multiple linear regression models (and state the assumptions clearly).
+- Interpret regression output: coefficients, partial effects, interactions, and categorical predictors.
+- Quantify uncertainty using standard errors, confidence intervals, prediction intervals, and hypothesis tests.
+- Compare and refine models using fit metrics (including $R^2$ / adjusted $R^2$) and information criteria (AIC/BIC).
+- Detect common pitfalls: nonlinearity, heteroskedasticity, non-normal errors, dependence, multicollinearity, outliers, leverage, and influential observations.
+- Apply practical remedies: transformations, adding appropriate terms, revising variables, and using robust approaches when needed.
+
+## Course roadmap {#sec-course-roadmap}
+
+These chapters are designed to build from foundations → modelling → diagnostics → an end-to-end case study.
+
+- **Chapter 00 — Introduction to linear models:** what a regression model is, why we need an error term, and what assumptions mean in practice.
+- **Chapter 01 — Simple linear regression (SLR):** least squares, fitted values and residuals, inference, and prediction.
+- **Chapter 02 — Multiple linear regression (MLR):** partial regression coefficients, adjustment, categorical predictors, and overall model tests.
+- **Chapter 03 — Model building:** interactions, polynomial terms, parsimony, and model comparison/selection (with caveats).
+- **Chapter 04 — Regression pitfalls & diagnostics:** how to recognise assumption violations and influence, and what to do about them.
+- **Chapter 05 — Case study (NAPLAN):** a guided workflow from question → model → diagnostics → interpretation.
+- **Glossary:** short definitions plus formulas and useful R functions.
 
 ## How to use this book {#sec-how-to-use-this-book}
 
-- Each chapter corresponds to a module in the syllabus and ends with
-  short practice prompts.
-- R examples use base `lm()` and standard diagnostics; you can run code
-  chunks directly if you enable execution.
-- The *Assessments* chapter outlines optional exercises and a capstone
-  project that integrate exploration, model selection, and diagnostics. 
+- **Read sequentially** if you are new to regression; jump to Chapter 04 if you mainly need a diagnostics “field guide”.
+- **Run the examples** as you go. Most examples are written to run in-browser using WebR; you can also run them in R/RStudio.
+- **Hover or click glossary terms**: glossary links include short tooltips and take you to a full entry with formulas and relevant R functions.
+- **Treat diagnostics as part of the analysis**: when a plot or check suggests a problem, the chapter aims to show a reasonable next step rather than a one-size-fits-all rule.

@@ -1,0 +1,7 @@
+```{ojs}
+//| echo: false
+tex.block`\hat{Y} = ${my_a} + ${my_b}\cdot x`
+```
+
+
+

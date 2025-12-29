@@ -1,0 +1,5 @@
+::: Exercise
+
+#### Hypothesis testing revision ([p-values]{.glossary term="p-value"}) {#sec-hypothesis-testing-revision-p-values}
+
+:::

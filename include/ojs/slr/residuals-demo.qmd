@@ -1,0 +1,54 @@
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b0adj_resid = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})
+viewof b1_resid = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
+
+b0_resid = -3 + b0adj_resid
+
+residualData_resid = transpose(linearData).map(d => {
+  const yhat = b1_resid * d.x + b0_resid;
+  const res  = d.y - yhat;
+  return {
+    ...d,
+    yhat,
+    residual: res,
+    sign: res >= 0 ? "positive" : "negative",
+    absRes: Math.abs(res)
+  };
+})
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+xRange_resid = d3.extent(linearData.x)
+
+lineData_resid = xRange_resid.map(x => ({x, y: b1_resid * x + b0_resid}))
+yRange_resid = d3.extent(linearData.y)
+yPad_resid = (yRange_resid[1] - yRange_resid[0]) * 0.1
+yDomain_resid = [yRange_resid[0] - yPad_resid, yRange_resid[1] + yPad_resid]
+tex.block`\hat{Y} = ${b0_resid} + ${b1_resid}x`
+
+Plot.plot({
+  marks: [
+    Plot.ruleX(residualData_resid, {x: "x",
+      y1: "y",
+      y2: "yhat",
+      stroke: "sign",
+      strokeOpacity: 0.75,
+      strokeWidth: d => 1 + d.absRes}),
+
+    Plot.line(lineData_resid, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange_resid },
+  y: { domain: yDomain_resid, label: "y" },
+  color: { domain: ["positive", "negative"]}
+})
+```
+
+
+

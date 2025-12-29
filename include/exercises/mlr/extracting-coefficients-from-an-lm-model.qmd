@@ -1,0 +1,15 @@
+::: Exercise
+#### extracting coefficients from an `lm` model {#sec-extracting-coefficients-from-an-lm-model}
+Use the the least-squares coefficients from `abs mod` to complete these partial regression plots
+
+
+::: {.cell}
+```{webr}
+ggplot(ads)+
+  aes(x=TV, y=Sales)+
+  geom_point()+
+  geom_abline(intercept = ads_mod$coefficients[1], ads_slope = ______)
+```
+:::
+
+:::

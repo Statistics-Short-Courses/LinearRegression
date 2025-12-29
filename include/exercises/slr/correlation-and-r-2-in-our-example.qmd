@@ -1,0 +1,49 @@
+::: Exercise
+#### Correlation and $R^2$ in our example {#sec-correlation-and-r-2-in-our-example}
+compute $R^2$ using the residuals from `lm_1`.
+
+::: {.cell exercise='ex_2.2.4' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.4
+#| envir: ex_2.2
+r_squared <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.4"}
+#### Solution {#sec-correlation-and-r-2-in-our-example-solution}
+
+::: {.cell exercise='ex_2.2.4' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.4
+#| solution: true
+#| envir: ex_2.2
+r <- cor(linearData$x, linearData$y)
+r_squared <- 1 - sum(e^2) / sum((linearData$y - mean(linearData$y))^2)
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.4' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.4
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+
+
+::: {.cell envir='ex_2.2'}
+```{webr}
+#| echo: false
+#| envir: ex_2.2
+c(computed_r = r, computed_r_squared = r_squared, lm_summary_r_squared = summary(lm_1)$r.squared)
+```
+:::
+
+:::

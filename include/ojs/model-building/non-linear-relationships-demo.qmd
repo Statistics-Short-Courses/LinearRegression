@@ -1,0 +1,51 @@
+```{ojs}
+//| panel: sidebar
+//| echo: false
+
+quadPoints = transpose(quadData)
+quadXDomain = d3.extent(quadData.x)
+
+xRange = d3.extent(quadData.x)
+yRange = d3.extent(quadData.y)
+
+viewof b0adj_1 = Inputs.range([-1,16], {step: 1, label: html`${tex`\beta_0`}: Intercept `})
+viewof b1_1 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`\beta_1`}: Slope`})
+
+b0_1 = b0adj_1
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+tex.block`\hat{Y} = ${b0_1.toFixed(0)} + ${b1_1.toFixed(2)}x`
+
+lineData = xRange.map(x => ({x, y: b1_1 * x + b0_1}))
+lineResiduals = quadPoints.map((d) => {
+  const fit = b0_1 + b1_1 * d.x;
+  return { x: d.x, y: d.y, fit, resid: d.y - fit };
+})
+lineMaxAbsResid = d3.max(lineResiduals, (d) => Math.abs(d.resid)) || 1;
+Plot.plot({
+  marks: [
+    Plot.link(lineResiduals, {
+      x1: "x",
+      y1: "y",
+      x2: "x",
+      y2: "fit",
+      stroke: (d) => d.resid >= 0 ? "positive" : "negative",
+      strokeWidth: (d) => 1.5 + 3 * Math.abs(d.resid) / lineMaxAbsResid,
+      strokeOpacity: 0.7,
+      title: (d) => `Residual: ${d.resid.toFixed(2)}`
+    }),
+    Plot.line(lineData, { x: "x", y: "y" }),
+
+    Plot.dot(quadPoints, { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange },
+  y: { domain: yRange, label: "y" },
+})
+```
+
+

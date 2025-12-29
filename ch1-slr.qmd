@@ -1,0 +1,1233 @@
+---
+format: 
+  live-html:
+    toc: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
+embed-resources: true
+
+filters:
+  - custom-numbered-blocks
+
+custom-numbered-blocks:
+  classes:
+    Assumption:
+      colors: [FFCDD2, F44336]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: true
+    Example:
+      colors: [BBDEFB, 2196F3]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: true
+    Exercise:
+      colors: [C8E6C9, 4CAF50]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: true
+    Note:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-point:
+      colors: [FFF9C4, FFEB3B]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+    Key-term:
+      colors: [D1C4E9, 673AB7]
+      boxstyle: foldbox.simple
+      collapse: false
+      numbered: false
+webr:
+  render-df: gt-interactive
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+{{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
+
+```{webr chapter01-slr-setup}
+#| include: false
+library(tidyverse)
+theme_set(theme_bw())
+```
+
+```{r chapter01-slr-setup-2}
+#| include: false
+library(tidyverse)
+theme_set(theme_bw())
+```
+
+```{r chapter01-slr-setup-simulate}
+#| echo: false
+#| define:
+#|  - linearData
+n <- 20
+x <- rnorm(n,0,4)
+y <- 0.5 * x - 3 + rnorm(n,0, 2)
+
+linearData <- data.frame(x,y)
+ojs_define(linearData)
+```
+
+# Simple Linear Regression (SLR) {#sec-slr}
+
+Linear regression is a method that uses a [linear model] to describe the relationship between a response variable $Y$ and one or more predictor variables $x$. In this chapter, we focus on the simplest case of linear regression - *simple linear regression* (SLR) - where there is a single predictor variable $x$.
+
+## When to use SLR {#sec-when-to-use-slr}
+
+SLR is appropriate when you want to model the relationship between a *continuous* response variable $Y$ and a single *continuous* predictor variable $x$. There are some additional conditions that should be met for SLR to be valid, but we will cover these in later chapters. 
+
+::: Key-point
+SLR is used to model the relationship between a [continuous]{.glossary term="Continuous variable"} response variable ($Y$) and a single continuous predictor variable ($x$).
+:::
+
+## Fitting models to data {#sec-LinearFit}
+
+In @sec-introduction-to-linear-models we constructed a simple linear model based on known parameters:
+$$
+Y=\alpha + \beta x + \varepsilon, \quad{\varepsilon \sim N(0,\sigma^2)}
+$$
+where $\alpha$ is the intercept, $\beta$ is the slope, and $\sigma$ is the standard deviation of the normally distributed error term $\varepsilon$. In that section, we knew the values of $\alpha$, $\beta$ and even $\sigma$. 
+
+However, in most contexts we don't know the true relationship between $x$ and $Y$ in advance. Instead, we are given *data* and try to *infer* the values of $\alpha$, $\beta$, and $\sigma$ by analysing the data. This analysis is called [simple linear regression]{.glossary term="Simple linear regression"}. 
+
+Indeed, at the end of @sec-simple_linear_model we generated data from a linear model. In preparation for this chapter, we've generated some data from a similar such linear model. Here it is:
+
+::: {.panel-tabset}
+### Plot {#sec-fitting-models-to-data-plot}
+```{r chapter01-slr-fitting-models-to-data-plot}
+#| echo: false
+#| input:
+#|   - linearData
+ggplot(linearData)+
+  aes(x=x, y=y)+
+  geom_point()
+```
+
+### Data {#sec-fitting-models-to-data-data}
+```{r chapter01-slr-fitting-models-to-data}
+#| echo: false
+#| input:
+#|   - linearData
+linearData
+```
+:::
+
+our task for the remainder of the chapter (and in regression generally) is to try an make a (educated) guess about what linear model gave rise to this data. 
+
+- [ ] Continue
+
+### Parameter estimates {#sec-estimating-parameters}
+
+We call the process of trying to guess the parameters of the data generating model (i.e. $\alpha$, $\beta$ and $\sigma$), [estimation]{.glossary term="Estimation"}, and our guesses are [estimates]{.glossary term="estimate"}. 
+
+To avoid confusion, we will give our estimates different names to the true parameters. In particular, for simple linear regression we will denote an estimate of the intercept,$\alpha$, by $a$, and estimate of the slope, $\beta$, by $b$, and an estimate of the error  standard deviation,$\sigma$ by $s$. So, we have
+
+::: Key-term
+#### Parameter Estimates {#sec-parameter-estimates-definition}
+The estimates of the parameters of a simple linear regression model are denoted as:
+$$
+a: \text{Estimated intercept}
+$$
+$$
+b: \text{Estimated slope}
+$$
+$$
+s: \text{Estimated standard deviation}.
+$$
+:::
+
+::: Key-point
+#### Estimated vs true parameters {#sec-estimated-vs-true-parameters}
+It is important to distinguish between estimated (sometimes called 'fitted', or 'sample') parameters and true (sometimes called 'population') parameters. The true parameters are assumed to govern the data generating process (and are unknown), while the estimated parameters are our best guesses for the true parameters based on the observed data.
+In this course we use Greek letters (e.g. $\alpha$, $\beta$, $\sigma$) to denote true parameters, while Latin letters (e.g. $a$, $b$, $s$) denote estimates of those parameters.
+:::
+
+- [ ] Continue
+
+### Predicted values {#sec-predicted-values}
+
+Just as the linear model with true parameters gives us the expected value of $Y$:
+$$
+E[Y]=\alpha + \beta x,
+$$
+our estimated linear model gives us an *estimate* of the value of $Y$. We denote this as $\hat{Y}$ (pronounced y-hat), the [predicted value]{.glossary term="Predicted value"} of $Y$ given our estimated model:
+
+::: Key-term
+#### Predicted Value {#sec-predicted-value-definition}
+The predicted value of the outcome variable $Y$ given an esimated simple linear predictor is defined as:
+$$
+\hat{Y}=a+bx
+$$
+:::
+
+___
+
+- [ ] Continue
+
+### Fitting a line to data {#sec-fitting-line-to-data}
+
+Looking at data (i.e. pairs of $(x, Y)$ values), we try to find the estimates of our parameters that best 'fit' its distribution. Adjust the parameter estimates with the sliders below to find a line that you think fits the data:
+
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b1_1 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
+viewof b0adj_1 = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept (adjust)`})
+
+b0_1 = (-3 - 0.5*b1_1) + b0adj_1
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+
+xRange = d3.extent(linearData.x)
+
+lineData_1 = xRange.map(x => ({x, y: b1_1 * x + b0_1}))
+yRange = d3.extent(linearData.y)
+yPad = (yRange[1] - yRange[0]) * 0.1
+yDomain = [yRange[0] - yPad, yRange[1] + yPad]
+tex.block`\hat{Y} = ${b0_1.toFixed(2)} + ${b1_1.toFixed(2)}x`
+
+Plot.plot({
+  marks: [
+    Plot.line(lineData_1, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange },
+  y: { domain: yDomain, label: "y" },
+})
+```
+
+
+
+
+
+::: Exercise
+What is your best [estimate]{.glossary term="Estimate"} for the values of $\alpha$ and $\beta$ that best fit the given data?
+
+
+::: {.cell exercise='ex_2.1' envir='Ex2' define='["my_a","my_b"]'}
+```{webr}
+#| exercise: ex_2.1
+#| envir: Ex2
+#| define:
+#|   - my_a
+#|   - my_b
+my_a <- ______
+my_b <- ______
+```
+:::
+
+
+:::: {.solution exercise="ex_1"}
+
+::: {.cell exercise='ex_2.1' solution='true'}
+```{webr}
+#| exercise: ex_2.1
+#| solution: true
+```
+:::
+
+::::
+
+::: {.cell exercise='ex_2.1' envir='Ex2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.1
+#| envir: Ex2
+#| check: true
+#| class: wait
+grade_this({
+  if (is.numeric(get("my_a", envir = .envir_result)) && is.numeric(get("my_b", envir = .envir_result))){pass("Good guess!")}
+  fail("both $a$ and $b$ should be numbers")
+})
+```
+:::
+
+:::
+
+
+Ok great, so we have an estimate for our line-of-best-fit:
+
+```{ojs}
+//| echo: false
+tex.block`\hat{Y} = ${my_a} + ${my_b}\cdot x`
+```
+
+
+
+
+
+But how good is our estimate really? What do we mean by 'best' fit here? And how can we objectively evaluate it and maybe compare it to other estimates?
+
+-   [ ] Continue
+
+### Residuals {#sec-residuals}
+
+[Residuals]{.glossary term="Residual"} are the differences between observed values of $Y$, and the value predicted by our estimated linear predictor $\hat{Y}$. We denote residuals with the letter $e$:
+
+::: Key-term
+#### Residual {#sec-residual-definition}
+The difference between an observed value of $Y$ and the value predicted by our estimated model $\hat{Y}$:
+$$
+e=Y-\hat{Y} = Y - (a + bx). 
+$$
+:::
+
+Residuals, $e$, are similar to the errors, $\varepsilon$, that we encountered in @sec-random-errors - but they are distinct. Since we do not know the 'true' values of $\alpha$ and $\beta$ - we cannot calculate the errors, $\varepsilon= Y- E[Y]= Y-\alpha + \beta x$. However, we do  have our estimates, $a$ and $b$, so we can calculate residuals. 
+
+Indeed - calculating residuals gives us a way to assess how well our estimated model fits the data.  We can think of the residuals as being the 'mismatch' between our estimated linear predictor and each data point. By *minimizing* the size of residuals (minimising the mismatch of our model to the data), we can get a better fit of our line to data.
+
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b0adj_resid = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})
+viewof b1_resid = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
+
+b0_resid = -3 + b0adj_resid
+
+residualData_resid = transpose(linearData).map(d => {
+  const yhat = b1_resid * d.x + b0_resid;
+  const res  = d.y - yhat;
+  return {
+    ...d,
+    yhat,
+    residual: res,
+    sign: res >= 0 ? "positive" : "negative",
+    absRes: Math.abs(res)
+  };
+})
+
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+xRange_resid = d3.extent(linearData.x)
+
+lineData_resid = xRange_resid.map(x => ({x, y: b1_resid * x + b0_resid}))
+yRange_resid = d3.extent(linearData.y)
+yPad_resid = (yRange_resid[1] - yRange_resid[0]) * 0.1
+yDomain_resid = [yRange_resid[0] - yPad_resid, yRange_resid[1] + yPad_resid]
+tex.block`\hat{Y} = ${b0_resid} + ${b1_resid}x`
+
+Plot.plot({
+  marks: [
+    Plot.ruleX(residualData_resid, {x: "x",
+      y1: "y",
+      y2: "yhat",
+      stroke: "sign",
+      strokeOpacity: 0.75,
+      strokeWidth: d => 1 + d.absRes}),
+
+    Plot.line(lineData_resid, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xRange_resid },
+  y: { domain: yDomain_resid, label: "y" },
+  color: { domain: ["positive", "negative"]}
+})
+```
+
+
+
+
+
+- [ ] Continue 
+
+## Estimating coefficients {#sec-estimating-coefficients}
+
+### Optimising fit by minimising (squared) residuals {#sec-optimising-model-fit-by-minimising-squared-residuals}
+Below, the plot now also displays squared residuals for each data point as squares.
+Underneath the model equation is the *[Sum of squared residuals]{.glossary}* (SSR), which gives a measure of the absolute difference between our linear predictor and the observed outcomes. 
+
+::: Key-term
+### Sum of squared residuals (SSR) {#sec-sum-of-squared-residuals-definition}
+The sum of squared residuals (SSR) is the sum of the squares of the residuals from our estimated linear predictor:
+$$
+SSR=\sum_{i=1}^{n} e_i^2
+$$
+
+where $e_i = Y_i - \hat{Y}_i$.
+:::
+
+The SSR gives us a numerical measure of how well the line fits the data - see how small you can get the SSR by adjusting slope and intercept.
+
+```{ojs}
+//| panel: sidebar
+//| echo: false
+viewof b0adj_2 = Inputs.range([-5, 5], {step: 1, label: html`${tex`a`}: Estimated Intercept`})
+viewof b1_2 = Inputs.range([-2, 2], {step: 0.01, label:  html`${tex`b`}: Estimated Slope`})
+
+b0_2 = -3 + b0adj_2
+
+residualData = transpose(linearData).map(d => {
+  const yhat = b1_2 * d.x + b0_2;
+  const res  = d.y - yhat;
+  return {
+    ...d,
+    yhat,
+    residual: res,
+    sign: res >= 0 ? "positive" : "negative",
+    absRes: Math.abs(res)
+  };
+})
+
+squareData = residualData.map(d => {
+  const y1 = Math.min(d.y, d.yhat);
+  const y2 = Math.max(d.y, d.yhat);
+  const alignLeft = (d.residual < 0 && b1_2 >= 0) || (d.residual >= 0 && b1_2 < 0);
+  const x1 = alignLeft ? d.x : d.x - d.absRes;
+  const x2 = alignLeft ? d.x + d.absRes : d.x;
+  return {
+    ...d,
+    x1,
+    x2,
+    y1,
+    y2
+  };
+})
+  
+SSRes = d3.sum(residualData, d => d.residual ** 2)
+
+html`<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-top: 10px;">
+  <div style="font-weight: 500; margin-bottom: 8px;">Sum of Squared Residuals (SSR):</div>
+  ${tex`\displaystyle\sum_{i=1}^{n} e_i^{2} = ${SSRes.toFixed(2)}`}
+</div>`
+```
+
+```{ojs}
+//| panel: fill
+//| echo: false
+xMin_2 = d3.min(squareData, d => Math.min(d.x1, d.x2))
+xMax_2 = d3.max(squareData, d => Math.max(d.x1, d.x2))
+xPad_2 = (xMax_2 - xMin_2) * 0.05
+xDomain_2 = [xMin_2 - xPad_2, xMax_2 + xPad_2]
+
+yMin_2 = d3.min(squareData, d => Math.min(d.y1, d.y2))
+yMax_2 = d3.max(squareData, d => Math.max(d.y1, d.y2))
+yPad_2 = (yMax_2 - yMin_2) * 0.1
+yDomain_2 = [yMin_2 - yPad_2, yMax_2 + yPad_2]
+
+lineData_2 = xDomain_2.map(x => ({x, y: b1_2 * x + b0_2}))
+
+tex.block`\hat{Y} = ${b0_2} + ${b1_2}x`
+
+Plot.plot({
+  marks: [
+    Plot.rect(squareData, {
+      x1: "x1",
+      x2: "x2",
+      y1: "y1",
+      y2: "y2",
+      fill: "#4CAF50",
+      fillOpacity: 0.25,
+      stroke: "#4CAF50",
+      strokeOpacity: 0.75
+    }),
+
+    Plot.line(lineData_2, { x: "x", y: "y" }),
+
+    Plot.dot(transpose(linearData), { x: "x", y: "y", r: 3 })
+  ],
+  x: { domain: xDomain_2 },
+  y: { domain: yDomain_2, label: "y" },
+})
+```
+
+
+
+
+
+::: Exercise
+Based on this visualisation, what do you think is the minimum possible $SSR$ achievable?
+
+::: {.cell exercise='Ex_2.2' envir='Ex2' define='SSR'}
+```{webr}
+#| exercise: Ex_2.2
+#| envir: Ex2
+#| define:
+#|   - SSR
+SSR <- ________
+```
+:::
+
+:::: {.solution exercise="Ex_2.2"}
+
+::: {.cell exercise='Ex_2.2' solution='true'}
+```{webr}
+#| exercise: Ex_2.2
+#| solution: true
+```
+:::
+
+::::
+
+::: {.cell exercise='Ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: Ex_2.2
+#| check: true
+#| class: wait
+grade_this({
+  if (is.numeric(get("SSR", envir = .envir_result))){
+    pass("Good guess!")}
+  fail("SSR should be a number!")
+})
+```
+:::
+
+If you want you can update your $a$ and $b$ estimates too (otherwise just proceed):
+
+
+::: {.cell exercise='ex_2.3' envir='Ex2'}
+```{webr}
+#| exercise: ex_2.3
+#| envir: Ex2
+my_a <- ______
+
+my_b <- ______
+```
+:::
+
+
+:::
+
+
+### The least-squares estimate {#sec-leastsquares}
+
+We call the estimates $a$ and $b$ which minimise the sum of squares the *[least squares estimates]{.glossary term="Ordinary least squares"}*. Some nice mathematics tells us that the least squares esimates for a simple linear model are *unique* - that is, there is one set of values for $a$ and $b$ which satisfy this property. Moreover, we don't have to manually adjust our parameters to keep lowering SSR - there is a convenient closed form expression which allows us to compute $a$ and $b$ very efficiently. As a statistical programming language, this is something R does very easily.
+
+
+#### Fitting a model with the `lm()` function {#sec-fitting-a-model-with-the-lm-function}
+
+In R the `lm()` function computes the least squares estimates $a$ and $b$ for our simple linear model (among other things) in a single command: 
+
+```{webr chapter01-slr-fitting-a-model-with-the-lm-function-fit-lm}
+#| input:
+#|   - linearData
+lm_1 <- lm(y~x,linearData)
+```
+We can  extract the coefficients from the `lm` by indexing:
+
+```{webr chapter01-slr-fitting-a-model-with-the-lm-function}
+lm_1$coefficients
+```
+or by the `coef()` function:
+
+```{webr chapter01-slr-fitting-a-model-with-the-lm-function-2}
+coef(lm_1)
+```
+-  [ ] How do these estimates compare with yours? 
+
+Lets compare the estimated linear fits graphically:
+
+::: {.panel-tabset}
+#### Plot {#sec-fitting-a-model-with-the-lm-function-plot}
+
+::: {.cell exercise='comparePlot' envir='Ex2' edit='false'}
+```{webr}
+#| exercise: comparePlot
+#| envir: Ex2
+#| echo: false
+#| edit: false
+ggplot(linearData)+
+  aes(x=x,y=y)+
+  geom_point()+
+  geom_abline( # the least squares estimate
+    aes(intercept = lm_1$coefficients[1],
+    slope = lm_1$coefficients[2],
+    colour = "Least squares fit")) +
+  geom_abline( # Your guess
+    aes(intercept = my_a,
+    slope = my_b,
+    colour = "Your guess"))+
+  scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'), name = NULL)
+```
+:::
+
+#### Code {#sec-fitting-a-model-with-the-lm-function-code}
+
+::: {.cell}
+```{webr}
+#| eval: false
+ggplot(linearData)+
+  aes(x=x,y=y)+
+  geom_point()+
+  geom_abline( # the least squares estimate
+    aes(intercept = lm_1$coefficients[1],
+    slope = lm_1$coefficients[2],
+    colour = "Least squares fit")) +
+  geom_abline( # Your guess
+    aes(intercept = my_a,
+    slope = my_b,
+    colour = "Your guess"))+
+  scale_colour_manual(values= c("Least squares fit"="#4CAF50","Your guess"='#2196F3'), name = NULL)
+```
+:::
+
+:::
+
+-   [ ] Continue
+
+
+## Estimating variance {#sec-estimating-variance}
+
+Once the line has been fitted (i.e. $\alpha$ and $\beta$ have been estimated as $a$ and $b$), we also have to estimate the distribution of error terms (remember, as per @sec-varAssumption, the error distribution has a constant variance defined by $\sigma^2$).
+As you might expect, we again utilise the residuals from our least squares linear predictor to estimate $\sigma$.  The spread of the error terms will be estimated by the spread of the residuals around our line of best fit.
+
+We can extract the individual residual values from the fitted `lm` object by indexing (e.g. `my_lm$residuals`) or with the `residuals()` function.
+
+```{webr chapter01-slr-estimating-variance}
+residuals(lm_1)
+```
+
+The resulting `R` object is a vector of the residual for each observation. i.e. residuals(lm_1)[[3]] $= e_3$
+
+::: Exercise
+#### Extracting residuals from an `lm` object {#sec-extracting-residuals-from-an-lm-object}
+Extract the residuals from  your least squares fitted model `lm_1`*by indexing* and assign them to the variable `e`
+
+
+::: {.cell exercise='ex_2.2.1' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.1
+#| envir: ex_2.2
+e <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.1"}
+#### Solution {#sec-extracting-residuals-from-an-lm-object-solution}
+
+::: {.cell exercise='ex_2.2.1' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.1
+#| solution: true
+#| envir: ex_2.2
+e <- lm_1$residuals
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.1' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.1
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+:::
+
+
+### Residual Standard Error {#sec-residual-standard-error}
+The residuals from our least squares fit can be used to estimate the variance of the error terms in our linear model. 
+The *[residual sum of squares]{.glossary term="Residual sum of squares"}* (RSS) that we calculated in @sec-leastsquares during 'least squares' fitting, as a measure of variation of observations around the fitted line can also be used to estimate the variance of the error terms.
+
+::: Key-term
+#### Residual Sum of Squares (RSS) {#sec-residual-sum-of-squares-definition}
+The *[residual sum of squares]{.glossary}* (RSS) is defined as
+$$
+RSS = \sum_{i=1}^{n} e_i^2
+$$
+where $e_i = Y_i - \hat{Y}_i$ are the residuals from our estimated linear predictor.
+:::
+
+::: Exercise
+#### Calculate the Residual Sum of Squares {#sec-calculate-the-residual-sum-of-squares}
+using your `e` object defined in the previous exercise, calculate the residual sum of squares of the least squares model.
+
+::: {.cell exercise='ex_2.2.2' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.2
+#| envir: ex_2.2
+rss <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.2"}
+#### Solution {#sec-calculate-the-residual-sum-of-squares-solution}
+We simply square each residual using `r^2` and then sum them together using the `sum()` function:
+
+::: {.cell exercise='ex_2.2.2' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.2
+#| solution: true
+#| envir: ex_2.2
+rss <- sum(e^2)
+```
+:::
+
+::::
+
+::: {.cell exercise='ex_2.2.2' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.2
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+:::
+
+However, the RSS itself is not a very useful measure of the spread of the residuals, since it depends on the number of observations - more observations will tend to lead to a larger RSS, even if the spread of the residuals is the same. We need a measure of the *average* size of the residual (per observation).
+To standardise the RSS, we might consider the average squared residual, which we can obtain by dividing the RSS by the number of observations, $n$. However, this would tend to *underestimate* the true variance of the error terms, $\sigma^2$, because the residuals are calculated from the estimated line, which has already 'used up' some of the information (see [degrees of freedom]) in the data.
+
+To adjust for the fact that we have already estimated two parameters ($a$ and $b$) from the RSS,we instead divide the RSS by $n-k$ (where $n$ is the number of observations, and $k$ is the number of parameters alreadyu estimated -in this case 2). This gives us the *[mean squared error]{.glossary}* (MSE), which is our estimator for $\sigma^2$:
+
+::: Key-term
+#### Mean Squared Error (MSE)
+{#sec-residual-standard-error-definition}
+We define the *[mean squared error]{.glossary}* (MSE) of a simple linear regression model as
+$$
+s^2 = \frac{1}{n-2}\sum_{i=1}^{n} e_i^2= \frac{SSE}{n-2}
+$$
+:::
+
+Just as we often prefer to work with standard deviations rather than variances, we also define the *[residual standard error]{.glossary}* (RSE) as the square root of the MSE:
+
+::: Key-term
+#### Residual Standard Error (RSE) {#sec-residual-standard-error-definition}
+The *[residual standard error]{.glossary}* (RSE) of a simple linear regression model is defined as
+$$
+s = \sqrt{s^2} = \sqrt{\frac{1}{n-2}\sum_{i=1}^{n} e_i^2} = \sqrt{\frac{SSE}{n-2}}.
+$$
+:::
+
+$s^2$ and $s$ are our estimators for $\sigma^2$ and $\sigma$, respectively. 
+
+::: Exercise
+#### Calculate the Residual Standard Error {#sec-calculate-the-residual-standard-error}
+Using your `rss` object defined in the previous exercise, calculate the residual standard error of the least squares model.
+
+::: {.cell exercise='ex_2.2.3' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3
+#| envir: ex_2.2
+rse <- ______
+```
+:::
+
+
+::: {.hint exercise="ex_2.2.3"}
+The RSE is $s = \sqrt{\frac{RSS}{n-2}}$. You can get $n$ using `nrow(linearData)`.
+:::
+:::: {.solution exercise="ex_2.2.3"}
+#### Solution {#sec-calculate-the-residual-standard-error-solution}
+
+::: {.cell exercise='ex_2.2.3' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3
+#| solution: true
+#| envir: ex_2.2
+rse <- sqrt(sum(e^2)/(nrow(linearData)-2))
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.3' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.3
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this({
+  expected <- sqrt(sum(e^2) / (nrow(linearData) - 2))
+  if (isTRUE(all.equal(.result, expected, tolerance = 1e-6))) {
+    pass("Correct!")
+  }
+  fail("Check your calculation of the residual standard error.")
+})
+```
+:::
+
+:::
+
+
+- [ ] Continue
+
+### Correlation and $R^2$ {#sec-correlation-and-r-2}
+
+The residual standard error $s$ tells us the *absolute* spread of observations around the fitted line — it is measured in the same units as $Y$. But it does not tell us how much of the original variation in $Y$ our model has *explained*. For that, we need a *relative* measure.
+
+The **[total sum of squares]{.glossary}** (TSS) captures the total variation in $Y$ around its mean:
+
+::: Key Term
+#### Total Sum of Squares (TSS) {#sec-total-sum-of-squares-definition}
+
+$$
+\text{TSS} = \sum_{i=1}^{n} (Y_i - \bar{Y})^2.
+$$
+:::
+
+::: Exercise
+#### Calculate TSS {#sec-calculate-tss}
+Using `linearData`, calculate the total sum of squares (TSS).
+
+
+::: {.cell exercise='ex_2.2.3b' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| envir: ex_2.2
+TSS <- ______
+```
+:::
+
+
+::: { .hint exercise="ex_2.2.3b" }
+TSS is `sum((linearData$y - mean(linearData$y))^2)`.
+:::
+
+
+::: {.cell exercise='ex_2.2.3b' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| solution: true
+#| envir: ex_2.2
+TSS <- sum((linearData$y - mean(linearData$y))^2)
+TSS
+```
+:::
+
+
+
+::: {.cell exercise='ex_2.2.3b' check='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.3b
+#| check: true
+#| envir: ex_2.2
+grade_this({
+  if (isTRUE(all.equal(.result, 265.3973, tolerance = 0.01))) {
+    pass("Correct! TSS = 265.40")
+  }
+  fail("Check your calculation. TSS is the sum of squared deviations from the mean of y.")
+})
+```
+:::
+
+:::
+
+
+By comparing the residual sum of squares (RSS) to the total sum of squares (TSS), we can quantify the proportion of variance *explained* by our model. This ratio is called **[R-squared]{.glossary}**:
+
+::: Key-term
+#### R-squared ($R^2$) {#sec-r-squared-definition}
+The $R^2$ statistic is defined as
+$$
+R^2 = 1 - \frac{\text{RSS}}{\text{TSS}}.
+$$
+
+i.e. the proportion of the total variance in $Y$ (the total sum of squares, TSS) explained by the model.
+
+- When $R^2 = 1$, all variation is explained (RSS = 0).
+- When $R^2 = 0$, the model explains none of the variation (RSS = TSS).
+:::
+
+As a visual demonstration of how $R^2$ changes with increasing error variance, consider the following interactive plot:
+
+```{ojs}
+//| echo: false
+//| panel: sidebar
+
+// Use linearData
+data_r2 = transpose(linearData)
+
+// True model parameters that generated the data
+alpha_true_r2 = -3
+beta_true_r2 = 0.5
+
+// Compute true fitted values and errors (difference from true model)
+trueModelData_r2 = data_r2.map(d => ({
+  ...d,
+  yTrue: alpha_true_r2 + beta_true_r2 * d.x,
+  error: d.y - (alpha_true_r2 + beta_true_r2 * d.x)
+}))
+
+// Observed error SD (used to create unit errors)
+errorSD_observed = Math.sqrt(d3.sum(trueModelData_r2, d => d.error ** 2) / data_r2.length)
+
+// Unit errors: error / errorSD (so they have approx unit variance)
+unitError_r2 = trueModelData_r2.map(d => d.error / errorSD_observed)
+
+viewof varScale_r2 = Inputs.range([0, 4], {
+  value: 1,
+  step: 0.05,
+  label: "Variance scale"
+})
+```
+
+```{ojs}
+//| echo: false
+//| panel: fill
+
+// Current sigma based on scale
+sigma_current = varScale_r2 * errorSD_observed
+
+// Compute displayed y = true model + scaled error
+pointData_r2 = trueModelData_r2.map((d, i) => ({
+  x: d.x,
+  y: d.yTrue + sigma_current * unitError_r2[i]
+}))
+
+// Compute LS fit for the current points
+xMean_r2 = d3.mean(pointData_r2, d => d.x)
+yMean_r2 = d3.mean(pointData_r2, d => d.y)
+sxy_r2 = d3.sum(pointData_r2, d => (d.x - xMean_r2) * (d.y - yMean_r2))
+sxx_r2 = d3.sum(pointData_r2, d => (d.x - xMean_r2) ** 2)
+beta_ls_r2 = sxy_r2 / sxx_r2
+alpha_ls_r2 = yMean_r2 - beta_ls_r2 * xMean_r2
+
+// Add LS fitted values to points
+pointDataWithFit_r2 = pointData_r2.map(d => ({
+  ...d,
+  yFitted: alpha_ls_r2 + beta_ls_r2 * d.x
+}))
+
+// Compute RSS, TSS, R² using LS fit
+RSS_r2 = d3.sum(pointDataWithFit_r2, d => (d.y - d.yFitted) ** 2)
+TSS_r2 = d3.sum(pointDataWithFit_r2, d => (d.y - yMean_r2) ** 2)
+R2_demo = TSS_r2 > 0 ? Math.max(0, 1 - RSS_r2 / TSS_r2) : 1
+
+tex.block`R^2 = ${R2_demo.toFixed(3)}`
+
+// Fixed axis domains based on max variance scale (3)
+xDomain_r2 = d3.extent(data_r2, d => d.x)
+xPad_r2 = (xDomain_r2[1] - xDomain_r2[0]) * 0.1
+
+// Fixed y domain: use range that accommodates max variance scale (3)
+maxSigma_r2 = 3 * errorSD_observed
+yMin_r2_fixed = d3.min(trueModelData_r2, (d, i) => d.yTrue + maxSigma_r2 * unitError_r2[i])
+yMax_r2_fixed = d3.max(trueModelData_r2, (d, i) => d.yTrue + maxSigma_r2 * unitError_r2[i])
+yPad_r2 = (yMax_r2_fixed - yMin_r2_fixed) * 0.1
+
+Plot.plot({
+  height: 300,
+  x: { domain: [xDomain_r2[0] - xPad_r2, xDomain_r2[1] + xPad_r2], label: "x", grid: true },
+  y: { domain: [yMin_r2_fixed - yPad_r2, yMax_r2_fixed + yPad_r2], label: "Y", grid: true },
+  marks: [
+    Plot.line(pointDataWithFit_r2, {x: "x", y: "yFitted", stroke: "steelblue", strokeWidth: 2}),
+    Plot.dot(pointData_r2, {x: "x", y: "y", r: 4, fillOpacity: 0.7})
+  ]
+})
+```
+
+
+
+
+
+We can see that as $\sigma$ increases, $R^2$ decreases, indicating that the model explains less of the variance in $Y$. Fitting a line to data with high noise results in a poor fit, as reflected by a low $R^2$ value.
+
+::: Exercise
+#### Correlation and $R^2$ in our example {#sec-correlation-and-r-2-in-our-example}
+compute $R^2$ using the residuals from `lm_1`.
+
+::: {.cell exercise='ex_2.2.4' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.4
+#| envir: ex_2.2
+r_squared <- ______
+```
+:::
+
+:::: {.solution exercise="ex_2.2.4"}
+#### Solution {#sec-correlation-and-r-2-in-our-example-solution}
+
+::: {.cell exercise='ex_2.2.4' solution='true' envir='ex_2.2'}
+```{webr}
+#| exercise: ex_2.2.4
+#| solution: true
+#| envir: ex_2.2
+r <- cor(linearData$x, linearData$y)
+r_squared <- 1 - sum(e^2) / sum((linearData$y - mean(linearData$y))^2)
+```
+:::
+
+::::
+
+
+::: {.cell exercise='ex_2.2.4' envir='ex_2.2' check='true' class='wait'}
+```{webr}
+#| exercise: ex_2.2.4
+#| envir: ex_2.2
+#| check: true
+#| class: wait
+grade_this_code()
+```
+:::
+
+
+
+::: {.cell envir='ex_2.2'}
+```{webr}
+#| echo: false
+#| envir: ex_2.2
+c(computed_r = r, computed_r_squared = r_squared, lm_summary_r_squared = summary(lm_1)$r.squared)
+```
+:::
+
+:::
+
+
+
+- [ ] Continue
+
+## Inference for SLR {#sec-inference-for-slr}
+
+
+Up to this point, we have fitted a straight-line model to a *sample* of data, obtaining estimates $a$ and $b$ for the intercept and slope. These estimates describe the pattern visible in the sample, but they do not tell us how closely they reflect the **true population parameters** $\alpha$ and $\beta$. Because sampling introduces randomness, different samples would produce different fitted lines.
+
+This raises the central question:
+
+**How much confidence can we place in the slope and intercept we estimated, and what do they tell us about the true relationship in the population?**
+
+To answer this, we rely on **statistical inference**, which quantifies the uncertainty in the estimates and evaluates whether the predictor genuinely influences the response.
+
+Importantly, the inferential procedures we use rest on the **assumptions of the linear regression model**:
+
+* The errors $\varepsilon$ have mean $0$.
+* They have constant variance $\sigma^2$ (homoscedasticity).
+* They are independent.
+* **They are Normally distributed.**
+
+The Normality assumption is what allows us to derive the sampling distributions of $a$ and $b$, leading directly to the **[t-tests]{.glossary term="t-test"}** and **[confidence intervals]{.glossary term="Confidence interval"}** used for inference. Without these assumptions—especially Normality—the exact forms of these inferential tools would not hold.
+
+::: Note
+For a broader introduction to statistical inference, see the *Inferential Statistics with R* short course. If concepts such as the Normal distribution or t-tests feel unfamiliar, please review that material before continuing.
+:::
+
+---
+
+### Inference About the Slope, $\beta$ {#sec-beta_inference}
+
+In simple linear regression, the population relationship is modelled as
+
+$$
+Y = \alpha + \beta x + \varepsilon.
+$$
+
+To determine whether $x$ is genuinely associated with $Y$, we test:
+
+$$
+H_0: \beta = 0
+\qquad \text{vs.} \qquad
+H_a: \beta \ne 0.
+$$
+
+* Under $H_0$, changes in $x$ do not affect the mean of $Y$ (a change in $x$ will lead to $\beta\cdot x = 0\cdot x = 0$ change in $Y$).
+* Under $H_a$, there is evidence of a real linear effect (i.e. a change in $x$ will lead to a non-zero change in $Y$).
+
+Because the Normality assumption implies that the estimator $b$ has a Normal sampling distribution (and hence a $t$ distribution once $\sigma$ is estimated), we are able to quantify how unusual our observed slope would be if $H_0$ were correct.
+
+::: Exercise
+
+#### Hypothesis testing revision ([p-values]{.glossary term="p-value"}) {#sec-hypothesis-testing-revision-p-values}
+
+:::
+
+
+#### The t-Test for the Slope {#sec-the-t-test-for-the-slope}
+
+The hypothesis test is carried out using the statistic
+
+$$
+t = \frac{b}{\text{SE}(b)},
+$$
+
+which follows a $t$-distribution with $n - 2$ [degrees of freedom]{.glossary term="Degrees of freedom"}.
+
+Interpretation:
+
+* A **large** value of $|t|$ (small p-value) indicates evidence that $\beta \ne 0$.
+* A **small** value of $|t|$ suggests the data are consistent with no linear effect.
+
+The validity of this test relies on the Normality of the errors, which guarantees that this $t$ statistic follows the appropriate reference distribution.
+
+::: Note
+While the assumption of Normality is what theoretically grounds the use of the t-test for parameter estimates, SLR is quite robust to violations of this assumption and inferences about our slope parameters may be of interest even with non-normal residual distributions.
+:::
+
+::: {.panel-tabset}
+#### p-value vs SE(b) {#sec-seb-pvalue-visual}
+```{webr chapter01-slr-seb-pvalue-visual}
+#| echo: false
+#| input:
+#|   - linearData
+lm_1 <- lm(y ~ x, linearData)
+
+b_hat <- coef(lm_1)[2]
+df <- nrow(linearData) - 2
+se_ref <- summary(lm_1)$coefficients[2, 2]
+
+se_vals <- seq(se_ref / 5, se_ref * 5, length.out = 100)
+p_vals <- 2 * pt(-abs(b_hat / se_vals), df = df)
+
+plot_df <- tibble(se = se_vals, p_value = p_vals)
+
+ggplot(plot_df, aes(se, p_value)) +
+  geom_line(color = "#2a5599") +
+  geom_hline(yintercept = 0.05, linetype = "dashed") +
+  labs(x = "SE(b)", y = "Two-sided p-value")
+```
+#### CI width vs SE(b) {#sec-seb-ci-visual}
+```{webr chapter01-slr-seb-ci-visual}
+#| echo: false
+#| input:
+#|   - linearData
+lm_1 <- lm(y ~ x, linearData)
+
+df <- nrow(linearData) - 2
+se_ref <- summary(lm_1)$coefficients[2, 2]
+
+se_vals <- seq(se_ref / 5, se_ref * 5, length.out = 100)
+ci_half <- qt(0.975, df = df) * se_vals
+
+plot_df <- tibble(se = se_vals, ci_half = ci_half)
+
+ggplot(plot_df, aes(se, ci_half)) +
+  geom_line(color = "#4CAF50") +
+  labs(x = "SE(b)", y = "CI half-width")
+```
+:::
+
+::: Example
+
+##### t-test for slope {#sec-t-test-for-slope}
+
+:::
+
+::: Exercise
+
+##### t-test for slope {#sec-t-test-for-slope-2}
+
+:::
+
+
+#### Confidence Interval for the Slope {#sec-confidence-interval-for-the-slope}
+
+A $(1-\alpha)100%$ confidence interval for $\beta$ is
+
+$$
+b ;\pm; t_{\alpha/2,,n-2},\text{SE}(b).
+$$
+
+Interpretation:
+
+* An interval **excluding zero** indicates a likely genuine relationship.
+* An interval **including zero** suggests weaker evidence.
+
+Confidence intervals complement hypothesis tests by communicating both the direction and plausible magnitude of the effect.
+
+In R, you can compute the confidence interval for the slope directly:
+
+```{webr chapter01-slr-confidence-interval-for-the-slope}
+confint(lm_1, "x")
+```
+
+
+### Inference About the Response, $Y$ {#sec-inference-about-the-response-y}
+
+Once we have fitted a regression model, we often want to make statements about the **value of the response** at a given predictor value $x_0$. There are two distinct quantities of interest:
+
+1. **The mean (average) response** at $x_0$:
+   $$
+   \mu_Y(x_0) = \alpha + \beta x_0.
+   $$
+
+2. **A new individual response** at $x_0$:
+   $$
+   Y_{\text{new}} = \alpha + \beta x_0 + \varepsilon.
+   $$
+
+These involve different uncertainties, and therefore require different intervals.
+
+Confidence intervals for the mean response reflect uncertainty in $a$ and $b$. Prediction intervals include that uncertainty *plus* the additional variability from the random error term $\varepsilon$.
+
+#### [Confidence interval]{.glossary term="Confidence interval"} for the Mean Response {#sec-confidence-interval-for-the-mean-response}
+
+Let $\hat{y}_0 = a + b x_0$ be the fitted value at $x_0$.
+A confidence interval for the mean response is:
+
+$$
+\hat{y}*0
+;\pm;
+t*{\alpha/2,,n-2} ,
+s\sqrt{
+\frac{1}{n} +
+\frac{(x_0 - \bar{x})^2}{\sum (x_i - \bar{x})^2}
+}.
+$$
+
+This interval quantifies uncertainty in the *average* value of $Y$ for units with predictor value $x_0$.
+
+```r
+predict(fit, newdata = new_point, interval = "confidence")
+```
+
+#### [Prediction interval]{.glossary term="Prediction interval"} for a New Observation {#sec-prediction-interval-for-a-new-observation}
+
+To predict an individual outcome at $x_0$, we must include the additional uncertainty from the random error $\varepsilon$:
+
+$$
+\hat{y}*0
+;\pm;
+t*{\alpha/2, , n-2} ,
+s\sqrt{
+1 +
+\frac{1}{n} +
+\frac{(x_0 - \bar{x})^2}{\sum (x_i - \bar{x})^2}
+}.
+$$
+
+Because of the extra "1" term, prediction intervals are **always wider** than confidence intervals.
+
+```r
+predict(fit, newdata = new_point, interval = "prediction")
+```
+
+::: {.panel-tabset}
+#### R code: confidence interval {#sec-ci-r-code}
+```{webr chapter01-slr-ci-r-code}
+#| input:
+#|   - linearData
+lm_1 <- lm(y ~ x, linearData)
+new_point <- data.frame(x = 2)
+predict(lm_1, newdata = new_point, interval = "confidence")
+```
+#### R code: prediction interval {#sec-pi-r-code}
+```{webr chapter01-slr-pi-r-code}
+#| input:
+#|   - linearData
+lm_1 <- lm(y ~ x, linearData)
+new_point <- data.frame(x = 2)
+predict(lm_1, newdata = new_point, interval = "prediction")
+```
+:::
+
+#### Summary {#sec-prediction-interval-for-a-new-observation-summary}
+
+* Confidence interval → uncertainty in the **expected** value at $x_0$
+* Prediction interval → uncertainty in a **new outcome** at $x_0$
+
+---
+
+-  [ ] Continue
+
+We now have the full SLR toolkit: estimation, fit summaries, and inference for slopes and responses. Next, we extend these ideas to multiple predictors in @sec-multiple-linear-regression-mlr, and later return to residual diagnostics and assumption checking in @sec-regression-pitfalls-and-diagnostics.
