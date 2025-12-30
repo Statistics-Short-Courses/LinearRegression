@@ -6,6 +6,84 @@ local glossary_page = nil
 local glossary_include = "auto"
 local glossary_sort = "yaml"
 local glossary_loaded = false
+local glossary_styles_injected = false
+
+local function glossary_css()
+  return [[
+#glossary .glossary-entry {
+  scroll-margin-top: 5rem;
+  padding: 0.9rem 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-left: 0.3rem solid rgba(var(--bs-primary-rgb, 13, 110, 253), 0.75);
+  border-radius: 0.5rem;
+  background: var(--bs-body-bg, #fff);
+}
+
+#glossary .glossary-entry > p:first-child {
+  margin-bottom: 0.25rem;
+}
+
+#glossary .glossary-term {
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+#glossary .glossary-details {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--bs-border-color, #dee2e6);
+}
+
+#glossary .glossary-section {
+  margin-top: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.25);
+  border-left: 0.25rem solid rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.6);
+  background: rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.04);
+}
+
+#glossary .glossary-section-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color, #6c757d);
+  margin-bottom: 0.4rem;
+}
+
+#glossary .glossary-section-formula {
+  border-left-color: rgba(var(--bs-primary-rgb, 13, 110, 253), 0.75);
+  background: rgba(var(--bs-primary-rgb, 13, 110, 253), 0.06);
+}
+
+#glossary .glossary-section-in-r {
+  border-left-color: rgba(var(--bs-success-rgb, 25, 135, 84), 0.75);
+  background: rgba(var(--bs-success-rgb, 25, 135, 84), 0.06);
+}
+
+#glossary .glossary-section > :last-child {
+  margin-bottom: 0;
+}
+  ]]
+end
+
+local function glossary_style_block()
+  if glossary_styles_injected then
+    return nil
+  end
+
+  if not FORMAT or not FORMAT:match("html") then
+    return nil
+  end
+
+  glossary_styles_injected = true
+  return pandoc.RawBlock("html", "<style>\n" .. glossary_css() .. "\n</style>")
+end
+
 local function is_list(value)
   local t = pandoc.utils.type(value)
   return t == "MetaList" or t == "List"
@@ -135,6 +213,86 @@ local function slugify(text)
     s = "term"
   end
   return s
+end
+
+local function details_section_heading(block)
+  if not block then
+    return nil
+  end
+
+  if block.t == "Header" then
+    local label = pandoc.utils.stringify(block.content)
+    if label and label ~= "" then
+      return { label = label, inlines = block.content }
+    end
+    return nil
+  end
+
+  if block.t ~= "Para" then
+    return nil
+  end
+
+  local inlines = block.content
+  if not inlines or #inlines ~= 1 then
+    return nil
+  end
+
+  local first = inlines[1]
+  if first.t ~= "Strong" then
+    return nil
+  end
+
+  local label = pandoc.utils.stringify(first.content)
+  if label and label ~= "" then
+    return { label = label, inlines = first.content }
+  end
+
+  return nil
+end
+
+local function structured_details(blocks)
+  if not blocks or #blocks == 0 then
+    return {}
+  end
+
+  local output = {}
+  local current = { title = nil, inlines = nil, blocks = {} }
+
+  local function flush()
+    if current.title ~= nil then
+      local title_block = pandoc.Para({
+        pandoc.Span(current.inlines, pandoc.Attr("", { "glossary-section-title" })),
+      })
+
+      local section_blocks = { title_block }
+      for _, block in ipairs(current.blocks) do
+        table.insert(section_blocks, block)
+      end
+
+      local class_slug = "glossary-section-" .. slugify(current.title)
+      table.insert(
+        output,
+        pandoc.Div(section_blocks, pandoc.Attr("", { "glossary-section", class_slug }))
+      )
+    else
+      for _, block in ipairs(current.blocks) do
+        table.insert(output, block)
+      end
+    end
+  end
+
+  for _, block in ipairs(blocks) do
+    local heading = details_section_heading(block)
+    if heading then
+      flush()
+      current = { title = heading.label, inlines = heading.inlines, blocks = {} }
+    else
+      table.insert(current.blocks, block)
+    end
+  end
+
+  flush()
+  return output
 end
 
 local function unique_anchor(base, used)
@@ -282,8 +440,9 @@ local function ensure_glossary_loaded(meta)
   if glossary_path then
     local glossary_meta_doc = parse_markdown_metadata(glossary_path)
     if glossary_meta_doc then
-      if not glossary_meta or not is_list(glossary_meta) then
-        glossary_meta = meta_value(glossary_meta_doc, "glossary")
+      local file_glossary_meta = meta_value(glossary_meta_doc, "glossary")
+      if file_glossary_meta and is_list(file_glossary_meta) then
+        glossary_meta = file_glossary_meta
       end
       if not glossary_page or glossary_page == "" then
         glossary_page = meta_string(meta_value(glossary_meta_doc, "glossary-page"))
@@ -355,13 +514,18 @@ local function build_glossary_blocks()
 
   for _, entry in ipairs(sorted_entries(included)) do
     local content = {
-      pandoc.Para({ pandoc.Strong({ pandoc.Str(entry.term) }) }),
+      pandoc.Para({
+        pandoc.Span({ pandoc.Str(entry.term) }, pandoc.Attr("", { "glossary-term" })),
+      }),
     }
     for _, def_block in ipairs(entry.definition) do
       table.insert(content, def_block)
     end
     if entry.details and #entry.details > 0 then
-      table.insert(content, pandoc.Div(entry.details, pandoc.Attr("", { "glossary-details" })))
+      table.insert(
+        content,
+        pandoc.Div(structured_details(entry.details), pandoc.Attr("", { "glossary-details" }))
+      )
     end
     table.insert(blocks, pandoc.Div(content, pandoc.Attr(entry.anchor, { "glossary-entry" })))
   end
@@ -400,7 +564,12 @@ function Pandoc(doc)
 
   local function replace_glossary_div(el)
     if el.identifier == "glossary" or has_class(el, "glossary") then
-      return pandoc.Div(build_glossary_blocks(), el.attr)
+      local blocks = build_glossary_blocks()
+      local style_block = glossary_style_block()
+      if style_block then
+        table.insert(blocks, 1, style_block)
+      end
+      return pandoc.Div(blocks, el.attr)
     end
     return nil
   end

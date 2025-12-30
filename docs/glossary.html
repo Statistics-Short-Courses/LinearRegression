@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -220,199 +255,358 @@ window.Quarto = {
 
 
 <div id="glossary">
+<style>
+#glossary .glossary-entry {
+  scroll-margin-top: 5rem;
+  padding: 0.9rem 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-left: 0.3rem solid rgba(var(--bs-primary-rgb, 13, 110, 253), 0.75);
+  border-radius: 0.5rem;
+  background: var(--bs-body-bg, #fff);
+}
+
+#glossary .glossary-entry > p:first-child {
+  margin-bottom: 0.25rem;
+}
+
+#glossary .glossary-term {
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+#glossary .glossary-details {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--bs-border-color, #dee2e6);
+}
+
+#glossary .glossary-section {
+  margin-top: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.25);
+  border-left: 0.25rem solid rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.6);
+  background: rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.04);
+}
+
+#glossary .glossary-section-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color, #6c757d);
+  margin-bottom: 0.4rem;
+}
+
+#glossary .glossary-section-formula {
+  border-left-color: rgba(var(--bs-primary-rgb, 13, 110, 253), 0.75);
+  background: rgba(var(--bs-primary-rgb, 13, 110, 253), 0.06);
+}
+
+#glossary .glossary-section-in-r {
+  border-left-color: rgba(var(--bs-success-rgb, 25, 135, 84), 0.75);
+  background: rgba(var(--bs-success-rgb, 25, 135, 84), 0.06);
+}
+
+#glossary .glossary-section > :last-child {
+  margin-bottom: 0;
+}
+  
+</style>
 <div id="glossary-statistical-model" class="glossary-entry">
-<p><strong>Statistical model</strong></p>
+<p><span class="glossary-term">Statistical model</span></p>
 <p>A probabilistic description of how a response relates to predictors, combining a systematic component with random variation.</p>
 <div class="glossary-details">
-<p><strong>Common form</strong></p>
+<div class="glossary-section glossary-section-common-form">
+<p><span class="glossary-section-title">Common form</span></p>
 <p><span class="math display">\[Y = f(X) + \varepsilon.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Fit models with <code>lm()</code> (linear regression) and <code>glm()</code> (generalised linear models).</li>
-<li>Use <code>summary()</code>, <code>coef()</code>, and <code>predict()</code> to inspect fitted models.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear regression (Gaussian errors)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generalised linear model (e.g., logistic regression)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>m_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(vs <span class="sc">~</span> mpg <span class="sc">+</span> wt, <span class="at">data =</span> mtcars, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect / use fitted models</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_lm)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m_lm)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m_lm, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-random-variable" class="glossary-entry">
-<p><strong>Random variable</strong></p>
+<p><span class="glossary-term">Random variable</span></p>
 <p>A quantity whose value varies across observations, described by a probability distribution.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Simulate random variables with functions like <code>rnorm()</code>, <code>runif()</code>, and <code>rbinom()</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate random variables (make results reproducible)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>x_norm <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>x_unif <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>x_binom <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-distribution" class="glossary-entry">
-<p><strong>Distribution</strong></p>
+<p><span class="glossary-term">Distribution</span></p>
 <p>A description of how the values of a random variable are spread across possible outcomes.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Many distributions use the <code>d/p/q/r</code> pattern, e.g.&nbsp;<code>dnorm()</code>, <code>pnorm()</code>, <code>qnorm()</code>, <code>rnorm()</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Many distributions use the d/p/q/r pattern:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># d* = density, p* = CDF, q* = quantile, r* = simulation</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-normal-distribution" class="glossary-entry">
-<p><strong>Normal distribution</strong></p>
+<p><span class="glossary-term">Normal distribution</span></p>
 <p>A symmetric, bell-shaped distribution often used to model random variation.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[X \sim N(\mu, \sigma^2).\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Density/CDF/quantiles/simulation: <code>dnorm()</code>, <code>pnorm()</code>, <code>qnorm()</code>, <code>rnorm()</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normal N(mu, sigma^2): use mean = mu and sd = sigma</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">12</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.95</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-variance" class="glossary-entry">
-<p><strong>Variance</strong></p>
+<p><span class="glossary-term">Variance</span></p>
 <p>A measure of spread; larger variance means values tend to be further from their mean.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\mathrm{Var}(X) = E[(X - E[X])^2].\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Sample variance: <code>var(x)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample variance (uses n - 1 in the denominator)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(x)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(x)^2 gives the same quantity</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(x)<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-assumption" class="glossary-entry">
-<p><strong>Assumption</strong></p>
+<p><span class="glossary-term">Assumption</span></p>
 <p>A condition we adopt to justify a model or an inference procedure.</p>
 <div class="glossary-details">
-<p><strong>In this course</strong></p>
+<div class="glossary-section glossary-section-in-this-course">
+<p><span class="glossary-section-title">In this course</span></p>
 <ul>
 <li>For linear regression, key assumptions are about the error term (mean zero, constant variance, normality, independence).</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-response-variable" class="glossary-entry">
-<p><strong>Response variable</strong></p>
+<p><span class="glossary-term">Response variable</span></p>
 <p>The variable you aim to explain or predict (sometimes called the outcome or dependent variable).</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>In a formula like <code>y ~ x1 + x2</code>, the response is on the left-hand side.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In a formula like y ~ x1 + x2, the response is on the left-hand side</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)  <span class="co"># response = dist</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The response used by a fitted model can be recovered like this</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">model.response</span>(<span class="fu">model.frame</span>(fit))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-predictor-variable" class="glossary-entry">
-<p><strong>Predictor variable</strong></p>
+<p><span class="glossary-term">Predictor variable</span></p>
 <p>A variable used to explain, adjust for, or predict changes in the response (sometimes called a covariate).</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>In a formula like <code>y ~ x1 + x2</code>, predictors are on the right-hand side.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In a formula like y ~ x1 + x2, predictors are on the right-hand side</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)  <span class="co"># predictor = speed</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The design matrix contains the (coded) predictors used by the model</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-continuous-variable" class="glossary-entry">
-<p><strong>Continuous variable</strong></p>
+<p><span class="glossary-term">Continuous variable</span></p>
 <p>A numeric variable that can (in principle) take any value on an interval.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Stored as numeric (<code>dbl</code>/<code>int</code>).</li>
-<li>Helpful checks: <code>is.numeric(x)</code>, <code>summary(x)</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Continuous variables are usually stored as numeric vectors</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(cars<span class="sc">$</span>speed)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick numeric summaries</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cars<span class="sc">$</span>speed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-linear-function" class="glossary-entry">
-<p><strong>Linear function</strong></p>
+<p><span class="glossary-term">Linear function</span></p>
 <p>A straight-line relationship between a variable and an outcome.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[f(x) = \alpha + \beta x.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Fit a straight-line mean function with <code>lm(y ~ x)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A straight-line function</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(x) alpha <span class="sc">+</span> beta <span class="sc">*</span> x</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-linear-predictor" class="glossary-entry">
-<p><strong>Linear predictor</strong></p>
+<p><span class="glossary-term">Linear predictor</span></p>
 <p>The systematic (non-random) part of a regression model that combines predictors and coefficients.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[E[Y\mid X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Fitted values: <code>fitted(model)</code> or <code>predict(model)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted values for the training data</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(fit)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions for new cases</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-intercept" class="glossary-entry">
-<p><strong>Intercept</strong></p>
+<p><span class="glossary-term">Intercept</span></p>
 <p>The baseline level of the response when predictors are at their reference values (often zero).</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Included by default in <code>lm()</code>; remove with <code>y ~ x - 1</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Included by default</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fit_with_intercept <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the intercept (forces line through the origin)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>fit_no_intercept <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> cars)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit_with_intercept)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit_no_intercept)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-slope" class="glossary-entry">
-<p><strong>Slope</strong></p>
+<p><span class="glossary-term">Slope</span></p>
 <p>The expected change in the response for a one-unit increase in a predictor, holding other predictors constant.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Extract coefficients with <code>coef(model)</code> or <code>summary(model)$coefficients</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The slope is the coefficient on the predictor</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>slope_speed <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit)[<span class="st">"speed"</span>]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>slope_speed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-random-error-term" class="glossary-entry">
-<p><strong>Random error term</strong></p>
+<p><span class="glossary-term">Random error term</span></p>
 <p>The part of the response not explained by the predictors (random variation around the systematic part).</p>
 <div class="glossary-details">
-<p><strong>In a model</strong></p>
+<div class="glossary-section glossary-section-in-a-model">
+<p><span class="glossary-section-title">In a model</span></p>
 <ul>
 <li>Often written as <span class="math inline">\(\varepsilon\)</span> in <span class="math inline">\(Y = f(X) + \varepsilon\)</span>.</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-mean-zero-errors" class="glossary-entry">
-<p><strong>Mean-zero errors</strong></p>
+<p><span class="glossary-term">Mean-zero errors</span></p>
 <p>The assumption that errors average to zero, so the model is unbiased on average.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[E[\varepsilon \mid X] = 0.\]</span></p>
 </div>
 </div>
+</div>
 <div id="glossary-homoscedasticity" class="glossary-entry">
-<p><strong>Homoscedasticity</strong></p>
+<p><span class="glossary-term">Homoscedasticity</span></p>
 <p>The assumption that the variability of the errors is roughly constant across the predictor range.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\mathrm{Var}(\varepsilon \mid X) = \sigma^2.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Check residuals vs fitted: <code>plot(model, which = 1)</code> (or with <code>broom::augment()</code>).</li>
-<li>Scale–location plot: <code>plot(model, which = 3)</code>.</li>
-</ul>
-<p><strong>Remedies (when violated)</strong></p>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals vs fitted values (look for constant spread)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale-location plot (another constant-variance check)</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="glossary-section glossary-section-remedies-when-violated">
+<p><span class="glossary-section-title">Remedies (when violated)</span></p>
 <ul>
 <li>Transform the response (e.g., log / square-root), or model the mean-variance relationship.</li>
 <li>Use heteroskedasticity-robust standard errors for inference (where appropriate).</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-heteroskedasticity" class="glossary-entry">
-<p><strong>Heteroskedasticity</strong></p>
+<p><span class="glossary-term">Heteroskedasticity</span></p>
 <p>Nonconstant error variance across predictor values (the opposite of homoscedasticity).</p>
 <div class="glossary-details">
-<p><strong>Idea</strong></p>
+<div class="glossary-section glossary-section-idea">
+<p><span class="glossary-section-title">Idea</span></p>
 <ul>
 <li><span class="math inline">\(\mathrm{Var}(\varepsilon \mid X)\)</span> changes with <span class="math inline">\(X\)</span> (often increasing with the mean).</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li>Look for a funnel pattern in residuals vs fitted: <code>plot(model, which = 1)</code>.</li>
-<li>Scale–location plot: <code>plot(model, which = 3)</code>.</li>
-<li>Optional formal test (if available): <code>lmtest::bptest(model)</code> (Breusch–Pagan).</li>
-</ul>
-<p><strong>Remedies</strong></p>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for a funnel pattern in residuals vs fitted values</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional formal test (requires lmtest):</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># lmtest::bptest(fit)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="glossary-section glossary-section-remedies">
+<p><span class="glossary-section-title">Remedies</span></p>
 <ul>
 <li>Transform the response (log / square-root), especially for positive outcomes.</li>
 <li>Consider weighted least squares if you can model the changing variance.</li>
@@ -420,506 +614,725 @@ window.Quarto = {
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-normal-errors" class="glossary-entry">
-<p><strong>Normal errors</strong></p>
+<p><span class="glossary-term">Normal errors</span></p>
 <p>The assumption that errors are approximately normally distributed (mainly important for small-sample inference).</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\varepsilon \sim N(0, \sigma^2).\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Check with Q–Q plots: <code>plot(model, which = 2)</code> or <code>qqnorm(resid(model)); qqline(resid(model))</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Q-Q plot of residuals</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative base R approach:</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># qqnorm(resid(fit)); qqline(resid(fit))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-independence" class="glossary-entry">
-<p><strong>Independence</strong></p>
+<p><span class="glossary-term">Independence</span></p>
 <p>The assumption that errors from different observations are not correlated.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>For time-ordered data, inspect autocorrelation with <code>acf(resid(model))</code>.</li>
-<li>Optional test (if available): <code>lmtest::dwtest(model)</code> (Durbin–Watson).</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># For time-ordered data: inspect autocorrelation</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">resid</span>(fit))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional Durbin–Watson test (requires lmtest):</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># lmtest::dwtest(fit)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-estimation" class="glossary-entry">
-<p><strong>Estimation</strong></p>
+<p><span class="glossary-term">Estimation</span></p>
 <p>The process of using data to infer unknown model parameters (like regression coefficients and error variability).</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Fit a linear regression with <code>lm()</code>.</li>
-<li>Extract estimates with <code>coef(model)</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a linear regression model (estimates coefficients from data)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the estimated coefficients</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-estimate" class="glossary-entry">
-<p><strong>Estimate</strong></p>
+<p><span class="glossary-term">Estimate</span></p>
 <p>A value computed from data that approximates an unknown population quantity (a parameter).</p>
 <div class="glossary-details">
-<p><strong>Notation</strong></p>
+<div class="glossary-section glossary-section-notation">
+<p><span class="glossary-section-title">Notation</span></p>
 <ul>
 <li>Parameters are often written with Greek letters (e.g., <span class="math inline">\(\beta\)</span>), and estimates with hats (e.g., <span class="math inline">\(\hat{\beta}\)</span>).</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li>Coefficient estimates: <code>coef(model)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The estimated coefficients (beta-hats)</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>beta_hat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-ordinary-least-squares" class="glossary-entry">
-<p><strong>Ordinary least squares</strong></p>
+<p><span class="glossary-term">Ordinary least squares</span></p>
 <p>Estimation method that chooses coefficients to minimise the sum of squared residuals.</p>
 <div class="glossary-details">
-<p><strong>Criterion</strong></p>
+<div class="glossary-section glossary-section-criterion">
+<p><span class="glossary-section-title">Criterion</span></p>
 <p><span class="math display">\[\text{RSS} = \sum_{i=1}^n (y_i - \hat{y}_i)^2.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Standard linear regression uses OLS via <code>lm()</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># lm() uses OLS (it chooses coefficients that minimise RSS)</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(fit)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>rss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-residual-sum-of-squares" class="glossary-entry">
-<p><strong>Residual sum of squares</strong></p>
+<p><span class="glossary-term">Residual sum of squares</span></p>
 <p>The total squared discrepancy between observed values and fitted values.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\text{RSS} = \sum_{i=1}^n e_i^2.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>deviance(model)</code> (for <code>lm</code>) equals RSS.</li>
-<li>Or compute directly: <code>sum(resid(model)^2)</code>.</li>
-</ul>
-<p><strong>Notes</strong></p>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute RSS directly</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(fit)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For lm objects, deviance() equals RSS</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="glossary-section glossary-section-notes">
+<p><span class="glossary-section-title">Notes</span></p>
 <ul>
 <li>Notation varies: many texts use <code>SSE</code> for this quantity; <code>SSR</code> is sometimes reserved for the <em>regression</em> sum of squares.</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-total-sum-of-squares" class="glossary-entry">
-<p><strong>Total sum of squares</strong></p>
+<p><span class="glossary-term">Total sum of squares</span></p>
 <p>The total variability in the response around its mean (a baseline benchmark for model fit).</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>sum((y - mean(y))^2)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> cars<span class="sc">$</span>dist</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Total variability around the mean</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((y <span class="sc">-</span> <span class="fu">mean</span>(y))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-mean-squared-error" class="glossary-entry">
-<p><strong>Mean squared error</strong></p>
+<p><span class="glossary-term">Mean squared error</span></p>
 <p>An estimate of error variance based on residual size (often RSS divided by residual degrees of freedom).</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\text{MSE} = \frac{\text{RSS}}{n - p},\]</span></p>
 <p>where <span class="math inline">\(p\)</span> is the number of estimated parameters (including the intercept).</p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Residual variance: <code>sigma(model)^2</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># MSE = RSS / residual_df</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(fit)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> rss <span class="sc">/</span> <span class="fu">df.residual</span>(fit)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>mse</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># For lm, sigma(fit)^2 is the same value</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sigma</span>(fit)<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-residual-standard-error" class="glossary-entry">
-<p><strong>Residual standard error</strong></p>
+<p><span class="glossary-term">Residual standard error</span></p>
 <p>An estimate of the typical size of residuals (the estimated error standard deviation).</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\text{RSE} = \sqrt{\frac{\text{RSS}}{n - p}} = \sqrt{\text{MSE}},\]</span></p>
 <p>where <span class="math inline">\(p\)</span> is the number of fitted parameters (including the intercept).</p>
-<p><strong>In R</strong></p>
-<ul>
-<li>For <code>lm</code>, use <code>sigma(model)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Residual standard error (estimated sigma)</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sigma</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-degrees-of-freedom" class="glossary-entry">
-<p><strong>Degrees of freedom</strong></p>
+<p><span class="glossary-term">Degrees of freedom</span></p>
 <p>The amount of independent information remaining after estimating model parameters.</p>
 <div class="glossary-details">
-<p><strong>Examples</strong></p>
+<div class="glossary-section glossary-section-examples">
+<p><span class="glossary-section-title">Examples</span></p>
 <ul>
 <li>In simple linear regression (intercept + slope): residual df is <span class="math inline">\(n - 2\)</span>.</li>
 <li>More generally (linear regression): residual df is <span class="math inline">\(n - p\)</span>.</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li>Residual df: <code>df.residual(model)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Residual degrees of freedom</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">df.residual</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-standard-error" class="glossary-entry">
-<p><strong>Standard error</strong></p>
+<p><span class="glossary-term">Standard error</span></p>
 <p>An estimate of how much a statistic (like a coefficient) would vary across repeated samples.</p>
 <div class="glossary-details">
-<p><strong>Formula (linear regression)</strong></p>
+<div class="glossary-section glossary-section-formula-linear-regression">
+<p><span class="glossary-section-title">Formula (linear regression)</span></p>
 <p><span class="math display">\[\mathrm{SE}(\hat{\beta}_j) = \sqrt{\hat{\sigma}^2\,(X^\top X)^{-1}_{jj}}.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Coefficient SEs are in <code>summary(model)$coefficients[, "Std. Error"]</code>.</li>
-<li>The covariance matrix is <code>vcov(model)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Coefficient standard errors</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)<span class="sc">$</span>coefficients[, <span class="st">"Std. Error"</span>]</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariance matrix of coefficient estimates</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-t-test" class="glossary-entry">
-<p><strong>t-test</strong></p>
+<p><span class="glossary-term">t-test</span></p>
 <p>Tests whether a coefficient differs from zero using a t statistic and an assumed reference distribution.</p>
 <div class="glossary-details">
-<p><strong>Test statistic</strong></p>
+<div class="glossary-section glossary-section-test-statistic">
+<p><span class="glossary-section-title">Test statistic</span></p>
 <p><span class="math display">\[t = \frac{\hat{\beta}_j - 0}{\mathrm{SE}(\hat{\beta}_j)}.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>See <code>t value</code> and <code>Pr(&gt;|t|)</code> in <code>summary(model)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># t values and p-values for coefficients</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)<span class="sc">$</span>coefficients[, <span class="fu">c</span>(<span class="st">"t value"</span>, <span class="st">"Pr(&gt;|t|)"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-f-test-overall-model-test" class="glossary-entry">
-<p><strong>F-test</strong></p>
+<p><span class="glossary-term">F-test</span></p>
 <p>Tests whether predictors jointly improve model fit compared with a simpler model (often intercept-only).</p>
 <div class="glossary-details">
-<p><strong>Common form (overall regression test)</strong></p>
+<div class="glossary-section glossary-section-common-form-overall-regression-test">
+<p><span class="glossary-section-title">Common form (overall regression test)</span></p>
 <p><span class="math display">\[F = \frac{(\text{TSS} - \text{RSS})/(p - 1)}{\text{RSS}/(n - p)},\]</span></p>
 <p>where <span class="math inline">\(p\)</span> is the number of fitted parameters (including the intercept).</p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Reported in <code>summary(model)</code> for <code>lm</code>.</li>
-<li>Compare nested models with <code>anova(model_small, model_big)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fit_small <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> cars)     <span class="co"># intercept-only</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>fit_big <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)   <span class="co"># add predictor</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Overall F-test appears in summary() for lm</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_big)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare nested models with anova()</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit_small, fit_big)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-p-value" class="glossary-entry">
-<p><strong>p-value</strong></p>
+<p><span class="glossary-term">p-value</span></p>
 <p>The probability, under the null hypothesis, of observing a result at least as extreme as the one observed.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Reported in <code>summary(model)</code> for standard <code>lm</code> coefficient tests.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># p-values are part of the coefficient table</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)<span class="sc">$</span>coefficients[, <span class="st">"Pr(&gt;|t|)"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-confidence-interval" class="glossary-entry">
-<p><strong>Confidence interval</strong></p>
+<p><span class="glossary-term">Confidence interval</span></p>
 <p>A range of plausible parameter values at a chosen confidence level (e.g., 95%).</p>
 <div class="glossary-details">
-<p><strong>Common form</strong></p>
+<div class="glossary-section glossary-section-common-form">
+<p><span class="glossary-section-title">Common form</span></p>
 <p><span class="math display">\[\hat{\theta} \pm t^* \cdot \mathrm{SE}(\hat{\theta}).\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Use <code>confint(model)</code> for coefficient confidence intervals.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence intervals for coefficients (default 95%)</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-prediction-interval" class="glossary-entry">
-<p><strong>Prediction interval</strong></p>
+<p><span class="glossary-term">Prediction interval</span></p>
 <p>An interval for a future observation at given predictors; wider than a confidence interval.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li><code>predict(model, newdata = df, interval = "prediction")</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>new <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> new, <span class="at">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-fitted-value" class="glossary-entry">
-<p><strong>Fitted value</strong></p>
+<p><span class="glossary-term">Fitted value</span></p>
 <p>The model’s predicted mean response for an observation (given its predictor values).</p>
 <div class="glossary-details">
-<p><strong>Notation</strong></p>
+<div class="glossary-section glossary-section-notation">
+<p><span class="glossary-section-title">Notation</span></p>
 <ul>
 <li>Often written as <span class="math inline">\(\hat{y}_i\)</span>.</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>fitted(model)</code> or <code>predict(model)</code> for fitted values.</li>
-<li>For new cases: <code>predict(model, newdata = ...)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted values for the training data</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">fitted</span>(fit))</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted value (mean) for new cases</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-residual" class="glossary-entry">
-<p><strong>Residual</strong></p>
+<p><span class="glossary-term">Residual</span></p>
 <p>The difference between an observed value and the value predicted by the fitted model.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[e_i = y_i - \hat{y}_i.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>resid(model)</code>; with <code>broom</code>, <code>augment(model)</code> includes <code>.resid</code> and <code>.fitted</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals for the training data</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">resid</span>(fit))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-simple-linear-model" class="glossary-entry">
-<p><strong>Simple linear model</strong></p>
+<p><span class="glossary-term">Simple linear model</span></p>
 <p>A model that relates a response to a single predictor using a straight-line mean function plus random error.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[Y = \alpha + \beta x + \varepsilon.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Fit with <code>lm(y ~ x, data = df)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a simple linear model (one predictor)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-simple-linear-regression" class="glossary-entry">
-<p><strong>Simple linear regression</strong></p>
+<p><span class="glossary-term">Simple linear regression</span></p>
 <p>Linear regression with exactly one predictor (a straight-line relationship on average).</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[E[Y\mid X] = \beta_0 + \beta_1 X.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Fit with <code>lm(y ~ x)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualise the fitted line</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fit, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-multiple-linear-regression" class="glossary-entry">
-<p><strong>Multiple linear regression</strong></p>
+<p><span class="glossary-term">Multiple linear regression</span></p>
 <p>Linear regression with two or more predictors, allowing adjustment for multiple variables at once.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[E[Y\mid X] = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li>Fit with <code>lm(y ~ x1 + x2 + x3)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Two or more predictors on the right-hand side</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>fit_mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> disp, <span class="at">data =</span> mtcars)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_mlr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-partial-regression-coefficient" class="glossary-entry">
-<p><strong>Partial regression coefficient</strong></p>
+<p><span class="glossary-term">Partial regression coefficient</span></p>
 <p>The effect of a predictor on the response after holding the other predictors constant.</p>
 <div class="glossary-details">
-<p><strong>Idea</strong></p>
+<div class="glossary-section glossary-section-idea">
+<p><span class="glossary-section-title">Idea</span></p>
 <ul>
 <li>Interprets the change in <span class="math inline">\(E[Y\mid X]\)</span> for a one-unit increase in <span class="math inline">\(X_j\)</span>, with the other predictors held fixed.</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li>In multiple regression, each coefficient in <code>summary(model)$coefficients</code> is a partial effect.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>fit_mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Each coefficient is a partial effect (holding the other predictors fixed)</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit_mlr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-pearson-correlation" class="glossary-entry">
-<p><strong>Pearson correlation</strong></p>
+<p><span class="glossary-term">Pearson correlation</span></p>
 <p>Measures linear association between two variables, ranging from -1 to 1.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[r = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^n (x_i - \bar{x})^2\;\sum_{i=1}^n (y_i - \bar{y})^2}}.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>cor(x, y)</code> for Pearson’s correlation (default).</li>
-<li><code>cor.test(x, y)</code> for a test and confidence interval.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pearson correlation (default)</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>wt)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test for correlation (with CI)</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>wt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-r-squared" class="glossary-entry">
-<p><strong>R-squared</strong></p>
+<p><span class="glossary-term">R-squared</span></p>
 <p>The proportion of response variability explained by the fitted model (on the training data).</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[R^2 = 1 - \frac{\text{RSS}}{\text{TSS}}.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>summary(model)$r.squared</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># R-squared</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-adjusted-r-squared" class="glossary-entry">
-<p><strong>Adjusted R-squared</strong></p>
+<p><span class="glossary-term">Adjusted R-squared</span></p>
 <p>R-squared penalised for the number of predictors to discourage unnecessary terms.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\bar{R}^2 = 1 - (1 - R^2)\frac{n - 1}{n - p},\]</span></p>
 <p>where <span class="math inline">\(p\)</span> is the number of fitted parameters (including the intercept).</p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>summary(model)$adj.r.squared</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fit_mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> disp, <span class="at">data =</span> mtcars)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted R-squared</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_mlr)<span class="sc">$</span>adj.r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-polynomial-term" class="glossary-entry">
-<p><strong>Polynomial term</strong></p>
+<p><span class="glossary-term">Polynomial term</span></p>
 <p>A transformed predictor (like x²) used to capture curvature while keeping the model linear in coefficients.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Use <code>I(x^2)</code> for a squared term, or <code>poly(x, degree)</code> for orthogonal polynomials.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a squared term (still linear in coefficients)</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>fit_poly <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> <span class="fu">I</span>(wt<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> mtcars)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or use orthogonal polynomials</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>fit_poly2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">poly</span>(wt, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> mtcars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-interaction" class="glossary-entry">
-<p><strong>Interaction</strong></p>
+<p><span class="glossary-term">Interaction</span></p>
 <p>A model term that allows the effect of one predictor to depend on another predictor.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li><code>x1:x2</code> for an interaction only; <code>x1 * x2</code> for main effects plus interaction.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Interaction only:</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>fit_int_only <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt<span class="sc">:</span>hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Main effects + interaction:</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>fit_int <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">*</span> hp, <span class="at">data =</span> mtcars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-overfitting" class="glossary-entry">
-<p><strong>Overfitting</strong></p>
+<p><span class="glossary-term">Overfitting</span></p>
 <p>When a model captures noise in the training data and generalises poorly to new data.</p>
 <div class="glossary-details">
-<p><strong>In practice</strong></p>
+<div class="glossary-section glossary-section-in-practice">
+<p><span class="glossary-section-title">In practice</span></p>
 <ul>
 <li>Symptoms include overly optimistic fit on training data and poor performance on new data.</li>
 <li>Prefer validation (train/test split or cross-validation) over “fit on everything and hope”.</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-stepwise-regression" class="glossary-entry">
-<p><strong>Stepwise regression</strong></p>
+<p><span class="glossary-term">Stepwise regression</span></p>
 <p>An automated selection approach that adds/removes predictors based on a criterion (often AIC).</p>
 <div class="glossary-details">
-<p><strong>Pitfalls</strong></p>
+<div class="glossary-section glossary-section-pitfalls">
+<p><span class="glossary-section-title">Pitfalls</span></p>
 <ul>
 <li>Can be unstable: small data changes may lead to different selected models.</li>
 <li>Post-selection <span class="math inline">\(p\)</span>-values and confidence intervals can be misleading.</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li>Use <code>step(model)</code> (AIC-based by default).</li>
-<li>Always re-check diagnostics after selection, and validate performance on new/held-out data.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fit_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> disp <span class="sc">+</span> drat <span class="sc">+</span> qsec, <span class="at">data =</span> mtcars)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Stepwise selection by AIC (automated; use with caution)</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>fit_step <span class="ot">&lt;-</span> <span class="fu">step</span>(fit_full, <span class="at">trace =</span> <span class="dv">0</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">formula</span>(fit_step)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-akaike-information-criterion" class="glossary-entry">
-<p><strong>Akaike Information Criterion</strong></p>
+<p><span class="glossary-term">Akaike Information Criterion</span></p>
 <p>Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\mathrm{AIC} = -2\log(L) + 2k,\]</span></p>
 <p>where <span class="math inline">\(k\)</span> is the number of fitted parameters and <span class="math inline">\(L\)</span> is the maximised likelihood.</p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>AIC(model)</code>; compare multiple models with <code>AIC(m1, m2, m3)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Lower AIC is preferred (among the models compared)</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(m1, m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-bayesian-information-criterion" class="glossary-entry">
-<p><strong>Bayesian Information Criterion</strong></p>
+<p><span class="glossary-term">Bayesian Information Criterion</span></p>
 <p>Model comparison metric that penalises complexity more than AIC; lower values indicate a preferred model among those compared.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\mathrm{BIC} = -2\log(L) + k\log(n).\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>BIC(model)</code>; compare multiple models with <code>BIC(m1, m2, m3)</code>.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Lower BIC is preferred (stronger penalty for complexity)</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(m1, m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-parsimony" class="glossary-entry">
-<p><strong>Parsimony</strong></p>
+<p><span class="glossary-term">Parsimony</span></p>
 <p>Choosing the simplest adequate model that answers the scientific question.</p>
 <div class="glossary-details">
-<p><strong>In practice</strong></p>
+<div class="glossary-section glossary-section-in-practice">
+<p><span class="glossary-section-title">In practice</span></p>
 <ul>
 <li>Prefer simpler models unless extra complexity meaningfully improves interpretation or prediction.</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-outlier" class="glossary-entry">
-<p><strong>Outlier</strong></p>
+<p><span class="glossary-term">Outlier</span></p>
 <p>An observation with an unusually large residual relative to the fitted model.</p>
 <div class="glossary-details">
-<p><strong>Diagnostics</strong></p>
+<div class="glossary-section glossary-section-diagnostics">
+<p><span class="glossary-section-title">Diagnostics</span></p>
 <ul>
 <li>Large standardised/studentised residuals suggest an outlying response value <em>given the predictors</em>.</li>
 <li>Rules of thumb (context dependent): <span class="math inline">\(|r_i| &gt; 2\)</span> (flag), <span class="math inline">\(|r_i| &gt; 3\)</span> (strong flag).</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>rstandard(model)</code> (standardised residuals) and <code>rstudent(model)</code> (studentised residuals).</li>
-<li>An outlier is not always influential: check leverage and Cook’s distance as well.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardised residuals and studentised residuals</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">rstandard</span>(fit))</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">rstudent</span>(fit))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-standardised-residual" class="glossary-entry">
-<p><strong>Standardised residual</strong></p>
+<p><span class="glossary-term">Standardised residual</span></p>
 <p>A residual scaled by its estimated standard deviation to highlight unusually large deviations.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[r_i = \frac{e_i}{\hat{\sigma}\sqrt{1 - h_{ii}}}.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>rstandard(model)</code> and <code>rstudent(model)</code> (studentised residuals).</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardised residuals</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rstandard</span>(fit)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Studentised residuals (often used for outlier detection)</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rstudent</span>(fit)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-influential-point" class="glossary-entry">
-<p><strong>Influential point</strong></p>
+<p><span class="glossary-term">Influential point</span></p>
 <p>An observation that substantially changes fitted coefficients or predictions when removed.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Use <code>cooks.distance(model)</code> and <code>influence.measures(model)</code>.</li>
-<li>For coefficient impact: <code>dfbetas(model)</code> and <code>dffits(model)</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Influence diagnostics</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cooks.distance</span>(fit)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="fu">influence.measures</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-leverage" class="glossary-entry">
-<p><strong>Leverage</strong></p>
+<p><span class="glossary-term">Leverage</span></p>
 <p>A measure of how unusual a case’s predictor values are; high leverage can increase influence.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[h_{ii} = x_i^\top (X^\top X)^{-1} x_i.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>hatvalues(model)</code> returns leverages (<span class="math inline">\(h_{ii}\)</span>).</li>
-</ul>
-<p><strong>Rule of thumb</strong></p>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Hat-values are leverages (h_ii)</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(fit)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="glossary-section glossary-section-rule-of-thumb">
+<p><span class="glossary-section-title">Rule of thumb</span></p>
 <ul>
 <li>High leverage often flagged by <span class="math inline">\(h_{ii} &gt; 2p/n\)</span> (or <span class="math inline">\(3p/n\)</span>), where <span class="math inline">\(p\)</span> is the number of parameters.</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-cooks-distance" class="glossary-entry">
-<p><strong>Cook’s distance</strong></p>
+<p><span class="glossary-term">Cook’s distance</span></p>
 <p>An influence measure combining residual size and leverage to flag points that strongly affect the fit.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[D_i = \frac{e_i^2}{p\,\hat{\sigma}^2}\frac{h_{ii}}{(1 - h_{ii})^2}.\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>cooks.distance(model)</code>.</li>
-</ul>
-<p><strong>Rule of thumb</strong></p>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cook's distance (larger values indicate more influence)</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(fit)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cd)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Rule of thumb often used: 4/n</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">/</span> <span class="fu">nrow</span>(cars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="glossary-section glossary-section-rule-of-thumb">
+<p><span class="glossary-section-title">Rule of thumb</span></p>
 <ul>
 <li>Values above about <span class="math inline">\(4/n\)</span> are often flagged for inspection (not an automatic deletion rule).</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-extrapolation" class="glossary-entry">
-<p><strong>Extrapolation</strong></p>
+<p><span class="glossary-term">Extrapolation</span></p>
 <p>Making predictions outside the observed predictor range, where the fitted relationship may not hold.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Compare new predictor values to <code>range(df$x)</code> (and analogous for other predictors).</li>
-</ul>
-<p><strong>Practical note</strong></p>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare new predictor values to the observed range</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(cars<span class="sc">$</span>speed)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>new_speed <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">50</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>new_speed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="glossary-section glossary-section-practical-note">
+<p><span class="glossary-section-title">Practical note</span></p>
 <ul>
 <li>Uncertainty grows quickly as you move away from the data cloud (often reflected in higher leverage).</li>
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-multicollinearity" class="glossary-entry">
-<p><strong>Multicollinearity</strong></p>
+<p><span class="glossary-term">Multicollinearity</span></p>
 <p>Strong correlation among predictors that inflates standard errors and destabilises coefficient estimates.</p>
 <div class="glossary-details">
-<p><strong>Diagnostics</strong></p>
+<div class="glossary-section glossary-section-diagnostics">
+<p><span class="glossary-section-title">Diagnostics</span></p>
 <ul>
 <li>Large standard errors and unstable coefficient signs/magnitudes.</li>
 <li>High correlations among predictors; large VIFs.</li>
 <li>Exact multicollinearity shows up as non-estimable coefficients.</li>
 </ul>
-<p><strong>In R</strong></p>
-<ul>
-<li>Correlations: <code>cor(df[, numeric_cols])</code>.</li>
-<li>Exact aliasing (perfect collinearity): <code>alias(model)</code>.</li>
-<li>Condition number (rough diagnostic): <code>kappa(model.matrix(model))</code>.</li>
-</ul>
-<p><strong>Remedies</strong></p>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fit_mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> disp, <span class="at">data =</span> mtcars)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlations among predictors</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(mtcars[, <span class="fu">c</span>(<span class="st">"wt"</span>, <span class="st">"hp"</span>, <span class="st">"disp"</span>)])</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Exact aliasing (perfect collinearity)</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">alias</span>(fit_mlr)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Condition number (rough collinearity diagnostic)</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">model.matrix</span>(fit_mlr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="glossary-section glossary-section-remedies">
+<p><span class="glossary-section-title">Remedies</span></p>
 <ul>
 <li>Remove or combine redundant predictors (guided by your scientific question).</li>
 <li>Centering can help when you include interactions/polynomials (reduces <em>induced</em> collinearity), but does not “fix” collinearity in general.</li>
@@ -927,74 +1340,115 @@ window.Quarto = {
 </ul>
 </div>
 </div>
+</div>
 <div id="glossary-variance-inflation-factor" class="glossary-entry">
-<p><strong>Variance inflation factor</strong></p>
+<p><span class="glossary-term">Variance inflation factor</span></p>
 <p>A diagnostic that summarises how collinearity inflates the uncertainty of a coefficient estimate.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p><span class="math display">\[\text{VIF}_j = \frac{1}{1 - R_j^2},\]</span></p>
 <p>where <span class="math inline">\(R_j^2\)</span> comes from regressing predictor <span class="math inline">\(X_j\)</span> on the other predictors.</p>
-<p><strong>In R</strong></p>
-<ul>
-<li>The <code>car::vif()</code> function is commonly used (if the <code>car</code> package is available).</li>
-<li>Base R approach: regress each predictor on the others and plug its <span class="math inline">\(R_j^2\)</span> into the VIF formula.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>fit_mlr <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp <span class="sc">+</span> disp, <span class="at">data =</span> mtcars)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional (if you have the car package):</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># car::vif(fit_mlr)</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Base R: regress each predictor on the others, then VIF = 1 / (1 - R^2)</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>predictors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"wt"</span>, <span class="st">"hp"</span>, <span class="st">"disp"</span>)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>vif <span class="ot">&lt;-</span> <span class="fu">sapply</span>(predictors, <span class="cf">function</span>(p) {</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  others <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(predictors, p)</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  r2 <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">lm</span>(<span class="fu">reformulate</span>(others, <span class="at">response =</span> p), <span class="at">data =</span> mtcars))<span class="sc">$</span>r.squared</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> r2)</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>vif</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-box-cox-transformation" class="glossary-entry">
-<p><strong>Box-Cox transformation</strong></p>
+<p><span class="glossary-term">Box-Cox transformation</span></p>
 <p>A family of power transformations used to stabilise variance or improve linearity for positive responses.</p>
 <div class="glossary-details">
-<p><strong>Formula</strong></p>
+<div class="glossary-section glossary-section-formula">
+<p><span class="glossary-section-title">Formula</span></p>
 <p>For <span class="math inline">\(\lambda \neq 0\)</span>:</p>
 <p><span class="math display">\[g_\lambda(y) = \frac{y^\lambda - 1}{\lambda}.\]</span></p>
 <p>For <span class="math inline">\(\lambda = 0\)</span>:</p>
 <p><span class="math display">\[g_0(y) = \log(y).\]</span></p>
-<p><strong>In R</strong></p>
-<ul>
-<li><code>MASS::boxcox(model)</code> explores power transformations for positive responses.</li>
-</ul>
+</div>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Box-Cox search (requires MASS; often installed with R)</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># MASS::boxcox(fit)</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Common special case (lambda = 0): log-transform a positive response</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>fit_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(dist) <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_log)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-factor" class="glossary-entry">
-<p><strong>Factor</strong></p>
+<p><span class="glossary-term">Factor</span></p>
 <p>A categorical predictor with discrete levels; R stores these as factors.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Create with <code>factor(x)</code>; check levels with <code>levels(x)</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"medium"</span>, <span class="st">"low"</span>, <span class="st">"high"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">factor</span>(x)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(f)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(f)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-dummy-variable" class="glossary-entry">
-<p><strong>Dummy variable</strong></p>
+<p><span class="glossary-term">Dummy variable</span></p>
 <p>An indicator (0/1) used to code categories in regression relative to a baseline.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Factors are expanded into dummy variables automatically in <code>lm()</code>.</li>
-<li>Inspect the design matrix with <code>model.matrix(model)</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>))</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Factors expand to dummy/indicator columns in the design matrix</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(y <span class="sc">~</span> group, <span class="at">data =</span> df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-reference-level" class="glossary-entry">
-<p><strong>Reference level</strong></p>
+<p><span class="glossary-term">Reference level</span></p>
 <p>The baseline category used to interpret coefficients for a factor.</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>Change with <code>relevel(f, ref = "baseline")</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"treatment"</span>, <span class="st">"control"</span>))</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(g)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the reference (baseline) level</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">relevel</span>(g, <span class="at">ref =</span> <span class="st">"control"</span>)</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(g2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 <div id="glossary-contrast" class="glossary-entry">
-<p><strong>Contrast</strong></p>
+<p><span class="glossary-term">Contrast</span></p>
 <p>A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).</p>
 <div class="glossary-details">
-<p><strong>In R</strong></p>
-<ul>
-<li>View or set with <code>contrasts(f)</code> and functions like <code>contr.treatment()</code>.</li>
-</ul>
+<div class="glossary-section glossary-section-in-r">
+<p><span class="glossary-section-title">In R</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"treatment"</span>, <span class="st">"treatment"</span>))</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># View or set contrasts (coding)</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(g) <span class="ot">&lt;-</span> <span class="fu">contr.treatment</span>(<span class="fu">nlevels</span>(g))</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 </div>
