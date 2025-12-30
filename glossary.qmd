@@ -12,22 +12,45 @@ glossary:
 
       **In R**
 
-      - Fit models with `lm()` (linear regression) and `glm()` (generalised linear models).
-      - Use `summary()`, `coef()`, and `predict()` to inspect fitted models.
+      ```r
+      # Linear regression (Gaussian errors)
+      m_lm <- lm(dist ~ speed, data = cars)
+
+      # Generalised linear model (e.g., logistic regression)
+      m_glm <- glm(vs ~ mpg + wt, data = mtcars, family = binomial())
+
+      # Inspect / use fitted models
+      summary(m_lm)
+      coef(m_lm)
+      predict(m_lm, newdata = data.frame(speed = c(10, 20)))
+      ```
   - term: Random variable
     definition: |
       A quantity whose value varies across observations, described by a probability distribution.
     details: |
       **In R**
 
-      - Simulate random variables with functions like `rnorm()`, `runif()`, and `rbinom()`.
+      ```r
+      # Simulate random variables (make results reproducible)
+      set.seed(1)
+      x_norm <- rnorm(100, mean = 0, sd = 1)
+      x_unif <- runif(100, min = 0, max = 1)
+      x_binom <- rbinom(100, size = 1, prob = 0.3)
+      ```
   - term: Distribution
     definition: |
       A description of how the values of a random variable are spread across possible outcomes.
     details: |
       **In R**
 
-      - Many distributions use the `d/p/q/r` pattern, e.g. `dnorm()`, `pnorm()`, `qnorm()`, `rnorm()`.
+      ```r
+      # Many distributions use the d/p/q/r pattern:
+      # d* = density, p* = CDF, q* = quantile, r* = simulation
+      dnorm(0, mean = 0, sd = 1)
+      pnorm(0, mean = 0, sd = 1)
+      qnorm(0.975, mean = 0, sd = 1)
+      rnorm(5, mean = 0, sd = 1)
+      ```
   - term: Normal distribution
     definition: |
       A symmetric, bell-shaped distribution often used to model random variation.
@@ -38,7 +61,18 @@ glossary:
 
       **In R**
 
-      - Density/CDF/quantiles/simulation: `dnorm()`, `pnorm()`, `qnorm()`, `rnorm()`.
+      ```r
+      # Normal N(mu, sigma^2): use mean = mu and sd = sigma
+      mu <- 10
+      sigma <- 2
+
+      dnorm(10, mean = mu, sd = sigma)
+      pnorm(12, mean = mu, sd = sigma)
+      qnorm(0.95, mean = mu, sd = sigma)
+
+      set.seed(1)
+      rnorm(5, mean = mu, sd = sigma)
+      ```
   - term: Variance
     definition: |
       A measure of spread; larger variance means values tend to be further from their mean.
@@ -49,7 +83,14 @@ glossary:
 
       **In R**
 
-      - Sample variance: `var(x)`.
+      ```r
+      # Sample variance (uses n - 1 in the denominator)
+      x <- c(1, 2, 3, 4, 5)
+      var(x)
+
+      # sd(x)^2 gives the same quantity
+      sd(x)^2
+      ```
   - term: Assumption
     definition: |
       A condition we adopt to justify a model or an inference procedure.
@@ -63,7 +104,14 @@ glossary:
     details: |
       **In R**
 
-      - In a formula like `y ~ x1 + x2`, the response is on the left-hand side.
+      ```r
+      # In a formula like y ~ x1 + x2, the response is on the left-hand side
+      fit <- lm(dist ~ speed, data = cars)  # response = dist
+
+      # The response used by a fitted model can be recovered like this
+      y <- model.response(model.frame(fit))
+      head(y)
+      ```
     aliases:
       - Outcome variable
       - Response (outcome) variable
@@ -73,7 +121,14 @@ glossary:
     details: |
       **In R**
 
-      - In a formula like `y ~ x1 + x2`, predictors are on the right-hand side.
+      ```r
+      # In a formula like y ~ x1 + x2, predictors are on the right-hand side
+      fit <- lm(dist ~ speed, data = cars)  # predictor = speed
+
+      # The design matrix contains the (coded) predictors used by the model
+      X <- model.matrix(fit)
+      head(X)
+      ```
     aliases:
       - Covariate
       - Explanatory variable
@@ -84,8 +139,13 @@ glossary:
     details: |
       **In R**
 
-      - Stored as numeric (`dbl`/`int`).
-      - Helpful checks: `is.numeric(x)`, `summary(x)`.
+      ```r
+      # Continuous variables are usually stored as numeric vectors
+      is.numeric(cars$speed)
+
+      # Quick numeric summaries
+      summary(cars$speed)
+      ```
   - term: Linear function
     definition: |
       A straight-line relationship between a variable and an outcome.
@@ -96,7 +156,14 @@ glossary:
 
       **In R**
 
-      - Fit a straight-line mean function with `lm(y ~ x)`.
+      ```r
+      # A straight-line function
+      alpha <- 2
+      beta <- 0.5
+      f <- function(x) alpha + beta * x
+
+      f(x = c(0, 1, 2))
+      ```
   - term: Linear predictor
     definition: |
       The systematic (non-random) part of a regression model that combines predictors and coefficients.
@@ -107,21 +174,44 @@ glossary:
 
       **In R**
 
-      - Fitted values: `fitted(model)` or `predict(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Fitted values for the training data
+      fitted(fit)[1:5]
+
+      # Predictions for new cases
+      predict(fit, newdata = data.frame(speed = c(10, 20)))
+      ```
   - term: Intercept
     definition: |
       The baseline level of the response when predictors are at their reference values (often zero).
     details: |
       **In R**
 
-      - Included by default in `lm()`; remove with `y ~ x - 1`.
+      ```r
+      # Included by default
+      fit_with_intercept <- lm(dist ~ speed, data = cars)
+
+      # Remove the intercept (forces line through the origin)
+      fit_no_intercept <- lm(dist ~ speed - 1, data = cars)
+
+      coef(fit_with_intercept)
+      coef(fit_no_intercept)
+      ```
   - term: Slope
     definition: |
       The expected change in the response for a one-unit increase in a predictor, holding other predictors constant.
     details: |
       **In R**
 
-      - Extract coefficients with `coef(model)` or `summary(model)$coefficients`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # The slope is the coefficient on the predictor
+      slope_speed <- coef(fit)["speed"]
+      slope_speed
+      ```
   - term: Random error term
     definition: |
       The part of the response not explained by the predictors (random variation around the systematic part).
@@ -146,8 +236,15 @@ glossary:
 
       **In R**
 
-      - Check residuals vs fitted: `plot(model, which = 1)` (or with `broom::augment()`).
-      - Scale–location plot: `plot(model, which = 3)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Residuals vs fitted values (look for constant spread)
+      plot(fit, which = 1)
+
+      # Scale-location plot (another constant-variance check)
+      plot(fit, which = 3)
+      ```
 
       **Remedies (when violated)**
 
@@ -163,9 +260,15 @@ glossary:
 
       **In R**
 
-      - Look for a funnel pattern in residuals vs fitted: `plot(model, which = 1)`.
-      - Scale–location plot: `plot(model, which = 3)`.
-      - Optional formal test (if available): `lmtest::bptest(model)` (Breusch–Pagan).
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Look for a funnel pattern in residuals vs fitted values
+      plot(fit, which = 1)
+
+      # Optional formal test (requires lmtest):
+      # lmtest::bptest(fit)
+      ```
 
       **Remedies**
 
@@ -184,23 +287,43 @@ glossary:
 
       **In R**
 
-      - Check with Q–Q plots: `plot(model, which = 2)` or `qqnorm(resid(model)); qqline(resid(model))`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Q-Q plot of residuals
+      plot(fit, which = 2)
+
+      # Alternative base R approach:
+      # qqnorm(resid(fit)); qqline(resid(fit))
+      ```
   - term: Independence
     definition: |
       The assumption that errors from different observations are not correlated.
     details: |
       **In R**
 
-      - For time-ordered data, inspect autocorrelation with `acf(resid(model))`.
-      - Optional test (if available): `lmtest::dwtest(model)` (Durbin–Watson).
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # For time-ordered data: inspect autocorrelation
+      acf(resid(fit))
+
+      # Optional Durbin–Watson test (requires lmtest):
+      # lmtest::dwtest(fit)
+      ```
   - term: Estimation
     definition: |
       The process of using data to infer unknown model parameters (like regression coefficients and error variability).
     details: |
       **In R**
 
-      - Fit a linear regression with `lm()`.
-      - Extract estimates with `coef(model)`.
+      ```r
+      # Fit a linear regression model (estimates coefficients from data)
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Extract the estimated coefficients
+      coef(fit)
+      ```
   - term: Estimate
     definition: |
       A value computed from data that approximates an unknown population quantity (a parameter).
@@ -211,7 +334,13 @@ glossary:
 
       **In R**
 
-      - Coefficient estimates: `coef(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # The estimated coefficients (beta-hats)
+      beta_hat <- coef(fit)
+      beta_hat
+      ```
     aliases:
       - estimate
   - term: Ordinary least squares
@@ -224,7 +353,13 @@ glossary:
 
       **In R**
 
-      - Standard linear regression uses OLS via `lm()`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # lm() uses OLS (it chooses coefficients that minimise RSS)
+      rss <- sum(resid(fit)^2)
+      rss
+      ```
     aliases:
       - OLS
   - term: Residual sum of squares
@@ -237,8 +372,15 @@ glossary:
 
       **In R**
 
-      - `deviance(model)` (for `lm`) equals RSS.
-      - Or compute directly: `sum(resid(model)^2)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Compute RSS directly
+      sum(resid(fit)^2)
+
+      # For lm objects, deviance() equals RSS
+      deviance(fit)
+      ```
 
       **Notes**
 
@@ -258,7 +400,12 @@ glossary:
 
       **In R**
 
-      - `sum((y - mean(y))^2)`.
+      ```r
+      y <- cars$dist
+
+      # Total variability around the mean
+      sum((y - mean(y))^2)
+      ```
   - term: Mean squared error
     definition: |
       An estimate of error variance based on residual size (often RSS divided by residual degrees of freedom).
@@ -271,7 +418,17 @@ glossary:
 
       **In R**
 
-      - Residual variance: `sigma(model)^2`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # MSE = RSS / residual_df
+      rss <- sum(resid(fit)^2)
+      mse <- rss / df.residual(fit)
+      mse
+
+      # For lm, sigma(fit)^2 is the same value
+      sigma(fit)^2
+      ```
     aliases:
       - MSE
   - term: Residual standard error
@@ -286,7 +443,12 @@ glossary:
 
       **In R**
 
-      - For `lm`, use `sigma(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Residual standard error (estimated sigma)
+      sigma(fit)
+      ```
   - term: Degrees of freedom
     definition: |
       The amount of independent information remaining after estimating model parameters.
@@ -298,7 +460,12 @@ glossary:
 
       **In R**
 
-      - Residual df: `df.residual(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Residual degrees of freedom
+      df.residual(fit)
+      ```
   - term: Standard error
     definition: |
       An estimate of how much a statistic (like a coefficient) would vary across repeated samples.
@@ -309,8 +476,15 @@ glossary:
 
       **In R**
 
-      - Coefficient SEs are in `summary(model)$coefficients[, "Std. Error"]`.
-      - The covariance matrix is `vcov(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Coefficient standard errors
+      summary(fit)$coefficients[, "Std. Error"]
+
+      # Covariance matrix of coefficient estimates
+      vcov(fit)
+      ```
   - term: t-test
     definition: |
       Tests whether a coefficient differs from zero using a t statistic and an assumed reference distribution.
@@ -321,7 +495,12 @@ glossary:
 
       **In R**
 
-      - See `t value` and `Pr(>|t|)` in `summary(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # t values and p-values for coefficients
+      summary(fit)$coefficients[, c("t value", "Pr(>|t|)")]
+      ```
   - term: F-test
     id: f-test-overall-model-test
     definition: |
@@ -335,8 +514,16 @@ glossary:
 
       **In R**
 
-      - Reported in `summary(model)` for `lm`.
-      - Compare nested models with `anova(model_small, model_big)`.
+      ```r
+      fit_small <- lm(dist ~ 1, data = cars)     # intercept-only
+      fit_big <- lm(dist ~ speed, data = cars)   # add predictor
+
+      # Overall F-test appears in summary() for lm
+      summary(fit_big)
+
+      # Compare nested models with anova()
+      anova(fit_small, fit_big)
+      ```
     aliases:
       - F-test (overall model test)
       - Overall F-test
@@ -346,7 +533,12 @@ glossary:
     details: |
       **In R**
 
-      - Reported in `summary(model)` for standard `lm` coefficient tests.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # p-values are part of the coefficient table
+      summary(fit)$coefficients[, "Pr(>|t|)"]
+      ```
   - term: Confidence interval
     definition: |
       A range of plausible parameter values at a chosen confidence level (e.g., 95%).
@@ -357,14 +549,24 @@ glossary:
 
       **In R**
 
-      - Use `confint(model)` for coefficient confidence intervals.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Confidence intervals for coefficients (default 95%)
+      confint(fit)
+      ```
   - term: Prediction interval
     definition: |
       An interval for a future observation at given predictors; wider than a confidence interval.
     details: |
       **In R**
 
-      - `predict(model, newdata = df, interval = "prediction")`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      new <- data.frame(speed = c(10, 20))
+      predict(fit, newdata = new, interval = "prediction")
+      ```
   - term: Fitted value
     definition: |
       The model’s predicted mean response for an observation (given its predictor values).
@@ -375,8 +577,15 @@ glossary:
 
       **In R**
 
-      - `fitted(model)` or `predict(model)` for fitted values.
-      - For new cases: `predict(model, newdata = ...)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Fitted values for the training data
+      head(fitted(fit))
+
+      # Fitted value (mean) for new cases
+      predict(fit, newdata = data.frame(speed = c(10, 20)))
+      ```
     aliases:
       - Predicted value
   - term: Residual
@@ -389,7 +598,12 @@ glossary:
 
       **In R**
 
-      - `resid(model)`; with `broom`, `augment(model)` includes `.resid` and `.fitted`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Residuals for the training data
+      head(resid(fit))
+      ```
   - term: Simple linear model
     definition: |
       A model that relates a response to a single predictor using a straight-line mean function plus random error.
@@ -400,7 +614,11 @@ glossary:
 
       **In R**
 
-      - Fit with `lm(y ~ x, data = df)`.
+      ```r
+      # Fit a simple linear model (one predictor)
+      fit <- lm(dist ~ speed, data = cars)
+      summary(fit)
+      ```
     aliases:
       - simple linear model
   - term: Simple linear regression
@@ -413,7 +631,13 @@ glossary:
 
       **In R**
 
-      - Fit with `lm(y ~ x)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Visualise the fitted line
+      plot(dist ~ speed, data = cars)
+      abline(fit, col = "blue")
+      ```
   - term: Multiple linear regression
     definition: |
       Linear regression with two or more predictors, allowing adjustment for multiple variables at once.
@@ -424,7 +648,11 @@ glossary:
 
       **In R**
 
-      - Fit with `lm(y ~ x1 + x2 + x3)`.
+      ```r
+      # Two or more predictors on the right-hand side
+      fit_mlr <- lm(mpg ~ wt + hp + disp, data = mtcars)
+      summary(fit_mlr)
+      ```
   - term: Partial regression coefficient
     definition: |
       The effect of a predictor on the response after holding the other predictors constant.
@@ -435,7 +663,12 @@ glossary:
 
       **In R**
 
-      - In multiple regression, each coefficient in `summary(model)$coefficients` is a partial effect.
+      ```r
+      fit_mlr <- lm(mpg ~ wt + hp, data = mtcars)
+
+      # Each coefficient is a partial effect (holding the other predictors fixed)
+      coef(fit_mlr)
+      ```
   - term: Pearson correlation
     definition: |
       Measures linear association between two variables, ranging from -1 to 1.
@@ -446,8 +679,13 @@ glossary:
 
       **In R**
 
-      - `cor(x, y)` for Pearson’s correlation (default).
-      - `cor.test(x, y)` for a test and confidence interval.
+      ```r
+      # Pearson correlation (default)
+      cor(mtcars$mpg, mtcars$wt)
+
+      # Test for correlation (with CI)
+      cor.test(mtcars$mpg, mtcars$wt)
+      ```
   - term: R-squared
     definition: |
       The proportion of response variability explained by the fitted model (on the training data).
@@ -458,7 +696,12 @@ glossary:
 
       **In R**
 
-      - `summary(model)$r.squared`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # R-squared
+      summary(fit)$r.squared
+      ```
   - term: Adjusted R-squared
     definition: |
       R-squared penalised for the number of predictors to discourage unnecessary terms.
@@ -471,21 +714,38 @@ glossary:
 
       **In R**
 
-      - `summary(model)$adj.r.squared`.
+      ```r
+      fit_mlr <- lm(mpg ~ wt + hp + disp, data = mtcars)
+
+      # Adjusted R-squared
+      summary(fit_mlr)$adj.r.squared
+      ```
   - term: Polynomial term
     definition: |
       A transformed predictor (like x²) used to capture curvature while keeping the model linear in coefficients.
     details: |
       **In R**
 
-      - Use `I(x^2)` for a squared term, or `poly(x, degree)` for orthogonal polynomials.
+      ```r
+      # Add a squared term (still linear in coefficients)
+      fit_poly <- lm(mpg ~ wt + I(wt^2), data = mtcars)
+
+      # Or use orthogonal polynomials
+      fit_poly2 <- lm(mpg ~ poly(wt, degree = 2), data = mtcars)
+      ```
   - term: Interaction
     definition: |
       A model term that allows the effect of one predictor to depend on another predictor.
     details: |
       **In R**
 
-      - `x1:x2` for an interaction only; `x1 * x2` for main effects plus interaction.
+      ```r
+      # Interaction only:
+      fit_int_only <- lm(mpg ~ wt:hp, data = mtcars)
+
+      # Main effects + interaction:
+      fit_int <- lm(mpg ~ wt * hp, data = mtcars)
+      ```
   - term: Overfitting
     definition: |
       When a model captures noise in the training data and generalises poorly to new data.
@@ -505,8 +765,13 @@ glossary:
 
       **In R**
 
-      - Use `step(model)` (AIC-based by default).
-      - Always re-check diagnostics after selection, and validate performance on new/held-out data.
+      ```r
+      fit_full <- lm(mpg ~ wt + hp + disp + drat + qsec, data = mtcars)
+
+      # Stepwise selection by AIC (automated; use with caution)
+      fit_step <- step(fit_full, trace = 0)
+      formula(fit_step)
+      ```
   - term: Akaike Information Criterion
     definition: |
       Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.
@@ -519,7 +784,13 @@ glossary:
 
       **In R**
 
-      - `AIC(model)`; compare multiple models with `AIC(m1, m2, m3)`.
+      ```r
+      m1 <- lm(mpg ~ wt, data = mtcars)
+      m2 <- lm(mpg ~ wt + hp, data = mtcars)
+
+      # Lower AIC is preferred (among the models compared)
+      AIC(m1, m2)
+      ```
     aliases:
       - AIC
   - term: Bayesian Information Criterion
@@ -532,7 +803,13 @@ glossary:
 
       **In R**
 
-      - `BIC(model)`; compare multiple models with `BIC(m1, m2, m3)`.
+      ```r
+      m1 <- lm(mpg ~ wt, data = mtcars)
+      m2 <- lm(mpg ~ wt + hp, data = mtcars)
+
+      # Lower BIC is preferred (stronger penalty for complexity)
+      BIC(m1, m2)
+      ```
     aliases:
       - BIC
   - term: Parsimony
@@ -553,8 +830,13 @@ glossary:
 
       **In R**
 
-      - `rstandard(model)` (standardised residuals) and `rstudent(model)` (studentised residuals).
-      - An outlier is not always influential: check leverage and Cook’s distance as well.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Standardised residuals and studentised residuals
+      head(rstandard(fit))
+      head(rstudent(fit))
+      ```
   - term: Standardised residual
     definition: |
       A residual scaled by its estimated standard deviation to highlight unusually large deviations.
@@ -565,7 +847,15 @@ glossary:
 
       **In R**
 
-      - `rstandard(model)` and `rstudent(model)` (studentised residuals).
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Standardised residuals
+      rstandard(fit)[1:5]
+
+      # Studentised residuals (often used for outlier detection)
+      rstudent(fit)[1:5]
+      ```
     aliases:
       - Standardized residual
   - term: Influential point
@@ -574,8 +864,13 @@ glossary:
     details: |
       **In R**
 
-      - Use `cooks.distance(model)` and `influence.measures(model)`.
-      - For coefficient impact: `dfbetas(model)` and `dffits(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Influence diagnostics
+      cooks.distance(fit)[1:5]
+      influence.measures(fit)
+      ```
   - term: Leverage
     definition: |
       A measure of how unusual a case’s predictor values are; high leverage can increase influence.
@@ -586,7 +881,12 @@ glossary:
 
       **In R**
 
-      - `hatvalues(model)` returns leverages ($h_{ii}$).
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Hat-values are leverages (h_ii)
+      hatvalues(fit)[1:5]
+      ```
 
       **Rule of thumb**
 
@@ -601,7 +901,16 @@ glossary:
 
       **In R**
 
-      - `cooks.distance(model)`.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Cook's distance (larger values indicate more influence)
+      cd <- cooks.distance(fit)
+      head(cd)
+
+      # Rule of thumb often used: 4/n
+      4 / nrow(cars)
+      ```
 
       **Rule of thumb**
 
@@ -612,7 +921,13 @@ glossary:
     details: |
       **In R**
 
-      - Compare new predictor values to `range(df$x)` (and analogous for other predictors).
+      ```r
+      # Compare new predictor values to the observed range
+      range(cars$speed)
+
+      new_speed <- c(5, 50)
+      new_speed
+      ```
 
       **Practical note**
 
@@ -629,9 +944,18 @@ glossary:
 
       **In R**
 
-      - Correlations: `cor(df[, numeric_cols])`.
-      - Exact aliasing (perfect collinearity): `alias(model)`.
-      - Condition number (rough diagnostic): `kappa(model.matrix(model))`.
+      ```r
+      fit_mlr <- lm(mpg ~ wt + hp + disp, data = mtcars)
+
+      # Correlations among predictors
+      cor(mtcars[, c("wt", "hp", "disp")])
+
+      # Exact aliasing (perfect collinearity)
+      alias(fit_mlr)
+
+      # Condition number (rough collinearity diagnostic)
+      kappa(model.matrix(fit_mlr))
+      ```
 
       **Remedies**
 
@@ -650,8 +974,21 @@ glossary:
 
       **In R**
 
-      - The `car::vif()` function is commonly used (if the `car` package is available).
-      - Base R approach: regress each predictor on the others and plug its $R_j^2$ into the VIF formula.
+      ```r
+      fit_mlr <- lm(mpg ~ wt + hp + disp, data = mtcars)
+
+      # Optional (if you have the car package):
+      # car::vif(fit_mlr)
+
+      # Base R: regress each predictor on the others, then VIF = 1 / (1 - R^2)
+      predictors <- c("wt", "hp", "disp")
+      vif <- sapply(predictors, function(p) {
+        others <- setdiff(predictors, p)
+        r2 <- summary(lm(reformulate(others, response = p), data = mtcars))$r.squared
+        1 / (1 - r2)
+      })
+      vif
+      ```
     aliases:
       - VIF
   - term: Box-Cox transformation
@@ -670,22 +1007,44 @@ glossary:
 
       **In R**
 
-      - `MASS::boxcox(model)` explores power transformations for positive responses.
+      ```r
+      fit <- lm(dist ~ speed, data = cars)
+
+      # Box-Cox search (requires MASS; often installed with R)
+      # MASS::boxcox(fit)
+
+      # Common special case (lambda = 0): log-transform a positive response
+      fit_log <- lm(log(dist) ~ speed, data = cars)
+      summary(fit_log)
+      ```
   - term: Factor
     definition: |
       A categorical predictor with discrete levels; R stores these as factors.
     details: |
       **In R**
 
-      - Create with `factor(x)`; check levels with `levels(x)`.
+      ```r
+      x <- c("low", "medium", "low", "high")
+      f <- factor(x)
+
+      levels(f)
+      table(f)
+      ```
   - term: Dummy variable
     definition: |
       An indicator (0/1) used to code categories in regression relative to a baseline.
     details: |
       **In R**
 
-      - Factors are expanded into dummy variables automatically in `lm()`.
-      - Inspect the design matrix with `model.matrix(model)`.
+      ```r
+      df <- data.frame(
+        y = c(1, 2, 3, 4),
+        group = factor(c("A", "A", "B", "B"))
+      )
+
+      # Factors expand to dummy/indicator columns in the design matrix
+      model.matrix(y ~ group, data = df)
+      ```
     aliases:
       - Indicator variable
   - term: Reference level
@@ -694,14 +1053,27 @@ glossary:
     details: |
       **In R**
 
-      - Change with `relevel(f, ref = "baseline")`.
+      ```r
+      g <- factor(c("control", "treatment", "control"))
+      levels(g)
+
+      # Set the reference (baseline) level
+      g2 <- relevel(g, ref = "control")
+      levels(g2)
+      ```
   - term: Contrast
     definition: |
       A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).
     details: |
       **In R**
 
-      - View or set with `contrasts(f)` and functions like `contr.treatment()`.
+      ```r
+      g <- factor(c("control", "treatment", "treatment"))
+
+      # View or set contrasts (coding)
+      contrasts(g) <- contr.treatment(nlevels(g))
+      contrasts(g)
+      ```
 ---
 
 # Glossary {#sec-glossary .unnumbered}
