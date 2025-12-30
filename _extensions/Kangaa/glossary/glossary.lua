@@ -5,6 +5,7 @@ local used_count = 0
 local glossary_page = nil
 local glossary_include = "auto"
 local glossary_sort = "yaml"
+local glossary_hover = "simple"
 local glossary_loaded = false
 local glossary_styles_injected = false
 
@@ -20,7 +21,12 @@ local function glossary_css()
   background: var(--bs-body-bg, #fff);
 }
 
-#glossary .glossary-entry > p:first-child {
+#glossary .glossary-xref {
+  scroll-margin-top: 5rem;
+}
+
+#glossary .glossary-entry > p:first-child,
+#glossary .glossary-entry > .glossary-xref > p:first-child {
   margin-bottom: 0.25rem;
 }
 
@@ -376,6 +382,7 @@ local function parse_glossary(meta)
         local entry = {
           term = term,
           anchor = anchor,
+          preview_anchor = "sec-" .. anchor,
           definition = blocks,
           definition_text = definition_text(blocks),
           details = details_blocks,
@@ -425,6 +432,7 @@ local function ensure_glossary_loaded(meta)
   glossary_page = pick_meta("glossary-page")
   glossary_include = pick_meta("glossary-include")
   glossary_sort = pick_meta("glossary-sort")
+  glossary_hover = pick_meta("glossary-hover")
 
   local glossary_path = nil
   if glossary_page then
@@ -453,6 +461,9 @@ local function ensure_glossary_loaded(meta)
       if not glossary_sort or glossary_sort == "" then
         glossary_sort = meta_string(meta_value(glossary_meta_doc, "glossary-sort"))
       end
+      if not glossary_hover or glossary_hover == "" then
+        glossary_hover = meta_string(meta_value(glossary_meta_doc, "glossary-hover"))
+      end
     end
   end
 
@@ -460,19 +471,26 @@ local function ensure_glossary_loaded(meta)
 
   glossary_include = (glossary_include or "auto"):lower()
   glossary_sort = (glossary_sort or "yaml"):lower()
+  glossary_hover = (glossary_hover or "simple"):lower()
+  if glossary_hover == "true" then
+    glossary_hover = "simple"
+  elseif glossary_hover == "false" then
+    glossary_hover = "none"
+  end
 
   glossary_loaded = true
 end
 
-local function glossary_href(entry)
+local function glossary_href(entry, anchor)
+  local target = anchor or entry.anchor
   if glossary_page and FORMAT:match("html") then
     local page = glossary_page
     if page:match("%.qmd$") then
       page = page:gsub("%.qmd$", ".html")
     end
-    return page .. "#" .. entry.anchor
+    return page .. "#" .. target
   end
-  return "#" .. entry.anchor
+  return "#" .. target
 end
 
 local function should_include(entry)
@@ -513,14 +531,22 @@ local function build_glossary_blocks()
   end
 
   for _, entry in ipairs(sorted_entries(included)) do
-    local content = {
+    local preview = {
       pandoc.Para({
-        pandoc.Span({ pandoc.Str(entry.term) }, pandoc.Attr("", { "glossary-term" })),
+        pandoc.Span(
+          { pandoc.Strong({ pandoc.Str(entry.term) }) },
+          pandoc.Attr("", { "glossary-term" })
+        ),
       }),
     }
     for _, def_block in ipairs(entry.definition) do
-      table.insert(content, def_block)
+      table.insert(preview, def_block)
     end
+
+    local content = {
+      pandoc.Div(preview, pandoc.Attr(entry.preview_anchor or "", { "glossary-xref" })),
+    }
+
     if entry.details and #entry.details > 0 then
       table.insert(
         content,
@@ -557,8 +583,33 @@ function Pandoc(doc)
       used_count = used_count + 1
     end
 
-    local target = glossary_href(entry)
+    local hover_mode = glossary_hover or "none"
+    local enable_hover = FORMAT and FORMAT:match("html") and hover_mode ~= "none"
+
+    local anchor = entry.anchor
     local title = entry.definition_text or ""
+
+    if enable_hover then
+      local has_quarto_xref = false
+      for _, cls in ipairs(el.attr.classes or {}) do
+        if cls == "quarto-xref" then
+          has_quarto_xref = true
+          break
+        end
+      end
+      if not has_quarto_xref then
+        table.insert(el.attr.classes, "quarto-xref")
+      end
+
+      if hover_mode ~= "full" and entry.preview_anchor then
+        anchor = entry.preview_anchor
+      end
+
+      -- Avoid competing browser title tooltips in HTML output.
+      title = nil
+    end
+
+    local target = glossary_href(entry, anchor)
     return pandoc.Link(el.content, target, title, el.attr)
   end
 
