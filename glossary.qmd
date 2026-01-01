@@ -1,6 +1,6 @@
 ---
 glossary-include: auto
-glossary-sort: yaml
+glossary-sort: lexical
 glossary:
   - term: Statistical model
     definition: |
@@ -73,6 +73,28 @@ glossary:
       set.seed(1)
       rnorm(5, mean = mu, sd = sigma)
       ```
+  - term: Expected value
+    definition: |
+      The long-run average value of a random variable; the mean of its distribution.
+    details: |
+      **Formula**
+
+      - Discrete case: $$E[X] = \sum_x x\,P(X=x).$$
+      - Continuous case: $$E[X] = \int_{-\infty}^{\infty} x f(x)\,dx.$$
+
+      **In this course**
+
+      - In regression, $E[Y\mid X]$ is the mean response at given predictors.
+
+      **In R**
+
+      ```r
+      set.seed(1)
+      x <- rnorm(100000, mean = 10, sd = 2)
+      mean(x)  # approximates E[X]
+      ```
+    aliases:
+      - Expectation
   - term: Variance
     definition: |
       A measure of spread; larger variance means values tend to be further from their mean.
