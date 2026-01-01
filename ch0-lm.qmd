@@ -55,6 +55,8 @@ theme_set(theme_bw())
 
 This chapter serves as a conceptual introduction to linear models, the foundation of linear regression. By constructing a simple linear model from basic principles, we aim to understand the assumptions which play a crucial role in linear regression analysis. 
 
+-  [ ] Continue
+
 ## Statistical models {#sec-statistical-models}
 
 A central aim of statistical modelling is to understand how one *variable* changes in relation to others. In your own work, these variables will have concrete meaning - perhaps plant growth, reaction time, exam score, or income - but for now we will simply call them $x$ and $Y$.
@@ -75,7 +77,9 @@ $$
 Y = f(x) + \varepsilon.
 $$
 
-Here, $\varepsilon$ represents natural variability: the part of $Y$ that our model does not or cannot explain. 
+Here, $\varepsilon$ represents natural variability: the part of $Y$ that our model does not or cannot explain.
+
+-  [ ] Continue
 
 ## Linear prediction {#sec-linear-prediction}
 
@@ -85,7 +89,7 @@ $$
  f(x) = \alpha + \beta x .
 $$
 
-This allows us to describe the **expected value** of $Y$ as
+This allows us to describe the **[expected value]{.glossary term="Expected value"}** of $Y$ as
 
 $$
 E[Y] = \alpha + \beta x
@@ -128,7 +132,6 @@ $Y$ and $x$ have a linear relationship.
 
 -  [ ] Continue
 
-
 ::: Example
 
 ### Salary growth over time {#sec-salary-growth-over-time}
@@ -141,9 +144,9 @@ $$
 E[Y] = 50{,}000 + 5{,}000 \cdot x.
 $$
 
-::: {.panel-tabset}
+:::: {.panel-tabset}
 
-## Plot {#sec-salary-growth-over-time-plot}
+#### Plot {#sec-salary-growth-over-time-plot}
 
 ```{r chapter00-lm-salary-growth-over-time-plot}
 #| echo: false
@@ -154,7 +157,7 @@ ggplot() +
   labs(x = "Years Employed", y = "Expected Salary ($)")
 ```
 
-## Code {#sec-salary-growth-over-time-code}
+#### Code {#sec-salary-growth-over-time-code}
 
 ```{r chapter00-lm-salary-growth-over-time-code}
 #| eval: false
@@ -163,17 +166,17 @@ ggplot() +
   lims(x = c(0, 15), y = c(4e4, 13e4)) +
   labs(x = "Years Employed", y = "Expected Salary ($)")
 ```
-
-:::
+::::
 
 After 10 years of employment ($x = 10$), our linear predictor gives
 
 $$
 E[Y] = 50{,}000 + 5{,}000 \times 10 = 100{,}000.
 $$
+
 :::
 
----
+- [ ] Continue
 
 ::: Exercise
 
@@ -187,9 +190,9 @@ $$
 E[Y] = \alpha + \beta x.
 $$
 
-::::{}
-
-Assign these values to the R variables `alpha` and `beta`:
+:::: {}
+#### Choosing parameters {#sec-choosing-parameters}
+Assign the values of $\alpha$ and $\beta$ to the R variables `alpha` and `beta`:
 
 ```{webr chapter00-lm-choosing-parameters}
 #| exercise: ex_1.1.1
@@ -224,9 +227,7 @@ gradethis::grade_this_code()
 
 ::::
 
----
-
-::::{}
+:::: {}
 
 #### Linear prediction {#sec-linear-prediction-2}
 
@@ -238,9 +239,9 @@ $$
 
 Below is a plot comparing salary trends for both companies:
 
-::: {.panel-tabset}
+::::: {.panel-tabset}
 
-## Plot {#sec-linear-prediction-plot}
+##### Plot {#sec-linear-prediction-plot}
 
 ```{r chapter00-lm-linear-prediction-plot}
 #| echo: false
@@ -257,7 +258,7 @@ ggplot() +
   scale_color_manual(values = c("Company B" = "#4CAF50", "Company A" = "#2196F3"))
 ```
 
-## Code {#sec-linear-prediction-code}
+##### Code {#sec-linear-prediction-code}
 
 ```{r chapter00-lm-linear-prediction-code}
 #| eval: false
@@ -273,7 +274,7 @@ ggplot() +
   scale_color_manual(values = c("Company B" = "#4CAF50", "Company A" = "#2196F3"))
 ```
 
-:::
+:::::
 
 Now compute the expected salary after 15 years, using the `alpha` and `beta` values you just assigned:
 
@@ -304,9 +305,7 @@ gradethis::grade_this_code()
 
 ::::
 
----
-
-::::{}
+:::: {}
 
 #### Using R functions {#sec-using-r-functions}
 
@@ -364,11 +363,13 @@ simple_linear_prediction(x)
 gradethis::grade_this_code()
 ```
 
-::::
 
-### Good work! {#sec-good-work .unnumbered}
+## Good work! {#sec-good-work .unnumbered}
 
 Next we will extend our linear predictor to form a full linear *statistical* model.
+
+::::
+
 :::
 
 -  [ ] Continue
@@ -407,7 +408,6 @@ i.e. The linear predictor gives the correct value of $Y$ on average. This is why
 $$
 E[Y]=\alpha + \beta x + E[\varepsilon] = \alpha + \beta x + 0 = \alpha + \beta x
 $$
----
 
 -  [ ] The second key property of $\varepsilon$ is that
 
@@ -424,7 +424,6 @@ The term *homoscedasticity* comes from the Greek words for 'same' (homo) and 'sp
 ### Homoscedasticity
 *Homoscedasticity* means constant error variance across all values of $x$.
 :::
---- 
 
 - [ ] The final assumption we make about $\varepsilon$ is that it is Normally distributed.
 
@@ -610,11 +609,14 @@ Here $\varepsilon$ represents random deviations from the expected (average) sala
 ::: Exercise
 ### Normally distributed errors
 Considering our model of salary with $\varepsilon \sim \mathcal{N}(0, 4000^2)$, what is the probability that an employee with 5 years of experience earns more than \$83,000?
+
+:::: {}
 ```{webr chapter00-lm-normally-distributed-errors}
 #| exercise: ex_1.2.1
 #| envir: Ex2
 pnorm(83000, _______, _______, lower.tail = FALSE)
 ```
+
 ::::: {.solution exercise="ex_1.2.1"}
 ```{webr chapter00-lm-normally-distributed-errors-solution}
 #| exercise: ex_1.2.1
@@ -622,7 +624,8 @@ pnorm(83000, _______, _______, lower.tail = FALSE)
 #| envir: Ex2
 pnorm(83000, 75000, 4000, lower.tail = FALSE)
 ```
-:::::   
+:::::
+
 ```{webr chapter00-lm-normally-distributed-errors-solution-2}
 #| exercise: ex_1.2.1
 #| check: true
@@ -630,7 +633,9 @@ pnorm(83000, 75000, 4000, lower.tail = FALSE)
 #| envir: Ex2
 gradethis::grade_this_code()
 ```
-::::   
+::::
+
+:::
 
 
 ## The Simple Linear Model {#sec-simple_linear_model}
