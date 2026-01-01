@@ -191,7 +191,19 @@ In this dataset:
 This is an observational dataset. Regression estimates here describe **associations**, not “effects”. For reminders about modelling assumptions, see @sec-common-assumptions-and-pitfalls.
 :::
 
-Also note that students come from 60 schools (`school_id`), so the independence assumption may be imperfect. Handling clustering rigorously would typically use multilevel modelling, which is beyond the scope of this short course.
+::: Note
+Students are clustered within schools (`school_id`). If there are unmeasured school-level factors (e.g. teaching practices, resources, peer effects), then students from the same school can end up with **correlated errors**, which violates the “independent errors” assumption used for standard t/F tests in a plain `lm()`.
+
+In this chapter we stay within ordinary least squares (no random effects). We *partly* address school-to-school differences by including observed context variables such as `school_type`, along with strong student-level covariates like `grade` and socioeconomic proxies. These predictors can explain some between-school variation and reduce residual clustering, but they do not guarantee independence.
+
+A more complete approach would use either:
+
+- `lm(... + factor(school_id))` (school fixed effects): controls for all stable between-school differences, but uses many parameters and you generally can’t estimate purely school-level predictors (like `school_type`) at the same time, or
+- a multilevel model with a random effect for `school_id`, or
+- cluster-robust standard errors.
+
+These options are beyond the scope of this short course, but are worth knowing about if you analyse clustered education data.
+:::
 
 ## Importing and preparing the data {#sec-importing-data}
 
@@ -558,6 +570,39 @@ Before we fit any model, we look for:
 - outliers or unusual values that might affect the model.
 
 This is exactly the “EDA first” mindset in @sec-exploratory-data-analysis-and-theory-driven-model-development.
+
+### Clustering by school (students within schools)
+
+Because students are sampled within schools, a quick EDA step is to check the *cluster sizes* (how many students per school) and whether school-average scores differ. Visible variation across schools is one sign that school context might matter, which in turn can lead to correlated errors within schools if that context is not fully captured by the predictors. Later, when we include `school_type` (and other predictors) in the regression, we are adjusting for observed school context, which can reduce—but not eliminate—between-school clustering in the residuals.
+
+```{webr chapter05-case-naplan-eda-school-sizes}
+#| echo: true
+#| autorun: true
+naplan |>
+  count(school_id, name = "n_students") |>
+  summarise(
+    n_schools = n(),
+    min_students = min(n_students),
+    median_students = median(n_students),
+    max_students = max(n_students)
+  )
+```
+
+```{webr chapter05-case-naplan-eda-school-means}
+#| echo: true
+#| autorun: true
+school_means <- naplan |>
+  group_by(school_id) |>
+  summarise(
+    n_students = n(),
+    mean_score = mean(naplan_reading_score),
+    .groups = "drop"
+  )
+
+ggplot(school_means, aes(x = mean_score)) +
+  geom_histogram(binwidth = 20, fill = "steelblue", colour = "white") +
+  labs(x = "School mean NAPLAN reading score", y = "Number of schools")
+```
 
 ### Outcome distribution (by grade)
 
