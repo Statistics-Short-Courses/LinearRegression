@@ -364,12 +364,12 @@ gradethis::grade_this_code()
 ```
 
 
+
+
+::::
 ## Good work! {#sec-good-work .unnumbered}
 
 Next we will extend our linear predictor to form a full linear *statistical* model.
-
-::::
-
 :::
 
 -  [ ] Continue
