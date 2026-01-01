@@ -28037,25 +28037,25 @@ initializeRuntime();
 
 </script>
 <style>
-.Key-point {
---color1: #FFF9C4;
---color2: #FFEB3B;
+.Example {
+--color1: #BBDEFB;
+--color2: #2196F3;
+}
+.Assumption {
+--color1: #FFCDD2;
+--color2: #F44336;
 }
 .Note {
 --color1: #FFF9C4;
 --color2: #FFEB3B;
 }
-.Example {
---color1: #BBDEFB;
---color2: #2196F3;
+.Key-point {
+--color1: #FFF9C4;
+--color2: #FFEB3B;
 }
 .Exercise {
 --color1: #C8E6C9;
 --color2: #4CAF50;
-}
-.Assumption {
---color1: #FFCDD2;
---color2: #F44336;
 }
 </style>
 
@@ -28459,7 +28459,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJwbG90
 </section>
 <section id="sec-multiple_linear_regression" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="sec-multiple_linear_regression"><span class="header-section-number">2.2</span> The multiple linear regression model</h2>
-<p>The <a href="glossary.html#glossary-multiple-linear-regression" class="glossary" data-term="Multiple linear regression" title="Linear regression with two or more predictors, allowing adjustment for multiple variables at once.">multiple linear regression</a> model extends the simple linear model from <a href="ch0-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 4</span></a> straightforwardly by adding the extra variables to the deterministic <a href="glossary.html#glossary-linear-predictor" class="glossary" title="The systematic (non-random) part of a regression model that combines predictors and coefficients.">linear predictor</a>, each with its own parameter:</p>
+<p>The <a href="glossary.html#sec-glossary-multiple-linear-regression" class="glossary quarto-xref" data-term="Multiple linear regression">multiple linear regression</a> model extends the simple linear model from <a href="ch0-lm.html#sec-simple_linear_model" class="quarto-xref"><span>Section 4</span></a> straightforwardly by adding the extra variables to the deterministic <a href="glossary.html#sec-glossary-linear-predictor" class="glossary quarto-xref">linear predictor</a>, each with its own parameter:</p>
 <div id="sec-the-mlr-model" class="Key-point" title="The MLR model">
 <p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point: </strong>The MLR model</summary><div><span class="math display">\[
 Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilon \sim N(0,\sigma^2)
@@ -28471,11 +28471,11 @@ Y = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k + \varepsilon, \quad \varepsilo
 <div id="sec-assumptions-of-the-mlr-model" class="Assumption" title="Assumptions of the MLR model">
 <details class="Assumption fbx-simplebox fbx-default" open=""><summary><strong>Assumption: </strong>Assumptions of the MLR model</summary><div>
 <ul>
-<li>A <em>linear</em> <a href="glossary.html#glossary-linear-predictor" class="glossary" data-term="Linear predictor" title="The systematic (non-random) part of a regression model that combines predictors and coefficients.">predictor</a>, e.g.&nbsp;<span class="math inline">\(E[Y]=\beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k\)</span>.</li>
-<li><a href="glossary.html#glossary-independence" class="glossary" data-term="Independence" title="The assumption that errors from different observations are not correlated.">Independent</a> and identically distributed random error terms that
+<li>A <em>linear</em> <a href="glossary.html#sec-glossary-linear-predictor" class="glossary quarto-xref" data-term="Linear predictor">predictor</a>, e.g.&nbsp;<span class="math inline">\(E[Y]=\beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k\)</span>.</li>
+<li><a href="glossary.html#sec-glossary-independence" class="glossary quarto-xref" data-term="Independence">Independent</a> and identically distributed random error terms that
 <ul>
-<li>Have a mean <span class="math inline">\(\mu=0\)</span> (<a href="glossary.html#glossary-mean-zero-errors" class="glossary" title="The assumption that errors average to zero, so the model is unbiased on average.">mean-zero errors</a>), and a constant variance <span class="math inline">\(Var(\varepsilon)=\sigma^2\)</span> (<a href="glossary.html#glossary-homoscedasticity" class="glossary" title="The assumption that the variability of the errors is roughly constant across the predictor range.">homoscedasticity</a>)</li>
-<li>Follow a normal distribution (<a href="glossary.html#glossary-normal-errors" class="glossary" title="The assumption that errors are approximately normally distributed (mainly important for small-sample inference).">normal errors</a>): <span class="math inline">\(N(0,\sigma^2)\)</span></li>
+<li>Have a mean <span class="math inline">\(\mu=0\)</span> (<a href="glossary.html#sec-glossary-mean-zero-errors" class="glossary quarto-xref">mean-zero errors</a>), and a constant variance <span class="math inline">\(Var(\varepsilon)=\sigma^2\)</span> (<a href="glossary.html#sec-glossary-homoscedasticity" class="glossary quarto-xref">homoscedasticity</a>)</li>
+<li>Follow a normal distribution (<a href="glossary.html#sec-glossary-normal-errors" class="glossary quarto-xref">normal errors</a>): <span class="math inline">\(N(0,\sigma^2)\)</span></li>
 </ul></li>
 </ul>
 </div></details>
@@ -28500,8 +28500,8 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJcbiMg
 </ul>
 </section>
 <section id="sec-partial-regression-coefficients-betai" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="sec-partial-regression-coefficients-betai"><span class="header-section-number">2.3</span> <a href="glossary.html#glossary-partial-regression-coefficient" class="glossary" data-term="Partial regression coefficient" title="The effect of a predictor on the response after holding the other predictors constant.">Partial regression coefficients</a>, <span class="math inline">\(\beta_i\)</span></h2>
-<p>Even though our model is no longer just a straight line, the <em><a href="glossary.html#glossary-slope" class="glossary" title="The expected change in the response for a one-unit increase in a predictor, holding other predictors constant.">slope</a></em> interpretation from SLR is still relevant in MLR. Now however, <span class="math inline">\(\beta_i\)</span> describes the expected change in the mean response for a one-unit increase in <span class="math inline">\(x_i\)</span>, <strong>holding all other predictors constant</strong>.</p>
+<h2 data-number="2.3" class="anchored" data-anchor-id="sec-partial-regression-coefficients-betai"><span class="header-section-number">2.3</span> <a href="glossary.html#sec-glossary-partial-regression-coefficient" class="glossary quarto-xref" data-term="Partial regression coefficient">Partial regression coefficients</a>, <span class="math inline">\(\beta_i\)</span></h2>
+<p>Even though our model is no longer just a straight line, the <em><a href="glossary.html#sec-glossary-slope" class="glossary quarto-xref">slope</a></em> interpretation from SLR is still relevant in MLR. Now however, <span class="math inline">\(\beta_i\)</span> describes the expected change in the mean response for a one-unit increase in <span class="math inline">\(x_i\)</span>, <strong>holding all other predictors constant</strong>.</p>
 <div id="sec-interpreting-a-partial-coefficient-betai" class="Example" title="Interpreting a partial coefficient, \beta_i">
 <details class="Example fbx-simplebox fbx-default" open=""><summary><strong>Example 2: </strong>Interpreting a partial coefficient, <span class="math inline">\(\beta_i\)</span></summary><div>
 <p>We may propose a model for <code>Sales</code> whereby the baseline sales (when no money is invested in advertising) is <span class="math inline">\(\beta_0=3\)</span>, <span class="math inline">\(\beta_{TV}= 0.1\)</span> and <span class="math inline">\(\beta_{Radio}= 0.2\)</span>, i.e.&nbsp; <span class="math display">\[
@@ -28548,7 +28548,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIn0=
 </div>
 <section id="sec-fitting-mlr-models-in-r" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="sec-fitting-mlr-models-in-r"><span class="header-section-number">2.3.1</span> Fitting MLR Models in R</h3>
-<p>Fitting a multiple linear regression uses the exact same conceptual process from <a href="ch1-slr.html#sec-leastsquares" class="quarto-xref"><span>Section 1.3.2</span></a>. Residuals are still defined <span class="math inline">\(e = Y- \hat{Y}\)</span>, and minimising the sum of squared residuals provides optimal and unique <em><a href="glossary.html#glossary-ordinary-least-squares" class="glossary" data-term="Ordinary least squares" title="Estimation method that chooses coefficients to minimise the sum of squared residuals.">least squares estimates</a></em> for the model parameters <span class="math inline">\(\hat{\beta}_0, \ldots, \hat{\beta}_k\)</span>.</p>
+<p>Fitting a multiple linear regression uses the exact same conceptual process from <a href="ch1-slr.html#sec-leastsquares" class="quarto-xref"><span>Section 1.3.2</span></a>. Residuals are still defined <span class="math inline">\(e = Y- \hat{Y}\)</span>, and minimising the sum of squared residuals provides optimal and unique <em><a href="glossary.html#sec-glossary-ordinary-least-squares" class="glossary quarto-xref" data-term="Ordinary least squares">least squares estimates</a></em> for the model parameters <span class="math inline">\(\hat{\beta}_0, \ldots, \hat{\beta}_k\)</span>.</p>
 <p>In <code>R</code> we use the same <code>lm()</code> function as SLR (these are both ‘linear models’, after all). Now however, the model <code>formula</code> includes both predictors on the RHS, separated by a <code>+</code>:</p>
 <div class="cell">
 <div>
@@ -28640,13 +28640,13 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImxpYnJhcnkoYnJvb20pXG50
 H_0 : \beta_i = 0
 \qquad\text{vs}\qquad
 H_a : \beta_i \ne 0.
-\]</span> using t-statistic which takes into account the size of the estimate along with its <a href="glossary.html#glossary-standard-error" class="glossary" title="An estimate of how much a statistic (like a coefficient) would vary across repeated samples.">standard error</a>: <span class="math display">\[
+\]</span> using t-statistic which takes into account the size of the estimate along with its <a href="glossary.html#sec-glossary-standard-error" class="glossary quarto-xref">standard error</a>: <span class="math display">\[
 t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
 \]</span></p>
-<p>The main difference in calculation here is that this test statistic has <a href="glossary.html#glossary-degrees-of-freedom" class="glossary" data-term="Degrees of freedom" title="The amount of independent information remaining after estimating model parameters.">degrees of freedom</a> that depend on the number of predictors in the model. Specifically, <span class="math inline">\(t_i\)</span> has <span class="math inline">\(n - (k+1)\)</span> degrees of freedom - where <span class="math inline">\(n\)</span> is the number of observations and <span class="math inline">\(k\)</span> is the number of predictor variables. Note that this is consistent with the df used for SLR.</p>
+<p>The main difference in calculation here is that this test statistic has <a href="glossary.html#sec-glossary-degrees-of-freedom" class="glossary quarto-xref" data-term="Degrees of freedom">degrees of freedom</a> that depend on the number of predictors in the model. Specifically, <span class="math inline">\(t_i\)</span> has <span class="math inline">\(n - (k+1)\)</span> degrees of freedom - where <span class="math inline">\(n\)</span> is the number of observations and <span class="math inline">\(k\)</span> is the number of predictor variables. Note that this is consistent with the df used for SLR.</p>
 <p>The interpretation of these hypotheses is slightly more nuanced. As pointed out above, the value of <span class="math inline">\(\beta_i\)</span> here does not represent the relationship between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X_i\)</span> without qualification - but only as the other variables are held constant. Analogously, the hypothesis being tested by <span class="math inline">\(t_i\)</span> is whether <span class="math inline">\(X_i\)</span> is related to to <span class="math inline">\(Y\)</span> - <em>once we account for the other predictors in the model</em>.</p>
 <div id="sec-interpreting-the-t-test-of-betai" class="Key-point" title="Interpreting the t-test of \beta_i">
-<p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point: </strong>Interpreting the t-test of <span class="math inline">\(\beta_i\)</span></summary><div><span class="math inline">\(t_i\)</span> is a <span class="math inline">\(n-k+1\)</span> statistic which tests the null hypothesis that <span class="math inline">\(\beta_i=0\)</span> in the multiple regression model. A significant <a href="glossary.html#glossary-p-value" class="glossary" data-term="p-value" title="The probability, under the null hypothesis, of observing a result at least as extreme as the one observed.">p-value</a> for this test entails that <em>given the other predictors in the model</em>.<p></p>
+<p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point: </strong>Interpreting the t-test of <span class="math inline">\(\beta_i\)</span></summary><div><span class="math inline">\(t_i\)</span> is a <span class="math inline">\(n-k+1\)</span> statistic which tests the null hypothesis that <span class="math inline">\(\beta_i=0\)</span> in the multiple regression model. A significant <a href="glossary.html#sec-glossary-p-value" class="glossary quarto-xref" data-term="p-value">p-value</a> for this test entails that <em>given the other predictors in the model</em>.<p></p>
 </div></details>
 </div>
 <p>Because of this:</p>
@@ -28665,12 +28665,12 @@ t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
 </ul>
 </section>
 <div id="sec-multiple-t-tests-and-type-i-error-inflation" class="Note" title="Multiple t-tests and type I error inflation">
-<p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note: </strong>Multiple t-tests and type I error inflation</summary><div>While it is easy to compute <a href="glossary.html#glossary-t-test" class="glossary" data-term="t-test" title="Tests whether a coefficient differs from zero using a t statistic and an assumed reference distribution.">t-tests</a> for each model coefficient individually, this is generally not a good way to determine whether the model as a whole is contributing useful information for the prediction of <span class="math inline">\(Y\)</span>. While the model above only has two predictors, larger datasets have the potential for dozens, hundreds, or thousands of predictors! If we were to rely on this series of <span class="math inline">\(t\)</span>-tests alone to determine whether we have <em>any</em> useful predictors of the outcome, we would be compounding our chance of making a ‘type I error’ (i.e.&nbsp;concluding there is a effect where there is none) with each test. Instead of performing several small tests, we have reason to want a single <em>global</em> test - one that encompasses all the <span class="math inline">\(\beta\)</span> parameters.<p></p>
+<p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note: </strong>Multiple t-tests and type I error inflation</summary><div>While it is easy to compute <a href="glossary.html#sec-glossary-t-test" class="glossary quarto-xref" data-term="t-test">t-tests</a> for each model coefficient individually, this is generally not a good way to determine whether the model as a whole is contributing useful information for the prediction of <span class="math inline">\(Y\)</span>. While the model above only has two predictors, larger datasets have the potential for dozens, hundreds, or thousands of predictors! If we were to rely on this series of <span class="math inline">\(t\)</span>-tests alone to determine whether we have <em>any</em> useful predictors of the outcome, we would be compounding our chance of making a ‘type I error’ (i.e.&nbsp;concluding there is a effect where there is none) with each test. Instead of performing several small tests, we have reason to want a single <em>global</em> test - one that encompasses all the <span class="math inline">\(\beta\)</span> parameters.<p></p>
 </div></details>
 </div>
 </section>
 <section id="sec-the-f-test-for-model-model-usefulness-and-measures-of-model-fit" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="sec-the-f-test-for-model-model-usefulness-and-measures-of-model-fit"><span class="header-section-number">2.4</span> The <a href="glossary.html#glossary-f-test-overall-model-test" class="glossary" data-term="F-test (overall model test)" title="Tests whether predictors jointly improve model fit compared with a simpler model (often intercept-only).">F-test</a> for model model usefulness. : and measures of model fit</h2>
+<h2 data-number="2.4" class="anchored" data-anchor-id="sec-the-f-test-for-model-model-usefulness-and-measures-of-model-fit"><span class="header-section-number">2.4</span> The <a href="glossary.html#sec-glossary-f-test-overall-model-test" class="glossary quarto-xref" data-term="F-test (overall model test)">F-test</a> for model model usefulness. : and measures of model fit</h2>
 <p>Having multiple predictor variables expands the scope of the kind of questions we can ask about our linear model. Rather than looking at each coefficient separately, we can ask whether our model <em>as a whole</em> is effective in explaining the outcome <span class="math inline">\(Y\)</span> In other words, is the combined contribution of the predictors enough to conclude that a linear relationship exists?</p>
 <p>Formally, the global hypothesis test is:</p>
 <ul>
@@ -28683,7 +28683,7 @@ t_i = \frac{\hat\beta_i}{\operatorname{SE}(\hat\beta_i)}.
 <ul>
 <li><strong>variation explained by the model</strong> (mean regression sum of squares, MSR),<br>
 </li>
-<li><strong>residual variation</strong> (mean squared error, <a href="glossary.html#glossary-mean-squared-error" class="glossary" data-term="Mean squared error" title="An estimate of error variance based on residual size (often RSS divided by residual degrees of freedom).">MSE</a>).</li>
+<li><strong>residual variation</strong> (mean squared error, <a href="glossary.html#sec-glossary-mean-squared-error" class="glossary quarto-xref" data-term="Mean squared error">MSE</a>).</li>
 </ul>
 <p>Because each of these quantities is constructed from squared normal deviations, the ratio</p>
 <p><span class="math display">\[
@@ -28752,7 +28752,7 @@ R^2 = 1 - \frac{\text{SSE}}{\text{SST}},
 <p>To address the fact that <span class="math inline">\(R^2\)</span> is overly optimistic in larger models, we use the <em>adjusted coefficient of determination</em>: <span class="math display">\[
 R^2_{\text{adj}} = 1 -\frac{\text{SSE}/(n - k - 1)}{\text{SST}/(n - 1)}.
 \]</span></p>
-<p>Adjusted <a href="glossary.html#glossary-adjusted-r-squared" class="glossary" data-term="Adjusted R-squared" title="R-squared penalised for the number of predictors to discourage unnecessary terms.">R-squared</a>:</p>
+<p>Adjusted <a href="glossary.html#sec-glossary-adjusted-r-squared" class="glossary quarto-xref" data-term="Adjusted R-squared">R-squared</a>:</p>
 <ul>
 <li><strong>penalises</strong> the inclusion of additional predictors,</li>
 <li>increases only when a predictor provides meaningful explanatory value,</li>
@@ -28767,7 +28767,7 @@ R^2_{\text{adj}} = 1 -\frac{\text{SSE}/(n - k - 1)}{\text{SST}/(n - 1)}.
 </section>
 <section id="sec-other-model-fit-statistics-loglikelihood-aic-and-bic" class="level3" data-number="2.4.4">
 <h3 data-number="2.4.4" class="anchored" data-anchor-id="sec-other-model-fit-statistics-loglikelihood-aic-and-bic"><span class="header-section-number">2.4.4</span> Other model fit statistics: logLikelihood, AIC, and BIC</h3>
-<p>The <code>glance()</code> output also includes two additional quantities: <strong><a href="glossary.html#glossary-akaike-information-criterion" class="glossary" data-term="Akaike Information Criterion" title="Model comparison metric that balances fit and complexity; lower values indicate a preferred model among those compared.">AIC</a></strong> (Akaike Information Criterion) and <strong><a href="glossary.html#glossary-bayesian-information-criterion" class="glossary" data-term="Bayesian Information Criterion" title="Model comparison metric that penalises complexity more than AIC; lower values indicate a preferred model among those compared.">BIC</a></strong> (Bayesian Information Criterion).<br>
+<p>The <code>glance()</code> output also includes two additional quantities: <strong><a href="glossary.html#sec-glossary-akaike-information-criterion" class="glossary quarto-xref" data-term="Akaike Information Criterion">AIC</a></strong> (Akaike Information Criterion) and <strong><a href="glossary.html#sec-glossary-bayesian-information-criterion" class="glossary quarto-xref" data-term="Bayesian Information Criterion">BIC</a></strong> (Bayesian Information Criterion).<br>
 Although they appear alongside the F-statistic and <span class="math inline">\(R^2\)</span>, they serve a different purpose.</p>
 <p>AIC and BIC are <strong>not</strong> measures of how well a single model fits the data in an absolute sense.<br>
 Instead, they are designed for <strong>comparing multiple competing models</strong>, balancing goodness of fit against model complexity. Lower values indicate a preferable trade-off, but only <strong>relative</strong> comparisons are meaningful.</p>
@@ -28776,14 +28776,14 @@ Instead, they are designed for <strong>comparing multiple competing models</stro
 </section>
 <section id="sec-mlr_cat" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="sec-mlr_cat"><span class="header-section-number">2.5</span> Categorical predictors in MLR</h2>
-<p>So far, we have only considered numerical predictors in our multiple linear regression models. However, categorical predictors (also called <em><a href="glossary.html#glossary-factor" class="glossary" data-term="Factor" title="A categorical predictor with discrete levels; R stores these as factors.">factors</a></em> in R) can also be included seamlessly.</p>
+<p>So far, we have only considered numerical predictors in our multiple linear regression models. However, categorical predictors (also called <em><a href="glossary.html#sec-glossary-factor" class="glossary quarto-xref" data-term="Factor">factors</a></em> in R) can also be included seamlessly.</p>
 <section id="sec-factors-and-indicator-variables" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="sec-factors-and-indicator-variables"><span class="header-section-number">2.5.1</span> Factors and indicator variables</h3>
-<p>To include a categorical predictor in a linear model, we represent each category using <strong><a href="glossary.html#glossary-dummy-variable" class="glossary" data-term="Dummy variable" title="An indicator (0/1) used to code categories in regression relative to a baseline.">dummy variables</a></strong>. For a binary factor with levels A (reference) and B, we create a single indicator <span class="math display">\[
+<p>To include a categorical predictor in a linear model, we represent each category using <strong><a href="glossary.html#sec-glossary-dummy-variable" class="glossary quarto-xref" data-term="Dummy variable">dummy variables</a></strong>. For a binary factor with levels A (reference) and B, we create a single indicator <span class="math display">\[
 D = I(\text{Group} = B),
 \]</span> and fit <span class="math display">\[
 Y = \beta_0 + \beta_1 D + \varepsilon.
-\]</span> Here, <span class="math inline">\(\beta_0\)</span> is the mean of the <strong><a href="glossary.html#glossary-reference-level" class="glossary" data-term="Reference level" title="The baseline category used to interpret coefficients for a factor.">reference level</a></strong> (A), and <span class="math inline">\(\beta_1\)</span> is the difference in means between B and A. This is exactly the same comparison made by a two-sample t-test, and the slope test of <span class="math inline">\(\beta_1\)</span> uses the same logic as <a href="ch1-slr.html#sec-beta_inference" class="quarto-xref"><span>Section 1.5.1</span></a>.</p>
+\]</span> Here, <span class="math inline">\(\beta_0\)</span> is the mean of the <strong><a href="glossary.html#sec-glossary-reference-level" class="glossary quarto-xref" data-term="Reference level">reference level</a></strong> (A), and <span class="math inline">\(\beta_1\)</span> is the difference in means between B and A. This is exactly the same comparison made by a two-sample t-test, and the slope test of <span class="math inline">\(\beta_1\)</span> uses the same logic as <a href="ch1-slr.html#sec-beta_inference" class="quarto-xref"><span>Section 1.5.1</span></a>.</p>
 <div id="sec-transmission-type-and-fuel-economy" class="Example" title="Transmission type and fuel economy">
 <p></p><details class="Example fbx-simplebox fbx-default" open=""><summary><strong>Example 4: </strong>Transmission type and fuel economy</summary><div>In <code>mtcars</code>, transmission (<code>am</code>) is coded as 0 = automatic and 1 = manual. We can treat this as a factor and model mean fuel economy by transmission type.<p></p>
 <div class="cell">
@@ -28812,7 +28812,7 @@ eyJhdHRyIjp7ImVjaG8iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibW9kX2Ft
 </section>
 <section id="sec-multi-level-factors-and-anova" class="level3" data-number="2.5.2">
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="sec-multi-level-factors-and-anova"><span class="header-section-number">2.5.2</span> Multi-level factors and one-way ANOVA</h3>
-<p>For a factor with <span class="math inline">\(k\)</span> levels, R creates <span class="math inline">\(k-1\)</span> dummy variables by default (a <em><a href="glossary.html#glossary-contrast" class="glossary" data-term="Contrast" title="A coding scheme that maps factor levels to numeric columns (e.g., treatment coding).">contrast</a></em> coding scheme). The overall F-test for the factor is the same as the one-way ANOVA you have already seen.</p>
+<p>For a factor with <span class="math inline">\(k\)</span> levels, R creates <span class="math inline">\(k-1\)</span> dummy variables by default (a <em><a href="glossary.html#sec-glossary-contrast" class="glossary quarto-xref" data-term="Contrast">contrast</a></em> coding scheme). The overall F-test for the factor is the same as the one-way ANOVA you have already seen.</p>
 <div class="cell">
 <div>
 <div id="webr-21" class="exercise-cell">

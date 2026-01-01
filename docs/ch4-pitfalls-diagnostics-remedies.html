@@ -28072,29 +28072,29 @@ initializeRuntime();
 
 </script>
 <style>
-.Note {
---color1: #FFF9C4;
---color2: #FFEB3B;
-}
 .Exercise {
 --color1: #C8E6C9;
 --color2: #4CAF50;
-}
-.Assumption {
---color1: #FFCDD2;
---color2: #F44336;
 }
 .Key-term {
 --color1: #D1C4E9;
 --color2: #673AB7;
 }
-.Key-point {
+.Note {
 --color1: #FFF9C4;
 --color2: #FFEB3B;
 }
 .Example {
 --color1: #BBDEFB;
 --color2: #2196F3;
+}
+.Assumption {
+--color1: #FFCDD2;
+--color2: #F44336;
+}
+.Key-point {
+--color1: #FFF9C4;
+--color2: #FFEB3B;
 }
 </style>
 
@@ -28394,7 +28394,7 @@ eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZSwiaW5jbHVkZSI6ZmFs
 </script>
 </div>
 </div>
-<p>In <a href="ch3-model-building.html" class="quarto-xref"><span>Chapter 3</span></a> we saw that regression models can go wrong due to <a href="glossary.html#glossary-overfitting" class="glossary" data-term="Overfitting" title="When a model captures noise in the training data and generalises poorly to new data.">overfitting</a>—fitting to noise rather than signal in the data. But even a simple model can be misleading if its assumptions are violated, or if a small number of observations have an outsized effect on the fit.</p>
+<p>In <a href="ch3-model-building.html" class="quarto-xref"><span>Chapter 3</span></a> we saw that regression models can go wrong due to <a href="glossary.html#sec-glossary-overfitting" class="glossary quarto-xref" data-term="Overfitting">overfitting</a>—fitting to noise rather than signal in the data. But even a simple model can be misleading if its assumptions are violated, or if a small number of observations have an outsized effect on the fit.</p>
 <p>In this chapter we focus on the ways in which linear regression can go wrong, how to diagnose problems using residuals, and what to do when issues arise.</p>
 <p>In <span class="quarto-unresolved-ref">?sec-introduction-to-linear-models</span>, we introduced the basic assumptions for constructing a simple linear model model of the relationship between two variables. In <a href="ch2-mlr.html" class="quarto-xref"><span>Chapter 2</span></a> we extended these these assumptions to the multiple predictor setting. As a reminder, a linear regression analysis assumes that the data were generated according to something of following form:</p>
 <div id="assumption-linear-model" class="Assumption" title="The linear model">
@@ -28434,9 +28434,9 @@ Y_i ~ \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_p X_{ip}
 <p>When</p>
 <p>Other common pitfalls that can undermine interpretation include:</p>
 <ul>
-<li><strong><a href="glossary.html#glossary-influential-point" class="glossary" data-term="Influential point" title="An observation that substantially changes fitted coefficients or predictions when removed.">Influential points</a></strong>: observations that strongly affect estimates.</li>
-<li><strong><a href="glossary.html#glossary-multicollinearity" class="glossary" title="Strong correlation among predictors that inflates standard errors and destabilises coefficient estimates.">Multicollinearity</a></strong>: predictors that are highly correlated, inflating uncertainty.</li>
-<li><strong><a href="glossary.html#glossary-extrapolation" class="glossary" title="Making predictions outside the observed predictor range, where the fitted relationship may not hold.">Extrapolation</a></strong>: making predictions outside the range of observed data.</li>
+<li><strong><a href="glossary.html#sec-glossary-influential-point" class="glossary quarto-xref" data-term="Influential point">Influential points</a></strong>: observations that strongly affect estimates.</li>
+<li><strong><a href="glossary.html#sec-glossary-multicollinearity" class="glossary quarto-xref">Multicollinearity</a></strong>: predictors that are highly correlated, inflating uncertainty.</li>
+<li><strong><a href="glossary.html#sec-glossary-extrapolation" class="glossary quarto-xref">Extrapolation</a></strong>: making predictions outside the range of observed data.</li>
 <li><strong>Blind model selection</strong>: using automated procedures without scientific context or diagnostic checks.</li>
 </ul>
 <div id="Key-point*-1" class="Key-point">
@@ -28732,7 +28732,7 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImdncGxvdChhdWdfcXVhZCwg
 </div>
 </section>
 <section id="sec-diagnosing-heteroskedasticity" class="level3" data-number="4.5.2">
-<h3 data-number="4.5.2" class="anchored" data-anchor-id="sec-diagnosing-heteroskedasticity"><span class="header-section-number">4.5.2</span> Nonconstant variance (<a href="glossary.html#glossary-heteroskedasticity" class="glossary" title="Nonconstant error variance across predictor values (the opposite of homoscedasticity).">heteroskedasticity</a>)</h3>
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="sec-diagnosing-heteroskedasticity"><span class="header-section-number">4.5.2</span> Nonconstant variance (<a href="glossary.html#sec-glossary-heteroskedasticity" class="glossary quarto-xref">heteroskedasticity</a>)</h3>
 <p><strong>Symptoms</strong></p>
 <ul>
 <li>A “funnel” shape in residuals vs fitted (spread increases or decreases with the fitted value).</li>
@@ -28804,7 +28804,7 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImdncGxvdChhdWdfbG9nLCBh
 </section>
 <section id="sec-assessing-independence" class="level3" data-number="4.5.4">
 <h3 data-number="4.5.4" class="anchored" data-anchor-id="sec-assessing-independence"><span class="header-section-number">4.5.4</span> Independence (autocorrelation)</h3>
-<p>The <a href="glossary.html#glossary-independence" class="glossary" title="The assumption that errors from different observations are not correlated.">independence</a> assumption is most commonly violated when observations are collected over time (or space). If residuals are correlated, standard errors can be too small, and <span class="math inline">\(p\)</span>-values can look “better” than they should.</p>
+<p>The <a href="glossary.html#sec-glossary-independence" class="glossary quarto-xref">independence</a> assumption is most commonly violated when observations are collected over time (or space). If residuals are correlated, standard errors can be too small, and <span class="math inline">\(p\)</span>-values can look “better” than they should.</p>
 <p><strong>Symptoms</strong></p>
 <ul>
 <li>Residuals show runs/clustering when plotted against time/order.</li>
@@ -28865,9 +28865,9 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImdncGxvdChhY2ZfZGYsIGFl
 <div id="sec-influence-diagnostics-key-term" class="Key-term" title="Standardised residuals and influence diagnostics">
 <details class="Key-term fbx-simplebox fbx-default" open=""><summary><strong>Key-term: </strong>Standardised residuals and influence diagnostics</summary><div>
 <ul>
-<li><a href="glossary.html#glossary-standardised-residual" class="glossary" data-term="Standardized residual" title="A residual scaled by its estimated standard deviation to highlight unusually large deviations.">Standardised residuals</a> scale residuals by an estimate of their variability.</li>
-<li><a href="glossary.html#glossary-leverage" class="glossary" title="A measure of how unusual a case’s predictor values are; high leverage can increase influence.">Leverage</a> identifies observations with unusual predictor values.</li>
-<li><a href="glossary.html#glossary-cooks-distance" class="glossary" data-term="Cook's distance" title="An influence measure combining residual size and leverage to flag points that strongly affect the fit.">Cook’s distance</a> combines leverage and residual size to measure influence.</li>
+<li><a href="glossary.html#sec-glossary-standardised-residual" class="glossary quarto-xref" data-term="Standardized residual">Standardised residuals</a> scale residuals by an estimate of their variability.</li>
+<li><a href="glossary.html#sec-glossary-leverage" class="glossary quarto-xref">Leverage</a> identifies observations with unusual predictor values.</li>
+<li><a href="glossary.html#sec-glossary-cooks-distance" class="glossary quarto-xref" data-term="Cook's distance">Cook’s distance</a> combines leverage and residual size to measure influence.</li>
 </ul>
 </div></details>
 </div>
@@ -28888,7 +28888,7 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImRpYWdfYXVnIHw+XG4gIHNl
 </section>
 <section id="sec-extrapolation-and-high-leverage" class="level3" data-number="4.5.6">
 <h3 data-number="4.5.6" class="anchored" data-anchor-id="sec-extrapolation-and-high-leverage"><span class="header-section-number">4.5.6</span> Extrapolation and high-leverage prediction</h3>
-<p><a href="glossary.html#glossary-extrapolation" class="glossary" title="Making predictions outside the observed predictor range, where the fitted relationship may not hold.">Extrapolation</a> means predicting for predictor values outside the range you observed. It is risky because the <em>relationship itself</em> may change outside the observed region, and because uncertainty grows rapidly when you move away from the data cloud (often showing up as high leverage).</p>
+<p><a href="glossary.html#sec-glossary-extrapolation" class="glossary quarto-xref">Extrapolation</a> means predicting for predictor values outside the range you observed. It is risky because the <em>relationship itself</em> may change outside the observed region, and because uncertainty grows rapidly when you move away from the data cloud (often showing up as high leverage).</p>
 <div id="Key-point*-7" class="Key-point">
 <p></p><details class="Key-point fbx-simplebox fbx-default" open=""><summary><strong>Key-point</strong></summary><div>Before you trust a prediction, check whether it is an extrapolation. A simple first step is to compare each new predictor value to the observed range.<p></p>
 </div></details>
@@ -28906,7 +28906,7 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6InRpYmJsZShcbiAgcHJlZGlj
 </section>
 <section id="sec-transformations-including-box-cox" class="level3" data-number="4.5.7">
 <h3 data-number="4.5.7" class="anchored" data-anchor-id="sec-transformations-including-box-cox"><span class="header-section-number">4.5.7</span> Transformations including Box–Cox</h3>
-<p>Transformations can help when residual plots show curvature or nonconstant variance. A systematic way to explore power transformations of the response is the <a href="glossary.html#glossary-box-cox-transformation" class="glossary" data-term="Box-Cox transformation" title="A family of power transformations used to stabilise variance or improve linearity for positive responses.">Box–Cox transformation</a>.</p>
+<p>Transformations can help when residual plots show curvature or nonconstant variance. A systematic way to explore power transformations of the response is the <a href="glossary.html#sec-glossary-box-cox-transformation" class="glossary quarto-xref" data-term="Box-Cox transformation">Box–Cox transformation</a>.</p>
 <div id="Note*-8" class="Note">
 <p></p><details class="Note fbx-simplebox fbx-default" open=""><summary><strong>Note</strong></summary><div>Box–Cox requires the response to be strictly positive.<p></p>
 </div></details>
@@ -28924,11 +28924,11 @@ eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlfSwiY29kZSI6ImJjIDwtIE1BU1M6OmJveGNv
 </section>
 <section id="sec-multicollinearity-diagnostics" class="level3" data-number="4.5.8">
 <h3 data-number="4.5.8" class="anchored" data-anchor-id="sec-multicollinearity-diagnostics"><span class="header-section-number">4.5.8</span> Multicollinearity</h3>
-<p><a href="glossary.html#glossary-multicollinearity" class="glossary" title="Strong correlation among predictors that inflates standard errors and destabilises coefficient estimates.">Multicollinearity</a> occurs when predictors are strongly correlated. It does <em>not</em> necessarily make predictions bad, but it can make coefficient estimates unstable and inflate standard errors—so interpretation and “which predictor matters?” questions become fragile.</p>
+<p><a href="glossary.html#sec-glossary-multicollinearity" class="glossary quarto-xref">Multicollinearity</a> occurs when predictors are strongly correlated. It does <em>not</em> necessarily make predictions bad, but it can make coefficient estimates unstable and inflate standard errors—so interpretation and “which predictor matters?” questions become fragile.</p>
 <p><strong>Symptoms</strong></p>
 <ul>
 <li>Large standard errors and coefficient sign changes when you add/remove a correlated predictor.</li>
-<li>Large <a href="glossary.html#glossary-variance-inflation-factor" class="glossary" data-term="Variance inflation factor" title="A diagnostic that summarises how collinearity inflates the uncertainty of a coefficient estimate.">variance inflation factors</a> (VIFs).</li>
+<li>Large <a href="glossary.html#sec-glossary-variance-inflation-factor" class="glossary quarto-xref" data-term="Variance inflation factor">variance inflation factors</a> (VIFs).</li>
 </ul>
 <p><strong>Common remedies</strong></p>
 <ul>
@@ -29118,7 +29118,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJjbGFzcyI6IndhaXQiLCJlZGl0Ijp0cnVlLCJlbnZpciI6IkV4
 </section>
 </section>
 <section id="sec-handling-outliers-and-influential-observations" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="sec-handling-outliers-and-influential-observations"><span class="header-section-number">4.7</span> Handling <a href="glossary.html#glossary-outlier" class="glossary" data-term="Outlier" title="An observation with an unusually large residual relative to the fitted model.">outliers</a> and influential observations</h2>
+<h2 data-number="4.7" class="anchored" data-anchor-id="sec-handling-outliers-and-influential-observations"><span class="header-section-number">4.7</span> Handling <a href="glossary.html#sec-glossary-outlier" class="glossary quarto-xref" data-term="Outlier">outliers</a> and influential observations</h2>
 <p>When diagnostics flag influential observations, slow down and investigate rather than deleting points automatically.</p>
 <ul>
 <li>Check data quality first (entry errors, unusual units, miscoding).</li>
