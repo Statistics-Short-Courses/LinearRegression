@@ -170,16 +170,15 @@ By assuming this form we can proceed to estimate the parameters $b_0, b_1, \ldot
 However, if it is not the case that the data were generated according to something like \ref{assumption-linear-model} (e.g. as in sets 2, 3, or 4 of Anscombe's quartet), then our estimates, inferences, and predictions may be misleading.
 
 ## Common assumptions and pitfalls {#sec-common-assumptions-and-pitfalls}
-It is often the case, some aspects of \ref{assumption-linear-model} may be violated while others are still reasonably satisfied. For example, a model may have nonconstant variance but still have linear mean structure and approximately normal errors. For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to state present the assumptions of a linear model is via the following four assumptions about the error terms $\epsilon_i$:
+It is often the case, some aspects of \ref{assumption-linear-model} may be violated while others are still reasonably satisfied. For example, data may show a linear trend but have nonconstant variance (heteroskedasticity). For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to present the assumptions of a linear model is via the following four assumptions:
 
 
 ::: Assumption
 ### Linearity
-The relationship between the predictors and the response is linear (in the parameters)
+The relationship between the predictors and the response is linear (in the parameters) on average
 $$
-Y_i ~ \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_p X_{ip}
+E[Y_i] = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_p X_{ip}
 $$
-Where 
 :::
 
 ::: Assumption
@@ -200,8 +199,6 @@ $$
 ### Independence
 The errors are independent: $\epsilon_i$ is independent of $\epsilon_j$ for $i \neq j$. 
 :::
-
-When 
 
 Other common pitfalls that can undermine interpretation include:
 
