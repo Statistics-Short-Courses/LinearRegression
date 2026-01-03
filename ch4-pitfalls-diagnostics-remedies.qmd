@@ -71,9 +71,84 @@ theme_set(theme_bw())
 
 # Pitfalls, Diagnostics, and Remedies {#sec-regression-pitfalls-and-diagnostics}
 
-In @sec-model-building-and-selection we saw that regression models can go wrong due to [overfitting]{.glossary term="Overfitting"}—fitting to noise rather than signal in the data. But even a simple model can be misleading if its assumptions are violated, or if a small number of observations have an outsized effect on the fit.
+In @sec-model-building-and-selection we saw that complex regression models can go wrong due to [overfitting]{.glossary term="Overfitting"}. But even regression analyses can be misleading if the linear model we are fitting does not adequately capture the data-generating process.
+
+::: Example
+### Anscombe's quartet: same regression, different data {#sec-anscombes-quartet}
+Regression summaries can mask radically different data patterns. Consider the following four datasets, known as Anscombe's quartet (@anscombe1973graphs):
+
+::: {.panel-tabset}
+### Scatter plots
+```{r chapter04-regression-pitfalls-diagnostics-anscombe-setup}
+#| edit: false
+anscombe_long <- anscombe |>
+  pivot_longer(
+    cols = everything(),
+    names_to = c(".value", "set"),
+    names_pattern = "([xy])(\\d)"
+  ) |>
+  mutate(set = paste0("Set ", set))
+  
+ggplot(anscombe_long, aes(x = x, y = y)) +
+  geom_point(size = 2) +
+  facet_wrap(~ set, ncol = 2) 
+```
+### dataset
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-scatter}
+#| edit: false
+anscombe
+```
+These data are clearly very different, howerver each has the same summary statistics: 
+```{r chapter04-regression-pitfalls-diagnostics-anscombe-summary}
+#| edit: false
+anscombe_long |>
+  group_by(set) |>
+  summarise(
+    n = n(),
+    mean_x = mean(x),
+    mean_y = mean(y),
+    sd_x = sd(x),
+    sd_y = sd(y),
+    cor_xy = cor(x, y)
+  )
+```
+
+ Furthermore,  fitting a simple linear regression model to each dataset yields identical estimates:
+
+ ::: {.panel-tabset}
+ ### fitted lines
+```{r chapter04-regression-pitfalls-diagnostics-anscombe-setup}
+#| edit: false
+#| include: false
+#| echo: false
+
+ggplot(anscombe_long, aes(x = x, y = y)) +
+  geom_point(size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  facet_wrap(~ set, ncol = 2) 
+```
+```{r chapter04-regression-pitfalls-diagnostics-anscombe-regression}
+#| edit: false
+list(
+  x1 = lm(y1 ~ x1, anscombe),
+  x2 = lm(y2 ~ x2, anscombe),
+  x3 = lm(y3 ~ x3, anscombe),
+  x4 = lm(y4 ~ x4, anscombe)
+) |>  map(tidy) |> bind_rows(.id = "dataset")
+```
+::::
+
+The key lesson from Anscombe's quartet is that regression summaries can hide important aspects of the data. Therefore, a necessary step in **any** regression analysis is to check whether the assumptions of the linear model are reasonably satisfied by the data at hand.
+:::
 
 In this chapter we focus on the ways in which linear regression can go wrong, how to diagnose problems using residuals, and what to do when issues arise. 
+
+::: Key-point
+
+A good regression analysis is not just about fitting a model and reporting results; it also involves checking that the model assumptions are reasonably satisfied and addressing any issues that arise.
+:::
+
+### Revisiting linear model assumptions {#sec-linear-model-and-its-assumptions}
 
 In @sec-introduction-to-linear-models, we introduced the basic assumptions for constructing a simple linear model model of the relationship between two variables. In @sec-multiple-linear-regression-mlr we extended these these assumptions to the multiple predictor setting. As a reminder, a linear regression analysis assumes that the data were generated according to something of following form:
 
@@ -90,7 +165,9 @@ $$
 for some unknown parameters $\beta_0, \beta_1, \ldots, \beta_p$ and $\sigma^2 > 0$.
 :::
 
-By assuming this form we can proceed to estimate the parameters $b_0, b_1, \ldots, b_p$ and $s^2$ using the method of least squares, and then use these estimates to perform inference and prediction. However, if it is not the case that the data were generated according to this form, then our estimates, inferences, and predictions may be misleading.
+By assuming this form we can proceed to estimate the parameters $b_0, b_1, \ldots, b_p$ and $s^2$ using the method of least squares, and then use these estimates to perform inference and prediction. 
+
+However, if it is not the case that the data were generated according to something like \ref{assumption-linear-model} (e.g. as in sets 2, 3, or 4 of Anscombe's quartet), then our estimates, inferences, and predictions may be misleading.
 
 ## Common assumptions and pitfalls {#sec-common-assumptions-and-pitfalls}
 It is often the case, some aspects of \ref{assumption-linear-model} may be violated while others are still reasonably satisfied. For example, a model may have nonconstant variance but still have linear mean structure and approximately normal errors. For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to state present the assumptions of a linear model is via the following four assumptions about the error terms $\epsilon_i$:
@@ -135,57 +212,6 @@ Other common pitfalls that can undermine interpretation include:
 
 ::: Key-point
 Diagnostics are not an optional add-on—they are part of the modelling workflow. A good model should have residuals that look like *structureless noise*.
-:::
-
-- [ ] Continue
-
-## Why check residuals? Anscombe's quartet {#sec-the-importance-of-checking-residuals-anscombe-s-quartet}
-
-::: Example
-Anscombe's quartet is a classic reminder that identical regression summaries can mask radically different data patterns. Each dataset below has the same $n$, mean $x$, mean $y$, correlation, and the same fitted regression line, yet the residual plots tell very different stories.
-
-```{webr chapter04-regression-pitfalls-diagnostics-anscombe-setup}
-#| edit: false
-anscombe_long <- anscombe |>
-  pivot_longer(
-    cols = everything(),
-    names_to = c(".value", "set"),
-    names_pattern = "([xy])(\\d)"
-  ) |>
-  mutate(set = paste0("Set ", set))
-
-anscombe_aug <- anscombe_long |>
-  nest(data = c(x, y)) |>
-  mutate(
-    model = map(data, ~ lm(y ~ x, data = .x)),
-    aug = map2(model, data, broom::augment)
-  ) |>
-  unnest(aug)
-```
-
-:::: {.panel-tabset}
-### Scatter plots (with fitted line)
-```{webr chapter04-regression-pitfalls-diagnostics-anscombe-scatter}
-#| edit: false
-ggplot(anscombe_aug, aes(x = x, y = y)) +
-  geom_point(size = 2) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
-  facet_wrap(~ set, ncol = 2) +
-  labs(title = "Same fitted line, very different datasets")
-```
-
-### Residual plots
-```{webr chapter04-regression-pitfalls-diagnostics-anscombe-residuals}
-#| edit: false
-ggplot(anscombe_aug, aes(x = .fitted, y = .resid)) +
-  geom_point(size = 2) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
-  facet_wrap(~ set, ncol = 2) +
-  labs(x = "Fitted value", y = "Residual")
-```
-::::
-
-Residual plots often reveal problems that are easy to miss from summaries and even from the original scatter plot (especially when you have many predictors).
 :::
 
 - [ ] Continue
