@@ -117,7 +117,7 @@ anscombe_long |>
 
  ::: {.panel-tabset}
  ### fitted lines
-```{r chapter04-regression-pitfalls-diagnostics-anscombe-setup}
+```{r chapter04-regression-pitfalls-diagnostics-anscombe-fitted-lines}
 #| edit: false
 #| include: false
 #| echo: false
@@ -255,13 +255,15 @@ We can see that cholesterol tends to increase with fat intake, but the relations
 ```{webr chapter04-regression-pitfalls-diagnostics-olympic-setup}
 #| edit: false
 olympic_mod <- lm(CHOLESTEROL ~ FAT, data = olympic)
+olympic$resid <- resid(olympic_mod)
+olympic$fitted <- predict(olympic_mod)
 ```
 
 :::: {.panel-tabset}
 ### Residuals vs fitted
 ```{webr chapter04-regression-pitfalls-diagnostics-olympic-residuals-vs-fitted}
 #| edit: false
-ggplot(olympic_aug, aes(x = .fitted, y = .resid)) +
+ggplot(olympic, aes(x = fitted, y = residuals)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
   geom_point(size = 2) +
   labs(x = "Fitted value", y = "Residual")
@@ -270,7 +272,7 @@ ggplot(olympic_aug, aes(x = .fitted, y = .resid)) +
 ### Residuals vs FAT
 ```{webr chapter04-regression-pitfalls-diagnostics-olympic-residuals-vs-fat}
 #| edit: false
-ggplot(olympic_aug, aes(x = FAT, y = .resid)) +
+ggplot(olympic, aes(x = FAT, y = resid)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
   geom_point(size = 2) +
   labs(y = "Residual")
