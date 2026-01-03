@@ -144,11 +144,10 @@ The key lesson from Anscombe's quartet is that regression summaries can hide imp
 In this chapter we focus on the ways in which linear regression can go wrong, how to diagnose problems using residuals, and what to do when issues arise. 
 
 ::: Key-point
-
 A good regression analysis is not just about fitting a model and reporting results; it also involves checking that the model assumptions are reasonably satisfied and addressing any issues that arise.
 :::
 
-### Revisiting linear model assumptions {#sec-linear-model-and-its-assumptions}
+## Revisiting linear model assumptions {#sec-linear-model-and-its-assumptions}
 
 In @sec-introduction-to-linear-models, we introduced the basic assumptions for constructing a simple linear model model of the relationship between two variables. In @sec-multiple-linear-regression-mlr we extended these these assumptions to the multiple predictor setting. As a reminder, a linear regression analysis assumes that the data were generated according to something of following form:
 
@@ -169,9 +168,8 @@ By assuming this form we can proceed to estimate the parameters $b_0, b_1, \ldot
 
 However, if it is not the case that the data were generated according to something like \ref{assumption-linear-model} (e.g. as in sets 2, 3, or 4 of Anscombe's quartet), then our estimates, inferences, and predictions may be misleading.
 
-## Common assumptions and pitfalls {#sec-common-assumptions-and-pitfalls}
+### Common assumptions {#sec-common-assumptions-and-pitfalls}
 It is often the case, some aspects of \ref{assumption-linear-model} may be violated while others are still reasonably satisfied. For example, data may show a linear trend but have nonconstant variance (heteroskedasticity). For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to present the assumptions of a linear model is via the following four assumptions:
-
 
 ::: Assumption
 ### Linearity
@@ -200,22 +198,15 @@ $$
 The errors are independent: $\epsilon_i$ is independent of $\epsilon_j$ for $i \neq j$. 
 :::
 
-Other common pitfalls that can undermine interpretation include:
-
-- **[Influential points]{.glossary term="Influential point"}**: observations that strongly affect estimates.
-- **[Multicollinearity]{.glossary}**: predictors that are highly correlated, inflating uncertainty.
-- **[Extrapolation]{.glossary}**: making predictions outside the range of observed data.
-- **Blind model selection**: using automated procedures without scientific context or diagnostic checks.
-
-::: Key-point
-Diagnostics are not an optional add-on—they are part of the modelling workflow. A good model should have residuals that look like *structureless noise*.
-:::
+The standard workflow for a regression analysis involves checking whether these assumptions are reasonably satisfied. If problems are detected, it means we need to revise our model in some way (e.g., by adding polynomial terms, transforming variables, or using a different modelling approach).
 
 - [ ] Continue
 
 ## Residuals as diagnostic tools {#sec-residuals-as-diagnostic-tools}
 
-How can we check whether the assumptions of a linear regression model are met? One of the most common approaches is to examine the residuals of the model. Residuals are the part of the data that your model did *not* explain.
+How can we check whether the assumptions of a linear regression model are met? 
+We might start by plotting the data and looking for obvious problems. This is how we identified issues in @sec-anscombes-quartet looking at Anscombe's quartet. However, a more systematic approach is to examine the *residuals* from the fitted model. 
+Remember that the *residuals* are defined as the difference between the observed values and the fitted values from the model.
 
 ::: Key-term
 ### Residual {#sec-residual}
@@ -224,9 +215,9 @@ $$e_i = y_i - \hat{y}_i$$
 where $e_i$ is the residual for observation $i$, $y_i$ is the observed value, and $\hat{y}_i$ is the predicted value from the model.
 :::
 
-We used residuals in @sec-leastsquares to estimate the parameters of the linear model, but they can also be used to diagnose model problems. Since residuals encode the information about what the model has *not* captured, plotting residuals can reveal systematic patterns such as:
+We used residuals in @sec-leastsquares to estimate the parameters of the linear model, but they can also be used to diagnose model problems. Since residuals encode the information about what the model has *not* captured, plotting residuals can reveal systematic patterns where the model is failing to fit the data well. Common issues that can be detected using residual plots include:
 
-- curvature (missing nonlinearity),
+- curvature (non-linearity),
 - changing spread (nonconstant variance),
 - extreme points (outliers/influence),
 - departures from normality.
@@ -234,24 +225,39 @@ We used residuals in @sec-leastsquares to estimate the parameters of the linear 
 ::: Example
 ### Residuals in the Olympic cholesterol data {#sec-residuals-in-the-olympic-cholesterol-data}
 
-The OLYMPIC dataset records fat intake (mg) and cholesterol (mg/L) for 20 athletes. A simple linear model leaves a curved pattern in the residuals.
+The OLYMPIC dataset records fat intake (mg) and cholesterol (mg/L) for 20 athletes. 
 
-```{webr chapter04-regression-pitfalls-diagnostics-olympic-setup}
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-data}
 #| edit: false
+
 olympic <- read.delim("Data/OLYMPIC.txt")
-olympic_mod <- lm(CHOLESTEROL ~ FAT, data = olympic)
-olympic_aug <- augment(olympic_mod)
 ```
 
-:::: {.panel-tabset}
-### Scatter plot (with fitted line)
-```{webr chapter04-regression-pitfalls-diagnostics-olympic-scatter}
+::: {.panel-tabset}
+## Scatter plot 
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-data-scatter}
 #| edit: false
 ggplot(olympic, aes(x = FAT, y = CHOLESTEROL)) +
   geom_point(size = 2) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8)
+  labs(x = "Fat intake (mg)", y = "Cholesterol (mg/L)")
+
 ```
 
+## Data table
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-data-table}
+#| edit: false
+olympic
+```
+:::
+
+We can see that cholesterol tends to increase with fat intake, but the relationship does not appear to be perfectly linear. Let's fit a simple linear regression model predicting cholesterol from fat intake, and then examine the residuals to see if there are any obvious problems.
+
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-setup}
+#| edit: false
+olympic_mod <- lm(CHOLESTEROL ~ FAT, data = olympic)
+```
+
+:::: {.panel-tabset}
 ### Residuals vs fitted
 ```{webr chapter04-regression-pitfalls-diagnostics-olympic-residuals-vs-fitted}
 #| edit: false
@@ -271,7 +277,9 @@ ggplot(olympic_aug, aes(x = FAT, y = .resid)) +
 ```
 ::::
 
-The curved pattern indicates that a straight-line model is missing structure in the data (a sign of nonlinearity).
+We can see that the positive relationship between fat intake and cholesterol observed in the scatter plot has been captured by the model (the  diagonal trend is gone in the residual plots, and the coefficient for FAT in the model summary is positive and significant). However, there is still a clear curved pattern in the residuals, indicating that not all the structure in the data.
+
+The curved pattern in the data is not able to be captured by a first order linear model. This suggests that we need to revise our model, perhaps by adding a polynomial term or transforming one of the variables.
 :::
 
 ### Extracting diagnostics with `broom::augment()` {#sec-extracting-residuals-and-broom-augment}
