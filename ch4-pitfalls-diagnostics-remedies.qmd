@@ -71,13 +71,13 @@ theme_set(theme_bw())
 
 # Pitfalls, Diagnostics, and Remedies {#sec-regression-pitfalls-and-diagnostics}
 
-In @sec-model-building-and-selection we saw that complex regression models can go wrong due to [overfitting]{.glossary term="Overfitting"}. But even regression analyses can be misleading if the linear model we are fitting does not adequately capture the data-generating process.
+In @sec-model-building-and-selection we saw that complex regression models can go wrong due to [overfitting]{.glossary term="Overfitting"}. But even simple regression analyses can be misleading if the linear model we are fitting does not adequately capture the data-generating process.
 
 ::: Example
 ### Anscombe's quartet: same regression, different data {#sec-anscombes-quartet}
 Regression summaries can mask radically different data patterns. Consider the following four datasets, known as Anscombe's quartet (@anscombe1973graphs):
 
-::: {.panel-tabset}
+:::: {.panel-tabset}
 ### Scatter plots
 ```{r chapter04-regression-pitfalls-diagnostics-anscombe-setup}
 #| edit: false
@@ -93,13 +93,16 @@ ggplot(anscombe_long, aes(x = x, y = y)) +
   geom_point(size = 2) +
   facet_wrap(~ set, ncol = 2) 
 ```
+
 ### dataset
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-scatter}
 #| edit: false
 anscombe
 ```
+::::
+
 These data are clearly very different, howerver each has the same summary statistics: 
-```{r chapter04-regression-pitfalls-diagnostics-anscombe-summary}
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-summary}
 #| edit: false
 anscombe_long |>
   group_by(set) |>
@@ -113,11 +116,11 @@ anscombe_long |>
   )
 ```
 
- Furthermore,  fitting a simple linear regression model to each dataset yields identical estimates:
+Furthermore,  fitting a simple linear regression model to each dataset yields identical estimates:
 
- ::: {.panel-tabset}
+:::: {.panel-tabset}
  ### fitted lines
-```{r chapter04-regression-pitfalls-diagnostics-anscombe-fitted-lines}
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-fitted-lines}
 #| edit: false
 #| include: false
 #| echo: false
@@ -127,7 +130,8 @@ ggplot(anscombe_long, aes(x = x, y = y)) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
   facet_wrap(~ set, ncol = 2) 
 ```
-```{r chapter04-regression-pitfalls-diagnostics-anscombe-regression}
+### Regression summary
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-regression}
 #| edit: false
 list(
   x1 = lm(y1 ~ x1, anscombe),
