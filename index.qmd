@@ -15,9 +15,9 @@ custom-numbered-blocks:
 
 # Course Overview {#sec-course-overview .unnumbered}
 
-Linear regression is one of the most widely used tools in data analysis. It helps us describe and predict an outcome $Y$ using one or more predictors $X$, while also quantifying how uncertain our conclusions are.
+Linear regression is one of the most widely used tools in data analysis. It helps us describe and predict a continuous *outcome* using one or more *predictors*, while also quantifying how uncertain our conclusions are.  Linear regression models are used across many fields, including social sciences, health sciences, economics, engineering, and natural sciences. Understanding how to use linear regression effectively is a crucial skill for anyone working with data.
 
-This short course aims to introduce you to the key concepts and practical skills needed to use linear regression effectively. The focus is on understanding what regression models do, how to apply them in R, interpret the results, and check that the resulting models are appropriate for your data and research question.
+This short course aims to introduce you to the key concepts and practical skills needed to use linear regression effectively. The focus is on understanding what regression models do, how to apply them in the statistical programming language `R`, interpret the output, and check that the resulting model is appropriate for your data and research question.
 
 
 ## What you will learn {#sec-what-you-will-learn}
@@ -44,7 +44,7 @@ This short course aims to introduce you to the key concepts and practical skills
 ## How to use this book {#sec-how-to-use-this-book}
 This book is part of a larger series of *Statistics Short Courses* from the UNE School of Science and Technology. Some content from other courses in this series is assumed knowledge here. In particular, a familarity with 
 
-- Basic `R` usage (see the [UNE Consolidated R Resources](https://turing.une.edu.au/~statshare/index.html) for a refresher),
+- Basic `R` usage, including famiarity with the `tidyverse` including `ggplot2` and `dplyr` (see the [UNE Consolidated R Resources](https://turing.une.edu.au/~statshare/index.html) for a refresher)
 - Descriptive statistics and data visualisation (see the [Exploratory Data Analysis/Visualisation Short Course]()), and
 - Basic inferential statistics: estimation and hypothesis testing including t-tests and ANOVA  (see the [inferential Statistics with R Short Course]()).
 
@@ -55,7 +55,8 @@ Here are some tips for getting the most out of this book:
 - **Use the Glossary** as you go. Important terms are highlighted in the text and defined in the glossary at the end of the book along with relevant formulas and R functions.
 - **Pace yourself** — this is a short course, but it covers a lot of material. Each chapter should take around 45-60 minutes to work through, depending on your familiarity with the topics.
 
-Finally, note that this is only a *short* course so we won't be able to cover everything in depth. The goal is to give you a solid foundation in linear regression that you can build on with further study and practice. UNE offers several longer form and more advanced courses in statistics and data analysis if you wish to deepen your knowledge further. Also, there are many excellent textbooks and online resources available for further reading on regression analysis. Some recommended texts include:
+Finally, note that this is only a *short* course so we won't be able to cover everything in depth. The goal is to give you a solid foundation in linear regression that you can build on with further study and practice. UNE offers several longer form and more advanced courses in statistics and data analysis if you wish to deepen your knowledge further. Simple linear regression is introduced in STAT100 and multiple linear regression is covered in more depth in STAT210
+Also, there are many excellent textbooks and online resources available for further reading on regression and using R for data analysis. Some recommended texts include:
 - "Linear Models with R" by Julian J. Faraway
 - "R for Data Science" by Hadley Wickham and Garrett Grolemund
 - "An Introduction to Statistical Learning" by Gareth James, Daniela Witten, Trevor Hastie, and Robert Tibshirani
