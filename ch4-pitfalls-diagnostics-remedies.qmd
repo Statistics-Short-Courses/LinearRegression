@@ -101,7 +101,7 @@ anscombe
 ```
 ::::
 
-These data are clearly very different, howerver each has the same summary statistics: 
+These data are clearly very different, howerver each  variable has the same summary statistics: 
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-summary}
 #| edit: false
 anscombe_long |>
@@ -119,7 +119,7 @@ anscombe_long |>
 Furthermore,  fitting a simple linear regression model to each dataset yields identical estimates:
 
 :::: {.panel-tabset}
- ### fitted lines
+### fitted lines
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-fitted-lines}
 #| edit: false
 #| include: false
@@ -130,6 +130,7 @@ ggplot(anscombe_long, aes(x = x, y = y)) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
   facet_wrap(~ set, ncol = 2) 
 ```
+
 ### Regression summary
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-regression}
 #| edit: false
@@ -140,9 +141,10 @@ list(
   x4 = lm(y4 ~ x4, anscombe)
 ) |>  map(tidy) |> bind_rows(.id = "dataset")
 ```
+
 ::::
 
-The key lesson from Anscombe's quartet is that regression summaries can hide important aspects of the data. Therefore, a necessary step in **any** regression analysis is to check whether the assumptions of the linear model are reasonably satisfied by the data at hand.
+The key lesson from Anscombe's quartet is that regression summaries can hide important aspects of the data. Therefore, a necessary step in **any** regression analysis is to check whether the data meet the assumptions of the linear model being fitted. 
 :::
 
 In this chapter we focus on the ways in which linear regression can go wrong, how to diagnose problems using residuals, and what to do when issues arise. 
@@ -208,7 +210,7 @@ The standard workflow for a regression analysis involves checking whether these 
 
 ## Residuals as diagnostic tools {#sec-residuals-as-diagnostic-tools}
 
-How can we check whether the assumptions of a linear regression model are met? 
+How can we check whether the assumptions of a linear regression model are met?
 We might start by plotting the data and looking for obvious problems. This is how we identified issues in @sec-anscombes-quartet looking at Anscombe's quartet. However, a more systematic approach is to examine the *residuals* from the fitted model. 
 Remember that the *residuals* are defined as the difference between the observed values and the fitted values from the model.
 
@@ -267,7 +269,7 @@ olympic$fitted <- predict(olympic_mod)
 ### Residuals vs fitted
 ```{webr chapter04-regression-pitfalls-diagnostics-olympic-residuals-vs-fitted}
 #| edit: false
-ggplot(olympic, aes(x = fitted, y = residuals)) +
+ggplot(olympic, aes(x = fitted, y = resid)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
   geom_point(size = 2) +
   labs(x = "Fitted value", y = "Residual")
@@ -283,7 +285,7 @@ ggplot(olympic, aes(x = FAT, y = resid)) +
 ```
 ::::
 
-We can see that the positive relationship between fat intake and cholesterol observed in the scatter plot has been captured by the model (the  diagonal trend is gone in the residual plots, and the coefficient for FAT in the model summary is positive and significant). However, there is still a clear curved pattern in the residuals, indicating that not all the structure in the data.
+We can see that the positive relationship between fat intake and cholesterol observed in the scatter plot has been captured by the model (the diagonal trend is gone in the residual plots, and the coefficient for FAT in the model summary is positive and significant). However, there is still a clear curved pattern in the residuals, indicating that not all the structure in the data has been captured.
 
 The curved pattern in the data is not able to be captured by a first order linear model. This suggests that we need to revise our model, perhaps by adding a polynomial term or transforming one of the variables.
 :::
@@ -297,36 +299,44 @@ We saw in @sec-residuals how to extract residuals using `resid()`. A convenient 
 
 ```{webr chapter04-regression-pitfalls-diagnostics-olympic-augment-preview}
 #| edit: false
-olympic_aug |>
-  select(FAT, CHOLESTEROL, .fitted, .resid, .std.resid, .hat, .cooksd) |>
-  slice(1:6)
+olympic_mod |>
+  augment() |> 
+  select(FAT, CHOLESTEROL, .fitted, .resid, .std.resid, .hat, .cooksd)
 ```
 :::
+
+We will use the 'augmented' data frame format extensively in the remainder of this chapter.
 
 - [ ] Continue
 
-## A small set of diagnostic plots {#sec-common-diagnostic-plots}
+## Residual diagnostics by assumption {#sec-common-diagnostic-plots}
 
-In practice you can learn a lot from a small, repeatable set of plots. The most common ones correspond closely to the default `plot(lm_object)` panel in base R:
+The goal of residual diagnostics is to check whether the key assumptions behind our linear regression model are reasonable.
 
-1. Residuals vs fitted: check linearity and constant variance.
-2. Normal Q–Q: assess whether residuals are approximately normal.
-3. Scale–location: another view of nonconstant variance.
-4. Residuals vs leverage (Cook’s distance): identify influential observations.
+We'll illustrate using a multiple linear regression model predicting miles per gallon (`mpg`) from weight (`wt`), horsepower (`hp`), and transmission type (`am`) in the `mtcars` dataset.
 
-::: Note
-Diagnostics are *graphical* because many important failures are about patterns. A model summary is a single snapshot; a diagnostic plot is a pattern detector.
-:::
-
-```{webr chapter04-regression-pitfalls-diagnostics-diagnostic-model-setup}
+```{r chapter04-regression-pitfalls-diagnostics-diagnostic-model-setup}
 #| edit: false
 diag_mod <- lm(mpg ~ wt + hp + am, data = mtcars)
-diag_aug <- augment(diag_mod) |> mutate(.index = row_number())
+```
+We will use `broom::augment()` to extract the residuals and other diagnostics.
+```{r chapter04-regression-pitfalls-diagnostics-diagnostic-model-augment}
+#| edit: false
+diag_aug <- augment(diag_mod)
 ```
 
-:::: {.panel-tabset}
-### Residuals vs fitted
-```{webr chapter04-regression-pitfalls-diagnostics-residuals-vs-fitted}
+And proceed by checking each assumption from @sec-common-assumptions-and-pitfalls in turn.
+
+### Linearity
+Again, we assume that the mean of the response is a linear function of the predictors.
+
+::: Assumption
+
+:::
+
+The because we make this assumption, our least squares fit will find the best straight line. If the data fits this assumption, then  the residuals plotted against fitted values should look like random noise around 0. Systematic curvature suggests the mean structure is misspecified (e.g., a missing nonlinear term or interaction).
+
+```{r chapter04-regression-pitfalls-diagnostics-residuals-vs-fitted-ggplot}
 #| edit: false
 ggplot(diag_aug, aes(x = .fitted, y = .resid)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
@@ -334,17 +344,10 @@ ggplot(diag_aug, aes(x = .fitted, y = .resid)) +
   labs(x = "Fitted value", y = "Residual")
 ```
 
-### Normal Q–Q
-```{webr chapter04-regression-pitfalls-diagnostics-normal-qq}
-#| edit: false
-ggplot(diag_aug, aes(sample = .std.resid)) +
-  stat_qq(size = 2) +
-  stat_qq_line(color = "gray40") +
-  labs(x = "Theoretical quantiles", y = "Standardised residuals")
-```
+### Constant variance
+The vertical spread of residuals should be roughly constant across the range of fitted values. A "funnel" pattern suggests heteroskedasticity. The scale-location plot makes changes in spread easier to see.
 
-### Scale–location
-```{webr chapter04-regression-pitfalls-diagnostics-scale-location}
+```{r chapter04-regression-pitfalls-diagnostics-scale-location-ggplot}
 #| edit: false
 ggplot(diag_aug, aes(x = .fitted, y = sqrt(abs(.std.resid)))) +
   geom_point(size = 2) +
@@ -352,8 +355,21 @@ ggplot(diag_aug, aes(x = .fitted, y = sqrt(abs(.std.resid)))) +
   labs(x = "Fitted value", y = expression(sqrt("|Standardised residual|")))
 ```
 
-### Residuals vs leverage
-```{webr chapter04-regression-pitfalls-diagnostics-residuals-vs-leverage}
+### Normality
+A Normal Q-Q plot compares the standardised residuals to what we'd expect under normal errors. Strong departures from the line suggest non-normality (often due to outliers or skewness).
+
+```{webr chapter04-regression-pitfalls-diagnostics-normal-qq-ggplot}
+#| edit: false
+ggplot(diag_aug, aes(sample = .std.resid)) +
+  stat_qq(size = 2) +
+  stat_qq_line(color = "gray40") +
+  labs(x = "Theoretical quantiles", y = "Standardised residuals")
+```
+
+### Unusual and influential observations
+Influence combines (i) leverage (unusual predictor values) and (ii) residual size. Points with high leverage and large residuals can have an outsized effect on the fitted model.
+
+```{webr chapter04-regression-pitfalls-diagnostics-residuals-vs-leverage-ggplot}
 #| edit: false
 ggplot(diag_aug, aes(x = .hat, y = .std.resid, size = .cooksd)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
@@ -361,17 +377,23 @@ ggplot(diag_aug, aes(x = .hat, y = .std.resid, size = .cooksd)) +
   scale_size_continuous(range = c(1, 10)) +
   labs(x = "Leverage (hat value)", y = "Standardised residual", size = "Cook's D")
 ```
-::::
 
 ::: Key-point
 If residuals show a clear *pattern*, that pattern is telling you what your model is missing.
 :::
 
+### Shortcut: `plot()` for `lm` objects
+Once you know what to look for, base R will produce the same set of standard diagnostic plots automatically (and you can request a specific panel with `which = 1`, `2`, `3`, or `5`).
+
+```{webr chapter04-regression-pitfalls-diagnostics-plot-lm}
+#| edit: false
+plot(diag_mod, ask = FALSE)
+```
+
 - [ ] Continue
 
 ## Diagnosing issues and choosing remedies {#sec-diagnosing-issues-and-choosing-remedies}
-
-This section focuses on the most common “what now?” moves: what to look for, and what you might do when you see it.
+We can use the diagnostic plots above to identify common problems with linear regression models. Below we outline some typical issues, how to recognise them in residual plots, and common strategies for addressing them.
 
 ### Nonlinearity (missing curvature) {#sec-diagnosing-nonlinearity}
 
