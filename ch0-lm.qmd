@@ -16,23 +16,23 @@ filters:
 custom-numbered-blocks:
   classes:
     Assumption:
-      colors: [FFCDD2, F44336]
+      colors: ["#FFCDD2", "#F44336"]
       boxstyle: foldbox.simple
       collapse: false
     Example:
-      colors: [BBDEFB, 2196F3]
+      colors: ["#BBDEFB", "#2196F3"]
       boxstyle: foldbox.simple
       collapse: false
     Exercise:
-      colors: [C8E6C9, 4CAF50]
+      colors: ["#C8E6C9", "#4CAF50"]
       boxstyle: foldbox.simple
       collapse: false
     Technical-point:
-      colors: [C8E6C9, 4CAF50]
+      colors: ["#C8E6C9", "#4CAF50"]
       boxstyle: foldbox.simple
       collapse: true
     Terminology:
-      colors: [FFF9C4, FFEB3B]
+      colors: ["#FFF9C4", "#FFEB3B"]
       boxstyle: foldbox.simple
       collapse: false
       numbered: false

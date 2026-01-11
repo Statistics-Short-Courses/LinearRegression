@@ -2,7 +2,6 @@
 format:
   live-html:
     toc: true
-
 execute:
   echo: false
   warning: false
@@ -14,32 +13,34 @@ filters:
   - custom-numbered-blocks
 
 custom-numbered-blocks:
+  styles:
+    math:
+      appearance: quartothmlike
+    text:
+      appearance: textbox
+    dropdown:
+      appearance: foldbox
   classes:
     Assumption:
-      colors: [FFCDD2, F44336]
-      boxstyle: foldbox.simple
-      collapse: false
-      numbered: true
+      colors: ["#ffd8d8ff", "#ff2212ff"]
+      style: text
+      numbered: false
     Example:
-      colors: [BBDEFB, 2196F3]
-      boxstyle: foldbox.simple
-      collapse: false
+      colors: ["#BBDEFB", "#2196F3"]
+      style: foldbox
     Exercise:
-      colors: [C8E6C9, 4CAF50]
+      colors: ["#C8E6C9", "#4CAF50"]
       boxstyle: foldbox.simple
       collapse: false
     Note:
-      colors: [FFF9C4, FFEB3B]
-      boxstyle: foldbox.simple
-      collapse: false
+      colors: ["#fffce3ff", "#FFEB3B"]
+      style: text
       numbered: false
     Key-term:
-      colors: [D1C4E9, 673AB7]
-      boxstyle: foldbox.simple
-      collapse: false
-      numbered: false
+      colors: ["#D1C4E9", "#673AB7"]
+      style: text
     Key-point:
-      colors: [FFF9C4, FFEB3B]
+      colors: ["#FFF9C4", "#FFEB3B"]
       boxstyle: foldbox.simple
       collapse: false
       numbered: false
@@ -75,7 +76,7 @@ In @sec-model-building-and-selection we saw that complex regression models can g
 
 ::: Example
 ### Anscombe's quartet: same regression, different data {#sec-anscombes-quartet}
-Regression summaries can mask radically different data patterns. Consider the following four datasets, known as Anscombe's quartet (@anscombe1973graphs):
+Regression summaries can mask radically different data patterns. Consider the following four datasets, known as *Anscombe's quartet*:
 
 :::: {.panel-tabset}
 ### Scatter plots
@@ -153,6 +154,8 @@ In this chapter we focus on the ways in which linear regression can go wrong, ho
 A good regression analysis is not just about fitting a model and reporting results; it also involves checking that the model assumptions are reasonably satisfied and addressing any issues that arise.
 :::
 
+- [ ] Continue
+
 ## Revisiting linear model assumptions {#sec-linear-model-and-its-assumptions}
 
 In @sec-introduction-to-linear-models, we introduced the basic assumptions for constructing a simple linear model model of the relationship between two variables. In @sec-multiple-linear-regression-mlr we extended these these assumptions to the multiple predictor setting. As a reminder, a linear regression analysis assumes that the data were generated according to something of following form:
@@ -172,10 +175,12 @@ for some unknown parameters $\beta_0, \beta_1, \ldots, \beta_p$ and $\sigma^2 > 
 
 By assuming this form we can proceed to estimate the parameters $b_0, b_1, \ldots, b_p$ and $s^2$ using the method of least squares, and then use these estimates to perform inference and prediction. 
 
-However, if it is not the case that the data were generated according to something like \ref{assumption-linear-model} (e.g. as in sets 2, 3, or 4 of Anscombe's quartet), then our estimates, inferences, and predictions may be misleading.
+However, if it is not the case that the data were generated according to the proposed linear model (e.g. as in sets 2, 3, or 4 of Anscombe's quartet), then our estimates, inferences, and predictions may be misleading.
+
+- [ ] Continue
 
 ### Common assumptions {#sec-common-assumptions-and-pitfalls}
-It is often the case, some aspects of \ref{assumption-linear-model} may be violated while others are still reasonably satisfied. For example, data may show a linear trend but have nonconstant variance (heteroskedasticity). For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to present the assumptions of a linear model is via the following four assumptions:
+It is often the case, some aspects of some aspects of the proposed linear model may be violated while others are still reasonably satisfied. For example, data may show a linear trend but have nonconstant variance (heteroskedasticity). For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to present the assumptions of a linear model is via the following four assumptions:
 
 ::: Assumption
 ### Linearity
@@ -221,12 +226,51 @@ $$e_i = y_i - \hat{y}_i$$
 where $e_i$ is the residual for observation $i$, $y_i$ is the observed value, and $\hat{y}_i$ is the predicted value from the model.
 :::
 
-We used residuals in @sec-leastsquares to estimate the parameters of the linear model, but they can also be used to diagnose model problems. Since residuals encode the information about what the model has *not* captured, plotting residuals can reveal systematic patterns where the model is failing to fit the data well. Common issues that can be detected using residual plots include:
+We used residuals in @sec-leastsquares to estimate the parameters of the linear model, but they can also be used to diagnose model problems. Since residuals encode the information about what the model has *not* captured, plotting residuals can reveal systematic patterns where the model is failing to fit the data well.
 
-- curvature (non-linearity),
-- changing spread (nonconstant variance),
-- extreme points (outliers/influence),
-- departures from normality.
+
+### Standardised residuals, leverage, and Cook's distance {#sec-standardised-residuals-leverage-cook-s-distance}
+
+Raw residuals $e_i$ are measured on the scale of the response, so their magnitude depends on the units of $Y$ (and on how variable $Y$ is). In multiple regression, residuals also do not all have the same variance: observations with unusual predictor values tend to have smaller residual variance simply because the fitted model is "pulled" towards them. To compare residuals on a common scale, we use *standardised residuals*.
+
+::: Key-term
+#### Standardised residual {#sec-standardised-residual}
+The standardised residual for observation $i$ is
+$$
+r_i = \frac{e_i}{s\,\sqrt{1-h_{ii}}}
+$$
+where $s$ is the residual standard error from the fitted model and $h_{ii}$ is the [leverage] for observation $i$. Under the usual model assumptions, $r_i$ is approximately $\text{Normal}(0,1)$.
+:::
+
+Standardised residuals are especially useful when comparing residual sizes across observations, and they are the scale used in several common diagnostic plots. 
+
+::: Key-term
+#### Leverage (hat value) {#sec-leverage-hat-value}
+Leverage measures how unusual an observation's predictor values are relative to the rest of the data. The leverage values $h_{ii}$ come from the *hat matrix* $H = X(X^\top X)^{-1}X^\top$, satisfy $0 \le h_{ii} \le 1$, and sum to $p + 1$ (including the intercept), so the average leverage is $(p + 1)/n$.
+
+A common rule of thumb is to flag points with 
+$$
+h_{ii} > \frac{2(p + 1)}{n} \quad \text{(or } \frac{3(p + 1)}{n}\text{)}
+$$
+as "high leverage", where $p$ is the number of predictors (excluding the intercept) and $n$ is the sample size.
+:::
+
+High leverage does *not* automatically mean a problem: it becomes concerning when it coincides with a large standardised residual.
+
+::: Key-term
+#### Cook's distance {#sec-cooks-distance}
+Cook's distance summarises how much the fitted model would change if observation $i$ were removed:
+$$
+D_i = \frac{e_i^2}{(p + 1)s^2}\,\frac{h_{ii}}{(1-h_{ii})^2}.
+$$
+Large values indicate potentially influential observations.
+:::
+
+::: Note
+Rules of thumb (use with caution): observations with $|r_i| > 2$ (or $> 3$) may be unusual; Cook's distance values that stand out relative to the rest merit investigation.
+:::
+
+In practice, these diagnostics are easy to extract with `broom::augment()` (as `.std.resid`, `.hat`, and `.cooksd`).
 
 ::: Example
 ### Residuals in the Olympic cholesterol data {#sec-residuals-in-the-olympic-cholesterol-data}
@@ -303,6 +347,18 @@ olympic_mod |>
   augment() |> 
   select(FAT, CHOLESTEROL, .fitted, .resid, .std.resid, .hat, .cooksd)
 ```
+
+The columns `.std.resid`, `.hat`, and `.cooksd` correspond to standardised residuals, leverage, and Cook's distance. One simple way to spot potentially influential points is to sort by Cook's distance:
+
+```{webr chapter04-regression-pitfalls-diagnostics-olympic-influence-table}
+#| edit: false
+olympic_mod |>
+  augment() |>
+  mutate(.index = row_number()) |>
+  select(.index, FAT, CHOLESTEROL, .std.resid, .hat, .cooksd) |>
+  arrange(desc(.cooksd)) |>
+  slice(1:6)
+```
 :::
 
 We will use the 'augmented' data frame format extensively in the remainder of this chapter.
@@ -331,10 +387,13 @@ And proceed by checking each assumption from @sec-common-assumptions-and-pitfall
 Again, we assume that the mean of the response is a linear function of the predictors.
 
 ::: Assumption
-
+The conditional mean of the response is linear in the predictors:
+$$
+E[Y_i] = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_p X_{ip}.
+$$
 :::
 
-The because we make this assumption, our least squares fit will find the best straight line. If the data fits this assumption, then  the residuals plotted against fitted values should look like random noise around 0. Systematic curvature suggests the mean structure is misspecified (e.g., a missing nonlinear term or interaction).
+Because we make this assumption, our least squares fit finds the best straight line (in the least squares sense). If the data fit this assumption, then the residuals plotted against fitted values should look like random noise around 0. Systematic curvature suggests the mean structure is misspecified (e.g., a missing nonlinear term or interaction).
 
 ```{r chapter04-regression-pitfalls-diagnostics-residuals-vs-fitted-ggplot}
 #| edit: false
@@ -573,30 +632,6 @@ ggplot(acf_df, aes(x = lag, y = acf)) +
 ```
 ::::
 :::
-
-### Standardised residuals, leverage, and Cook’s distance {#sec-standardised-residuals-leverage-cook-s-distance}
-
-Influence diagnostics answer a different question than “is the relationship real?” They ask: *are my conclusions stable if I perturb the data slightly?*
-
-::: Key-term
-#### Standardised residuals and influence diagnostics {#sec-influence-diagnostics-key-term}
-
-- [Standardised residuals]{.glossary term="Standardized residual"} scale residuals by an estimate of their variability.
-- [Leverage]{.glossary} identifies observations with unusual predictor values.
-- [Cook’s distance]{.glossary term="Cook's distance"} combines leverage and residual size to measure influence.
-:::
-
-::: Note
-Rules of thumb (use with caution): observations with |standardised residual| > 2 may be unusual; Cook’s distance values that stand out relative to the rest merit investigation.
-:::
-
-```{webr chapter04-regression-pitfalls-diagnostics-influence-table}
-#| edit: false
-diag_aug |>
-  select(.index, .std.resid, .hat, .cooksd) |>
-  arrange(desc(.cooksd)) |>
-  slice(1:6)
-```
 
 ### Extrapolation and high-leverage prediction {#sec-extrapolation-and-high-leverage}
 
