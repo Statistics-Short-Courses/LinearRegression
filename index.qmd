@@ -6,7 +6,7 @@ filters:
 custom-numbered-blocks:
   classes:
     Key-point:
-      colors: [FFF9C4, FFEB3B]
+      colors: ["#FFF9C4", "#FFEB3B"]
       boxstyle: foldbox.simple
       collapse: false
       numbered: false

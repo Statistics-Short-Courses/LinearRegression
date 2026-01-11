@@ -1,7 +1,7 @@
 --[[
 MIT License
 
-Copyright (c) 2023 Ute Hahn
+Copyright (c) 2023-2026 Ute Hahn
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,30 +21,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]--
--- pre-release
--- 
--- partial rewrite, complete later
+--[[
+ read  crossref information
+ ]]--
 
--- important quasi global variables
+require "cnb-global"
 
 
-cnbx = require "cnb-global"
-util = require "cnb-utilities"
-
-if cnbx.fmt == "unsupported" then
-  util.warning ("format "..FORMAT.." not supported")
-  return
+local readxref = function(filename)
+  local xrefs ={}
+  -- print("reading the xref "..filename)
+  
+  --if cnbx.isbook then
+    local file = io.open(filename,"r")
+    if file ~= nil then 
+      local xrfjson = file:read "*a"
+      file:close()
+      if xrfjson then xrefs = quarto.json.decode(xrfjson) end
+    -- else print ("file nicht gefunden")
+    end
+   return(xrefs) 
 end  
 
-return{
-    require("cnb-1-init-yaml") 
-  , require("cnb-1-init-options")  -- Meta: set up classes, groups etc
-  , require("cnb-1-init-chapters") -- Meta: set up chapter numbers and classes   
-  , require("cnb-1-init-xref")     -- Meta: for books read crossref information from other chapters
-  , require("cnb-2-register-divs") -- make indices for all cunumblo divs, register raw title
-  , require("cnb-3-crossref")      -- follow headers and count cross references. Resolve \ref
-  , require("cnb-4-prepare-render") -- filter element attributes and register rendered titles 
-  , require("cnb-5-renderblocks")  -- do the rendering, register colors 
-  , require("cnb-6-listof")        -- generate List-of qmd files
-}
 
+return{
+  Meta = function(met)
+    local xrefs = {}
+    -- cnbx.xreffile = "testing.json"
+    if cnbx.isbook then xrefs = readxref(cnbx.xreffile) end
+    cnbx.xref = xrefs
+    -- print("xrefs are "..type(cnbx.xref))
+    return(met)
+  end
+}
