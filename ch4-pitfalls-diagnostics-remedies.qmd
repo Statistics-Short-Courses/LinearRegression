@@ -6,6 +6,7 @@ execute:
   echo: false
   warning: false
   message: false
+  edit: false
 
 embed-resources: true
 
@@ -18,16 +19,17 @@ custom-numbered-blocks:
       appearance: quartothmlike
     text:
       appearance: textbox
-    dropdown:
+    callout:
       appearance: foldbox
   classes:
     Assumption:
       colors: ["#ffd8d8ff", "#ff2212ff"]
-      style: text
-      nudmbered: false
+      style: callout
+      numbered: false
     Example:
       colors: ["#BBDEFB", "#2196F3"]
       style: foldbox
+      collapse: false
     Exercise:
       colors: ["#C8E6C9", "#4CAF50"]
       boxstyle: foldbox.simple
@@ -47,6 +49,19 @@ custom-numbered-blocks:
 
 webr:
   render-df: gt-interactive
+  packages: 
+    - dplyr
+    - ggplot2
+    - tidyr
+    - purrr
+    - broom
+    - gt
+    - MASS
+  cell-options:
+    echo: false
+    warning: false
+    message: false
+    eval: true
 
 resources:
   - Data
@@ -55,15 +70,10 @@ resources:
 {{< include ./_extensions/r-wasm/live/_gradethis.qmd >}}
 
 ```{webr chapter04-regression-pitfalls-diagnostics-setup}
-#| include: false
-library(tidyverse)
-library(broom)
-library(MASS)
 theme_set(theme_bw())
 ```
 
 ```{r chapter04-regression-pitfalls-diagnostics-setup-r}
-#| include: false
 library(tidyverse)
 library(broom)
 library(MASS)
@@ -80,8 +90,7 @@ Regression summaries can mask radically different data patterns. Consider the fo
 
 :::: {.panel-tabset}
 ### Scatter plots
-```{r chapter04-regression-pitfalls-diagnostics-anscombe-setup}
-#| edit: false
+```{webr chapter04-regression-pitfalls-diagnostics-anscombe-setup}
 anscombe_long <- anscombe |>
   pivot_longer(
     cols = everything(),
@@ -97,23 +106,41 @@ ggplot(anscombe_long, aes(x = x, y = y)) +
 
 ### dataset
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-scatter}
-#| edit: false
+
 anscombe
 ```
 ::::
 
 These data are clearly very different, howerver each  variable has the same summary statistics: 
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-summary}
-#| edit: false
+
+library(gt)
 anscombe_long |>
   group_by(set) |>
   summarise(
     n = n(),
     mean_x = mean(x),
-    mean_y = mean(y),
     sd_x = sd(x),
+    mean_y = mean(y),
     sd_y = sd(y),
     cor_xy = cor(x, y)
+  ) |>
+  mutate(
+    x = sprintf("%.2f (%.2f)", mean_x, sd_x),
+    y = sprintf("%.2f (%.2f)", mean_y, sd_y),
+    Correlation = sprintf("%.3f", cor_xy)
+  ) |>
+  dplyr::select(set, n, x, y, Correlation) |>
+  gt(rowname_col = "set")  |>
+  tab_spanner(label= "Mean(SD)", columns = c(x, y)) |> 
+  cols_align("center") |>
+  tab_stubhead(md("**Dataset**")) |>
+    tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(
+      cells_column_spanners(),
+      cells_stub()
+    )
   )
 ```
 
@@ -122,25 +149,48 @@ Furthermore,  fitting a simple linear regression model to each dataset yields id
 :::: {.panel-tabset}
 ### fitted lines
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-fitted-lines}
-#| edit: false
-#| include: false
-#| echo: false
 
 ggplot(anscombe_long, aes(x = x, y = y)) +
   geom_point(size = 2) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  geom_smooth(method = "lm", se= FALSE, linewidth = 0.8) +
   facet_wrap(~ set, ncol = 2) 
 ```
 
 ### Regression summary
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-regression}
-#| edit: false
+
 list(
-  x1 = lm(y1 ~ x1, anscombe),
-  x2 = lm(y2 ~ x2, anscombe),
-  x3 = lm(y3 ~ x3, anscombe),
-  x4 = lm(y4 ~ x4, anscombe)
-) |>  map(tidy) |> bind_rows(.id = "dataset")
+  "Set 1" = lm(y1 ~ x1, anscombe),
+  "Set 2" = lm(y2 ~ x2, anscombe),
+  "Set 3" = lm(y3 ~ x3, anscombe),
+  "Set 4" = lm(y4 ~ x4, anscombe)
+) |>
+  map_df(~ tibble(
+    Intercept = coef(.x)[1],
+    Slope = coef(.x)[2],
+    R_squared = summary(.x)$r.squared,
+    Residual_SE = summary(.x)$sigma
+  ), .id = "Dataset") |>
+  gt() |>
+  cols_label(
+    Dataset = "Dataset",
+    Intercept = "Intercept",
+    Slope = "Slope",
+    R_squared = "R²",
+    Residual_SE = "Residual SE"
+  ) |>
+  fmt_number(
+    columns = c(Intercept, Slope, Residual_SE),
+    decimals = 2
+  ) |>
+  fmt_number(
+    columns = R_squared,
+    decimals = 3
+  ) |>
+  tab_style(
+    style = cell_text(align = "center"),
+    locations = cells_body(columns = c(Intercept, Slope, R_squared, Residual_SE))
+  )
 ```
 
 ::::

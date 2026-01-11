@@ -51,7 +51,7 @@ theme_set(theme_bw())
 library(ggplot2)
 theme_set(theme_bw())
 ```
-# Chapter 0: Introduction to linear models {.unnumbered #sec-introduction-to-linear-models}
+# Introduction to linear models {#sec-introduction-to-linear-models}
 
 This chapter serves as a conceptual introduction to linear models, the foundation of linear regression. By constructing a simple linear model from basic principles, we aim to understand the assumptions which play a crucial role in linear regression analysis. 
 
