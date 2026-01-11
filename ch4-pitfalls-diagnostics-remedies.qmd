@@ -111,7 +111,7 @@ anscombe
 ```
 ::::
 
-These data are clearly very different, howerver each  variable has the same summary statistics: 
+These data are clearly very different; however, each dataset has the same summary statistics:
 ```{webr chapter04-regression-pitfalls-diagnostics-anscombe-summary}
 
 library(gt)
@@ -208,7 +208,7 @@ A good regression analysis is not just about fitting a model and reporting resul
 
 ## Revisiting linear model assumptions {#sec-linear-model-and-its-assumptions}
 
-In @sec-introduction-to-linear-models, we introduced the basic assumptions for constructing a simple linear model model of the relationship between two variables. In @sec-multiple-linear-regression-mlr we extended these these assumptions to the multiple predictor setting. As a reminder, a linear regression analysis assumes that the data were generated according to something of following form:
+In @sec-introduction-to-linear-models, we introduced the basic assumptions for constructing a simple linear model of the relationship between two variables. In @sec-multiple-linear-regression-mlr we extended these assumptions to the multiple predictor setting. As a reminder, a linear regression analysis assumes that the data were generated according to something of the following form:
 
 ::: Assumption
 ### The linear model {#assumption-linear-model}
@@ -230,7 +230,7 @@ However, if it is not the case that the data were generated according to the pro
 - [ ] Continue
 
 ### Common assumptions {#sec-common-assumptions-and-pitfalls}
-It is often the case, some aspects of some aspects of the proposed linear model may be violated while others are still reasonably satisfied. For example, data may show a linear trend but have nonconstant variance (heteroskedasticity). For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to present the assumptions of a linear model is via the following four assumptions:
+It is often the case that some aspects of the proposed linear model may be violated while others are still reasonably satisfied. For example, data may show a linear trend but have nonconstant variance (heteroskedasticity). For this reason, we often break the general assumption above into more specific parts when performing model diagnostics. A common, equivalent way to present the assumptions of a linear model is via the following four assumptions:
 
 ::: Assumption
 ### Linearity
@@ -386,7 +386,7 @@ The curved pattern in the data is not able to be captured by a first order linea
 
 ### Extracting diagnostics with `broom::augment()` {#sec-extracting-residuals-and-broom-augment}
 
-We saw in @sec-residuals how to extract residuals using `resid()`. A convenient alternative is `broom::augment()`, which returns a data frame containing the original data plus fitted values, residuals, and several diagnostic quantities.
+In @sec-residuals-as-diagnostic-tools we defined residuals; we can extract them using `resid()`. A convenient alternative is `broom::augment()`, which returns a data frame containing the original data plus fitted values, residuals, and several diagnostic quantities.
 
 ::: Example
 ### Olympic residuals with `broom::augment()` {#sec-olympic-residuals-with-broom-augment}
