@@ -24,7 +24,7 @@ custom-numbered-blocks:
     Assumption:
       colors: ["#ffd8d8ff", "#ff2212ff"]
       style: text
-      numbered: false
+      nudmbered: false
     Example:
       colors: ["#BBDEFB", "#2196F3"]
       style: foldbox

@@ -10,3 +10,5 @@
 **/*.quarto_ipynb
 
 /.luarc.json
+
+*:Zone.Identifier
