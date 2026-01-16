@@ -33,12 +33,12 @@ This short course aims to introduce you to the key concepts and practical skills
 
 ## Course outline {#sec-course-outline}
 
-- **Chapter 0 — Introduction to linear models:** what a regression model is, why we need an error term, and what assumptions mean in practice.
-- **Chapter 1 — Simple linear regression (SLR):** least squares, fitted values and residuals, inference, and prediction.
-- **Chapter 2 — Multiple linear regression (MLR):** partial regression coefficients, categorical predictors, and overall model tests.
-- **Chapter 3 — Model building:** interactions, polynomial terms, parsimony, and model comparison/selection.
-- **Chapter 4 — Regression pitfalls & diagnostics:** how to recognise assumption violations and influence, and what to do about them.
-- **Chapter 5 — Case study (NAPLAN Reading scores):** a guided workflow through a real dataset from research question → model → diagnostics → interpretation.
+- @sec-introduction-to-linear-models: what a regression model is, why we need an error term, and what assumptions mean in practice.
+- @sec-slr: least squares, fitted values and residuals, inference, and prediction.
+- @sec-multiple-linear-regression-mlr: partial regression coefficients, categorical predictors, and overall model tests.
+- @sec-model-building-and-selection: interactions, polynomial terms, parsimony, and model comparison/selection.
+- @sec-regression-pitfalls-and-diagnostics: how to recognise assumption violations and influence, and what to do about them.
+- @sec-regression-case-study-naplan-reading-scores: a guided workflow through a real dataset from research question → model → diagnostics → interpretation.
 - **Glossary:** short definitions plus formulas and useful R functions.
 
 ## How to use this book {#sec-how-to-use-this-book}

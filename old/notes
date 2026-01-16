@@ -22,7 +22,7 @@ Use the ‘salary example parameters to generate data
 
  Note that x is not treated as an RV (just here for example)
  
- - make linear models section chapter 0.
+ - make linear models section @sec-introduction-to-linear-models.
  - add glossary term for estimation/estimate 
  - use s for sigma
  - clarify yhat as predicted value

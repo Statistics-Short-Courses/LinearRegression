@@ -187,7 +187,7 @@ $$
 e=Y-\hat{Y} = Y - (a + bX). 
 $$
 
-Residuals, $e$, are similar to the errors, $\varepsilon$, that we encountered in chapter 1 - but they are distinct. In many situations, we do not know the 'acutual' values of $\alpha$ and $\beta$ - so we cannot calculate the errors, $\varepsilon= Y- E[Y]= Y-\alpha + \beta X$. However, we do  have our estimates, $a$ and $b$, so we can calculate residuals. 
+Residuals, $e$, are similar to the errors, $\varepsilon$, that we encountered in @sec-introduction-to-linear-models - but they are distinct. In many situations, we do not know the 'acutual' values of $\alpha$ and $\beta$ - so we cannot calculate the errors, $\varepsilon= Y- E[Y]= Y-\alpha + \beta X$. However, we do  have our estimates, $a$ and $b$, so we can calculate residuals. 
 
 Indeed - calculating residuals gives us a way to assess how well our estimated model fits the data.  We can think of the residuals as being the 'mismatch' between our estimated linear predictor and each data point. By *minimizing* the size of residuals (minimisiong the mismatch of our model to the data), we can get a better fit of our line to data.
 
