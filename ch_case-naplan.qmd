@@ -191,36 +191,116 @@ This chapter is designed as a **hands-on walkthrough**. The webR chunks are the 
 
 ## Defining the research question {#sec-defining-the-research-question}
 
+Every regression analysis starts with a question. Ours is:
+
+**Research question:** How are students' socioeconomic circumstances, reading practice at home, and demographic characteristics associated with NAPLAN Reading scores?
+
+### The dataset
+
 This case study uses `naplan_reading.csv` (in this project: `Data/naplan_reading.csv`), which contains NAPLAN reading achievement data for **3,000 Australian students** across **Years 3, 5, 7, and 9**, drawn from **60 schools** (`school_id`). Each row is one student.
 
-The outcome variable is `naplan_reading_score`. Because scores are on different ranges across grades (roughly **100–600** in Year 3 vs **400–900** in Year 9), we include `grade` as a covariate throughout.
+The dataset includes:
 
-Alongside the outcome, the dataset includes student and family predictors such as weekly reading time at home (in minutes), parent education, school type, gender, a socioeconomic status index, birth month, and number of siblings.
+- A reading achievement score (`naplan_reading_score`) — on different ranges across grades (roughly **100–600** in Year 3 vs **400–900** in Year 9).
+- Student and family characteristics: weekly reading time at home (minutes), parent education, gender, birth month, number of siblings, and a socioeconomic status index.
+- Schooling context: school type (Government/Catholic/Independent), year level (`grade`), and school identifier.
 
-**Research question:** How are students’ socioeconomic circumstances, reading practice at home, and demographic characteristics associated with NAPLAN Reading scores?
+### Choosing the outcome and predictors
 
-In this dataset:
+Given the research question, the first modelling decision is: **which variable is the outcome (response), and which are potential predictors (explanatory variables)?**
 
-- The [outcome]{.glossary term="Outcome (response) variable"} is `naplan_reading_score`.
-- Candidate [predictors]{.glossary term="Predictor (explanatory) variable"} include:
+::: Exercise
+Based on the research question above, identify:
+
+1. The [outcome]{.glossary term="Outcome (response) variable"} variable (what we want to explain/predict).
+2. At least three candidate [predictors]{.glossary term="Predictor (explanatory) variable"} (variables that might help explain the outcome).
+
+Store the outcome variable name as `my_outcome` and a character vector of at least 3 predictor names as `my_predictors`.
+
+::: {.cell exercise='ex_cs_rq' envir='Ex5' define='["my_outcome", "my_predictors"]'}
+```{webr}
+#| exercise: ex_cs_rq
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - my_outcome
+#|   - my_predictors
+my_outcome <- "naplan_reading_score"
+my_predictors <- c("ses_index", "reading_time_home", "parent_education", "grade")
+```
+:::
+
+:::: {.solution exercise="ex_cs_rq"}
+::: {.cell exercise='ex_cs_rq' solution='true'}
+```{webr}
+#| exercise: ex_cs_rq
+#| solution: true
+my_outcome <- "naplan_reading_score"
+
+# Any combination of these is reasonable:
+my_predictors <- c(
+  "ses_index", "reading_time_home", "parent_education",
+  "school_type", "gender", "grade", "n_siblings", "birth_months"
+)
+```
+:::
+::::
+
+::: {.cell exercise='ex_cs_rq' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_cs_rq
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("my_outcome", envir = .envir_result)) fail("Create `my_outcome`.")
+  if (!exists("my_predictors", envir = .envir_result)) fail("Create `my_predictors`.")
+
+  outcome <- get("my_outcome", envir = .envir_result)
+  preds <- get("my_predictors", envir = .envir_result)
+
+  if (!identical(outcome, "naplan_reading_score")) {
+    fail("The research question asks about NAPLAN Reading scores — that's our outcome.")
+  }
+  if (!is.character(preds) || length(preds) < 3) {
+    fail("`my_predictors` should be a character vector with at least 3 variable names.")
+  }
+
+  valid_preds <- c("ses_index", "reading_time_home", "parent_education",
+                   "school_type", "gender", "grade", "n_siblings", "birth_months")
+  bad <- setdiff(preds, valid_preds)
+  if (length(bad) > 0) {
+    fail(paste0("These aren't in the dataset: ", paste(bad, collapse = ", "),
+                ". Check the variable names in the data description above."))
+  }
+  pass("Good — you've identified the outcome and a reasonable set of candidate predictors. We'll explore these in the EDA and decide which to keep in the model.")
+})
+```
+:::
+:::
+
+In this dataset, then:
+
+- The outcome is `naplan_reading_score`.
+- Candidate predictors include:
   - reading practice: `reading_time_home` (minutes per week),
   - socioeconomic measures: `ses_index` and `parent_education`,
   - demographics: `gender`, `birth_months`, `n_siblings`,
   - schooling context: `school_type`,
-  - schooling level: `grade` (Year 3/5/7/9, included as a covariate).
+  - schooling level: `grade` (Year 3/5/7/9 — included as a covariate because scores are on different scales across grades).
 
 ::: Note
-This is an observational dataset. Regression estimates here describe **associations**, not “effects”. For reminders about modelling assumptions, see @sec-common-assumptions-and-pitfalls.
+This is an observational dataset. Regression estimates here describe **associations**, not "effects". For reminders about modelling assumptions, see @sec-common-assumptions-and-pitfalls.
 :::
 
 ::: Note
-Students are clustered within schools (`school_id`). If there are unmeasured school-level factors (e.g. teaching practices, resources, peer effects), then students from the same school can end up with **correlated errors**, which violates the “independent errors” assumption used for standard t/F tests in a plain `lm()`.
+Students are clustered within schools (`school_id`). If there are unmeasured school-level factors (e.g. teaching practices, resources, peer effects), then students from the same school can end up with **correlated errors**, which violates the "independent errors" assumption used for standard t/F tests in a plain `lm()`.
 
 In this chapter we stay within ordinary least squares (no random effects). We *partly* address school-to-school differences by including observed context variables such as `school_type`, along with strong student-level covariates like `grade` and socioeconomic proxies. These predictors can explain some between-school variation and reduce residual clustering, but they do not guarantee independence.
 
 A more complete approach would use either:
 
-- `lm(... + factor(school_id))` (school fixed effects): controls for all stable between-school differences, but uses many parameters and you generally can’t estimate purely school-level predictors (like `school_type`) at the same time, or
+- `lm(... + factor(school_id))` (school fixed effects): controls for all stable between-school differences, but uses many parameters and you generally can't estimate purely school-level predictors (like `school_type`) at the same time, or
 - a multilevel model with a random effect for `school_id`, or
 - cluster-robust standard errors.
 
