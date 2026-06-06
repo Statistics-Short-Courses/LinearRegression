@@ -164,16 +164,30 @@ final_terms <- tidy(final_mod, conf.int = TRUE)
 
 In @sec-introduction-to-linear-models we built the basic linear model, in @sec-slr and @sec-multiple-linear-regression-mlr we focused on fitting and interpretation, in @sec-model-building-and-selection we built and compared candidate models, and in @sec-regression-pitfalls-and-diagnostics we diagnosed problems. In this final chapter, we put those pieces together in an end-to-end analysis.
 
+**Skills you will practise in this chapter:**
+
+- Fitting and interpreting a simple linear regression (@sec-slr)
+- Computing and interpreting confidence and prediction intervals (@sec-inference-about-the-response-y)
+- Adding predictors step-by-step and interpreting partial coefficients (@sec-partial-regression-coefficients-betai)
+- Interpreting categorical predictors and reference levels (@sec-mlr_cat)
+- Comparing models using ANOVA, AIC, BIC, and adjusted $R^2$ (@sec-model-building-and-selection)
+- Using polynomial terms and interactions to model non-linear relationships (@sec-non_linearity, @sec-mlr-cat-interactions)
+- Checking all four regression assumptions via diagnostic plots (@sec-common-diagnostic-plots)
+- Assessing influence and performing a sensitivity analysis (@sec-handling-outliers-and-influential-observations)
+- Writing up regression results in plain language
+
 Our workflow follows the model-building approach in @sec-a-model-building-workflow:
 
 1. Define the research question and candidate variables.
 2. Explore the data (plots + summaries).
-3. Fit a reasonable starting model.
-4. Refine using model comparisons (without “blind selection”).
-5. Check diagnostics and interpret results.
-6. Write up the findings in plain language.
+3. Start simple — fit an SLR model and understand its limitations.
+4. Extend to multiple regression, adding predictors step-by-step.
+5. Refine using model comparisons (without "blind selection").
+6. Check diagnostics systematically (each assumption in turn).
+7. Perform a sensitivity analysis.
+8. Interpret and write up the findings in plain language.
 
-This chapter is designed as a **hands-on walkthrough**. The webR chunks are the analysis: run each one as you read. Only use “Skip exercise” if you’ve already completed that step (e.g. in your IDE) and just want to keep moving.
+This chapter is designed as a **hands-on walkthrough**. The webR chunks are the analysis: run each one as you read. Only use "Skip exercise" if you've already completed that step (e.g. in your IDE) and just want to keep moving.
 
 ## Defining the research question {#sec-defining-the-research-question}
 
@@ -1284,6 +1298,80 @@ grade_this({
 :::
 :::
 
+### Seeing the full picture: a model comparison table
+
+Throughout this section we've compared models pairwise. It's good practice to also see them all together — this makes the trajectory from simple to complex visible at a glance (see @sec-fit-metrics).
+
+```{webr ch-case-naplan-fit-tbl-full}
+#| echo: true
+#| autorun: true
+fit_tbl |> print(n = 10)
+```
+
+::: Exercise
+Build your own comparison table that includes the SLR model we started with. Create a tibble called `my_comparison` with columns `model` (character label), `adj_r2`, and `AIC` for at least the SLR model, the grade-only model, and the final model. This lets you see the whole journey from one predictor to the final model.
+
+::: {.cell exercise='ex_cs_comparison' envir='Ex5' define='["my_comparison"]'}
+```{webr}
+#| exercise: ex_cs_comparison
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - my_comparison
+my_comparison <- tibble(
+  model = c("SLR (SES only)", "SES + grade", "All categoricals", "Final model"),
+  object = list(mod_slr, mod_ses_grade, mod_cats, final_mod)
+) |>
+  mutate(g = map(object, glance)) |>
+  unnest(g) |>
+  transmute(model, adj_r2 = adj.r.squared, AIC)
+
+my_comparison
+```
+:::
+
+:::: {.solution exercise="ex_cs_comparison"}
+::: {.cell exercise='ex_cs_comparison' solution='true'}
+```{webr}
+#| exercise: ex_cs_comparison
+#| solution: true
+my_comparison <- tibble(
+  model = c("SLR (SES only)", "SES + grade", "All categoricals", "Final model"),
+  object = list(mod_slr, mod_ses_grade, mod_cats, final_mod)
+) |>
+  mutate(g = map(object, glance)) |>
+  unnest(g) |>
+  transmute(model, adj_r2 = adj.r.squared, AIC)
+
+my_comparison
+
+# Notice: adj-R² climbs from ~0.04 (SLR) to ~0.60 (add grade) to ~0.65 (final).
+# Most of the explanatory power comes from grade. The later refinements
+# (polynomial, interaction) add smaller but meaningful improvements.
+```
+:::
+::::
+
+::: {.cell exercise='ex_cs_comparison' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_cs_comparison
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("my_comparison", envir = .envir_result)) fail("Create an object named `my_comparison`.")
+  tbl <- get("my_comparison", envir = .envir_result)
+  if (!inherits(tbl, "data.frame")) fail("`my_comparison` should be a data frame or tibble.")
+  if (!all(c("model", "adj_r2", "AIC") %in% names(tbl))) {
+    fail("Include columns named `model`, `adj_r2`, and `AIC`.")
+  }
+  if (nrow(tbl) < 3) fail("Include at least 3 models in your comparison.")
+  pass("Great — seeing the full trajectory from simple to complex makes model selection decisions transparent.")
+})
+```
+:::
+:::
+
 ## Diagnostics: checking each assumption {#sec-case-naplan-diagnostics}
 
 In @sec-regression-pitfalls-and-diagnostics we learned to check assumptions systematically using residual plots. Now we apply that framework to our final model. We check each assumption in turn: linearity, constant variance, normality, independence, and influence (see @sec-common-diagnostic-plots and @sec-diagnosing-issues-and-choosing-remedies).
@@ -1821,6 +1909,61 @@ grade_this({
 :::
 :::
 
+### Writing up regression results {#sec-case-naplan-writing-up}
+
+How would you report these results in a research report or assignment? Here's a structure that works for most regression analyses:
+
+::: Key-point
+**Template for reporting regression results:**
+
+1. **State the model and sample** — what was fitted, how many observations, what outcome.
+2. **Report overall fit** — adjusted $R^2$, $F$-test (with df and p-value), RSE.
+3. **Highlight key associations** — effect sizes with confidence intervals for the most important predictors.
+4. **Note limitations** — observational design, potential confounders, clustering, variables not measured.
+5. **State conclusions cautiously** — use "associated with" rather than "caused" or "affected".
+:::
+
+::: Exercise
+Write a 3–4 sentence results paragraph about the association between parent education and NAPLAN reading scores. Use the template above. Include: the reference level, the direction and approximate size of the largest effect, and a caveat about causation.
+
+This is a free-text exercise — there is no autograder. Compare your version to the model answer when you're done.
+
+::: {.cell exercise='ex_cs_writeup' envir='Ex5'}
+```{webr}
+#| exercise: ex_cs_writeup
+#| envir: Ex5
+# Write your paragraph as a comment below:
+#
+# "After adjusting for ...
+#
+#
+```
+:::
+
+:::: {.solution exercise="ex_cs_writeup"}
+::: {.cell exercise='ex_cs_writeup' solution='true'}
+```{webr}
+#| exercise: ex_cs_writeup
+#| solution: true
+
+# Model answer:
+#
+# "After adjusting for grade, school type, gender, and reading time at home
+# (with a grade-specific quadratic term), students whose parents held a
+# Postgraduate degree scored approximately 45–55 points higher on the NAPLAN
+# reading test than students whose parents had Year 10 education or below
+# (the reference category). This was the largest parent-education contrast
+# in the model. Parent education showed a clear ordered pattern, with each
+# successive level associated with higher predicted scores. However, because
+# these data are observational, these associations should not be interpreted
+# as causal effects of parent education on reading achievement — unmeasured
+# confounders (e.g., access to resources, school quality, prior academic
+# ability) may explain part of the association."
+```
+:::
+::::
+:::
+
 ## Conclusion {#sec-case-naplan-conclusion}
 
 Using `r naplan_n` students across Years 3, 5, 7, and 9, we fitted a multiple linear regression model relating NAPLAN reading scores to reading time at home, grade, parent education, school type, and gender. The model explained about `r round(100 * final_glance$adj.r.squared, 1)`% of the variation in scores (adjusted $R^2 \approx$ `r round(final_glance$adj.r.squared, 3)`), with a residual standard error of about `r round(final_glance$sigma, 1)` points.
@@ -1830,3 +1973,22 @@ After adjusting for other variables, higher parent education was associated with
 The relationship between reading time at home and score was not purely linear and differed by grade (a grade × quadratic reading-time interaction). Predicted curves suggested that increases in reading time are associated with higher predicted scores, but the shape of that association varies across schooling levels.
 
 **Limitations:** These are associations from observational data. Potential clustering within schools and omitted variables (e.g., prior achievement, classroom factors) may affect estimates. Always interpret results in context and re-check diagnostics, as in @sec-regression-pitfalls-and-diagnostics.
+
+### Reflection {#sec-case-naplan-reflection}
+
+Looking back at the full workflow — from research question through EDA, SLR, model building, diagnostics, and interpretation — consider:
+
+- **What drove model improvement the most?** Adding `grade` took us from $R^2 \approx 0.04$ to $\approx 0.60$. The remaining refinements (polynomial terms, interactions, predictor selection) added smaller but meaningful improvements.
+- **What would you do differently?** If we had more variables (e.g., prior test scores, teacher quality indicators), we might explain more variation. If we needed valid standard errors for inference, we'd address the school clustering with a mixed model or cluster-robust SEs.
+- **What can't regression tell us?** Even with a well-fitting model, we cannot claim that *increasing* reading time *causes* higher scores — that would require an experimental or quasi-experimental design.
+
+### Where to go next {#sec-case-naplan-next-steps}
+
+This case study used ordinary least squares throughout. For data like these (students clustered in schools), more advanced approaches include:
+
+- **Mixed-effects models** (`lme4::lmer()`) — account for school-level random effects, correctly partition student- and school-level variation.
+- **Cluster-robust standard errors** (`sandwich::vcovCL()`) — correct inference without changing the model structure.
+- **Generalised linear models** — if the outcome were bounded, binary, or count data rather than continuous.
+- **Causal inference methods** — if the research question asks "what is the *effect* of X?" rather than "what is *associated* with Y?" (e.g., instrumental variables, propensity score matching).
+
+These topics are covered in more advanced statistics courses (e.g., STAT320, STAT330 at UNE).
