@@ -1284,43 +1284,164 @@ grade_this({
 :::
 :::
 
-## Diagnostics (does the model look reasonable?) {#sec-case-naplan-diagnostics}
+## Diagnostics: checking each assumption {#sec-case-naplan-diagnostics}
 
-As emphasized in @sec-regression-pitfalls-and-diagnostics, we always re-check residual diagnostics on the final model (see @sec-common-diagnostic-plots and @sec-diagnosing-issues-and-choosing-remedies).
+In @sec-regression-pitfalls-and-diagnostics we learned to check assumptions systematically using residual plots. Now we apply that framework to our final model. We check each assumption in turn: linearity, constant variance, normality, independence, and influence (see @sec-common-diagnostic-plots and @sec-diagnosing-issues-and-choosing-remedies).
 
-### A small set of diagnostic plots
+```{webr ch-case-naplan-diagnostics-setup}
+#| echo: true
+#| autorun: true
+#| edit: false
+final_aug <- augment(final_mod)
+final_aug$student_id <- naplan$student_id
+final_aug$school_id <- naplan$school_id
+```
 
-```{webr ch-case-naplan-diagnostics-plots}
+### Linearity (residuals vs fitted values)
+
+The residuals-vs-fitted plot is our primary tool for detecting missed curvature (see @sec-diagnosing-nonlinearity). If the model captures the systematic patterns well, residuals should scatter randomly around zero with no visible trend.
+
+```{webr ch-case-naplan-diagnostics-linearity}
 #| echo: true
 #| autorun: true
 ggplot(final_aug, aes(x = .fitted, y = .resid)) +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "gray40") +
   geom_point(alpha = 0.25, size = 1) +
-  labs(x = "Fitted value", y = "Residual")
+  geom_smooth(method = "loess", se = FALSE, colour = "red", linewidth = 0.8) +
+  labs(x = "Fitted value", y = "Residual",
+       title = "Residuals vs Fitted")
+```
 
+The red smoother stays close to zero — no strong curvature remains. The quadratic term for `reading_time_home` and the `grade × reading_time` interaction appear to have captured the main nonlinearity.
+
+We can also check residuals against the predictor that was most likely to show curvature:
+
+```{webr ch-case-naplan-diagnostics-resid-vs-readtime}
+#| echo: true
+#| autorun: true
+final_aug$reading_time_home <- naplan$reading_time_home
+
+ggplot(final_aug, aes(x = reading_time_home, y = .resid)) +
+  geom_point(alpha = 0.2, size = 1) +
+  geom_smooth(method = "loess", se = FALSE, colour = "red") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(x = "Reading time at home (min/wk)", y = "Residual",
+       title = "Residuals vs reading_time_home")
+```
+
+If this plot showed a clear curve, we'd need a higher-order polynomial or a different functional form. Here, the loess line stays near zero — the quadratic is adequate.
+
+### Constant variance / homoscedasticity (scale-location plot)
+
+The [scale-location plot]{.glossary term="Homoscedasticity"} checks whether the spread of residuals changes with the fitted value (see @sec-diagnosing-heteroskedasticity). We plot $\sqrt{|\text{standardised residual}|}$ against fitted values — a flat smoother indicates constant variance.
+
+```{webr ch-case-naplan-diagnostics-scale-location}
+#| echo: true
+#| autorun: true
+ggplot(final_aug, aes(x = .fitted, y = sqrt(abs(.std.resid)))) +
+  geom_point(alpha = 0.2, size = 1) +
+  geom_smooth(method = "loess", se = FALSE, colour = "red", linewidth = 0.8) +
+  labs(x = "Fitted value", y = expression(sqrt("|Standardised residual|")),
+       title = "Scale-Location plot")
+```
+
+If the red line trends upward (or downward), variance is changing. With $n = 3000$, mild heteroskedasticity affects standard errors but not coefficient estimates. If it were severe, we might use robust/sandwich standard errors (beyond this course).
+
+### Normality of residuals (QQ plot + histogram)
+
+The [QQ plot]{.glossary term="Normal Q-Q plot"} compares the distribution of standardised residuals to a theoretical normal distribution (see @sec-assessing-normality-of-residuals).
+
+```{webr ch-case-naplan-diagnostics-qq}
+#| echo: true
+#| autorun: true
 ggplot(final_aug, aes(sample = .std.resid)) +
   stat_qq(alpha = 0.25) +
   stat_qq_line(colour = "gray40") +
-  labs(x = "Theoretical quantiles", y = "Standardised residuals")
+  labs(x = "Theoretical quantiles", y = "Standardised residuals",
+       title = "Normal Q-Q plot")
 ```
 
-The residual-vs-fitted plot is the main place to look for nonlinearity and changing variance (see @sec-diagnosing-nonlinearity and @sec-diagnosing-heteroskedasticity). In this case the pattern looks broadly centred around 0, with at most mild changes in spread.
+```{webr ch-case-naplan-diagnostics-hist}
+#| echo: true
+#| autorun: true
+ggplot(final_aug, aes(x = .std.resid)) +
+  geom_histogram(binwidth = 0.25, fill = "steelblue", colour = "white") +
+  labs(x = "Standardised residual", y = "Count",
+       title = "Histogram of standardised residuals")
+```
 
-### Influence and unusual points
+::: Key-point
+With $n = 3000$, moderate departures from normality have little impact on coefficient estimates or standard errors (central limit theorem). We mainly look for extreme skew or very heavy tails — these would affect prediction intervals and small-sample inference.
+:::
 
-```{webr ch-case-naplan-diagnostics-influence}
+### Independence: residual clustering by school
+
+Students within the same school may share unmeasured influences (teaching quality, school culture, resources). If these aren't captured by our predictors, residuals for students in the same school will be correlated — violating the independence assumption (see @sec-assessing-independence).
+
+Let's check whether school-level mean residuals show more variation than we'd expect by chance:
+
+```{webr ch-case-naplan-diagnostics-school-clustering}
+#| echo: true
+#| autorun: true
+school_resid <- final_aug |>
+  group_by(school_id) |>
+  summarise(
+    mean_resid = mean(.resid),
+    n_students = n(),
+    .groups = "drop"
+  ) |>
+  arrange(mean_resid)
+
+ggplot(school_resid, aes(x = reorder(school_id, mean_resid), y = mean_resid)) +
+  geom_col(fill = "steelblue") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(x = "School (sorted by mean residual)", y = "Mean residual",
+       title = "Average residual by school") +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
+```{webr ch-case-naplan-diagnostics-school-sd}
+#| echo: true
+#| autorun: true
+cat("SD of school-level mean residuals:", round(sd(school_resid$mean_resid), 2), "\n")
+cat("If independent, expected SD ≈ RSE / sqrt(median school size) ≈",
+    round(summary(final_mod)$sigma / sqrt(median(school_resid$n_students)), 2), "\n")
+```
+
+If the observed SD of school-mean residuals is substantially larger than the "independent" benchmark, that confirms residual clustering.
+
+::: Note
+Our model reduces clustering by including `school_type`, but cannot eliminate it. The practical consequence: our standard errors and p-values are likely *slightly too optimistic*. In a thorough analysis, we'd use cluster-robust standard errors or a mixed-effects model with a random intercept for `school_id`. These approaches are beyond this short course — but this is exactly the kind of limitation you should note when reporting results from clustered data.
+:::
+
+### Influential observations (Cook's distance)
+
+[Cook's distance]{.glossary term="Cook's distance"} measures how much the fitted model would change if a single observation were removed (see @sec-standardised-residuals-leverage-cook-s-distance).
+
+```{webr ch-case-naplan-diagnostics-cooksd}
+#| echo: true
+#| autorun: true
+ggplot(final_aug, aes(x = seq_len(nrow(final_aug)), y = .cooksd)) +
+  geom_point(alpha = 0.3, size = 1) +
+  geom_hline(yintercept = 4 / nrow(final_aug), linetype = "dashed", colour = "red") +
+  labs(x = "Observation index", y = "Cook's distance",
+       title = "Cook's distance",
+       caption = paste("Threshold line: 4/n =", round(4 / nrow(final_aug), 5)))
+```
+
+```{webr ch-case-naplan-diagnostics-influence-table}
 #| echo: true
 #| autorun: true
 final_aug |>
   arrange(desc(.cooksd)) |>
-  select(student_id, grade, naplan_reading_score, .fitted, .std.resid, .hat, .cooksd) |>
+  select(student_id, school_id, grade, naplan_reading_score, .fitted, .std.resid, .hat, .cooksd) |>
   slice_head(n = 10) |>
   print()
 ```
 
-These points are worth checking, but the Cook’s distances are not extreme. This is the sort of “small number of influential points” situation discussed in @sec-standardised-residuals-leverage-cook-s-distance.
+With $n = 3000$, even the largest Cook's D values are small in absolute terms. No single observation dominates the regression. We'll verify this with a sensitivity analysis in the next section.
 
-### Multicollinearity check (VIF) on a simpler model
+### Multicollinearity check (VIF)
 
 Because VIFs can be inflated by raw polynomials and interactions, we compute VIFs on the simpler first-order model (no quadratic or interaction terms) to get a clearer sense of redundancy among predictors (see @sec-multicollinearity-diagnostics).
 
@@ -1347,12 +1468,27 @@ vif_from_lm(mod_no_birth) |>
   print()
 ```
 
-::: Exercise
-Recreate the core diagnostic plot from @sec-common-diagnostic-plots: residuals vs fitted values.
+::: Key-point
+A rule of thumb: VIF > 5–10 suggests problematic multicollinearity. If VIFs are low, predictors provide largely independent information and coefficient estimates are stable.
+:::
 
-::: {.cell exercise='ex_5.6' envir='Ex5' define='["p_resid"]'}
+### Diagnostics summary
+
+| Assumption | Check | Verdict |
+|-----------|-------|---------|
+| Linearity | Residuals vs fitted | ✓ No strong curvature (quadratic term handles it) |
+| Constant variance | Scale-location plot | Mild changes in spread — note but not severe |
+| Normality | QQ plot + histogram | Approximately normal; minor tail deviations |
+| Independence | School-mean residuals | Some residual clustering by school — a known limitation |
+| Influence | Cook's distance | No dominant observations |
+| Multicollinearity | VIF | Acceptable levels |
+
+::: Exercise
+Using `augment()` on the final model, create a residuals-vs-fitted plot. Add a loess smoother (in red) to help visualise any remaining pattern. Store the plot as `p_resid`.
+
+::: {.cell exercise='ex_cs_diag' envir='Ex5' define='["p_resid"]'}
 ```{webr}
-#| exercise: ex_5.6
+#| exercise: ex_cs_diag
 #| envir: Ex5
 #| autorun: true
 #| define:
@@ -1360,20 +1496,22 @@ Recreate the core diagnostic plot from @sec-common-diagnostic-plots: residuals v
 p_resid <- ggplot(final_aug, aes(x = .fitted, y = .resid)) +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "gray40") +
   geom_point(alpha = 0.25, size = 1) +
+  geom_smooth(method = "loess", se = FALSE, colour = "red") +
   labs(x = "Fitted value", y = "Residual")
 
 p_resid
 ```
 :::
 
-:::: {.solution exercise="ex_5.6"}
-::: {.cell exercise='ex_5.6' solution='true'}
+:::: {.solution exercise="ex_cs_diag"}
+::: {.cell exercise='ex_cs_diag' solution='true'}
 ```{webr}
-#| exercise: ex_5.6
+#| exercise: ex_cs_diag
 #| solution: true
 p_resid <- ggplot(final_aug, aes(x = .fitted, y = .resid)) +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "gray40") +
   geom_point(alpha = 0.25, size = 1) +
+  geom_smooth(method = "loess", se = FALSE, colour = "red") +
   labs(x = "Fitted value", y = "Residual")
 
 p_resid
@@ -1381,9 +1519,9 @@ p_resid
 :::
 ::::
 
-::: {.cell exercise='ex_5.6' envir='Ex5' check='true' class='wait'}
+::: {.cell exercise='ex_cs_diag' envir='Ex5' check='true' class='wait'}
 ```{webr}
-#| exercise: ex_5.6
+#| exercise: ex_cs_diag
 #| envir: Ex5
 #| check: true
 #| class: wait
@@ -1396,7 +1534,96 @@ grade_this({
   if (!(identical(x, ".fitted") && identical(y, ".resid"))) {
     fail("Hint: use `aes(x = .fitted, y = .resid)` in your `ggplot()` call.")
   }
-  pass("Nice — residual plots are a core diagnostic tool (see @sec-common-diagnostic-plots).")
+  pass("Nice — a loess smoother near zero confirms linearity is satisfied. This is the single most important diagnostic plot (see @sec-common-diagnostic-plots).")
+})
+```
+:::
+:::
+
+## Sensitivity analysis: do influential observations matter? {#sec-case-naplan-sensitivity}
+
+In @sec-handling-outliers-and-influential-observations we discussed that influential observations can change model conclusions. A simple sensitivity check is to refit the model *without* the most influential points and see whether key coefficients change.
+
+```{webr ch-case-naplan-sensitivity-refit}
+#| echo: true
+#| autorun: true
+# Identify observations exceeding the 4/n Cook's D threshold
+cooksd_threshold <- 4 / nrow(naplan)
+influential_idx <- which(final_aug$.cooksd > cooksd_threshold)
+cat("Observations exceeding 4/n threshold:", length(influential_idx), "out of", nrow(naplan), "\n")
+
+# Refit without them
+naplan_trimmed <- naplan[-influential_idx, ]
+mod_trimmed <- update(final_mod, data = naplan_trimmed)
+```
+
+```{webr ch-case-naplan-sensitivity-compare}
+#| echo: true
+#| autorun: true
+# Compare key coefficients
+comparison <- bind_rows(
+  tidy(final_mod) |> mutate(model = "Full data"),
+  tidy(mod_trimmed) |> mutate(model = "Trimmed")
+) |>
+  filter(term %in% c("genderMale", "school_typeIndependent",
+                      "parent_educationPostgraduate", "parent_educationBachelor degree")) |>
+  select(model, term, estimate, std.error) |>
+  arrange(term, model)
+
+comparison |> print(n = 20)
+```
+
+If coefficients are stable (only small changes in estimates and standard errors), our conclusions are robust. If they shift substantially, that would warrant a deeper investigation into what's driving those influential points.
+
+::: Exercise
+Refit the final model after removing observations where Cook's distance exceeds 4/n. Store the trimmed model as `mod_sensitivity`. Compare the coefficient for `genderMale` between the full and trimmed models — did it change meaningfully?
+
+::: {.cell exercise='ex_cs_sensitivity' envir='Ex5' define='["mod_sensitivity"]'}
+```{webr}
+#| exercise: ex_cs_sensitivity
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - mod_sensitivity
+threshold <- 4 / nrow(naplan)
+keep <- final_aug$.cooksd <= threshold
+mod_sensitivity <- update(final_mod, data = naplan[keep, ])
+
+# Compare gender coefficient
+cat("Full model genderMale:", round(coef(final_mod)["genderMale"], 2), "\n")
+cat("Trimmed model genderMale:", round(coef(mod_sensitivity)["genderMale"], 2), "\n")
+```
+:::
+
+:::: {.solution exercise="ex_cs_sensitivity"}
+::: {.cell exercise='ex_cs_sensitivity' solution='true'}
+```{webr}
+#| exercise: ex_cs_sensitivity
+#| solution: true
+threshold <- 4 / nrow(naplan)
+keep <- final_aug$.cooksd <= threshold
+mod_sensitivity <- update(final_mod, data = naplan[keep, ])
+
+# Compare gender coefficient
+cat("Full model genderMale:", round(coef(final_mod)["genderMale"], 2), "\n")
+cat("Trimmed model genderMale:", round(coef(mod_sensitivity)["genderMale"], 2), "\n")
+cat("Change:", round(coef(mod_sensitivity)["genderMale"] - coef(final_mod)["genderMale"], 2), "points\n")
+```
+:::
+::::
+
+::: {.cell exercise='ex_cs_sensitivity' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_cs_sensitivity
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("mod_sensitivity", envir = .envir_result)) fail("Create an object named `mod_sensitivity`.")
+  m <- get("mod_sensitivity", envir = .envir_result)
+  if (!inherits(m, "lm")) fail("`mod_sensitivity` should be an `lm` model.")
+  if (nobs(m) >= nrow(naplan)) fail("The trimmed model should have fewer observations than the full model.")
+  pass("Good — with n=3000, removing a handful of influential points barely changes the coefficients. The model is robust.")
 })
 ```
 :::
