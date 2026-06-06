@@ -776,6 +776,67 @@ grade_this({
 :::
 :::
 
+::: Exercise
+Based on the EDA plots above, answer the following:
+
+1. Which continuous predictor shows the clearest **non-linear** (curved) relationship with NAPLAN reading score?
+2. Which categorical predictor shows the **largest group differences** in scores?
+
+Store your answers as character strings in `nonlinear_predictor` and `largest_cat_effect`.
+
+::: {.cell exercise='ex_cs_eda_reflect' envir='Ex5' define='["nonlinear_predictor", "largest_cat_effect"]'}
+```{webr}
+#| exercise: ex_cs_eda_reflect
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - nonlinear_predictor
+#|   - largest_cat_effect
+nonlinear_predictor <- "reading_time_home"
+largest_cat_effect <- "grade"
+```
+:::
+
+:::: {.solution exercise="ex_cs_eda_reflect"}
+::: {.cell exercise='ex_cs_eda_reflect' solution='true'}
+```{webr}
+#| exercise: ex_cs_eda_reflect
+#| solution: true
+# reading_time_home shows clear diminishing returns (curvature)
+nonlinear_predictor <- "reading_time_home"
+
+# grade has by far the largest group differences (~184 points between Yr3 and Yr9)
+# parent_education also shows large differences (~60 points across levels)
+largest_cat_effect <- "grade"
+```
+:::
+::::
+
+::: {.cell exercise='ex_cs_eda_reflect' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_cs_eda_reflect
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("nonlinear_predictor", envir = .envir_result)) fail("Create `nonlinear_predictor`.")
+  if (!exists("largest_cat_effect", envir = .envir_result)) fail("Create `largest_cat_effect`.")
+
+  nl <- tolower(trimws(get("nonlinear_predictor", envir = .envir_result)))
+  if (!(nl %in% c("reading_time_home", "readingtime", "reading time", "reading_time"))) {
+    fail("Hint: look at the scatterplots — which one used a *quadratic* smoother because of curvature?")
+  }
+
+  lc <- tolower(trimws(get("largest_cat_effect", envir = .envir_result)))
+  if (!(lc %in% c("grade", "parent_education", "parenteducation", "parent education"))) {
+    fail("Hint: look at the boxplots — which factor has groups that differ by 100+ points?")
+  }
+  pass("Correct! Recognising nonlinearity in the EDA (see @sec-non_linearity) tells us we'll likely need a polynomial term. And knowing that `grade` dominates tells us it must be in any model.")
+})
+```
+:::
+:::
+
 ## Starting simple: a single-predictor model {#sec-case-naplan-slr}
 
 Before jumping to a complex model, let's start with the simplest possible regression — a single predictor. This revisits the core SLR skills from @sec-slr: fitting a line, interpreting the slope, quantifying uncertainty, and recognising limitations.
