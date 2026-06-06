@@ -85,7 +85,15 @@ naplan_n <- nrow(naplan)
 
 ```{r ch-case-naplan-models}
 #| include: false
-#---- First-order “everything we have” (as a screening start)
+#---- SLR and stepwise MLR build-up (for §5 and §6)
+mod_slr <- lm(naplan_reading_score ~ ses_index, data = naplan)
+mod_ses_grade <- lm(naplan_reading_score ~ ses_index + grade, data = naplan)
+mod_cats <- lm(
+  naplan_reading_score ~ ses_index + grade + school_type + gender + parent_education,
+  data = naplan
+)
+
+#---- First-order "everything we have" (as a screening start)
 mod_full_first_order <- lm(
   naplan_reading_score ~ grade + ses_index + reading_time_home + n_siblings +
     parent_education + school_type + gender + birth_months,
@@ -242,7 +250,15 @@ naplan <- read_csv("Data/naplan_reading.csv", show_col_types = FALSE) |>
 
 naplan_n <- nrow(naplan)
 
-#---- First-order “everything we have” (as a screening start)
+#---- SLR and stepwise MLR build-up (for §5 and §6)
+mod_slr <- lm(naplan_reading_score ~ ses_index, data = naplan)
+mod_ses_grade <- lm(naplan_reading_score ~ ses_index + grade, data = naplan)
+mod_cats <- lm(
+  naplan_reading_score ~ ses_index + grade + school_type + gender + parent_education,
+  data = naplan
+)
+
+#---- First-order "everything we have" (as a screening start)
 mod_full_first_order <- lm(
   naplan_reading_score ~ grade + ses_index + reading_time_home + n_siblings +
     parent_education + school_type + gender + birth_months,
@@ -746,9 +762,285 @@ grade_this({
 :::
 :::
 
-## Fitting the least-squares model {#sec-fitting-the-least-squares-model}
+## Starting simple: a single-predictor model {#sec-case-naplan-slr}
 
-We now fit regression models using [ordinary least squares]{.glossary term="Ordinary least squares"} (see @sec-a-simple-linear-model-in-r). We start with a **first-order** additive model and then consider targeted increases in complexity when the EDA suggests they are useful (see @sec-increasing-model-complexity-to-model-complex-relationships).
+Before jumping to a complex model, let's start with the simplest possible regression — a single predictor. This revisits the core SLR skills from @sec-slr: fitting a line, interpreting the slope, quantifying uncertainty, and recognising limitations.
+
+From the EDA, `ses_index` has the highest correlation with score among the continuous predictors ($r \approx 0.21$). Let's see how far that one predictor gets us.
+
+### Fitting the SLR model
+
+```{webr ch-case-naplan-slr-fit}
+#| echo: true
+#| autorun: true
+mod_slr <- lm(naplan_reading_score ~ ses_index, data = naplan)
+summary(mod_slr)
+```
+
+```{webr ch-case-naplan-slr-tidy}
+#| echo: true
+#| autorun: true
+tidy(mod_slr, conf.int = TRUE)
+glance(mod_slr)
+```
+
+Let's interpret these results (see @sec-estimating-parameters and @sec-beta_inference):
+
+- **Intercept** ($\approx 547$): a student with `ses_index = 0` (roughly average SES) is predicted to score about 547 points.
+- **Slope** ($\approx 22$): each 1-unit increase in the SES index is associated with about 22 additional points on the NAPLAN reading test.
+- **95% CI for slope** ($\approx [18, 25]$): we're confident the SES–score association is positive.
+- **$t = 11.8$, $p < 0.001$**: strong evidence that the association is not zero.
+
+But look at the fit statistics:
+
+- $R^2 \approx 0.045$: SES alone explains only about 4.5% of the variation in scores.
+- RSE $\approx 92$: typical prediction errors are about 92 points — very large relative to within-grade standard deviations (~60–70 points).
+
+::: Key-point
+Statistical significance ($p < 0.001$) does not mean practical sufficiency. A highly significant predictor can still leave most of the variation unexplained. We clearly need more predictors.
+:::
+
+### Prediction with a single predictor
+
+What does a [prediction interval]{.glossary term="Prediction interval"} look like with this simple model? Consider a student with above-average SES (`ses_index = 1.5`):
+
+```{webr ch-case-naplan-slr-predict}
+#| echo: true
+#| autorun: true
+new_student <- tibble(ses_index = 1.5)
+
+# Confidence interval for the MEAN response at ses_index = 1.5
+predict(mod_slr, newdata = new_student, interval = "confidence")
+
+# Prediction interval for a NEW student at ses_index = 1.5
+predict(mod_slr, newdata = new_student, interval = "prediction")
+```
+
+The prediction interval is enormous (~±180 points) because the RSE is so large. This is the situation described in @sec-inference-about-the-response-y: when $R^2$ is low, individual predictions are very uncertain even when the slope is statistically significant.
+
+### Why one predictor isn't enough
+
+```{webr ch-case-naplan-slr-why-more}
+#| echo: true
+#| autorun: true
+ggplot(naplan, aes(x = ses_index, y = naplan_reading_score, colour = grade)) +
+  geom_point(alpha = 0.2, size = 1) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "SES index", y = "NAPLAN reading score", colour = "Grade")
+```
+
+The four roughly parallel lines tell us that `grade` explains a large portion of the remaining variation. Students in higher grades score higher regardless of SES. This is exactly the situation where [multiple linear regression]{.glossary term="Multiple linear regression"} helps — we can adjust for grade and get a cleaner picture of the SES association *within* each grade level.
+
+::: Exercise
+Fit a simple linear regression of `naplan_reading_score ~ reading_time_home` and store it as `mod_slr_rt`. Then look at the slope and $R^2$.
+
+The slope tells you how much the predicted score increases per additional minute of weekly reading. Is it large? Is $R^2$ any better than the SES model?
+
+::: {.cell exercise='ex_cs_slr' envir='Ex5' define='["mod_slr_rt"]'}
+```{webr}
+#| exercise: ex_cs_slr
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - mod_slr_rt
+mod_slr_rt <- lm(naplan_reading_score ~ reading_time_home, data = naplan)
+tidy(mod_slr_rt, conf.int = TRUE)
+glance(mod_slr_rt) |> select(r.squared, sigma, AIC)
+```
+:::
+
+:::: {.solution exercise="ex_cs_slr"}
+::: {.cell exercise='ex_cs_slr' solution='true'}
+```{webr}
+#| exercise: ex_cs_slr
+#| solution: true
+mod_slr_rt <- lm(naplan_reading_score ~ reading_time_home, data = naplan)
+tidy(mod_slr_rt, conf.int = TRUE)
+glance(mod_slr_rt) |> select(r.squared, sigma, AIC)
+```
+:::
+::::
+
+::: {.cell exercise='ex_cs_slr' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_cs_slr
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("mod_slr_rt", envir = .envir_result)) fail("Create an object named `mod_slr_rt`.")
+  m <- get("mod_slr_rt", envir = .envir_result)
+  if (!inherits(m, "lm")) fail("`mod_slr_rt` should be an `lm` model.")
+
+  resp <- as.character(formula(m)[[2]])
+  if (resp != "naplan_reading_score") fail("The response variable should be `naplan_reading_score`.")
+
+  rhs <- attr(terms(m), "term.labels")
+  if (!("reading_time_home" %in% rhs) || length(rhs) != 1) {
+    fail("Fit a *simple* regression with only `reading_time_home` as predictor.")
+  }
+  pass("Good — the slope is about 0.6 points per minute, and R² ≈ 0.02. Even weaker than SES alone! The EDA suggested curvature here, so a quadratic might help later.")
+})
+```
+:::
+:::
+
+::: Note
+The slope of ~0.6 points per extra minute of weekly reading looks small. But remember: (1) this is a *linear* fit to a possibly *curved* relationship (we saw diminishing returns in the EDA), and (2) confounders like grade aren't adjusted for yet. We'll return to this predictor with a polynomial term in @sec-model-refinement-and-interpretation.
+:::
+
+## Extending to multiple regression {#sec-case-naplan-mlr}
+
+We've seen that single predictors leave most variation unexplained. Now let's build up a multiple regression model step-by-step, adding predictors and watching how the fit changes. This revisits the skills from @sec-multiple-linear-regression-mlr: partial coefficients, categorical predictors, reference levels, and overall model tests.
+
+### Adding grade: the dominant predictor
+
+Grade explains the largest share of variation because NAPLAN scores are on different scales across year levels.
+
+```{webr ch-case-naplan-mlr-grade}
+#| echo: true
+#| autorun: true
+mod_ses_grade <- lm(naplan_reading_score ~ ses_index + grade, data = naplan)
+glance(mod_ses_grade) |> select(adj.r.squared, sigma, AIC)
+tidy(mod_ses_grade, conf.int = TRUE)
+```
+
+Look at what happened:
+
+- **Adjusted $R^2$** jumped from 0.044 to roughly 0.60 — adding `grade` explains most of the previously unexplained variation.
+- **RSE** dropped from ~92 to ~60 — predictions are now much tighter.
+- The **SES slope** barely changed (~22 → ~21) — `ses_index` and `grade` are nearly uncorrelated, so their effects are largely independent (see @sec-partial-regression-coefficients-betai).
+- **Grade coefficients** (relative to Year 3, the reference): Year 5 ≈ +83, Year 7 ≈ +137, Year 9 ≈ +184 points. These are [indicator variable]{.glossary term="Indicator (dummy) variable"} coefficients — exactly the dummy coding from @sec-factors-and-indicator-variables.
+
+### Adding more categorical predictors
+
+Let's bring in `school_type`, `gender`, and `parent_education`:
+
+```{webr ch-case-naplan-mlr-cats}
+#| echo: true
+#| autorun: true
+mod_cats <- lm(
+  naplan_reading_score ~ ses_index + grade + school_type + gender + parent_education,
+  data = naplan
+)
+glance(mod_cats) |> select(adj.r.squared, sigma, AIC)
+```
+
+```{webr ch-case-naplan-mlr-cats-coefs}
+#| echo: true
+#| autorun: true
+tidy(mod_cats, conf.int = TRUE) |> print(n = 20)
+```
+
+The reference levels are (see @sec-reference-levels-and-releveling):
+
+- `grade`: Year 3
+- `school_type`: Government
+- `gender`: Female
+- `parent_education`: Year 10 or below
+
+So each coefficient represents the estimated difference from that baseline, holding everything else constant.
+
+### The overall F-test
+
+The [F-test]{.glossary term="F-test (overall model test)"} asks: "Does this model explain significantly more variation than an intercept-only model?" (see @sec-the-f-test-for-model-model-usefulness-and-measures-of-model-fit).
+
+```{webr ch-case-naplan-mlr-ftest}
+#| echo: true
+#| autorun: true
+mod_cats_summary <- summary(mod_cats)
+cat("F-statistic:", round(mod_cats_summary$fstatistic[1], 1), 
+    "on", mod_cats_summary$fstatistic[2], "and", mod_cats_summary$fstatistic[3], "df\n")
+cat("p-value:", format.pval(pf(mod_cats_summary$fstatistic[1], mod_cats_summary$fstatistic[2], 
+    mod_cats_summary$fstatistic[3], lower.tail = FALSE), digits = 3), "\n")
+```
+
+With this many observations and this many significant predictors, the F-test is overwhelmingly significant. The model as a whole clearly "works" — the real question is *which* predictors we need and *how* to specify them.
+
+::: Exercise
+From the `tidy()` output of `mod_cats` above, find the coefficient for `parent_educationPostgraduate`. Store it (just the numeric estimate) as `coef_postgrad`. Then answer: what does this number mean in context?
+
+::: {.cell exercise='ex_cs_interpret_coef' envir='Ex5' define='["coef_postgrad"]'}
+```{webr}
+#| exercise: ex_cs_interpret_coef
+#| envir: Ex5
+#| autorun: true
+#| define:
+#|   - coef_postgrad
+coef_postgrad <- tidy(mod_cats) |>
+  filter(term == "parent_educationPostgraduate") |>
+  pull(estimate)
+
+coef_postgrad
+```
+:::
+
+:::: {.solution exercise="ex_cs_interpret_coef"}
+::: {.cell exercise='ex_cs_interpret_coef' solution='true'}
+```{webr}
+#| exercise: ex_cs_interpret_coef
+#| solution: true
+coef_postgrad <- tidy(mod_cats) |>
+  filter(term == "parent_educationPostgraduate") |>
+  pull(estimate)
+
+coef_postgrad
+
+# Interpretation: Students whose parents have a Postgraduate degree are predicted
+# to score approximately `coef_postgrad` points HIGHER on the NAPLAN reading test
+# than students whose parents have Year 10 or below education (the reference level),
+# holding grade, SES index, school type, and gender constant.
+```
+:::
+::::
+
+::: {.cell exercise='ex_cs_interpret_coef' envir='Ex5' check='true' class='wait'}
+```{webr}
+#| exercise: ex_cs_interpret_coef
+#| envir: Ex5
+#| check: true
+#| class: wait
+grade_this({
+  if (!exists("coef_postgrad", envir = .envir_result)) fail("Create an object named `coef_postgrad`.")
+  ans <- get("coef_postgrad", envir = .envir_result)
+  if (!is.numeric(ans) || length(ans) != 1) fail("`coef_postgrad` should be a single number.")
+
+  expected <- coef(mod_cats)["parent_educationPostgraduate"]
+  if (isTRUE(all.equal(ans, expected, tolerance = 1e-4))) {
+    pass("Correct! This coefficient tells you the estimated difference in score between Postgraduate and Year 10 or below (the reference), holding other predictors constant.")
+  }
+  fail("Not quite. Hint: filter the tidy() output for the term 'parent_educationPostgraduate' and pull the estimate.")
+})
+```
+:::
+:::
+
+### Do we need both ses_index and parent_education?
+
+Both variables capture aspects of socioeconomic status. Including both may introduce [multicollinearity]{.glossary term="Multicollinearity"} — they partly tell the model the same thing (see @sec-multicollinearity-diagnostics).
+
+```{webr ch-case-naplan-mlr-ses-overlap}
+#| echo: true
+#| autorun: true
+mod_no_ses <- update(mod_cats, . ~ . - ses_index)
+mod_no_parent <- update(mod_cats, . ~ . - parent_education)
+
+tibble(
+  model = c("Both (SES + parent_ed)", "Drop ses_index", "Drop parent_education"),
+  adj_r2 = c(
+    glance(mod_cats)$adj.r.squared,
+    glance(mod_no_ses)$adj.r.squared,
+    glance(mod_no_parent)$adj.r.squared
+  ),
+  AIC = c(AIC(mod_cats), AIC(mod_no_ses), AIC(mod_no_parent))
+) |> print()
+```
+
+Dropping `ses_index` barely hurts — `parent_education` captures most of the SES-related signal. We'll revisit this choice formally in the model-selection section below.
+
+## Fitting the full first-order model {#sec-fitting-the-least-squares-model}
+
+We now fit a first-order additive model with *all* candidate predictors, including `birth_months` and `n_siblings`. This is a common starting point: fit everything, then refine (see @sec-a-model-building-workflow and @sec-increasing-model-complexity-to-model-complex-relationships).
 
 ### A first-order screening model
 
