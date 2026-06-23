@@ -90,7 +90,7 @@ theme_set(theme_bw())
 In @sec-model-building-and-selection we saw that complex regression models can go wrong due to [overfitting]{.glossary term="Overfitting"}. But even simple regression analyses can be misleading if the linear model we are fitting does not adequately capture the data-generating process.
 
 ::: Example
-### Anscombe's quartet: same regression, different data {#sec-anscombes-quartet}
+### [Anscombe's quartet: same regression, different data]{#sec-anscombes-quartet}
 Regression summaries can mask radically different data patterns. Consider the following four datasets, known as *Anscombe's quartet*:
 
 :::: {.panel-tabset}

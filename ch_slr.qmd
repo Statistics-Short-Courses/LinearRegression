@@ -229,7 +229,7 @@ my_b <- ______
 :::
 
 
-:::: {.solution exercise="ex_1"}
+:::: {.solution exercise="ex_2.1"}
 
 ::: {.cell exercise='ex_2.1' solution='true'}
 ```{webr}
@@ -1040,6 +1040,8 @@ Because the Normality assumption implies that the estimator $b$ has a Normal sam
 
 #### Hypothesis testing revision ([p-values]{.glossary term="p-value"}) {#sec-hypothesis-testing-revision-p-values}
 
+*Coming soon.*
+
 :::
 
 
@@ -1111,11 +1113,15 @@ ggplot(plot_df, aes(se, ci_half)) +
 
 ##### t-test for slope {#sec-t-test-for-slope}
 
+*Coming soon.*
+
 :::
 
 ::: Exercise
 
 ##### t-test for slope {#sec-t-test-for-slope-2}
+
+*Coming soon.*
 
 :::
 
