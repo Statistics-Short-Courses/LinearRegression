@@ -1,5 +1,5 @@
-Chapter 1 Revisions
-- change to chapter 0 (to emphasise pre-req nature)
+Revisions
+- change to @sec-introduction-to-linear-models (to emphasise pre-req nature)
 
 - Switch order of alpha and beta sliders on first plot (so alpha first)
 - make it so a negative beta reads as 'E[Y]= a - bX' rather than 'E[Y]= a + -bX' in the plot. 
@@ -21,7 +21,7 @@ Use the ‘salary example parameters to generate data
 
  Note that x is not treated as an RV (just here for example)
  
- - make linear models section chapter 0.
+ - make linear models section @sec-introduction-to-linear-models.
  - add glossary term for estimation/estimate 
  - use s for sigma
  - clarify yhat as predicted value

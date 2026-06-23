@@ -72,7 +72,7 @@ Here $\varepsilon$ represents the random variation in $Y$ that is not explained 
 
 -   This means that $Y$ is not perfectly determined by $X$: even if we know the values of X, the outcome Y can still vary due to random noise.
 
--  This is the setup for our statisical model, and while it may seem very general it makes a key assumption: that it is possible to model our outcome $Y$ *just* using the information from $X$ (along with random noise). We will discuss the relevance of this assumption more in chapter 2, but lets put a pin in it for now:
+-  This is the setup for our statisical model, and while it may seem very general it makes a key assumption: that it is possible to model our outcome $Y$ *just* using the information from $X$ (along with random noise). We will discuss the relevance of this assumption more in @sec-multiple_linear_regression, but lets put a pin in it for now:
 
 ::: Assumption
 $Y$ depends only on a deterministic function of $X$ and a random noise component

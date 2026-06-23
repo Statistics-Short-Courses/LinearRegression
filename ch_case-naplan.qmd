@@ -54,7 +54,7 @@ resources:
 
 
 
-```{r chapter05-case-naplan-setup-r}
+```{r ch-case-naplan-setup-r}
 #| include: false
 library(MASS)
 library(tidyverse)
@@ -83,7 +83,7 @@ naplan <- read.csv("Data/naplan_reading.csv") |>
 naplan_n <- nrow(naplan)
 ```
 
-```{r chapter05-case-naplan-models}
+```{r ch-case-naplan-models}
 #| include: false
 #---- First-order “everything we have” (as a screening start)
 mod_full_first_order <- lm(
@@ -92,7 +92,7 @@ mod_full_first_order <- lm(
   data = naplan
 )
 
-#---- Candidate refinements guided by EDA + Chapter 03 (and always re-check diagnostics in Chapter 04)
+#---- Candidate refinements guided by EDA + model-building tools (see @sec-a-model-building-workflow)
 mod_no_birth <- update(mod_full_first_order, . ~ . - birth_months)
 mod_quad_time <- update(mod_no_birth, . ~ . - reading_time_home + poly(reading_time_home, 2, raw = TRUE))
 mod_quad_time_int_grade <- lm(
@@ -154,7 +154,7 @@ final_terms <- tidy(final_mod, conf.int = TRUE)
 
 # Regression Case Study: NAPLAN Reading Scores {#sec-regression-case-study-naplan-reading-scores}
 
-In Chapters 00–04 we built up the pieces of a regression analysis: what a linear model *is* (Chapter 00), how to fit and interpret regression models (Chapters 01–02), how to build and compare candidate models (Chapter 03), and how to diagnose problems (Chapter 04). In this final chapter, we put those pieces together in an end-to-end analysis.
+In @sec-introduction-to-linear-models we built the basic linear model, in @sec-slr and @sec-multiple-linear-regression-mlr we focused on fitting and interpretation, in @sec-model-building-and-selection we built and compared candidate models, and in @sec-regression-pitfalls-and-diagnostics we diagnosed problems. In this final chapter, we put those pieces together in an end-to-end analysis.
 
 Our workflow follows the model-building approach in @sec-a-model-building-workflow:
 
@@ -209,13 +209,13 @@ These options are beyond the scope of this short course, but are worth knowing a
 
 We start by importing the dataset and setting factor levels so coefficient interpretations are clear (see @sec-mlr_cat and @sec-reference-levels-and-releveling).
 
-```{webr chapter05-case-naplan-setup}
+```{webr ch-case-naplan-setup}
 #| include: false
 library(tidyverse)
 library(broom)
 theme_set(theme_bw())
 ```
-```{webr chapter05-case-naplan-models-webr}
+```{webr ch-case-naplan-models-webr}
 #| include: false
 #| output: false
 #| edit: false
@@ -249,7 +249,7 @@ mod_full_first_order <- lm(
   data = naplan
 )
 
-#---- Candidate refinements guided by EDA + Chapter 03 (and always re-check diagnostics in Chapter 04)
+#---- Candidate refinements guided by EDA + model-building tools (see @sec-a-model-building-workflow)
 mod_no_birth <- update(mod_full_first_order, . ~ . - birth_months)
 mod_quad_time <- update(mod_no_birth, . ~ . - reading_time_home + poly(reading_time_home, 2, raw = TRUE))
 mod_quad_time_int_grade <- lm(
@@ -575,7 +575,7 @@ This is exactly the “EDA first” mindset in @sec-exploratory-data-analysis-an
 
 Because students are sampled within schools, a quick EDA step is to check the *cluster sizes* (how many students per school) and whether school-average scores differ. Visible variation across schools is one sign that school context might matter, which in turn can lead to correlated errors within schools if that context is not fully captured by the predictors. Later, when we include `school_type` (and other predictors) in the regression, we are adjusting for observed school context, which can reduce—but not eliminate—between-school clustering in the residuals.
 
-```{webr chapter05-case-naplan-eda-school-sizes}
+```{webr ch-case-naplan-eda-school-sizes}
 #| echo: true
 #| autorun: true
 naplan |>
@@ -588,7 +588,7 @@ naplan |>
   )
 ```
 
-```{webr chapter05-case-naplan-eda-school-means}
+```{webr ch-case-naplan-eda-school-means}
 #| echo: true
 #| autorun: true
 school_means <- naplan |>
@@ -608,7 +608,7 @@ ggplot(school_means, aes(x = mean_score)) +
 
 NAPLAN scores are on different ranges across grades (Year 3 scores are typically lower than Year 9 scores), so it helps to look grade-by-grade.
 
-```{webr chapter05-case-naplan-eda-score-by-grade}
+```{webr ch-case-naplan-eda-score-by-grade}
 #| echo: true
 #| autorun: true
 ggplot(naplan, aes(x = naplan_reading_score)) +
@@ -621,7 +621,7 @@ ggplot(naplan, aes(x = naplan_reading_score)) +
 
 #### Reading score vs SES index
 
-```{webr chapter05-case-naplan-eda-ses}
+```{webr ch-case-naplan-eda-ses}
 #| echo: true
 #| autorun: true
 ggplot(naplan, aes(x = ses_index, y = naplan_reading_score, colour = grade)) +
@@ -632,9 +632,9 @@ ggplot(naplan, aes(x = ses_index, y = naplan_reading_score, colour = grade)) +
 
 #### Reading score vs time spent reading at home
 
-Because `reading_time_home` is reported in minutes per week and has a lot of small values (including zeros), we should be open to nonlinearity here (Chapter 03: @sec-non_linearity).
+Because `reading_time_home` is reported in minutes per week and has a lot of small values (including zeros), we should be open to nonlinearity here (see @sec-non_linearity).
 
-```{webr chapter05-case-naplan-eda-reading-time}
+```{webr ch-case-naplan-eda-reading-time}
 #| echo: true
 #| autorun: true
 ggplot(naplan, aes(x = reading_time_home, y = naplan_reading_score, colour = grade)) +
@@ -647,7 +647,7 @@ ggplot(naplan, aes(x = reading_time_home, y = naplan_reading_score, colour = gra
 
 Boxplots make it easy to compare distributions across categories (see @sec-mlr_cat and @sec-multi-level-factors-and-anova).
 
-```{webr chapter05-case-naplan-eda-cats}
+```{webr ch-case-naplan-eda-cats}
 #| echo: true
 #| autorun: true
 ggplot(naplan, aes(x = parent_education, y = naplan_reading_score)) +
@@ -668,7 +668,7 @@ ggplot(naplan, aes(x = gender, y = naplan_reading_score)) +
 
 We don’t have `GGally::ggpairs()` available in this project, but we can still compute a correlation matrix and look at a basic pairs plot (see @sec-pairs-plots-and-correlation-matrices).
 
-```{webr chapter05-case-naplan-eda-cor}
+```{webr ch-case-naplan-eda-cor}
 #| echo: true
 #| autorun: true
 naplan_cont <- naplan |>
@@ -678,7 +678,7 @@ naplan_cont <- naplan |>
 round(cor(naplan_cont), 2)
 ```
 
-```{webr chapter05-case-naplan-eda-pairs}
+```{webr ch-case-naplan-eda-pairs}
 #| echo: true
 #| autorun: true
 pairs(
@@ -748,19 +748,19 @@ grade_this({
 
 ## Fitting the least-squares model {#sec-fitting-the-least-squares-model}
 
-We now fit regression models using [ordinary least squares]{.glossary term="Ordinary least squares"} (Chapter 01: @sec-a-simple-linear-model-in-r). We start with a **first-order** additive model and then consider targeted increases in complexity when the EDA suggests they are useful (Chapter 03: @sec-increasing-model-complexity-to-model-complex-relationships).
+We now fit regression models using [ordinary least squares]{.glossary term="Ordinary least squares"} (see @sec-a-simple-linear-model-in-r). We start with a **first-order** additive model and then consider targeted increases in complexity when the EDA suggests they are useful (see @sec-increasing-model-complexity-to-model-complex-relationships).
 
 ### A first-order screening model
 
 This model includes *all* candidate predictors, including `birth_months`. Think of it as a starting point for refinement (not the final model).
 
-```{webr chapter05-case-naplan-fit-full}
+```{webr ch-case-naplan-fit-full}
 #| echo: true
 #| autorun: true
 formula(mod_full_first_order)
 ```
 
-```{webr chapter05-case-naplan-fit-full-glance}
+```{webr ch-case-naplan-fit-full-glance}
 #| echo: true
 #| autorun: true
 glance(mod_full_first_order)
@@ -768,9 +768,9 @@ glance(mod_full_first_order)
 
 ### Model comparison: does birth month help?
 
-We compare the model with and without `birth_months` using AIC/BIC (Chapter 03: @sec-information-criteria-aic-bic) and an ANOVA comparison (Chapter 03: @sec-comparing-model-fit).
+We compare the model with and without `birth_months` using AIC/BIC (see @sec-information-criteria-aic-bic) and an ANOVA comparison (see @sec-comparing-model-fit).
 
-```{webr chapter05-case-naplan-compare-birth-month}
+```{webr ch-case-naplan-compare-birth-month}
 #| echo: true
 #| autorun: true
 anova(mod_no_birth, mod_full_first_order)
@@ -840,7 +840,7 @@ grade_this({
 
 ## Model refinement and selection {#sec-model-refinement-and-interpretation}
 
-Now we refine the model in a controlled way, guided by what we saw in the EDA and by the tools in Chapter 03.
+Now we refine the model in a controlled way, guided by what we saw in the EDA and by the model-building tools in @sec-model-building-and-selection.
 
 ::: Note
 Automated methods like stepwise regression can be useful as **screening tools**, but can be misleading if used blindly (see @sec-stepwise-regression and @sec-blind-model-selection). In this case study we prefer small, interpretable comparisons.
@@ -850,7 +850,7 @@ Automated methods like stepwise regression can be useful as **screening tools**,
 
 If you want to see what a purely automated AIC search does, we can run a stepwise procedure on a **first-order** model (no interactions or polynomial terms). Treat this as a *starting point for thought*, not a final answer.
 
-```{webr chapter05-case-naplan-stepwise}
+```{webr ch-case-naplan-stepwise}
 #| echo: true
 #| edit: false
 #| eval: false
@@ -873,9 +873,9 @@ glance(step_mod)
 
 ### Add a quadratic term for reading time
 
-The scatterplot suggested possible curvature in the relationship between `reading_time_home` and `naplan_reading_score`. A natural next step is a quadratic term (Chapter 03: @sec-non_linearity).
+The scatterplot suggested possible curvature in the relationship between `reading_time_home` and `naplan_reading_score`. A natural next step is a quadratic term (see @sec-non_linearity).
 
-```{webr chapter05-case-naplan-compare-quad}
+```{webr ch-case-naplan-compare-quad}
 #| echo: true
 #| autorun: true
 anova(mod_no_birth, mod_quad_time)
@@ -887,9 +887,9 @@ fit_tbl |>
 
 ### Allow the reading-time curve to differ by grade (interaction)
 
-Because `grade` is strongly related to score, it’s plausible the reading-time pattern differs across grades. This is a continuous × categorical [interaction]{.glossary term="Interaction"} (Chapter 03: @sec-continuous-by-categorical-interactions).
+Because `grade` is strongly related to score, it’s plausible the reading-time pattern differs across grades. This is a continuous × categorical [interaction]{.glossary term="Interaction"} (see @sec-continuous-by-categorical-interactions).
 
-```{webr chapter05-case-naplan-compare-interaction}
+```{webr ch-case-naplan-compare-interaction}
 #| echo: true
 #| autorun: true
 anova(mod_quad_time, mod_quad_time_int_grade)
@@ -913,7 +913,7 @@ We fit two versions:
 - `mod_ses_index`: includes `ses_index` (but not `parent_education`),
 - `final_mod`: includes `parent_education` (but not `ses_index`).
 
-```{webr chapter05-case-naplan-ses-compare}
+```{webr ch-case-naplan-ses-compare}
 #| echo: true
 #| autorun: true
 fit_ses_tbl <- tibble(
@@ -932,7 +932,7 @@ In this dataset, the parent-education version fits better by AIC/BIC, so we use 
 
 Does the SES index add anything once parent education is already in the model?
 
-```{webr chapter05-case-naplan-ses-added-value}
+```{webr ch-case-naplan-ses-added-value}
 #| echo: true
 #| autorun: true
 anova(final_mod, mod_parent_edu_plus_ses)
@@ -992,13 +992,13 @@ grade_this({
 :::
 :::
 
-## Diagnostics (does the model look reasonable?) {#sec-chapter05-diagnostics}
+## Diagnostics (does the model look reasonable?) {#sec-case-naplan-diagnostics}
 
-As emphasized in Chapter 04, we always re-check residual diagnostics on the final model (see @sec-common-diagnostic-plots and @sec-diagnosing-issues-and-choosing-remedies).
+As emphasized in @sec-regression-pitfalls-and-diagnostics, we always re-check residual diagnostics on the final model (see @sec-common-diagnostic-plots and @sec-diagnosing-issues-and-choosing-remedies).
 
 ### A small set of diagnostic plots
 
-```{webr chapter05-case-naplan-diagnostics-plots}
+```{webr ch-case-naplan-diagnostics-plots}
 #| echo: true
 #| autorun: true
 ggplot(final_aug, aes(x = .fitted, y = .resid)) +
@@ -1012,11 +1012,11 @@ ggplot(final_aug, aes(sample = .std.resid)) +
   labs(x = "Theoretical quantiles", y = "Standardised residuals")
 ```
 
-The residual-vs-fitted plot is the main place to look for nonlinearity and changing variance (Chapter 04: @sec-diagnosing-nonlinearity and @sec-diagnosing-heteroskedasticity). In this case the pattern looks broadly centred around 0, with at most mild changes in spread.
+The residual-vs-fitted plot is the main place to look for nonlinearity and changing variance (see @sec-diagnosing-nonlinearity and @sec-diagnosing-heteroskedasticity). In this case the pattern looks broadly centred around 0, with at most mild changes in spread.
 
 ### Influence and unusual points
 
-```{webr chapter05-case-naplan-diagnostics-influence}
+```{webr ch-case-naplan-diagnostics-influence}
 #| echo: true
 #| autorun: true
 final_aug |>
@@ -1030,9 +1030,9 @@ These points are worth checking, but the Cook’s distances are not extreme. Thi
 
 ### Multicollinearity check (VIF) on a simpler model
 
-Because VIFs can be inflated by raw polynomials and interactions, we compute VIFs on the simpler first-order model (no quadratic or interaction terms) to get a clearer sense of redundancy among predictors (Chapter 04: @sec-multicollinearity-diagnostics).
+Because VIFs can be inflated by raw polynomials and interactions, we compute VIFs on the simpler first-order model (no quadratic or interaction terms) to get a clearer sense of redundancy among predictors (see @sec-multicollinearity-diagnostics).
 
-```{webr chapter05-case-naplan-diagnostics-vif}
+```{webr ch-case-naplan-diagnostics-vif}
 #| echo: true
 #| autorun: true
 vif_from_lm <- function(model) {
@@ -1056,7 +1056,7 @@ vif_from_lm(mod_no_birth) |>
 ```
 
 ::: Exercise
-Recreate the core diagnostic plot from Chapter 04: residuals vs fitted values.
+Recreate the core diagnostic plot from @sec-common-diagnostic-plots: residuals vs fitted values.
 
 ::: {.cell exercise='ex_5.6' envir='Ex5' define='["p_resid"]'}
 ```{webr}
@@ -1104,7 +1104,7 @@ grade_this({
   if (!(identical(x, ".fitted") && identical(y, ".resid"))) {
     fail("Hint: use `aes(x = .fitted, y = .resid)` in your `ggplot()` call.")
   }
-  pass("Nice — residual plots are a core diagnostic tool (see Chapter 04).")
+  pass("Nice — residual plots are a core diagnostic tool (see @sec-common-diagnostic-plots).")
 })
 ```
 :::
@@ -1112,7 +1112,7 @@ grade_this({
 
 ## Reporting the results {#sec-reporting-the-results}
 
-We now summarise the final model in a way that a reader can understand (Chapter 02: interpreting coefficients, @sec-partial-regression-coefficients-betai; and Chapter 01: confidence/prediction intervals, @sec-inference-about-the-response-y).
+We now summarise the final model in a way that a reader can understand (see @sec-partial-regression-coefficients-betai and @sec-inference-about-the-response-y).
 
 ### Model summary
 
@@ -1122,7 +1122,7 @@ We fitted a multiple linear regression model to `r naplan_n` students. The overa
 - Residual standard error $\approx$ `r round(final_glance$sigma, 2)`
 - Overall $F$-test: $F($`r final_fstat[2]`$, $`r final_fstat[3]`$) = `r round(final_fstat[1], 1)`, p `r format.pval(final_p_overall, digits = 2, eps = 1e-16)`
 
-```{webr chapter05-case-naplan-final-fit}
+```{webr ch-case-naplan-final-fit}
 #| echo: true
 #| autorun: true
 formula(final_mod)
@@ -1131,14 +1131,14 @@ glance(final_mod)
 
 ### Interpreting key coefficients
 
-For categorical predictors, coefficients are interpreted relative to their reference levels (Chapter 02: @sec-mlr_cat). In this model the references are:
+For categorical predictors, coefficients are interpreted relative to their reference levels (see @sec-mlr_cat). In this model the references are:
 
 - `grade`: Year 3
 - `parent_education`: Year 10 or below
 - `school_type`: Government
 - `gender`: Female
 
-```{webr chapter05-case-naplan-final-coefs}
+```{webr ch-case-naplan-final-coefs}
 #| echo: true
 #| autorun: true
 final_terms |>
@@ -1154,9 +1154,9 @@ From the table:
 
 ### Interpreting the grade × reading-time pattern
 
-Because the model includes an interaction between grade and a quadratic reading-time term, it’s often easiest to interpret with predicted curves rather than trying to “read” raw polynomial coefficients (Chapter 03: @sec-continuous-by-categorical-interactions).
+Because the model includes an interaction between grade and a quadratic reading-time term, it’s often easiest to interpret with predicted curves rather than trying to “read” raw polynomial coefficients (see @sec-continuous-by-categorical-interactions).
 
-```{webr chapter05-case-naplan-effects-reading-time}
+```{webr ch-case-naplan-effects-reading-time}
 #| echo: true
 #| autorun: true
 profile_ref <- tibble(
@@ -1191,7 +1191,7 @@ ggplot(grid, aes(x = reading_time_home, y = fit, colour = grade)) +
 
 Consider a Year 9 female student in a Government school, with parent education = Bachelor degree, who reports 30 minutes of reading at home per week. The fitted mean is:
 
-```{webr chapter05-case-naplan-prediction}
+```{webr ch-case-naplan-prediction}
 #| echo: true
 #| autorun: true
 pred_profile <- tibble(
@@ -1210,7 +1210,7 @@ predict(final_mod, newdata = pred_profile, interval = "prediction")
 
 If we swap `parent_education` for the numeric SES index, the SES index is strongly associated with score.
 
-```{webr chapter05-case-naplan-ses-index-effect}
+```{webr ch-case-naplan-ses-index-effect}
 #| echo: true
 #| autorun: true
 tidy(mod_ses_index, conf.int = TRUE) |>
@@ -1302,7 +1302,7 @@ grade_this({
 :::
 :::
 
-## Conclusion {#sec-chapter05-conclusion}
+## Conclusion {#sec-case-naplan-conclusion}
 
 Using `r naplan_n` students across Years 3, 5, 7, and 9, we fitted a multiple linear regression model relating NAPLAN reading scores to reading time at home, grade, parent education, school type, and gender. The model explained about `r round(100 * final_glance$adj.r.squared, 1)`% of the variation in scores (adjusted $R^2 \approx$ `r round(final_glance$adj.r.squared, 3)`), with a residual standard error of about `r round(final_glance$sigma, 1)` points.
 
