@@ -1,2 +1,1 @@
-https://statistics-short-courses.github.io/LinearRegression/
-
+This repository contains draft teaching materials for a short course in inferential statistics developed for Higher Degree by Research (HDR) students at the University of New England. The course is intended as a compact introduction or refresher to linear regression with an emphasis on implementation in the R statistical programming language.
