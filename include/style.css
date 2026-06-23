@@ -1,4 +1,16 @@
 /* hide later sections until exercises are complete */
+#title-block-header:has(+ p .course-banner) {
+  display: none;
+}
+
+.course-banner {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  margin: 0 auto 1.75rem;
+}
+
 /* Hide while there exists any pending exercise (wait cell without data-complete). */
 body#progressive section:has(.cell.wait[data-check="true"]:not([data-complete="true"])) ~ *,
 body#progressive section:has(ul.task-list input[type="checkbox"]:not(:checked)) ~ * {

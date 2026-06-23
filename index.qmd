@@ -13,6 +13,8 @@ custom-numbered-blocks:
 ---
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
+![Linear Regression with R](linear-regression-with-r-banner-v3.svg){.course-banner}
+
 # Course Overview {#sec-course-overview .unnumbered}
 
 Linear regression is one of the most widely used tools in data analysis. It helps us describe and predict a continuous *outcome* using one or more *predictors*, while also quantifying how uncertain our conclusions are.  Linear regression models are used across many fields, including social sciences, health sciences, economics, engineering, and natural sciences. Understanding how to use linear regression effectively is a crucial skill for anyone working with data.
